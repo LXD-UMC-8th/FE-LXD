@@ -1,0 +1,91 @@
+.harmony-analysis {
+    padding: 150px 20px;
+    background-color: white;
+    text-align: center;
+  }
+  
+  .section-title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .section-description {
+    font-size: 16px;
+    color: #6a6a6a;
+    margin-bottom: 100px;
+  }
+  
+  .harmony-info {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* 항목 사이 간격 */
+    margin-bottom: 30px;
+    padding: 20px; /* 내부 여백 */
+    background: linear-gradient(145deg, #e6e6e6, #ffffff); /* 배경 그라데이션 */
+    border-radius: 20px; /* 모서리 둥글기 */
+    box-shadow: 5px 5px 15px #d9d9d9, -5px -5px 15px #ffffff; /* 그림자 효과 */
+    width: fit-content; /* 컨텐츠 크기에 맞춤 */
+    margin: auto; /* 가운데 정렬 */
+    transform: translateY(-40px);
+  }
+  
+  /* 개별 아이템 컨테이너 */
+  .info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+  }
+  
+  /* 제목 스타일 */
+  .info-label {
+    font-size: 14px;
+    color: #6a6a6a;
+    margin-bottom: 5px;
+  }
+  
+  /* 개별 아이템 스타일 */
+  .info-item {
+    padding: 10px; /* 내부 여백 */
+    width: 60px; /* 고정 크기 */
+    height: 60px; /* 고정 크기 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px; /* 모서리 둥글기 */
+    background-color: white; /* 배경색 */
+    box-shadow: 2px 2px 5px #e0e0e0, -2px -2px 5px #ffffff; /* 그림자 효과 */
+    font-size: 16px;
+  }
+  
+  /* 텍스트 스타일 */
+  .info-item span {
+    font-weight: bold;
+    font-size: 16px; /* 글자 크기 */
+    color: #4a4a8a; /* 글자 색상 */
+  }
+  
+  
+  /* 정보 항목 제목 */
+  .harmony-info p {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #6a6a6a;
+  }
+  
+  .harmony-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 200px;
+  }
+  
+  .harmony-button:hover {
+    background-color: #4a4a8a;
+  }

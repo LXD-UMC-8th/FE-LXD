@@ -1,0 +1,36 @@
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 60px; /* 아이템 간 간격 */
+    margin-top: -50px;
+    padding-bottom: 100px;
+  }
+  
+  .feature-item {
+    text-align: center;
+    width: 200px; /* 각 아이템의 고정된 너비 */
+  }
+  
+  .feature-image {
+    width: 200px; /* 고정된 너비 */
+    height: 150px; /* 고정된 높이 */
+    border-radius: 10px; /* 직사각형에 약간의 모서리 둥글기 */
+    background-color: #eaeaea; /* 기본 배경색 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* 이미지를 고정된 영역 안에 표시 */
+  }
+  
+  .feature-image img {
+    width: 100%; /* 이미지를 부모 요소에 맞춤 */
+    height: 100%; /* 이미지를 부모 요소에 맞춤 */
+    object-fit: cover; /* 이미지를 고정 영역에 잘 맞도록 조정 */
+  }
+  
+  .feature-item p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+  }
