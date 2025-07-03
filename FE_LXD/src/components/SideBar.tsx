@@ -6,7 +6,7 @@ const Sidebar = () => {
       <div className="text-xl font-bold">LXD</div>
       <nav className="flex flex-col gap-4">
         <NavLink
-          to="/feeds"
+          to="/feed"
           className={({ isActive }) =>
             isActive ? "text-blue-600 font-semibold" : "text-gray-600"
           }
@@ -22,7 +22,7 @@ const Sidebar = () => {
           다이어리
         </NavLink>
         <NavLink
-          to="/corretions"
+          to="/corrections"
           className={({ isActive }) =>
             isActive ? "text-blue-600 font-semibold" : "text-gray-600"
           }
