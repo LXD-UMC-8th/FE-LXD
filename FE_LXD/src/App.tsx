@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
-import FeedsPage from "./pages/FeedsPage";
+import FeedPage from "./pages/FeedPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -21,18 +21,18 @@ const protectedRoutes: RouteObject[] = [
   {
     path: "/",
     element: <ProtectedLayout />,
-    // errorElement: <NotFoundPgae />,
+    // errorElement: <NotFoundPage />,
     children: [
       {
-        path: "/feeds",
-        element: <FeedsPage />,
+        path: "/feed",
+        element: <FeedPage />,
       },
       // {
       //   path: "/diary",
       //   element: <DiaryPage />,
       // },
       // {
-      //   path: "/corretions",
+      //   path: "/corrections",
       //   element: <CorrectionsPage />,
       // },
       // {
