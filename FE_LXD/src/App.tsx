@@ -7,10 +7,12 @@ import {
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
+import WritingPage from "./pages/diarypage/WritingPage";
+import DiaryPage from "./pages/diarypage/DiaryPage";
 
 const publicRoutes: RouteObject[] = [
   {
-    path: "/",
+    path: "/home",
     element: <HomeLayout />,
     // errorElement: <ErrorPage />,
     // children: [{ index: true, element: <LoginPage /> }],
@@ -27,18 +29,22 @@ const protectedRoutes: RouteObject[] = [
         path: "/feed",
         element: <FeedPage />,
       },
-      // {
-      //   path: "/diary",
-      //   element: <DiaryPage />,
-      // },
+      {
+        path: "/diary",
+        element: <DiaryPage />,
+      },
       // {
       //   path: "/corrections",
       //   element: <CorrectionsPage />,
       // },
       // {
-      //   path: "friendslist",
+      //   path: "/friendslist",
       //   element: <FriendsListPage />,
       // },
+      {
+        path: "/diary/writing",
+        element: <WritingPage />,
+      },
     ],
   },
 ];
