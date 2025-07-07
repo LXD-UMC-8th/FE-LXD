@@ -7,13 +7,14 @@ import {
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
+import LoginPage from "./pages/LoginPage";
 
 const publicRoutes: RouteObject[] = [
   {
     path: "/",
     element: <HomeLayout />,
     // errorElement: <ErrorPage />,
-    // children: [{ index: true, element: <LoginPage /> }],
+    children: [{ index: true, element: <LoginPage /> }],
   },
 ];
 
