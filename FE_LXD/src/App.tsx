@@ -10,6 +10,7 @@ import FeedPage from "./pages/FeedPage";
 import WritingPage from "./pages/diarypage/WritingPage";
 import DiaryPage from "./pages/diarypage/DiaryPage";
 import LoginPage from "./pages/LoginPage";
+import CorrectionsPage from "./pages/CorrectionsPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -34,10 +35,10 @@ const protectedRoutes: RouteObject[] = [
         path: "/diary",
         element: <DiaryPage />,
       },
-      // {
-      //   path: "/corrections",
-      //   element: <CorrectionsPage />,
-      // },
+      {
+        path: "/corrections",
+        element: <CorrectionsPage />,
+      },
       // {
       //   path: "/friendslist",
       //   element: <FriendsListPage />,

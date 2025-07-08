@@ -27,7 +27,7 @@ const Sidebar = () => {
             isActive ? "text-blue-600 font-semibold" : "text-gray-600"
           }
         >
-          교정
+          나의 교정
         </NavLink>
         <NavLink
           to="/friendslist"
