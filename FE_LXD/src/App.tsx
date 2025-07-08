@@ -9,13 +9,14 @@ import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
 import WritingPage from "./pages/diarypage/WritingPage";
 import DiaryPage from "./pages/diarypage/DiaryPage";
+import LoginPage from "./pages/LoginPage";
 
 const publicRoutes: RouteObject[] = [
   {
     path: "/home",
     element: <HomeLayout />,
     // errorElement: <ErrorPage />,
-    // children: [{ index: true, element: <LoginPage /> }],
+    children: [{ index: true, element: <LoginPage /> }],
   },
 ];
 
