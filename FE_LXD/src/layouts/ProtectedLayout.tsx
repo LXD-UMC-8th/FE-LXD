@@ -1,4 +1,4 @@
-import SideBar from "../components/SideBar";
+import SideBar from "../components/SideBar/SideBar";
 import { Outlet } from "react-router-dom";
 
 const ProtectedLayout = () => {
