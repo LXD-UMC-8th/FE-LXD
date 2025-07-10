@@ -7,9 +7,10 @@ import {
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
-import WritingPage from "./pages/diarypage/WritingPage";
-import DiaryPage from "./pages/diarypage/DiaryPage";
-import LoginPage from "./pages/LoginPage";
+import WritingPage from "./pages/Diary/WritingPage";
+import DiaryPage from "./pages/Diary/DiaryPage";
+import LoginPage from "./pages/Login/LoginPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 
 const publicRoutes: RouteObject[] = [
@@ -25,7 +26,7 @@ const protectedRoutes: RouteObject[] = [
   {
     path: "/",
     element: <ProtectedLayout />,
-    // errorElement: <NotFoundPage />,
+    errorElement: <NotFoundPage />,
     children: [
       {
         path: "/feed",
