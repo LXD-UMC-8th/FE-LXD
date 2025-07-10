@@ -10,7 +10,7 @@ const Sidebar = () => {
           className={({ isActive }) =>
             [
               "flex items-center gap-[12px]",
-              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px]",
+              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
                 : "text-gray-600 font-semibold"
@@ -32,7 +32,7 @@ const Sidebar = () => {
           className={({ isActive }) =>
             [
               "flex items-center gap-[12px]",
-              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px]",
+              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
                 : "text-gray-600 font-semibold"
@@ -54,7 +54,7 @@ const Sidebar = () => {
           className={({ isActive }) =>
             [
               "flex items-center gap-[12px]",
-              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px]",
+              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
                 : "text-gray-600 font-semibold"
@@ -64,7 +64,7 @@ const Sidebar = () => {
           {({ isActive }) => (
             <>
               <img 
-                src={isActive ? "/images/CorrectOffIcon.svg" : "/images/CorrectOffIcon.svg"}
+                src={isActive ? "/images/CorrectOnIcon.svg" : "/images/CorrectOffIcon.svg"}
                 alt="교정 아이콘"
               />
               나의 교정
@@ -76,7 +76,7 @@ const Sidebar = () => {
           className={({ isActive }) =>
             [
               "flex items-center gap-[12px]",
-              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px]",
+              "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
                 : "text-gray-600 font-semibold"
@@ -96,7 +96,7 @@ const Sidebar = () => {
       </nav>
 
       <button
-        className="mt-auto flex items-center gap-[12px] w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer"
+        className="mt-auto flex items-center gap-[12px] w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300"
       >
         <img
           src="/images/SettingIcon.svg"
