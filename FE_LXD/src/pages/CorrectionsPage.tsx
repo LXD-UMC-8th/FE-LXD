@@ -8,13 +8,14 @@ const CorrectionsPage = () => {
   const renderTab = (title: string) => (
     <button
       key={title}
-      className="pb-2 text-subhead3 font-semibold relative cursor-pointer"
+      className={`inline-flex flex-col items-center pb-2 text-subhead3 font-semibold relative cursor-pointer gap-1
+        ${activeTab === title ? "text-black" : "text-gray-500"}`}
       onClick={() => setActiveTab(title)}
     >
       {title}
       <span 
-        className={`absolute bottom-0 left-1/2 -translate-x-1 h-[2px] bg-gray-700 transition-all duration-300 ${
-          activeTab === title ? "w-12 opacity-100" : "w-0 opacity-0"
+        className={`mt-[2px] h-[2px] bg-black transition-all duration-300 ${
+          activeTab === title ? "w-full opacity-100" : "w-0 opacity-0"
         }`}
       />
     </button>
@@ -23,12 +24,12 @@ const CorrectionsPage = () => {
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div>
+      <div className="flex gap-7">
         {tabs.map((tab) => renderTab(tab))}
       </div>
 
       {/* Content */}
-      <div className="px-4 py-6">
+      <div className="px-4 py-6 ">
         {activeTab === "내가 받은 교정" && <CorrectionComponent />}
         {activeTab === "내가 제공한 교정" && <CorrectionComponent />}
       </div>
