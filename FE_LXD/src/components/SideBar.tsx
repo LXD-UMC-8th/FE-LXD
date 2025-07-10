@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="fixed top-16 left-0 h-[calc(100vh-64px)] w-[240px] bg-white shadow-md px-4 py-6 flex flex-col gap-6">
+    <div className="fixed top-16 left-0 h-[calc(100vh-64px)] w-[240px] bg-white border-r border-gray-300 shadow-md px-4 py-6 flex flex-col gap-6">
       {/* <div className="text-xl font-bold">LXD</div> */}
       <nav className="flex flex-col">
         <NavLink
@@ -13,7 +13,7 @@ const Sidebar = () => {
               "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
-                : "text-gray-600"
+                : "text-gray-600 font-semibold"
             ].join(" ")
           }
         >
