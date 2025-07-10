@@ -8,7 +8,7 @@ const CorrectionsPage = () => {
   const renderTab = (title: string) => (
     <button
       key={title}
-      className={`inline-flex flex-col items-center pb-2 text-subhead3 font-semibold relative cursor-pointer gap-1
+      className={`inline-flex flex-col items-center pb-2 text-subhead3 font-semibold relative cursor-pointer
         ${activeTab === title ? "text-black" : "text-gray-500"}`}
       onClick={() => setActiveTab(title)}
     >
