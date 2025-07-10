@@ -1,5 +1,9 @@
 const CommonBaseComponent = ({ title }: { title: string }) => {
-  const stats = ['댓글수', '좋아요 수', '교정 수'];
+  const stats = [
+    { label: "댓글수", icon: "/images/CommonComponentIcon/CommentIcon.svg"},
+    { label: "좋아요 수", icon: "/images/CommonComponentIcon/LikeIcon.svg"},
+    { label: "교정 수", icon: "/images/CommonComponentIcon/CorrectIcon.svg"},
+  ];
 
   return (
     <>
@@ -25,17 +29,19 @@ const CommonBaseComponent = ({ title }: { title: string }) => {
             </div>
             {/* 댓글수 + 좋아요 수 + 교정 수 */}
             <div className="flex gap-4 mt-4 text-body2 text-gray-700">
-              {stats.map((label, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-gray-300 rounded-[3px]"/>
-                  <span>{label}</span>
+              {stats.map((item, index) => (
+                <div key={index} className="flex items-center gap-1">
+                  <img src={item.icon} alt={`${item.label} 아이콘`} className="w-4 h-4"/>
+                  <span>{item.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* 대표 사진 */}
-          <div className="w-43 h-43 bg-gray-300 rounded-[10px]"></div>
+          <div className="w-43 h-43 bg-gray-300 rounded-[10px]">
+            {/* <img alt="대표 이미지" className="w-full h-full object-cover"/> */}
+          </div>
         </div>
 
       </div>
