@@ -38,6 +38,7 @@ const LoginPage = () => {
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <FormInput
             name="비밀번호"
             placeholder="비밀번호를 입력해주세요"
@@ -72,8 +73,8 @@ const LoginPage = () => {
             className="flex w-full justify-between text-body3 text-gray-700 py-3 
         underline underline-offset-2 cursor-pointer"
           >
-            <a href="/signup">회원가입</a>
-            <a href="/change-pw">비밀번호 변경</a>
+            <a href="/home/signup">회원가입</a>
+            <a href="/home/change-pw">비밀번호 변경</a>
           </div>
         </section>
       </div>
