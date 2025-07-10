@@ -2,18 +2,18 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="absolute top-0 left-0 h-full w-[240px] bg-white shadow-md px-4 py-6 flex flex-col gap-6">
+    <div className="fixed top-16 left-0 h-[calc(100vh-64px)] w-[240px] bg-white shadow-md px-4 py-6 flex flex-col gap-6">
       {/* <div className="text-xl font-bold">LXD</div> */}
       <nav className="flex flex-col">
         <NavLink
           to="/feed"
           className={({ isActive }) =>
             [
-              "flex items-center gap-[12px]",
+              "flex items-center gap-[12px] text-body1",
               "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
-                : "text-gray-600 font-semibold"
+                : "text-gray-600"
             ].join(" ")
           }
         >
@@ -31,7 +31,7 @@ const Sidebar = () => {
           to="/diary"
           className={({ isActive }) =>
             [
-              "flex items-center gap-[12px]",
+              "flex items-center gap-[12px] text-body1",
               "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
@@ -53,7 +53,7 @@ const Sidebar = () => {
           to="/corrections"
           className={({ isActive }) =>
             [
-              "flex items-center gap-[12px]",
+              "flex items-center gap-[12px] text-body1",
               "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
@@ -75,7 +75,7 @@ const Sidebar = () => {
           to="/friendslist"
           className={({ isActive }) =>
             [
-              "flex items-center gap-[12px]",
+              "flex items-center gap-[12px] text-body1",
               "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
               isActive
                 ? "bg-[#F1F5FD] text-blue-600 font-semibold"
@@ -96,7 +96,7 @@ const Sidebar = () => {
       </nav>
 
       <button
-        className="mt-auto flex items-center gap-[12px] w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300"
+        className="mt-auto flex items-center gap-[12px] w-[204px] h-[55px] rounded-[5px] text-subhead3 px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300"
       >
         <img
           src="/images/SettingIcon.svg"
