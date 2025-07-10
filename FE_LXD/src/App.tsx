@@ -11,6 +11,7 @@ import WritingPage from "./pages/Diary/WritingPage";
 import DiaryPage from "./pages/Diary/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import FriendsListPage from "./pages/FriendsListPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -39,10 +40,10 @@ const protectedRoutes: RouteObject[] = [
       //   path: "/corrections",
       //   element: <CorrectionsPage />,
       // },
-      // {
-      //   path: "/friendslist",
-      //   element: <FriendsListPage />,
-      // },
+       {
+         path: "/friendslist",
+         element: <FriendsListPage />,
+       },
       {
         path: "/diary/writing",
         element: <WritingPage />,
