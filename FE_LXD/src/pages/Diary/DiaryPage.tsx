@@ -1,7 +1,7 @@
 import ModalWithTabs from "../../components/ModalWithTabs";
 import { Link } from "react-router-dom";
-import pencil from "../../assets/pencil.svg";
-import diaryvector from "../../assets/diaryvector.svg";
+import pencil from "../../../public/images/pencil.svg";
+import diaryvector from "../../../public/images/diaryvector.svg";
 
 const DiaryPage = () => {
   return (
