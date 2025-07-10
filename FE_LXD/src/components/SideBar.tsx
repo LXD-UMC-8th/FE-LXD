@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 
 const Sidebar = () => {
   return (
-    <div className="fixed top-16 left-0 h-[calc(100vh-64px)] w-[240px] bg-white border-r border-gray-300 shadow-md px-4 py-6 flex flex-col gap-6">
+    <div className="fixed top-14 left-0 h-[calc(100vh-64px)] w-[240px] bg-white border-r border-gray-300 shadow-md px-4 py-6 flex flex-col gap-6">
       {/* <div className="text-xl font-bold">LXD</div> */}
       <nav className="flex flex-col">
         <NavLink

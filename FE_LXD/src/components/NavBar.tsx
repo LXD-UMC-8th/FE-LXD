@@ -1,10 +1,10 @@
 const NavBar = () => {
   return (
-    <div className="h-16 bg-white border-b border-gray-300 flex items-center justify-between px-6">
+    <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
       {/* 로고 */}
       <div className="flex items-center gap-2 cursor-pointer">
-        <img src="/images/LXD_logo.svg" alt="LXD 로고" className="w-8 h-8"/>
-        <img src="/images/LXDTitleIcon.svg" alt="LXD" className="w-10 h-4"/>
+        <img src="/images/LXD_logo.svg" alt="LXD 로고" className="w-7 h-7"/>
+        <img src="/images/LXDTitleIcon.svg" alt="LXD" className="w-9 h-4"/>
       </div>
 
       {/* 알림 + 프로필 */}
