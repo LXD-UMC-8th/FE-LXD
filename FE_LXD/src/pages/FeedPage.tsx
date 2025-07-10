@@ -1,5 +1,15 @@
+import ModalWithTabs from "../components/ModalWithTabs";
+
 const FeedPage = () => {
-  return <div>피드 페이지 (Feed Page)</div>;
+  return (
+    <div>
+      <ModalWithTabs 
+        title1="친구"
+        title2="탐색"
+        title3="좋아요"
+      />
+    </div>
+  )
 };
 
 export default FeedPage;
