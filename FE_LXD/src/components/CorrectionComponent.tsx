@@ -1,9 +1,16 @@
-import ProfileComonent from "./ProfileComonent"
+import ProfileComonent from "./ProfileComponent"
 
 const CorrectionComponent = () => {
   return (
     <div className="w-200 h-81 bg-white rounded-[10px] border border-gray-300">
-      <ProfileComonent />
+      <div className="flex items-center gap-125">
+        <ProfileComonent />
+        <img 
+            src="/images/EmptyHeartIcon.svg" 
+            alt="빈 하트" 
+            className="w-6 h-6 ml-2"
+        />
+      </div>
     </div>
   )
 }
