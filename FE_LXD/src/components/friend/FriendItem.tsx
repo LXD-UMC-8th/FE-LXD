@@ -5,6 +5,7 @@ interface Props {
   username: string;
   isSelected: boolean;
   onClick: () => void;
+  
 }
 
 const FriendItem: React.FC<Props> = ({ name, username, isSelected, onClick }) => {
