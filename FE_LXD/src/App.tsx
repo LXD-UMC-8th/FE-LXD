@@ -11,6 +11,7 @@ import WritingPage from "./pages/Diary/WritingPage";
 import DiaryPage from "./pages/Diary/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 
@@ -19,7 +20,10 @@ const publicRoutes: RouteObject[] = [
     path: "/home",
     element: <HomeLayout />,
     // errorElement: <ErrorPage />,
-    children: [{ index: true, element: <LoginPage /> }],
+    children: [
+      { index: true, element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
+    ],
   },
 ];
 
@@ -73,3 +77,4 @@ function App() {
 }
 
 export default App;
+

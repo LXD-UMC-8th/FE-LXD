@@ -11,6 +11,7 @@ const PrevButton = ({ navigateURL }: PrevButtonProps) => {
     console.log(`Navigating to: ${navigateURL}`);
     navigate(navigateURL);
   };
+
   return (
     <div>
       <img
