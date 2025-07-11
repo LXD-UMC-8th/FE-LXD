@@ -1,69 +1,81 @@
+import { useState } from "react";
+import { FormInput } from "../../components/FormInput";
+import { LangOptionsButton } from "../../components/LangOptionsButton";
+
 const LoginPage = () => {
+  const [lang, setLang] = useState("ko"); // 언어선택 상태 관리
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    // 로그인 요청 API 나중에 작성 예정
+    console.log("로그인 요청", { email, password });
+  };
+  const handleGoogleLogin = () => {
+    // 구글로그인 요청 API 나중에 작성 예정
+    console.log("구글 로그인 요청");
+  };
+  // 로그인 버튼 활성화 조건, 나중에 수정
+  const isFormValid = email.length >= 5 && password.length >= 5;
+
   return (
     <div
       className="flex flex-col min-h-screen 
-    items-center justify-center space-y-6 px-4"
+    items-center justify-center space-y-12 px-4"
     >
-      <div className="fixed top-0 right-0 w-[217px] justify-end px-2 text-sm text-gray-800">
-        <label className="flex items-center gap-3">
-          Language
-          <select className="cursor-pointer focus:outline-none">
-            <option value="ko">한국어</option>
-            <option value="en">English</option>
-          </select>
-        </label>
-      </div>
+      <LangOptionsButton selected={lang} onSelect={setLang} />
 
       <header className="flex flex-col items-center space-y-8">
         <img src="images/LXD_logo.svg" />
         <img src="images/language_x_diary.svg" />
       </header>
 
-      <div className="w-[384px] p-4 space-y-3">
-        <form className="flex flex-col">
-          <div>
-            <div className="text-headline1">이메일</div>
-            <input
-              type="email or ID"
-              placeholder="이메일 또는 아이디"
-              className="px-3 py-2 border-x border-t border-gray-400 bg-white
-            text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-          <div>
-            <div>비밀번호</div>
-            <input
-              type="password"
-              placeholder="비밀번호"
-              className=" px-3 py-2 border-1 border-gray-400 bg-white
-            text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
+      <div className="flex flex-col w-[430px] p-4 space-y-10">
+        <form className="flex flex-col space-y-5">
+          <FormInput
+            name="이메일"
+            placeholder="이메일을 입력해주세요"
+            input={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <FormInput
+            name="비밀번호"
+            placeholder="비밀번호를 입력해주세요"
+            input={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </form>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white text-sm py-2 rounded-sm
-        hover:bg-blue-700 cursor-pointer transition"
-        >
-          로그인
-        </button>
+        <section className="flex flex-col space-y-3">
+          <button
+            type="submit"
+            onClick={handleLogin}
+            disabled={!isFormValid}
+            className="w-full h-[55px] justify-center py-3 rounded-md  
+      bg-blue-600 hover:bg-blue-700 cursor-pointer transition 
+      disabled:bg-gray-300"
+          >
+            <span className="text-subhead3 text-white">로그인</span>
+          </button>
+          <button
+            type="submit"
+            onClick={handleGoogleLogin}
+            className="w-full h-[55px] justify-center border border-gray-500 
+            py-3 rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer transition"
+          >
+            <span className="text-subhead3 text-gray-600 font-medium">
+              Google로 시작하기
+            </span>
+          </button>
 
-        <button
-          className="flex justify-center border border-gray-400 py-3 rounded-md
-      hover:bg-gray-50 cursor-pointer transition"
-        >
-          <span className="text-gray-800">Google로 시작하기</span>
-        </button>
-
-        <div className="flex w-full justify-between text-sm cursor-pointer">
-          <a href="/signup" className="hover:underline">
-            회원가입
-          </a>
-          <a href="/find_idpw" className="hover:underline">
-            아이디 · 비밀번호 찾기
-          </a>
-        </div>
+          <div
+            className="flex w-full justify-between text-body3 text-gray-700 py-3 
+        underline underline-offset-2 cursor-pointer"
+          >
+            <a href="/signup">회원가입</a>
+            <a href="/change-pw">비밀번호 변경</a>
+          </div>
+        </section>
       </div>
     </div>
   );
