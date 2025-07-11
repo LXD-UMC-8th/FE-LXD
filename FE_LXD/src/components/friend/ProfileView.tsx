@@ -1,11 +1,11 @@
 import { X } from "lucide-react"; //npm install lucide-react
 
-interface Props {
+interface ProfileViewProps {
   user: { name: string; username: string };
   onClose: () => void; 
 }
 
-export default function ProfileView({ user, onClose }: Props) {
+export default function ProfileView({ user, onClose }: ProfileViewProps) {
   return (
     <div className="flex flex-col w-full h-full bg-white p-6 rounded-lg shadow-inner">
       {/* 상단 프로필 영역 */}

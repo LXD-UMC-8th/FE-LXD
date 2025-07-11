@@ -18,7 +18,6 @@ export default function FriendListPanel({
 }: FriendListPanelProps) {
   const [search, setSearch] = useState("");
 
-  // 임시 더미 데이터
   const friends: Friend[] = [
     { name: "김태현", username: "kimtaehyun" },
     { name: "홍길동", username: "honggildong" },
@@ -26,22 +25,14 @@ export default function FriendListPanel({
   ];
 
   return (
-    <div
-      className="bg-white flex flex-col border-r"
-      style={{
-        width: "419px",
-        height: "786px",
-        padding: "20px",
-        gap: "20px",
-      }}
-    >
+    <div className="bg-white flex flex-col border-r w-[420px] h-[780px] p-5 gap-5 font-[Pretendard]">
       {/* 검색창 */}
       <SearchBar value={search} onChange={setSearch} />
 
       {/* 최근 검색 목록 헤더 */}
-      <div className="text-sm font-semibold flex justify-between text-gray-700 font-[Pretendard]">
+      <div className="flex justify-between text-sm font-semibold text-gray-700">
         <span>최근 검색항목</span>
-        <button className="text-xs text-blue-500 hover:underline font-[Pretendard]">
+        <button className="text-xs text-blue-500 hover:underline">
           모두 지우기
         </button>
       </div>

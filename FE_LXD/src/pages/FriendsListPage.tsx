@@ -32,7 +32,7 @@ export default function FriendsListPage() {
     (u) => u.username === selectedUsername
   );
 
-  const handleUnfriend = () => {
+  const handleDeletefriend = () => {
     console.log("❌ 친구 삭제:", selectedUser);
     setShowConfirmModal(false);
     setSelectedUsername(null);
@@ -147,7 +147,7 @@ export default function FriendsListPage() {
           {showConfirmModal && selectedUser && (
             <ConfirmModal
               user={selectedUser}
-              onConfirm={handleUnfriend}
+              onConfirm={handleDeletefriend}
               onClose={closeConfirmModal}
             />
           )}
