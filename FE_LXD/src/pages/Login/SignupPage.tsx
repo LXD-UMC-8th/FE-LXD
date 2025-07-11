@@ -42,7 +42,7 @@ const SignupPage = () => {
       <LangOptionsButton selected={lang} onSelect={setLang} />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
-          <PrevButton />
+          <PrevButton navigateURL="/home" />
           <h1 className="text-headline3 font-bold">
             계정 생성을 위해 정보를 입력해주세요
           </h1>
