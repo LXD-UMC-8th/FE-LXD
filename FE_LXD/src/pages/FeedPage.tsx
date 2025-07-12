@@ -1,3 +1,4 @@
+import CommonComponentSkeleton from "../components/CommonComponent/CommonComponentSkeleton";
 import ExploreTab from "../components/FeedPage/ExploreTab";
 import FeedFriendTab from "../components/FeedPage/FeedFriendTab";
 import LikesTab from "../components/FeedPage/LikesTab";
@@ -14,6 +15,9 @@ const FeedPage = () => {
         tab2Component={<ExploreTab />}
         tab3Component={<LikesTab />}
       />
+      <CommonComponentSkeleton />
+      <CommonComponentSkeleton />
+      <CommonComponentSkeleton />
     </div>
   )
 };

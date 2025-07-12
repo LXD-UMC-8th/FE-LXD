@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CommonBaseComponent from "./CommonBaseComponent";
+import CommonBaseComponent from "./CommonComponent/CommonBaseComponent";
 interface ModalWithTabsProps {
   title1: string;
   title2: string;
