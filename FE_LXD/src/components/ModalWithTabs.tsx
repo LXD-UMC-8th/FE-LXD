@@ -38,9 +38,24 @@ const ModalWithTabs = ({ title1, title2, title3, tab1Component, tab2Component, t
 
       {/* Content */}
       <div className="px-4 py-6">
-        {activeTab === title1 && (tab1Component && <CommonBaseComponent title={title1} />)}
-        {activeTab === title2 && (tab2Component && <CommonBaseComponent title={title2} />)}
-        {title3 && activeTab === title3 && (tab3Component && <CommonBaseComponent title={title3} />)}
+        {activeTab === title1 && (
+          <>
+            <CommonBaseComponent title={title1} />
+            {tab1Component}
+          </>
+        )}
+        {activeTab === title2 && (
+          <>
+            {tab2Component}
+            <CommonBaseComponent title={title2} />
+          </>
+        )}
+        {title3 && activeTab === title3 && (
+          <>
+            <CommonBaseComponent title={title3} />
+            {tab3Component}
+          </>
+        )}
       </div>
     </div>
   );

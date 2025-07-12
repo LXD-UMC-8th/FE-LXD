@@ -1,7 +1,12 @@
 const ExploreTab = () => {
   return (
     <div>
-      탐색 목록
+      <button>
+        한국어
+      </button>
+      <button>
+        English
+      </button>
     </div>
   )
 }

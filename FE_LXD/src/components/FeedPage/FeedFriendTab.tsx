@@ -1,4 +1,4 @@
-const FriendTab = () => {
+const FeedFriendTab = () => {
   return (
     <div>
       친구목록
@@ -6,4 +6,4 @@ const FriendTab = () => {
   )
 }
 
-export default FriendTab
+export default FeedFriendTab
