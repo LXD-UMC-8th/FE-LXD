@@ -1,7 +1,7 @@
 const FeedFriendTab = () => {
   return (
     <div>
-      친구목록
+      친구탭
     </div>
   )
 }

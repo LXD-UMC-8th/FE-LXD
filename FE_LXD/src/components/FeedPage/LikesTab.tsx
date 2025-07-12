@@ -1,7 +1,7 @@
 const LikesTab = () => {
   return (
     <div>
-      좋아요 목록
+      좋아요 탭
     </div>
   )
 }
