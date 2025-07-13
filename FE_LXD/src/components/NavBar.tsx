@@ -1,4 +1,9 @@
+import { useState } from "react"
+import ProfileModal from "./ProfileModal";
+
 const NavBar = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
       {/* 로고 */}
@@ -10,11 +15,21 @@ const NavBar = () => {
       {/* 알림 + 프로필 */}
       <div className="flex items-center gap-5">
         <img src="/images/NoticeIcon.svg" alt="알림" className="w-7 h-7 cursor-pointer"/>
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2"
+          onClick = {() => setIsModalOpen(!isModalOpen)}
+        >
             <div className="w-7 h-7 rounded-full bg-gray-300"></div>
             <div className="text-body2 font-semibold text-gray-800 cursor-pointer">이용자 님</div>
         </div>
       </div>
+
+      {/* 프로필 모달 */}
+      { isModalOpen && (
+        <div className="absolute top-full right-6 z-10">
+          <ProfileModal onClose={() => setIsModalOpen(false)}/>
+        </div>
+      )}
     </div>
   )
 }
