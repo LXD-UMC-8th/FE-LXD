@@ -5,6 +5,7 @@ import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
+import TitleHeader from "../../components/TitleHeader";
 
 const SignupPage = () => {
   const [lang, setLang] = useState("ko");
@@ -43,9 +44,7 @@ const SignupPage = () => {
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />
-          <h1 className="text-headline3 font-bold">
-            계정 생성을 위해 정보를 입력해주세요
-          </h1>
+          <TitleHeader title="계정 생성을 위해 정보를 입력해주세요" />
         </section>
 
         <form className="w-full h-[390px] space-y-5">
