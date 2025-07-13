@@ -4,8 +4,8 @@ interface ModalWithTabsProps {
   title1: string;
   title2: string;
   title3?: string;
-  tab1Component?: React.ReactNode;
-  tab2Component?: React.ReactNode;
+  tab1Component: React.ReactNode;
+  tab2Component: React.ReactNode;
   tab3Component?: React.ReactNode;
 }
 
