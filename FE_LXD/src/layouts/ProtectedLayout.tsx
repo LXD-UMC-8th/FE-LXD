@@ -1,5 +1,5 @@
+import SideBar from "../components/SideBar/SideBar";
 import NavBar from "../components/NavBar";
-import SideBar from "../components/SideBar";
 import { Outlet } from "react-router-dom";
 
 const ProtectedLayout = () => {
