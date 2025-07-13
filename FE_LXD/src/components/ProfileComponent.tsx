@@ -1,4 +1,4 @@
-const ProfileComonent = () => {
+const ProfileComponent = () => {
   return (
     <div className="flex gap-2 p-5">
       {/* 프로필 이미지 */}
@@ -22,4 +22,4 @@ const ProfileComonent = () => {
   )
 }
 
-export default ProfileComonent
+export default ProfileComponent

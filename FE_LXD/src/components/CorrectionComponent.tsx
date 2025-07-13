@@ -1,10 +1,11 @@
-import ProfileComonent from "./ProfileComponent"
+import ProfileComponent from "./ProfileComponent"
+
 
 const CorrectionComponent = () => {
   return (
     <div className="w-200 h-81 bg-white rounded-[10px] border border-gray-300">
       <div className="flex items-center gap-125">
-        <ProfileComonent />
+        <ProfileComponent />
         <img 
             src="/images/EmptyHeartIcon.svg" 
             alt="빈 하트" 
