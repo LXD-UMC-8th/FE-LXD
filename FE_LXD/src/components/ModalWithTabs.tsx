@@ -1,12 +1,15 @@
-import { useState } from "react";
-import CommonBaseComponent from "./CommonBaseComponent";
+import React, { useState } from "react";
+import CommonBaseComponent from "./CommonComponent/CommonBaseComponent";
 interface ModalWithTabsProps {
   title1: string;
   title2: string;
   title3?: string;
+  tab1Component: React.ReactNode;
+  tab2Component: React.ReactNode;
+  tab3Component?: React.ReactNode;
 }
 
-const ModalWithTabs = ({ title1, title2, title3 }: ModalWithTabsProps) => {
+const ModalWithTabs = ({ title1, title2, title3, tab1Component, tab2Component, tab3Component }: ModalWithTabsProps) => {
   const [activeTab, setActiveTab] = useState(title1);
 
   const renderTab = (title: string) => (
@@ -34,11 +37,24 @@ const ModalWithTabs = ({ title1, title2, title3 }: ModalWithTabsProps) => {
       </div>
 
       {/* Content */}
-      <div className="px-4 py-6">
-        {activeTab === title1 && <CommonBaseComponent title={title1} />}
-        {activeTab === title2 && <CommonBaseComponent title={title2} />}
+      <div className="px-4 pt-5">
+        {activeTab === title1 && (
+          <>
+            <CommonBaseComponent title={title1} />
+            {tab1Component}
+          </>
+        )}
+        {activeTab === title2 && (
+          <>
+            {tab2Component}
+            <CommonBaseComponent title={title2} />
+          </>
+        )}
         {title3 && activeTab === title3 && (
-          <CommonBaseComponent title={title3} />
+          <>
+            <CommonBaseComponent title={title3} />
+            {tab3Component}
+          </>
         )}
       </div>
     </div>
