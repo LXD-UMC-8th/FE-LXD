@@ -26,11 +26,11 @@ export default function ProfileView({ user, onClose }: ProfileViewProps) {
       </div>
 
       {/* 버튼 영역 */}
-      <div className="flex gap-2 mb-6">
-        <button className="px-4 py-2 rounded-md bg-blue-500 text-white text-sm font-medium">
+      <div className="flex gap-2 mb-6 font-[Pretendard]">
+        <button className="px-5 py-2 rounded-lg bg-[#4170FE] text-[#FFFFFF] text-sm font-semibold hover:bg-blue-700 transition">
           친구요청하기
         </button>
-        <button className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 text-sm font-medium">
+        <button className="px-5 py-2 rounded-lg bg-[#EDF3FE] text-[#618BFD] text-sm font-semibold hover:bg-blue-100 transition">
           다이어리 보러가기
         </button>
       </div>

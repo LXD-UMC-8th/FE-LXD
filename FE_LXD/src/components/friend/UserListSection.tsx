@@ -48,7 +48,7 @@ const UserListSection: React.FC<Props> = ({
 
               {/* 친구 버튼 */}
               <button
-                className="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded-full hover:bg-gray-300 transition-colors cursor-pointer"
+                className="px-3 py-1 text-xs font-[Pretendard] text-[#747785] bg-[#EDEEF0] rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   onFriendButtonClick?.(user);

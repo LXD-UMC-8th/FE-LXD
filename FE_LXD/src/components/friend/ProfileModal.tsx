@@ -13,7 +13,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
   user,
   onClose,
   onUnfriendClick,
-}) => {
+}:ProfileModalProps ) => {
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-2xl w-96 p-6">
@@ -40,11 +40,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         <div className="flex justify-center gap-4">
           <button
             onClick={onUnfriendClick}
-            className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 cursor-pointer"
+            className="min-w-[144px] py-2 rounded-lg bg-[#4170FE] text-[#FFFFFF] text-sm font-medium hover:bg-blue-700 cursor-pointer"
           >
             친구
           </button>
-          <button className="min-w-[144px] py-2 rounded-lg bg-gray-100 text-sm text-gray-700 font-medium hover:bg-gray-200">
+          <button className="min-w-[144px] py-2 rounded-lg bg-[#EDF3FE] text-[#618BFD] text-sm font-medium hover:bg-gray-200">
             다이어리 보러가기
           </button>
         </div>

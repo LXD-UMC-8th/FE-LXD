@@ -50,10 +50,10 @@ export default function RequestTab({
                 </div>
               </div>
               <div className="flex gap-2">
-                <button className="px-4 py-1 text-xs text-white bg-blue-500 rounded hover:bg-blue-600">
+                <button className="px-4 py-1 text-xs text-[#F1F5FD] bg-[#4170FE] rounded hover:bg-blue-600">
                   수락
                 </button>
-                <button className="px-4 py-1 text-xs text-gray-700 border border-gray-300 rounded hover:bg-gray-50">
+                <button className="px-4 py-1 text-xs text-[#747785] border border-[#A4A7B2] rounded hover:bg-gray-50">
                   삭제
                 </button>
               </div>

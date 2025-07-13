@@ -16,18 +16,23 @@ export default function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`relative font-[Pretendard] text-base pb-[2px] cursor-pointer ${
-        isActive
-          ? "text-black font-semibold border-b-2 border-black"
-          : "text-gray-400"
-      }`}
+      className={`relative font-[Pretendard] text-sm font-semibold pb-2 cursor-pointer text-gray-700`}
     >
-      {label}
+      <span className={isActive ? "text-gray-900" : "text-gray-400"}>
+        {label}
+      </span>
+
       {typeof count === "number" && (
         <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded px-2 py-0.5 font-medium">
           {count}
         </span>
       )}
+
+      <span
+        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gray-700 transition-all duration-300 ${
+          isActive ? "w-12 opacity-100" : "w-0 opacity-0"
+        }`}
+      ></span>
     </button>
   );
 }
