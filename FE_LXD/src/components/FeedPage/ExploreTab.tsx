@@ -4,7 +4,7 @@ const ExploreTab = () => {
   const [selectedLang, setSelectedLang] = useState("한국어");
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 pt-3 pb-4">
       <button 
         onClick={() => setSelectedLang("한국어")}
         className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200

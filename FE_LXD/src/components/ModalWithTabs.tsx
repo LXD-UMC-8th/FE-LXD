@@ -37,7 +37,7 @@ const ModalWithTabs = ({ title1, title2, title3, tab1Component, tab2Component, t
       </div>
 
       {/* Content */}
-      <div className="px-4">
+      <div className="px-4 pt-5">
         {activeTab === title1 && (
           <>
             <CommonBaseComponent title={title1} />
