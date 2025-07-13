@@ -1,6 +1,8 @@
 import ModeSelector from "../../components/ModeSelector";
 import PrevButton from "../../components/PrevButton";
 import TitleHeader from "../../components/TitleHeader";
+import EnrollWrapper from "../../components/editor/EnrollWrapper";
+import WritingEditor from "../../components/editor/WritingEditor";
 
 const WritingPage = () => {
   return (
@@ -8,9 +10,9 @@ const WritingPage = () => {
       <div className="flex items-center gap-x-6 ">
         <PrevButton navigateURL="/diary" />
         <TitleHeader title="글쓰기" />
-        <button className="rounded-[8px] bg-[var(--Primary-500,#4170FE)] text-white hover:bg-[var(--Primary-600,#3259D9)] p-3 transition-all duration-300 cursor-pointer">
-          등록하기
-        </button>
+        <div className="ml-auto mr-6">
+          <EnrollWrapper />
+        </div>
       </div>
       <div className=" flex flex-col items-start p-5 gap-[15px] self-stretch w-full">
         {/*자유글 / 질문글 구분 영역*/}
@@ -19,15 +21,9 @@ const WritingPage = () => {
           질문글 / 자유글 선택
         </div>
 
-        {/*글쓰기 영역*/}
-
-        <div className="flex items-center gap-x-2 mb-2">
-          <label className="text-[var(--Gray-700,#4B5563)]">태그</label>
-          <input
-            type="text"
-            className="border border-gray-300 rounded-md p-2 w-full"
-            placeholder="태그를 입력하세요."
-          />
+        <div className="w-full mt-5 ">
+          {/*글쓰기 영역*/}
+          <WritingEditor />
         </div>
       </div>
     </div>
