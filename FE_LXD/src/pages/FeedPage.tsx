@@ -15,9 +15,11 @@ const FeedPage = () => {
         tab2Component={<ExploreTab />}
         tab3Component={<LikesTab />}
       />
-      <CommonComponentSkeleton />
-      <CommonComponentSkeleton />
-      <CommonComponentSkeleton />
+      <div className="px-4">
+        <CommonComponentSkeleton />
+        <CommonComponentSkeleton />
+        <CommonComponentSkeleton />
+      </div>
     </div>
   )
 };
