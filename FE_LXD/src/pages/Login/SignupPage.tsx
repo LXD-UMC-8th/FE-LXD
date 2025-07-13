@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { LangOptionsButton } from "../../components/LangOptionsButton";
+import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
 import PrevButton from "../../components/PrevButton";
-import { FormInput } from "../../components/FormInput";
-import { IDButton } from "../../components/IDButton";
-import { SignupButton } from "../../components/SignupButton";
+import { FormInput } from "../../components/Login/FormInput";
+import { IDButton } from "../../components/Login/IDButton";
+import { SignupButton } from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
@@ -39,7 +39,7 @@ const SignupPage = () => {
       className="flex flex-col min-h-screen
     items-center justify-center px-4"
     >
-      <LangOptionsButton selected={lang} onSelect={setLang} />
+      <TopLangOptionsButton selected={lang} onSelect={setLang} />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />

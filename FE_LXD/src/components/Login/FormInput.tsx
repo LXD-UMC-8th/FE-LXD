@@ -15,14 +15,14 @@ export const FormInput = ({
 }: FormInputProps) => {
   return (
     <div className="space-y-[10px]">
-      <div className="px-3 text-subhead3 font-medium">{name}</div>
+      <div className="text-subhead3 font-medium">{name}</div>
       <input
         placeholder={placeholder}
         value={input}
         onChange={onChange}
         onBlur={onBlur}
         className="w-full h-[55px] px-[32px] py-[16px] border rounded-md 
-              border-gray-400 bg-gray-50 text-gray-500 text-body1
+              border-gray-300 bg-gray-50 text-gray-500 text-body1
              focus:outline-none focus:ring-2 focus:ring-blue-400"
       />
     </div>
