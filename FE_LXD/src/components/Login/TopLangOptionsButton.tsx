@@ -5,7 +5,7 @@ interface TopLangOptionsButtonProps {
   onSelect: (lang: string) => void;
 }
 
-export const TopLangOptionsButton = ({
+const TopLangOptionsButton = ({
   selected,
   onSelect,
 }: TopLangOptionsButtonProps) => {
@@ -77,3 +77,5 @@ export const TopLangOptionsButton = ({
     </div>
   );
 };
+
+export default TopLangOptionsButton;

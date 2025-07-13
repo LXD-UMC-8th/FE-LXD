@@ -3,7 +3,7 @@ interface IDButtonProps {
   onClick: () => void;
 }
 
-export const IDButton = ({ name, onClick }: IDButtonProps) => {
+const IDButton = ({ name, onClick }: IDButtonProps) => {
   return (
     <button
       type="button"
@@ -15,3 +15,5 @@ export const IDButton = ({ name, onClick }: IDButtonProps) => {
     </button>
   );
 };
+
+export default IDButton;

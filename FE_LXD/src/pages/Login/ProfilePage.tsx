@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
-import { LangOptionsButton } from "../../components/Login/LangOptionsButton";
+import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
+import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/PrevButton";
-import { FormInput } from "../../components/Login/FormInput";
-import { IDButton } from "../../components/Login/IDButton";
-import { SignupButton } from "../../components/Login/SignupButton";
+import FormInput from "../../components/Login/FormInput";
+import IDButton from "../../components/Login/IDButton";
+import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {

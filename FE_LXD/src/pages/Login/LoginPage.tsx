@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FormInput } from "../../components/Login/FormInput";
-import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
+import FormInput from "../../components/Login/FormInput";
+import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 
 const LoginPage = () => {
   const [lang, setLang] = useState("ko"); // 언어선택 상태 관리

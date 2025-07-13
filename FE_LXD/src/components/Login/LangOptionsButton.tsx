@@ -6,7 +6,7 @@ interface LangOptionsButtonProps {
   onSelect: (lang: string) => void;
 }
 
-export const LangOptionsButton = ({
+const LangOptionsButton = ({
   name,
   selected,
   onSelect,
@@ -80,3 +80,5 @@ export const LangOptionsButton = ({
     </div>
   );
 };
+
+export default LangOptionsButton;
