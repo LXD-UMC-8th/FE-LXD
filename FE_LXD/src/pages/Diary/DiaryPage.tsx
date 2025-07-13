@@ -40,7 +40,7 @@ const DiaryPage = () => {
       </div>
 
       {/*다이어리 밑 내용 추가 구분선*/}
-      <ModalWithTabs title1="모두" title2="좋아요" />
+      <ModalWithTabs title1="모두/다이어리" title2="좋아요/다이어리" />
       <div></div>
     </div>
   );

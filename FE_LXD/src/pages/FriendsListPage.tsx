@@ -3,11 +3,11 @@ import TabButton from "../components/friend/TabButton";
 import FindTab from "../components/friend/Tabs/FindTab";
 import FriendTab from "../components/friend/Tabs/FriendTab";
 import RequestTab from "../components/friend/Tabs/RequestTab";
-
+import ModalWithTabs from "../components/ModalWithTabs";
 
 export default function FriendsListPage() {
   const [activeTab, setActiveTab] = useState<"find" | "friend" | "request">(
-    "find"
+    "find",
   );
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -30,9 +30,11 @@ export default function FriendsListPage() {
     { id: "6", name: "오하나", username: "ohanaz" },
   ];
 
-  const selectedUser = [...friendList, ...receivedRequests, ...sentRequests].find(
-    (u) => u.username === selectedUsername
-  );
+  const selectedUser = [
+    ...friendList,
+    ...receivedRequests,
+    ...sentRequests,
+  ].find((u) => u.username === selectedUsername);
 
   const handleDeletefriend = () => {
     console.log("❌ 친구 삭제:", selectedUser);
@@ -49,7 +51,7 @@ export default function FriendsListPage() {
     <div className="h-screen bg-gray-100 overflow-auto">
       {/* 탭 메뉴 */}
       <div className="flex gap-6 bg-white px-6 h-14 items-end pt-2">
-        <TabButton
+        {/* <TabButton
           label="친구찾기"
           isActive={activeTab === "find"}
           onClick={() => {
@@ -74,6 +76,12 @@ export default function FriendsListPage() {
             setActiveTab("request");
             setSelectedUsername(null);
           }}
+        /> */}
+
+        <ModalWithTabs
+          title1="친구찾기/친구"
+          title2="친구/친구"
+          title3="요청/친구"
         />
       </div>
 

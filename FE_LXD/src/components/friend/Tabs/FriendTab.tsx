@@ -1,34 +1,27 @@
-import React from "react";
+import { useState } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
 import ConfirmModal from "../ConfirmModal";
 
+const FriendTab = () => {
+  //더미데이터
+  const friendList = [
+    { id: "1", name: "김태현", username: "kimtaehyun" },
+    { id: "2", name: "홍길동", username: "honggildong" },
+    { id: "3", name: "김태현", username: "kimtaehyun" },
+    { id: "4", name: "김태현", username: "kimtaehyun" },
+  ];
 
-interface FriendTabProps {
-  friendList: { id: string; name: string; username: string }[];
-  selectedUser: { id: string; name: string; username: string } | undefined;
-  showProfileModal: boolean;
-  showConfirmModal: boolean;
-  onUserCardClick: (user: { id: string; name: string; username: string }) => void;
-  onFriendButtonClick: (user: { id: string; name: string; username: string }) => void;
-  onCloseProfileModal: () => void;
-  onOpenConfirmModal: () => void;
-  onCloseConfirmModal: () => void;
-  onConfirmDelete: () => void;
-}
+  //
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const selectedUser = [
+    ...friendList,
+    ...receivedRequests,
+    ...sentRequests,
+  ].find((u) => u.username === selectedUsername);
 
-export default function FriendTab({
-  friendList,
-  selectedUser,
-  showProfileModal,
-  showConfirmModal,
-  onUserCardClick,
-  onFriendButtonClick,
-  onCloseProfileModal,
-  onOpenConfirmModal,
-  onCloseConfirmModal,
-  onConfirmDelete,
-}: FriendTabProps) {
+  const onCloseProfileModal = () => {};
+
   return (
     <div className="max-w-5xl mx-auto p-6">
       <UserListSection
@@ -57,4 +50,6 @@ export default function FriendTab({
       )}
     </div>
   );
-}
+};
+
+export default FriendTab;
