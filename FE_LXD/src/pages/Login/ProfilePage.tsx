@@ -1,18 +1,21 @@
 import { useState } from "react";
-import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
-import { LangOptionsButton } from "../../components/Login/LangOptionsButton";
+import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
+import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/PrevButton";
-import { FormInput } from "../../components/Login/FormInput";
-import { IDButton } from "../../components/Login/IDButton";
-import { SignupButton } from "../../components/Login/SignupButton";
+import FormInput from "../../components/Login/FormInput";
+import IDButton from "../../components/Login/IDButton";
+import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
+import TitleHeader from "../../components/TitleHeader";
 
 const ProfilePage = () => {
-  const [lang, setLang] = useState("ko");
-  const [nativeLang, setNativeLang] = useState("");
-  const [studyLang, setStudyLang] = useState("");
-  const [id, setId] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    lang: "ko",
+    nativeLang: "",
+    studyLang: "",
+    id: "",
+    nickname: "",
+  });
   const [idTouched, setIdTouched] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -23,7 +26,6 @@ const ProfilePage = () => {
     if (file) {
       const imageURL = URL.createObjectURL(file);
       setPreview(imageURL);
-      console.log("preview URL:", preview);
     }
   };
   const handleIDCheck = () => {
@@ -35,6 +37,7 @@ const ProfilePage = () => {
   };
 
   const isValid = () => {
+    const { id, nickname, nativeLang, studyLang } = userInfo;
     const isIdValid = id.trim().length >= 6; // 아이디 유효성, 중복확인까지 완료해야함, 나중에 수정
     const isNicknameValid = nickname.trim() !== ""; // 닉네임 유효성, 나중에 수정
     const isLangValid = nativeLang !== "" && studyLang !== "";
@@ -44,17 +47,28 @@ const ProfilePage = () => {
   const handleCompleteSignup = () => {
     if (!isValid()) return;
     // 회원 데이터 보내기 API
+    console.log(userInfo.id, userInfo.nickname, userInfo.nativeLang, userInfo.studyLang)
     alert("회원가입 완료");
     navigate("/home");
   };
 
-  const handleNativeLangSelect = (lang: string) => {
-    setNativeLang(lang);
-    setStudyLang(lang === "ko" ? "en" : "ko");
+  const handleInputChange = (key: keyof typeof userInfo, value: string) => {
+    setUserInfo((prev) => ({ ...prev, [key]: value }));
   };
+  const handleNativeLangSelect = (lang: string) => {
+    setUserInfo((prev) => ({
+      ...prev,
+      nativeLang: lang,
+      studyLang: lang === "ko" ? "en" : "ko",
+    }));
+  };
+
   const handleStudyLangSelect = (lang: string) => {
-    setStudyLang(lang);
-    setNativeLang(lang === "ko" ? "en" : "ko");
+    setUserInfo((prev) => ({
+      ...prev,
+      studyLang: lang,
+      nativeLang: lang === "ko" ? "en" : "ko",
+    }));
   };
 
   return (
@@ -62,13 +76,14 @@ const ProfilePage = () => {
       className="flex flex-col min-h-screen
     items-center justify-center px-4"
     >
-      <TopLangOptionsButton selected={lang} onSelect={setLang} />
+      <TopLangOptionsButton
+        selected={userInfo.lang}
+        onSelect={(val) => handleInputChange("lang", val)}
+      />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home/signup" />
-          <h1 className="text-headline3 font-bold">
-            프로필 생성에 필요한 정보를 입력해주세요
-          </h1>
+          <TitleHeader title="프로필 생성에 필요한 정보를 입력해주세요" />
         </section>
 
         <section className="w-full flex items-center justify-center">
@@ -105,14 +120,14 @@ const ProfilePage = () => {
                 <FormInput
                   name="아이디"
                   placeholder="아이디를 입력해주세요"
-                  input={id}
-                  onChange={(e) => setId(e.target.value)}
+                  input={userInfo.id}
+                  onChange={(e) => handleInputChange("id", e.target.value)}
                   onBlur={() => setIdTouched(true)}
                 />
               </div>
               <IDButton name="중복확인" onClick={handleIDCheck} />
             </div>
-            {idTouched && idChecked && id.trim() !== "" && (
+            {idTouched && idChecked && userInfo.id.trim() !== "" && (
               <span className="text-body2 text-mint-500">
                 사용가능한 아이디입니다
               </span>
@@ -121,18 +136,18 @@ const ProfilePage = () => {
           <FormInput
             name="닉네임"
             placeholder="닉네임을 입력해주세요"
-            input={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            input={userInfo.nickname}
+            onChange={(e) => handleInputChange("nickname", e.target.value)}
           />
           <div className="flex justify-between">
             <LangOptionsButton
               name="모국어 / 주사용 언어"
-              selected={nativeLang}
+              selected={userInfo.nativeLang}
               onSelect={handleNativeLangSelect}
             />
             <LangOptionsButton
               name="학습언어"
-              selected={studyLang}
+              selected={userInfo.studyLang}
               onSelect={handleStudyLangSelect}
             />
           </div>

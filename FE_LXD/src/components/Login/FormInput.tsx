@@ -6,7 +6,7 @@ interface FormInputProps {
   onBlur?: () => void;
 }
 
-export const FormInput = ({
+const FormInput = ({
   name,
   placeholder,
   input,
@@ -28,3 +28,5 @@ export const FormInput = ({
     </div>
   );
 };
+
+export default FormInput;

@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
+import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import PrevButton from "../../components/PrevButton";
-import { FormInput } from "../../components/Login/FormInput";
-import { IDButton } from "../../components/Login/IDButton";
-import { SignupButton } from "../../components/Login/SignupButton";
+import FormInput from "../../components/Login/FormInput";
+import IDButton from "../../components/Login/IDButton";
+import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
+import TitleHeader from "../../components/TitleHeader";
 
 const SignupPage = () => {
-  const [lang, setLang] = useState("ko");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [checkPassword, setCheckPassword] = useState("");
+  const [userInfo, setUserInfo] = useState({
+    lang: "ko",
+    email: "",
+    password: "",
+    checkPassword: "",
+  });
   const [emailTouched, setEmailTouched] = useState(false);
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false);
 
@@ -23,14 +26,21 @@ const SignupPage = () => {
     console.log("이메일 유효성 확인 요청");
   };
   const isValid = () => {
-    const isEmailValid = email.trim() !== "" && email.includes("@"); // 이메일 유효성, 나중에 수정
-    const isPasswordValid = password.trim().length >= 6; // 비밀번호 유효성, 나중에 수정
-    const isPasswordChecked = password === checkPassword;
+    const isEmailValid =
+      userInfo.email.trim() !== "" && userInfo.email.includes("@"); // 이메일 유효성, 나중에 수정
+    const isPasswordValid = userInfo.password.trim().length >= 6; // 비밀번호 유효성, 나중에 수정
+    const isPasswordChecked = userInfo.password === userInfo.checkPassword;
 
     return isEmailValid && isPasswordValid && isPasswordChecked && agreed;
   };
+
+  const handleInputChange = (key: keyof typeof userInfo, value: string) => {
+    setUserInfo((prev) => ({ ...prev, [key]: value }));
+  };
+
   const handleNextPage = () => {
     if (!isValid()) return;
+    console.log(userInfo.email, userInfo.password)
     navigate("profile");
   };
 
@@ -39,13 +49,14 @@ const SignupPage = () => {
       className="flex flex-col min-h-screen
     items-center justify-center px-4"
     >
-      <TopLangOptionsButton selected={lang} onSelect={setLang} />
+      <TopLangOptionsButton
+        selected={userInfo.lang}
+        onSelect={(val) => handleInputChange("lang", val)}
+      />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />
-          <h1 className="text-headline3 font-bold">
-            계정 생성을 위해 정보를 입력해주세요
-          </h1>
+          <TitleHeader title="계정 생성을 위해 정보를 입력해주세요" />
         </section>
 
         <form className="w-full h-[390px] space-y-5">
@@ -55,14 +66,14 @@ const SignupPage = () => {
                 <FormInput
                   name="이메일"
                   placeholder="이메일을 입력해주세요"
-                  input={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  input={userInfo.email}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => setEmailTouched(true)}
                 />
               </div>
               <IDButton name="인증하기" onClick={handleEmailCheck} />
             </div>
-            {emailTouched && !email.includes("@") && (
+            {emailTouched && !userInfo.email.includes("@") && (
               <span className="text-body2 text-red-500">
                 유효하지 않은 이메일입니다
               </span>
@@ -71,22 +82,25 @@ const SignupPage = () => {
           <FormInput
             name="비밀번호"
             placeholder="비밀번호를 입력해주세요"
-            input={password}
-            onChange={(e) => setPassword(e.target.value)}
+            input={userInfo.password}
+            onChange={(e) => handleInputChange("password", e.target.value)}
           />
           <div className="flex flex-col space-y-2">
             <FormInput
               name="비밀번호 확인"
               placeholder="비밀번호를 입력해주세요"
-              input={checkPassword}
-              onChange={(e) => setCheckPassword(e.target.value)}
+              input={userInfo.checkPassword}
+              onChange={(e) =>
+                handleInputChange("checkPassword", e.target.value)
+              }
               onBlur={() => setCheckPasswordTouched(true)}
             />
-            {checkPasswordTouched && password !== checkPassword && (
-              <span className="text-body2 text-red-500">
-                비밀번호가 일치하지 않습니다
-              </span>
-            )}
+            {checkPasswordTouched &&
+              userInfo.password !== userInfo.checkPassword && (
+                <span className="text-body2 text-red-500">
+                  비밀번호가 일치하지 않습니다
+                </span>
+              )}
           </div>
         </form>
 
