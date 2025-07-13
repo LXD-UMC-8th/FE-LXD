@@ -16,7 +16,7 @@ export const SignupButton = ({
         ${
           disabled
             ? "bg-gray-400"
-            : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+            : "bg-black hover:bg-gray-800 cursor-pointer"
         }`}
     >
       <span className="text-subhead3 font-medium text-white">{name}</span>

@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-interface LangOptionsButtonProps {
+interface TopLangOptionsButtonProps {
   selected: string;
   onSelect: (lang: string) => void;
 }
 
-export const LangOptionsButton = ({
+export const TopLangOptionsButton = ({
   selected,
   onSelect,
-}: LangOptionsButtonProps) => {
+}: TopLangOptionsButtonProps) => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
 
   return (

@@ -14,6 +14,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
+import ProfilePage from "./pages/Login/ProfilePage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -23,6 +24,7 @@ const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
+      { path: "signup/profile", element: <ProfilePage /> },
     ],
   },
 ];

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FormInput } from "../../components/FormInput";
-import { LangOptionsButton } from "../../components/LangOptionsButton";
+import { FormInput } from "../../components/Login/FormInput";
+import { TopLangOptionsButton } from "../../components/Login/TopLangOptionsButton";
 
 const LoginPage = () => {
   const [lang, setLang] = useState("ko"); // 언어선택 상태 관리
@@ -23,7 +23,7 @@ const LoginPage = () => {
       className="flex flex-col min-h-screen 
     items-center justify-center space-y-12 px-4"
     >
-      <LangOptionsButton selected={lang} onSelect={setLang} />
+      <TopLangOptionsButton selected={lang} onSelect={setLang} />
 
       <header className="flex flex-col items-center space-y-8">
         <img src="images/LXD_logo.svg" />
