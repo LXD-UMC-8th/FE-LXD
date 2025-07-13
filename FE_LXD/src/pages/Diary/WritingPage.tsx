@@ -1,8 +1,8 @@
 import ModeSelector from "../../components/ModeSelector";
 import PrevButton from "../../components/PrevButton";
 import TitleHeader from "../../components/TitleHeader";
-import EnrollWrapper from "../../components/editor/EnrollWrapper";
-import WritingEditor from "../../components/editor/WritingEditor";
+import EnrollWrapper from "../../components/WritingPage/EnrollWrapper";
+import WritingEditor from "../../components/WritingPage/WritingEditor";
 
 const WritingPage = () => {
   return (
