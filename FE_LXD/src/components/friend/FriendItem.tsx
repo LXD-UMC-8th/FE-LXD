@@ -1,5 +1,3 @@
-import React from "react";
-
 interface FriendItemProps {
   name: string;
   username: string;

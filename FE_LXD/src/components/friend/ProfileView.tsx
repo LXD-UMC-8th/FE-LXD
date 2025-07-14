@@ -2,10 +2,10 @@ import { X } from "lucide-react"; //npm install lucide-react
 
 interface ProfileViewProps {
   user: { name: string; username: string };
-  onClose: () => void; 
+  onClose: () => void;
 }
 
-export default function ProfileView({ user, onClose }: ProfileViewProps) {
+const ProfileView = ({ user, onClose }: ProfileViewProps) => {
   return (
     <div className="flex flex-col w-full h-full bg-white p-6 rounded-lg shadow-inner">
       {/* 상단 프로필 영역 */}
@@ -19,8 +19,10 @@ export default function ProfileView({ user, onClose }: ProfileViewProps) {
             <div className="text-sm text-gray-500">@{user.username}</div>
           </div>
         </div>
-        <button className="text-gray-400 hover:text-gray-600 cursor-pointer"
-        onClick={onClose}>
+        <button
+          className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          onClick={onClose}
+        >
           <X size={20} />
         </button>
       </div>
@@ -38,7 +40,9 @@ export default function ProfileView({ user, onClose }: ProfileViewProps) {
       {/* 최근 다이어리 헤더 */}
       <div className="flex justify-between items-center mb-4">
         <div className="text-sm font-semibold text-gray-800">최근 다이어리</div>
-        <button className="text-xs text-gray-500 hover:underline">더보기</button>
+        <button className="text-xs text-gray-500 hover:underline">
+          더보기
+        </button>
       </div>
 
       {/* 다이어리 목록 */}
@@ -54,8 +58,9 @@ export default function ProfileView({ user, onClose }: ProfileViewProps) {
                 요즘 7월 루틴을 체크해보자~~
               </div>
               <p className="text-xs text-gray-500 leading-5">
-                요즘 10시에 자고 6시에 일어나는 루틴을 유지하려고 하는 중. 아직 완벽하진 않지만,
-                일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음. 아침에 일어나서 제일 먼저 물 한 잔 마시고 스트레칭...
+                요즘 10시에 자고 6시에 일어나는 루틴을 유지하려고 하는 중. 아직
+                완벽하진 않지만, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화
+                같음. 아침에 일어나서 제일 먼저 물 한 잔 마시고 스트레칭...
               </p>
               <div className="flex gap-3 text-xs text-gray-400 mt-2">
                 <span>💬 댓글</span>
@@ -69,4 +74,6 @@ export default function ProfileView({ user, onClose }: ProfileViewProps) {
       </div>
     </div>
   );
-}
+};
+
+export default ProfileView;
