@@ -1,14 +1,11 @@
-import React from "react";
+import { useState } from "react";
+interface FriendItemProps {}
 
-interface Props {
-  name: string;
-  username: string;
-  isSelected: boolean;
-  onClick: () => void;
-  
-}
+const FriendItem = ({}: FriendItemProps) => {
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-const FriendItem: React.FC<Props> = ({ name, username, isSelected, onClick }) => {
   return (
     <li
       onClick={onClick}
@@ -26,9 +23,7 @@ const FriendItem: React.FC<Props> = ({ name, username, isSelected, onClick }) =>
       </div>
 
       {/* X 버튼 - 최근 검색에서 쓸 때만 조건부로 보여주기 가능 */}
-      <div className="ml-auto text-gray-400 hover:text-gray-600 text-lg">
-        ✕
-      </div>
+      <div className="ml-auto text-gray-400 hover:text-gray-600 text-lg">✕</div>
     </li>
   );
 };

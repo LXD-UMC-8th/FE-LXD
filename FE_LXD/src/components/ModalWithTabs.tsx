@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CommonBaseComponent from "./CommonComponent/ComponentMap";
+import ComponentMap from "./CommonComponent/ComponentMap";
 interface ModalWithTabsProps {
   title1: string;
   title2: string;
@@ -50,17 +50,17 @@ const ModalWithTabs = ({
       <div className="px-4 pt-5">
         {activeTab === title1 && (
           <>
-            <CommonBaseComponent title={title1} />
+            <ComponentMap title={title1} />
           </>
         )}
         {activeTab === title2 && (
           <>
-            <CommonBaseComponent title={title2} />
+            <ComponentMap title={title2} />
           </>
         )}
         {title3 && activeTab === title3 && (
           <>
-            <CommonBaseComponent title={title3} />
+            <ComponentMap title={title3} />
           </>
         )}
       </div>

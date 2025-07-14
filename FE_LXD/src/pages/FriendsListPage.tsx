@@ -51,33 +51,6 @@ export default function FriendsListPage() {
     <div className="h-screen bg-gray-100 overflow-auto">
       {/* 탭 메뉴 */}
       <div className="flex gap-6 bg-white px-6 h-14 items-end pt-2">
-        {/* <TabButton
-          label="친구찾기"
-          isActive={activeTab === "find"}
-          onClick={() => {
-            setActiveTab("find");
-            setSelectedUsername(null);
-          }}
-        />
-        <TabButton
-          label="친구"
-          isActive={activeTab === "friend"}
-          count={friendList.length}
-          onClick={() => {
-            setActiveTab("friend");
-            setSelectedUsername(null);
-          }}
-        />
-        <TabButton
-          label="요청"
-          isActive={activeTab === "request"}
-          count={receivedRequests.length + sentRequests.length}
-          onClick={() => {
-            setActiveTab("request");
-            setSelectedUsername(null);
-          }}
-        /> */}
-
         <ModalWithTabs
           title1="친구찾기/친구"
           title2="친구/친구"
@@ -85,20 +58,8 @@ export default function FriendsListPage() {
         />
       </div>
 
-      {activeTab === "find" && (
-        <FindTab
-          selectedUsername={selectedUsername}
-          onSelect={setSelectedUsername}
-          onClearSelection={() => setSelectedUsername(null)}
-          friendList={friendList}
-        />
-      )}
-
       {activeTab === "friend" && (
         <FriendTab
-          friendList={friendList}
-          selectedUser={selectedUser}
-          showProfileModal={showProfileModal}
           showConfirmModal={showConfirmModal}
           onUserCardClick={(user) => {
             setSelectedUsername(user.username);

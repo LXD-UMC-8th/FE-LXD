@@ -11,7 +11,18 @@ const FriendTab = () => {
     { id: "3", name: "김태현", username: "kimtaehyun" },
     { id: "4", name: "김태현", username: "kimtaehyun" },
   ];
+  const receivedRequests = [
+    { id: "3", name: "이지은", username: "jieun" },
+    { id: "4", name: "박민수", username: "parkminsu" },
+  ];
 
+  const sentRequests = [
+    { id: "5", name: "김철수", username: "kimcheolsu" },
+    { id: "6", name: "오하나", username: "ohanaz" },
+  ];
+
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   //
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
   const selectedUser = [
