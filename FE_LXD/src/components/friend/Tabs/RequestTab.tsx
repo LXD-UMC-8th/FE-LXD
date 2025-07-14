@@ -1,16 +1,24 @@
-import React from "react";
+import { useState } from "react";
 
-interface RequestTabProps {
-  receivedRequests: { id: string; name: string; username: string }[];
-  sentRequests: { id: string; name: string; username: string }[];
-  onSelectUser: (username: string) => void;
-}
+const RequestTab = () => {
+  // API를 통해서 받아와야 하는 데이터
+  const receivedRequests = [
+    { id: "3", name: "이지은", username: "jieun" },
+    { id: "4", name: "박민수", username: "parkminsu" },
+  ];
+  // API를 통해서 받아와야 하는 데이터
+  const sentRequests = [
+    { id: "5", name: "김철수", username: "kimcheolsu" },
+    { id: "6", name: "오하나", username: "ohanaz" },
+  ];
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
 
-export default function RequestTab({
-  receivedRequests,
-  sentRequests,
-  onSelectUser,
-}: RequestTabProps) {
+  const onSelectUser = (username: string) => {
+    setSelectedUsername(username);
+    // 여기서 프로필 모달을 열거나 다른 동작을 수행할 수 있습니다.
+    console.log("선택된 사용자:", username);
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-6">
       {/* 탭 제목 */}
@@ -107,4 +115,5 @@ export default function RequestTab({
       </div>
     </div>
   );
-}
+};
+export default RequestTab;
