@@ -43,7 +43,10 @@ const ModalWithTabs = ({
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div className="flex space-x-10 pt-5 px-4 border-b border-gray-300 ">
+      <div
+        className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
+        role="tablist"
+      >
         {renderTab(title1)}
         {renderTab(title2, count2)}
         {title3 && renderTab(title3, count3)}
