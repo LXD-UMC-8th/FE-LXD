@@ -1,11 +1,18 @@
-import { useState } from "react";
-interface FriendItemProps {}
+import React from "react";
 
-const FriendItem = ({}: FriendItemProps) => {
-  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
-  const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
+interface FriendItemProps {
+  name: string;
+  username: string;
+  isSelected: boolean;
+  onClick: () => void;
+}
 
+const FriendItem = ({
+  name,
+  username,
+  isSelected,
+  onClick,
+}: FriendItemProps) => {
   return (
     <li
       onClick={onClick}

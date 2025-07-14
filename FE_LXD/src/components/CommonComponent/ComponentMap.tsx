@@ -12,9 +12,9 @@ const componentMap: Record<string, React.ReactElement> = {
   "좋아요/피드": <LikesTab />,
   "모두/다이어리": <div>모두/다이어리 컴포넌트</div>,
   "좋아요/다이어리": <div>좋아요/다이어리 컴포넌트</div>,
-  "친구/친구찾기": <FindTab />,
+  "친구찾기/친구": <FindTab />,
   "친구/친구": <FriendTab />,
-  "친구/요청": <RequestTab />,
+  "요청/친구": <RequestTab />,
 };
 
 interface ComponentMapProps {

@@ -31,13 +31,46 @@ const FriendTab = () => {
     ...sentRequests,
   ].find((u) => u.username === selectedUsername);
 
-  const onCloseProfileModal = () => {};
+  const onCloseProfileModal = () => {
+    setShowProfileModal(false);
+  };
+
+  const onCardClick = (user: {
+    id: string;
+    name: string;
+    username: string;
+  }) => {
+    setSelectedUsername(user.username);
+    setShowProfileModal(true);
+  };
+
+  const onFriendButtonClick = (user: {
+    id: string;
+    name: string;
+    username: string;
+  }) => {
+    setSelectedUsername(user.username);
+    setShowConfirmModal(true);
+  };
+
+  const onOpenConfirmModal = () => {
+    setShowConfirmModal(true);
+  };
+  const onCloseConfirmModal = () => {
+    setShowConfirmModal(false);
+    setSelectedUsername(null);
+  };
+  const onConfirmDelete = () => {
+    console.log("❌ 친구 삭제:", selectedUser);
+    setShowConfirmModal(false);
+    setSelectedUsername(null);
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
       <UserListSection
         users={friendList}
-        onUserCardClick={onUserCardClick}
+        onUserCardClick={onCardClick}
         onFriendButtonClick={onFriendButtonClick}
       />
 

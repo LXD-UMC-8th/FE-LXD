@@ -10,8 +10,8 @@ const FindTab = () => {
     { id: "4", name: "김태현", username: "kimtaehyun" },
   ];
 
-  const selectedUser = friendList.find((f) => f.username === selectedUsername);
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const selectedUser = friendList.find((f) => f.username === selectedUsername);
 
   const onClearSelection = () => {
     setSelectedUsername(null);

@@ -20,27 +20,30 @@ const ModalWithTabs = ({
   const renderTab = (title: string, count?: number) => (
     <button
       key={title}
+      type="button"
       className="pb-2 text-sm font-semibold relative cursor-pointer"
       onClick={() => setActiveTab(title)}
     >
-      {title.split("/")[0]}
+      <div className="inline-flex items-center pointer-events-none">
+        <span>{title.split("/")[0]}</span>
+        {count !== undefined && (
+          <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded px-2 py-0.5 font-medium">
+            {count}
+          </span>
+        )}
+      </div>
       <span
-        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gray-700 transition-all duration-300 ${
+        className={`pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gray-700 transition-all duration-300 ${
           activeTab === title ? "w-12 opacity-100" : "w-0 opacity-0"
         }`}
       />
-      {count !== undefined && (
-        <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded px-2 py-0.5 font-medium">
-          {count}
-        </span>
-      )}
     </button>
   );
 
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div className="flex space-x-10 pt-5 px-4 border-b border-gray-300">
+      <div className="flex space-x-10 pt-5 px-4 border-b border-gray-300 ">
         {renderTab(title1)}
         {renderTab(title2, count2)}
         {title3 && renderTab(title3, count3)}
