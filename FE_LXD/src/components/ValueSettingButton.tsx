@@ -1,23 +1,39 @@
 import { useState } from "react";
+
 interface ValueSettingButtonProps {
-  value: string;
+  title: string[];
 }
-const ValueSettingButton = ({ value }: ValueSettingButtonProps) => {
-  const [selectedLang, setSelectedLang] = useState(value);
+
+const ValueSettingButton = ({ title }: ValueSettingButtonProps) => {
+  const [selectedLang, setSelectedLang] = useState(title[0]);
 
   return (
-    <button
-      onClick={() => setSelectedLang(value)}
-      className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200
+    <div className="flex gap-2">
+      <button
+        onClick={() => setSelectedLang(title[0])}
+        className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
-            selectedLang === value
+            selectedLang === title[0]
               ? "bg-gray-900 text-blue-50"
               : "bg-gray-300 text-gray-700"
           }
         `}
-    >
-      {value}
-    </button>
+      >
+        {title[0]}
+      </button>
+      <button
+        onClick={() => setSelectedLang(title[1])}
+        className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200
+          ${
+            selectedLang === title[1]
+              ? "bg-gray-900 text-blue-50"
+              : "bg-gray-300 text-gray-700"
+          }
+        `}
+      >
+        {title[1]}
+      </button>
+    </div>
   );
 };
 
