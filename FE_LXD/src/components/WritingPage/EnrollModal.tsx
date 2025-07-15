@@ -4,7 +4,7 @@ interface EnrollModalProps {
   onClose?: () => void;
 }
 
-const EnrollModal = ({ OnClose }: EnrollModalProps) => {
+const EnrollModal = (_props: EnrollModalProps) => {
   const [visibility, setVisibility] = useState("public");
   const [commentPermission, setCommentPermission] = useState("everyone");
 
