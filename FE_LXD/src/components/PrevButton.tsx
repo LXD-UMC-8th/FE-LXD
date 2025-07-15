@@ -1,4 +1,4 @@
-import prevvector from "../assets/prevvector.svg";
+import prevvector from "../../public/images/prevvector.svg";
 import { useNavigate } from "react-router-dom";
 
 interface PrevButtonProps {
@@ -11,6 +11,7 @@ const PrevButton = ({ navigateURL }: PrevButtonProps) => {
     console.log(`Navigating to: ${navigateURL}`);
     navigate(navigateURL);
   };
+
   return (
     <div>
       <img

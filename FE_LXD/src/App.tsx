@@ -11,14 +11,21 @@ import WritingPage from "./pages/Diary/WritingPage";
 import DiaryPage from "./pages/Diary/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SignupPage from "./pages/Login/SignupPage";
+import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
+import ProfilePage from "./pages/Login/ProfilePage";
 
 const publicRoutes: RouteObject[] = [
   {
     path: "/home",
     element: <HomeLayout />,
     // errorElement: <ErrorPage />,
-    children: [{ index: true, element: <LoginPage /> }],
+    children: [
+      { index: true, element: <LoginPage /> },
+      { path: "signup", element: <SignupPage /> },
+      { path: "signup/profile", element: <ProfilePage /> },
+    ],
   },
 ];
 
@@ -36,14 +43,25 @@ const protectedRoutes: RouteObject[] = [
         path: "/diary",
         element: <DiaryPage />,
       },
+
+      // {
+      //   path: "/corrections",
+      //   element: <CorrectionsPage />,
+      // },
+      {
+        path: "/friendslist",
+        element: <FriendsListPage />,
+      },
+
       {
         path: "/corrections",
         element: <CorrectionsPage />,
       },
-      // {
-      //   path: "/friendslist",
-      //   element: <FriendsListPage />,
-      // },
+      {
+        path: "/friendslist",
+        element: <FriendsListPage />,
+      },
+
       {
         path: "/diary/writing",
         element: <WritingPage />,
@@ -61,3 +79,4 @@ function App() {
 }
 
 export default App;
+
