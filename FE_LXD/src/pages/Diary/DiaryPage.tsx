@@ -10,7 +10,7 @@ const DiaryPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gary-50 w-3/4 ">
+    <div className="min-h-screen bg-gray-50 w-3/4 ">
       <div className="h-45 rounded-t-[12px] rounded-b-none bg-[var(--Primary-500,#4170FE)] ">
         <div className="grid grid-cols-2 h-1/2 px-10">
           <div>

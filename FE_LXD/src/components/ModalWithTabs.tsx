@@ -51,7 +51,7 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
         {tabvalue.map(
           (tabvalue) =>
             activeTab === tabvalue.title && (
-              <ComponentMap tabvalue={tabvalue} />
+              <ComponentMap key={tabvalue.value} tabvalue={tabvalue} />
             ),
         )}
       </div>
