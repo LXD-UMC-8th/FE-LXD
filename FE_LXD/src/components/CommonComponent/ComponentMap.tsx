@@ -8,7 +8,7 @@ import FindTab from "../friend/Tabs/FindTab";
 
 const componentMap: Record<string, React.ReactElement> = {
   friendINfeed: <FeedFriendTab />,
-  searchINfeed: <ExploreTab title1="한국어" title2="English" />,
+  searchINfeed: <ExploreTab />,
   likeINfeed: <LikesTab />,
   totalINdiary: <div>모두/다이어리 컴포넌트</div>,
   likeINdiary: <div>좋아요/다이어리 컴포넌트</div>,
@@ -18,11 +18,10 @@ const componentMap: Record<string, React.ReactElement> = {
 };
 
 interface ComponentMapProps {
-  value: string;
+  tabvalue: { value: string; title: string; count?: number | undefined };
 }
-
-const ComponentMap = ({ value }: ComponentMapProps) => {
-  return componentMap[value];
+const ComponentMap = ({ tabvalue }: ComponentMapProps) => {
+  return componentMap[tabvalue.value];
 };
 
 export default ComponentMap;

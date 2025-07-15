@@ -4,7 +4,7 @@ import ComponentMap from "./CommonComponent/ComponentMap";
 type Tabvalue = {
   value: string;
   title: string;
-  count?: number;
+  count?: number | undefined;
 };
 interface ModalWithTabsProps {
   tabvalue: Tabvalue[];
@@ -13,9 +13,9 @@ interface ModalWithTabsProps {
 const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
   const [activeTab, setActiveTab] = useState(tabvalue[0].title);
 
-  const renderTab = (title: string, count?: number) => (
+  const renderTab = (value: string, title: string, count?: number) => (
     <button
-      key={title}
+      key={value}
       type="button"
       className="pb-2 text-sm font-semibold relative cursor-pointer"
       onClick={() => setActiveTab(title)}
@@ -43,14 +43,16 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
         className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
         role="tablist"
       >
-        {tabvalue.map((tab) => renderTab(tab.title, tab.count))}
+        {tabvalue.map((tab) => renderTab(tab.value, tab.title, tab.count))}
       </div>
 
       {/* Content */}
       <div className="pt-5">
         {tabvalue.map(
-          (tab) =>
-            activeTab === tab.value && <ComponentMap value={tab.value} />,
+          (tabvalue) =>
+            activeTab === tabvalue.title && (
+              <ComponentMap tabvalue={tabvalue} />
+            ),
         )}
       </div>
     </div>

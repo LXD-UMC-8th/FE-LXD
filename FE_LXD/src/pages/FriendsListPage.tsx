@@ -2,9 +2,9 @@ import ModalWithTabs from "../components/ModalWithTabs";
 
 const FriendsListPage = () => {
   const tabvalue = [
-    { value: "totalInFriends", title: "모두" },
-    { value: "likeInFriends", title: "좋아요", count: 5 },
-    { value: "requestInFriends", title: "요청", count: 19 },
+    { value: "findINfriend", title: "친구찾기" },
+    { value: "friendINfriend", title: "친구", count: 5 },
+    { value: "requestINfriend", title: "요청", count: 19 },
   ];
 
   return (

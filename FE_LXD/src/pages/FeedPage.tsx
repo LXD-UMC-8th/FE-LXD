@@ -3,8 +3,9 @@ import ModalWithTabs from "../components/ModalWithTabs";
 
 const FeedPage = () => {
   const tabvalue = [
-    { value: "totalInFeed", title: "모두" },
-    { value: "likeInFeed", title: "좋아요" },
+    { value: "friendINfeed", title: "친구" },
+    { value: "searchINfeed", title: "탐색" },
+    { value: "likeINfeed", title: "좋아요" },
   ];
   return (
     <div>
