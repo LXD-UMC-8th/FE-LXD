@@ -4,6 +4,11 @@ import pencil from "../../../public/images/pencil.svg";
 import diaryvector from "../../../public/images/diaryvector.svg";
 
 const DiaryPage = () => {
+  const tabvalue = [
+    { value: "totalINdiary", title: "모두" },
+    { value: "likeINdiary", title: "좋아요" },
+  ];
+
   return (
     <div className="min-h-screen bg-gary-50 w-3/4 ">
       <div className="h-45 rounded-t-[12px] rounded-b-none bg-[var(--Primary-500,#4170FE)] ">
@@ -40,7 +45,7 @@ const DiaryPage = () => {
       </div>
 
       {/*다이어리 밑 내용 추가 구분선*/}
-      <ModalWithTabs title1="모두/다이어리" title2="좋아요/다이어리" />
+      <ModalWithTabs tabvalue={tabvalue} />
       <div></div>
     </div>
   );

@@ -1,17 +1,14 @@
 import CommonComponentSkeleton from "../components/CommonComponent/CommonComponentSkeleton";
-import ExploreTab from "../components/FeedPage/ExploreTab";
-import FeedFriendTab from "../components/FeedPage/FeedFriendTab";
-import LikesTab from "../components/FeedPage/LikesTab";
 import ModalWithTabs from "../components/ModalWithTabs";
 
 const FeedPage = () => {
+  const tabvalue = [
+    { value: "totalInFeed", title: "모두" },
+    { value: "likeInFeed", title: "좋아요" },
+  ];
   return (
     <div>
-      <ModalWithTabs
-        title1="친구/피드"
-        title2="탐색/피드"
-        title3="좋아요/피드"
-      />
+      <ModalWithTabs tabvalue={tabvalue} />
       <div className="px-4">
         <CommonComponentSkeleton />
         <CommonComponentSkeleton />

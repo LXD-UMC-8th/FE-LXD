@@ -1,21 +1,17 @@
 import { useState } from "react";
 import ComponentMap from "./CommonComponent/ComponentMap";
+
+type Tabvalue = {
+  value: string;
+  title: string;
+  count?: number;
+};
 interface ModalWithTabsProps {
-  title1: string;
-  title2: string;
-  title3?: string;
-  count2?: number; // 친구/친구에 대한 numbering
-  count3?: number; // 친구/요청에 대한 numbering
+  tabvalue: Tabvalue[];
 }
 
-const ModalWithTabs = ({
-  title1,
-  title2,
-  title3,
-  count2,
-  count3,
-}: ModalWithTabsProps) => {
-  const [activeTab, setActiveTab] = useState(title1);
+const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
+  const [activeTab, setActiveTab] = useState(tabvalue[0].title);
 
   const renderTab = (title: string, count?: number) => (
     <button
@@ -25,9 +21,9 @@ const ModalWithTabs = ({
       onClick={() => setActiveTab(title)}
     >
       <div className="inline-flex items-center pointer-events-none">
-        <span>{title.split("/")[0]}</span>
+        <span>{title}</span>
         {count !== undefined && (
-          <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded px-2 py-0.5 font-medium">
+          <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded py-0.5 font-medium">
             {count}
           </span>
         )}
@@ -47,27 +43,14 @@ const ModalWithTabs = ({
         className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
         role="tablist"
       >
-        {renderTab(title1)}
-        {renderTab(title2, count2)}
-        {title3 && renderTab(title3, count3)}
+        {tabvalue.map((tab) => renderTab(tab.title, tab.count))}
       </div>
 
       {/* Content */}
-      <div className="px-4 pt-5">
-        {activeTab === title1 && (
-          <>
-            <ComponentMap title={title1} />
-          </>
-        )}
-        {activeTab === title2 && (
-          <>
-            <ComponentMap title={title2} />
-          </>
-        )}
-        {title3 && activeTab === title3 && (
-          <>
-            <ComponentMap title={title3} />
-          </>
+      <div className="pt-5">
+        {tabvalue.map(
+          (tab) =>
+            activeTab === tab.value && <ComponentMap value={tab.value} />,
         )}
       </div>
     </div>
