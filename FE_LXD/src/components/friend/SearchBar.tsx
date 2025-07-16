@@ -1,4 +1,4 @@
-import SearchIcon from "../../assets/Icons/Search.png";
+import SearchIcon from "/images/search.svg";
 
 type SearchBarProps = {
   value: string;
