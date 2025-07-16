@@ -1,5 +1,5 @@
 import { useState } from "react"
-import ProfileModal from "./ProfileModal";
+import NavProfileModal from "./ProfileModal";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,7 +27,7 @@ const NavBar = () => {
       {/* 프로필 모달 */}
       { isModalOpen && (
         <div className="absolute top-full right-6 z-10">
-          <ProfileModal onClose={() => setIsModalOpen(false)}/>
+          <NavProfileModal onClose={() => setIsModalOpen(false)}/>
         </div>
       )}
     </div>

@@ -7,14 +7,20 @@ import ModalWithTabs from "../components/ModalWithTabs";
 const FeedPage = () => {
   return (
     <div>
-      <ModalWithTabs 
-        title1="친구"
-        title2="탐색"
-        title3="좋아요"
-        tab1Component={<FeedFriendTab />}
-        tab2Component={<ExploreTab />}
-        tab3Component={<LikesTab />}
-      />
+      <div className="flex">
+        <ModalWithTabs 
+          title1="친구"
+          title2="탐색"
+          title3="좋아요"
+          tab1Component={<FeedFriendTab />}
+          tab2Component={<ExploreTab />}
+          tab3Component={<LikesTab />}
+        />
+        <div className="">
+          
+        </div>
+      </div>
+
       <div className="px-4">
         <CommonComponentSkeleton />
         <CommonComponentSkeleton />
