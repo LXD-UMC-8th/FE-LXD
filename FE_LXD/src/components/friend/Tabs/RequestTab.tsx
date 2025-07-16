@@ -11,7 +11,9 @@ const RequestTab = () => {
     { id: "5", name: "김철수", username: "kimcheolsu" },
     { id: "6", name: "오하나", username: "ohanaz" },
   ];
-  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [_selectedUsername, setSelectedUsername] = useState<string | null>(
+    null,
+  );
 
   const onSelectUser = (username: string) => {
     setSelectedUsername(username);
