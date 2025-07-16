@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LogoutModal from "./LogoutModal";
 
 interface ProfileModalProps {
     onClose: () => void;
@@ -8,6 +9,7 @@ interface ProfileModalProps {
 const NavProfileModal = ({onClose}: ProfileModalProps) => {
   const [active, setActive] = useState< "edit" | "logout">();
   const navigate = useNavigate();
+  const [showlogoutModal, setShowlogoutModal ] = useState(false);
 
   const handleAction = (action: "edit" | "logout") => {
     setActive(action);
@@ -15,12 +17,12 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
     if(action === "edit") {
       navigate("/profileedit");
     } else if(action === "logout") {
-      // navigate 연결
+      setShowlogoutModal(true);
     }
   };
 
   return (
-    <div className="w-50 h-47 border-1 border-gray-300 bg-white rounded-[10px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)]">
+    <div className="w-50 h-49 border-1 border-gray-300 bg-white rounded-[10px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)]">
       <div className="flex justify-end">
         <img 
           src="/images/DeleteButton.svg" 
@@ -43,7 +45,7 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
       <div className="flex flex-col px-4 gap-1">
         <button
           onClick={() => handleAction("edit")}
-          className={`p-2 w-40 h-8 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-300 text-body1
+          className={`p-2 w-40 h-10 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-300 text-body1
             ${active === "edit"
               ? "text-black bg-gray-200 rounded-[5px] font-medium"
               : "text-gray-600"
@@ -58,7 +60,7 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
         </button>
         <button
           onClick={() => handleAction("logout")}
-          className={`p-2 w-40 h-8 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-300 text-body1
+          className={`p-2 w-40 h-10 flex items-center gap-1 cursor-pointer hover:scale-105 transition-transform duration-300 text-body1
             ${active === "logout"
               ? "text-black bg-gray-200 rounded-[5px] font-medium"
               : "text-gray-600"
@@ -72,6 +74,9 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
           로그아웃
         </button>
       </div>
+
+      {/* 모달 */}
+      {showlogoutModal && <LogoutModal onClose={()=> setShowlogoutModal(false)}/>}
     </div>
   )
 }
