@@ -1,22 +1,20 @@
-import React from "react";
-
 interface User {
   id: string;
   name: string;
   username: string;
 }
 
-interface Props {
+interface UserListSectionProps {
   users: User[];
   onUserCardClick?: (user: User) => void;
   onFriendButtonClick?: (user: User) => void;
 }
 
-const UserListSection: React.FC<Props> = ({
+const UserListSection = ({
   users,
   onUserCardClick,
   onFriendButtonClick,
-}) => {
+}: UserListSectionProps) => {
   return (
     <div className="w-[1089px] h-[803px] bg-[#F7F8FA] rounded-lg overflow-y-auto">
       <div className="px-8 pt-6">
@@ -40,9 +38,7 @@ const UserListSection: React.FC<Props> = ({
                   <div className="text-sm font-semibold text-gray-900">
                     {user.name}
                   </div>
-                  <div className="text-xs text-gray-500">
-                    @{user.username}
-                  </div>
+                  <div className="text-xs text-gray-500">@{user.username}</div>
                 </div>
               </div>
 

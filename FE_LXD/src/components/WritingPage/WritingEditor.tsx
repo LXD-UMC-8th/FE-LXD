@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css"; // or quill.bubble.css for bubble theme
 import "./QullEditor.css";
@@ -17,9 +17,8 @@ function WritingEditor() {
     ],
   };
 
-  const ref = useRef(null);
-  const handleChange = (value) => {
-    setContent(value);
+  const handleChange = (_value: string) => {
+    setContent(_value);
   };
 
   return (
