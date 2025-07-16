@@ -12,10 +12,10 @@ interface FriendListPanelProps {
   selectedUsername: string | null;
 }
 
-export default function FriendListPanel({
+const FriendListPanel = ({
   onSelect,
   selectedUsername,
-}: FriendListPanelProps) {
+}: FriendListPanelProps) => {
   const [search, setSearch] = useState("");
 
   const friends: Friend[] = [
@@ -51,4 +51,5 @@ export default function FriendListPanel({
       </ul>
     </div>
   );
-}
+};
+export default FriendListPanel;

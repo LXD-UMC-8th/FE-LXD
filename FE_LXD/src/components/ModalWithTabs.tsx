@@ -1,26 +1,35 @@
-import React, { useState } from "react";
-import CommonBaseComponent from "./CommonComponent/CommonBaseComponent";
+import { useState } from "react";
+import ComponentMap from "./CommonComponent/ComponentMap";
+
+type Tabvalue = {
+  value: string;
+  title: string;
+  count?: number | undefined;
+};
 interface ModalWithTabsProps {
-  title1: string;
-  title2: string;
-  title3?: string;
-  tab1Component: React.ReactNode;
-  tab2Component: React.ReactNode;
-  tab3Component?: React.ReactNode;
+  tabvalue: Tabvalue[];
 }
 
-const ModalWithTabs = ({ title1, title2, title3, tab1Component, tab2Component, tab3Component }: ModalWithTabsProps) => {
-  const [activeTab, setActiveTab] = useState(title1);
+const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
+  const [activeTab, setActiveTab] = useState(tabvalue[0].title);
 
-  const renderTab = (title: string) => (
+  const renderTab = (value: string, title: string, count?: number) => (
     <button
-      key={title}
+      key={value}
+      type="button"
       className="pb-2 text-sm font-semibold relative cursor-pointer"
       onClick={() => setActiveTab(title)}
     >
-      {title}
+      <div className="inline-flex items-center pointer-events-none">
+        <span>{title}</span>
+        {count !== undefined && (
+          <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded py-0.5 font-medium">
+            {count}
+          </span>
+        )}
+      </div>
       <span
-        className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gray-700 transition-all duration-300 ${
+        className={`pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gray-700 transition-all duration-300 ${
           activeTab === title ? "w-12 opacity-100" : "w-0 opacity-0"
         }`}
       />
@@ -30,31 +39,20 @@ const ModalWithTabs = ({ title1, title2, title3, tab1Component, tab2Component, t
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div className="flex space-x-10 pt-5 px-4 border-b border-gray-300">
-        {renderTab(title1)}
-        {renderTab(title2)}
-        {title3 && renderTab(title3)}
+      <div
+        className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
+        role="tablist"
+      >
+        {tabvalue.map((tab) => renderTab(tab.value, tab.title, tab.count))}
       </div>
 
       {/* Content */}
-      <div className="px-4 pt-5">
-        {activeTab === title1 && (
-          <>
-            <CommonBaseComponent title={title1} />
-            {tab1Component}
-          </>
-        )}
-        {activeTab === title2 && (
-          <>
-            {tab2Component}
-            <CommonBaseComponent title={title2} />
-          </>
-        )}
-        {title3 && activeTab === title3 && (
-          <>
-            <CommonBaseComponent title={title3} />
-            {tab3Component}
-          </>
+      <div className="pt-5">
+        {tabvalue.map(
+          (tabvalue) =>
+            activeTab === tabvalue.title && (
+              <ComponentMap key={tabvalue.value} tabvalue={tabvalue} />
+            ),
         )}
       </div>
     </div>

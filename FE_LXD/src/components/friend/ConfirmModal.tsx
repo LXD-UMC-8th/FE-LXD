@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ConfirmModalProps {
   user: {
     name: string;
@@ -9,11 +7,7 @@ interface ConfirmModalProps {
   onClose: () => void;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({
-  user,
-  onConfirm,
-  onClose,
-}) => {
+const ConfirmModal = ({ user, onConfirm, onClose }: ConfirmModalProps) => {
   return (
     <div className="fixed inset-0 bg-black/20 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl p-6 w-96 shadow-2xl text-center">

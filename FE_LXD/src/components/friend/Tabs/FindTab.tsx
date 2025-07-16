@@ -1,28 +1,27 @@
-import React from "react";
+import { useState } from "react";
 import FriendListPanel from "../FriendListPanel";
 import ProfileView from "../ProfileView";
 
-interface FindTabProps {
-  selectedUsername: string | null;
-  onSelect: (username: string | null) => void;
+const FindTab = () => {
+  const friendList = [
+    { id: "1", name: "김태현", username: "kimtaehyun" },
+    { id: "2", name: "홍길동", username: "honggildong" },
+    { id: "3", name: "김태현", username: "kimtaehyun" },
+    { id: "4", name: "김태현", username: "kimtaehyun" },
+  ];
 
-  onClearSelection: () => void;
-  friendList: { id: string; name: string; username: string }[];
-}
-
-export default function FindTab({
-  selectedUsername,
-  onSelect,
-  onClearSelection,
-  friendList,
-}: FindTabProps) {
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
   const selectedUser = friendList.find((f) => f.username === selectedUsername);
+
+  const onClearSelection = () => {
+    setSelectedUsername(null);
+  };
 
   return (
     <div className="flex h-[calc(100vh-64px)]">
       <div className="w-[400px] bg-white">
         <FriendListPanel
-          onSelect={onSelect}
+          onSelect={setSelectedUsername}
           selectedUsername={selectedUsername}
         />
       </div>
@@ -37,4 +36,6 @@ export default function FindTab({
       </div>
     </div>
   );
-}
+};
+
+export default FindTab;
