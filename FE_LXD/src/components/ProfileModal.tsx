@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface ProfileModalProps {
     onClose: () => void;
@@ -6,12 +7,13 @@ interface ProfileModalProps {
 
 const NavProfileModal = ({onClose}: ProfileModalProps) => {
   const [active, setActive] = useState< "edit" | "logout">();
+  const navigate = useNavigate();
 
   const handleAction = (action: "edit" | "logout") => {
     setActive(action);
 
     if(action === "edit") {
-      // navigate 연결
+      navigate("/profileedit");
     } else if(action === "logout") {
       // navigate 연결
     }
