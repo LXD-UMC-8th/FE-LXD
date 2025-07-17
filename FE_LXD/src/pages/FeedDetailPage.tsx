@@ -1,12 +1,12 @@
 import { useState } from "react";
-import {  MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const FeedDetailPage = () => {
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
   const toggleReplyInput = (idx: number) => {
-    setOpenReplyIndex(prev => (prev === idx ? null : idx));
+    setOpenReplyIndex((prev) => (prev === idx ? null : idx));
   };
 
   const navigate = useNavigate();
@@ -15,8 +15,10 @@ const FeedDetailPage = () => {
     <div className="w-full max-w-[750px] mx-auto px-6 pt-6">
       {/* ← 뒤로가기 + 교정하기 */}
       <div className="mb-4 flex items-center justify-between">
-        <button className="flex items-center text-gray-600 hover:text-black cursor-pointer"
-        onClick={() => navigate(-1)}>
+        <button
+          className="flex items-center text-gray-600 hover:text-black cursor-pointer"
+          onClick={() => navigate(-1)}
+        >
           <img
             src="/images/backIcon.svg"
             alt="뒤로가기 아이콘"
@@ -49,7 +51,9 @@ const FeedDetailPage = () => {
             <p className="font-semibold text-black">손지현</p>
             <p className="text-xs text-gray-400">@2jahn</p>
           </div>
-          <span className="text-xs text-gray-400 ml-1">2025.06.16 오후 02:44</span>
+          <span className="text-xs text-gray-400 ml-1">
+            2025.06.16 오후 02:44
+          </span>
         </div>
         <div className="flex items-center gap-4 text-xs text-gray-500">
           <span>180</span>
@@ -64,12 +68,11 @@ const FeedDetailPage = () => {
       <div className="text-center">
         <div className="w-full h-52 bg-gray-200 rounded mb-4" />
         <p className="text-[15px] leading-relaxed text-gray-800 whitespace-pre-line">
-          요즘 하루가 정말 빨리 지나간다.
-          오늘도 눈 뜨고 정신 차려보니 벌써 저녁.
-          오랜만에 간단하게 집 정리하고, 밀린 설거지 해결했다.
-          생각보다 시간이 오래 걸려서 커피 한 잔 마시고 나니 벌써 점심시간.
-          점심은 냉장고에 남아있던 재료들로 대충 볶음밥. 의외로 낫다.
-          오후엔 컴퓨터 앞에 앉아서 이것저것 정리했다.
+          요즘 하루가 정말 빨리 지나간다. 오늘도 눈 뜨고 정신 차려보니 벌써
+          저녁. 오랜만에 간단하게 집 정리하고, 밀린 설거지 해결했다. 생각보다
+          시간이 오래 걸려서 커피 한 잔 마시고 나니 벌써 점심시간. 점심은
+          냉장고에 남아있던 재료들로 대충 볶음밥. 의외로 낫다. 오후엔 컴퓨터
+          앞에 앉아서 이것저것 정리했다.
         </p>
         <div className="w-full h-36 bg-gray-200 rounded mt-6" />
       </div>
@@ -78,7 +81,11 @@ const FeedDetailPage = () => {
       <div className="mt-10 bg-white rounded-xl border border-gray-200 p-6 shadow-md">
         {/* 댓글 헤더 */}
         <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
-          <img src="/images/commentIcon.svg" alt="댓글 아이콘" className="w-[24px] h-[24px]" />
+          <img
+            src="/images/commentIcon.svg"
+            alt="댓글 아이콘"
+            className="w-[24px] h-[24px]"
+          />
           <span>댓글 (5)</span>
         </div>
 
@@ -98,28 +105,42 @@ const FeedDetailPage = () => {
 
         {/* 댓글 리스트 */}
         {[1, 2].map((_, idx) => (
-          <div key={idx} className="border border-gray-200 rounded-lg p-5 mb-6 bg-white shadow-sm">
+          <div
+            key={idx}
+            className="border border-gray-200 rounded-lg p-5 mb-6 bg-white shadow-sm"
+          >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-9 h-9 rounded-full bg-gray-300" />
               <div className="flex flex-col">
                 <span className="font-semibold text-sm">김태현</span>
-                <span className="text-xs text-gray-400">@kimtaehyun · 0분 전</span>
+                <span className="text-xs text-gray-400">
+                  @kimtaehyun · 0분 전
+                </span>
               </div>
             </div>
             <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed mb-4">
-              우와 어쩌고 저쩌고 여기에 댓글이 들어갈거에요 우와 어쩌고 저쩌고 여기에 댓글이 들어갈거에요
-              우와 어쩌고 저쩌고 여기에 댓글이 들어갈거에요
+              우와 어쩌고 저쩌고 여기에 댓글이 들어갈거에요 우와 어쩌고 저쩌고
+              여기에 댓글이 들어갈거에요 우와 어쩌고 저쩌고 여기에 댓글이
+              들어갈거에요
             </p>
             <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
               <div
                 className="flex items-center gap-1 cursor-pointer"
                 onClick={() => toggleReplyInput(idx)}
               >
-                <img src="/images/commentIcon.svg" alt="댓글 수" className="w-4 h-4" />
+                <img
+                  src="/images/commentIcon.svg"
+                  alt="댓글 수"
+                  className="w-4 h-4"
+                />
                 <span>180</span>
               </div>
               <div className="flex items-center gap-1">
-                <img src="/images/CommonComponentIcon/LikeIcon.svg" alt="좋아요 수" className="w-4 h-4" />
+                <img
+                  src="/images/CommonComponentIcon/LikeIcon.svg"
+                  alt="좋아요 수"
+                  className="w-4 h-4"
+                />
                 <span>89</span>
               </div>
             </div>

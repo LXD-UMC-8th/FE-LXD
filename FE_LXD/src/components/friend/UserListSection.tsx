@@ -16,7 +16,7 @@ const UserListSection = ({
   onFriendButtonClick,
 }: UserListSectionProps) => {
   return (
-    <div className="w-[1089px] h-[803px] bg-[#F7F8FA] rounded-lg overflow-y-auto">
+    <div className="w-full h-[803px] bg-[#F7F8FA] rounded-lg overflow-y-auto">
       <div className="px-8 pt-6">
         {/* 친구 수 */}
         <div className="text-lg font-semibold text-black mb-6">

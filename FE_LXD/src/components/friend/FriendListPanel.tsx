@@ -25,7 +25,7 @@ const FriendListPanel = ({
   ];
 
   return (
-    <div className="bg-white flex flex-col border-r w-[420px] h-[780px] p-5 gap-5 font-[Pretendard]">
+    <div className="bg-white flex flex-col border-r h-[780px] p-5 gap-5 font-[Pretendard]">
       {/* 검색창 */}
       <SearchBar value={search} onChange={setSearch} />
 

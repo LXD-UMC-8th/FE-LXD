@@ -67,7 +67,7 @@ const FriendTab = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="w-3/5">
       <UserListSection
         users={friendList}
         onUserCardClick={onCardClick}
