@@ -21,7 +21,7 @@ const SideBarNavLink = ({
       className={({ isActive }) =>
         [
           "flex items-center gap-[12px]",
-          "w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
+          "w-[170px] h-[55px] rounded-[5px] px-[10px] py-[15px] hover:scale-105 transition-transform duration-300",
           isActive
             ? "bg-[#F1F5FD] text-blue-600 font-semibold"
             : "text-gray-600 font-semibold",
