@@ -5,6 +5,7 @@ import LikesTab from "../FeedPage/LikesTab";
 import FriendTab from "../friend/Tabs/FriendTab";
 import RequestTab from "../friend/Tabs/RequestTab";
 import FindTab from "../friend/Tabs/FindTab";
+import CorrectionComponent from "../CorrectionComponent";
 
 const componentMap: Record<string, React.ReactElement> = {
   friendINfeed: <FeedFriendTab />,
@@ -15,6 +16,8 @@ const componentMap: Record<string, React.ReactElement> = {
   findINfriend: <FindTab />,
   friendINfriend: <FriendTab />,
   requestINfriend: <RequestTab />,
+  receivedCorrections: <CorrectionComponent />,
+  providedCorrections: <div>내가 제공한 교정 컴포넌트</div>,
 };
 
 interface ComponentMapProps {

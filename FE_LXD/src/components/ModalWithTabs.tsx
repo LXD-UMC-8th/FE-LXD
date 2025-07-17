@@ -23,7 +23,10 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
       <div className="inline-flex items-center pointer-events-none">
         <span>{title}</span>
         {count !== undefined && (
-          <span className="ml-1 text-xs bg-gray-100 text-gray-500 rounded py-0.5 font-medium">
+          <span
+            className={`ml-1 text-xs rounded py-0.5 font-medium px-2
+          ${activeTab === title ? "bg-gray-400 text-gray-900" : "bg-gray-300 text-gray-500"}`}
+          >
             {count}
           </span>
         )}
