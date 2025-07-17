@@ -15,6 +15,7 @@ import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
+import FeedDetailPage from "./pages/FeedDetailPage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 
 const publicRoutes: RouteObject[] = [
@@ -39,6 +40,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/feed",
         element: <FeedPage />,
+      },
+      {
+        path: "/feed/:id",           
+        element: <FeedDetailPage />,
       },
       {
         path: "/diary",
