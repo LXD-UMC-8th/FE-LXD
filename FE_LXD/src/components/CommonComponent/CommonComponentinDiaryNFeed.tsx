@@ -5,7 +5,7 @@ const CommonComponentInDiaryNFeed = () => {
     { label: "교정 수", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
   return (
-    <div className="w-204 h-72 rounded-tl-[10px] rounded-tr-[10px] pt-8 pr-4 pb-8 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
+    <div className="w-200 h-72 rounded-tl-[10px] rounded-tr-[10px] pt-8 pr-4 pb-8 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
       {/* 우측 상단 언어 + 더보기 아이콘 */}
       <div className="flex justify-end items-center space-x-5 -translate-x-[15px]">
         <span className="font-semibold text-body2 text-blue-500">언어</span>

@@ -15,6 +15,8 @@ import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
+import FeedDetailPage from "./pages/FeedDetailPage";
+import ProfileEditPage from "./pages/ProfileEditPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -40,14 +42,13 @@ const protectedRoutes: RouteObject[] = [
         element: <FeedPage />,
       },
       {
-        path: "/diary",
+        path: "/feed/:id",
+        element: <FeedDetailPage />,
+      },
+      {
+        path: "/mydiary",
         element: <DiaryPage />,
       },
-
-      // {
-      //   path: "/corrections",
-      //   element: <CorrectionsPage />,
-      // },
       {
         path: "/friendslist",
         element: <FriendsListPage />,
@@ -63,8 +64,13 @@ const protectedRoutes: RouteObject[] = [
       },
 
       {
-        path: "/diary/writing",
+        path: "/mydiary/writing",
         element: <WritingPage />,
+      },
+
+      {
+        path: "/profileedit",
+        element: <ProfileEditPage />,
       },
     ],
   },
@@ -79,4 +85,3 @@ function App() {
 }
 
 export default App;
-

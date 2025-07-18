@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import CorrectionComponent from "../components/CorrectionComponent";
 
 const CorrectionsPage = () => {
@@ -13,7 +13,7 @@ const CorrectionsPage = () => {
       onClick={() => setActiveTab(title)}
     >
       {title}
-      <span 
+      <span
         className={`mt-[2px] h-[2px] bg-black transition-all duration-300 ${
           activeTab === title ? "w-full opacity-100" : "w-0 opacity-0"
         }`}
@@ -24,9 +24,7 @@ const CorrectionsPage = () => {
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div className="flex gap-7">
-        {tabs.map((tab) => renderTab(tab))}
-      </div>
+      <div className="flex gap-7">{tabs.map((tab) => renderTab(tab))}</div>
 
       {/* Content */}
       <div className="px-4 py-6 ">
@@ -34,7 +32,7 @@ const CorrectionsPage = () => {
         {activeTab === "내가 제공한 교정" && <CorrectionComponent />}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CorrectionsPage
+export default CorrectionsPage;
