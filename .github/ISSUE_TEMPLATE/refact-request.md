@@ -1,7 +1,7 @@
 ---
 name: Refact request
 about: Refactoring code to imporve project
-title: "[REFACT]"
+title: refact/
 labels: ''
 assignees: ''
 
