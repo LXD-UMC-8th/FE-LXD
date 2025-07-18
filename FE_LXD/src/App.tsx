@@ -42,11 +42,11 @@ const protectedRoutes: RouteObject[] = [
         element: <FeedPage />,
       },
       {
-        path: "/feed/:id",           
+        path: "/feed/:id",
         element: <FeedDetailPage />,
       },
       {
-        path: "/diary",
+        path: "/mydiary",
         element: <DiaryPage />,
       },
       {
@@ -64,14 +64,14 @@ const protectedRoutes: RouteObject[] = [
       },
 
       {
-        path: "/diary/writing",
+        path: "/mydiary/writing",
         element: <WritingPage />,
       },
 
       {
         path: "/profileedit",
         element: <ProfileEditPage />,
-      }
+      },
     ],
   },
 ];
@@ -85,4 +85,3 @@ function App() {
 }
 
 export default App;
-

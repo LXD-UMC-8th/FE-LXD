@@ -9,6 +9,7 @@ const EnrollModal = (_props: EnrollModalProps) => {
   const [commentPermission, setCommentPermission] = useState("everyone");
 
   const handleSubmit = () => {
+    //최종 API전송할 때 이용되는 함수임
     console.log("공개 설정:", visibility);
     console.log("댓글 설정:", commentPermission);
   };
@@ -38,6 +39,16 @@ const EnrollModal = (_props: EnrollModalProps) => {
               onChange={(e) => setVisibility(e.target.value)}
             />
             친구공개
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              name="visibility"
+              value="private"
+              checked={visibility === "private"}
+              onChange={(e) => setVisibility(e.target.value)}
+            />
+            비공개
           </label>
         </div>
       </div>
@@ -70,8 +81,8 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="comment"
-              value="none"
-              checked={commentPermission === "none"}
+              value="private"
+              checked={commentPermission === "private"}
               onChange={(e) => setCommentPermission(e.target.value)}
             />
             비허용
