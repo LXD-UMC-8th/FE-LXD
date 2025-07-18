@@ -8,15 +8,23 @@ import { useState, useEffect } from "react";
 const WritingPage = () => {
   const _title_free = "자유글";
   const _title_question = "질문글";
-  const [value, setValue] = useState<string>(_title_free);
+  const [_titleValue, setTitleValue] = useState<string>(_title_free);
   const [_freeTitle, setFreeTitle] = useState<string>(""); // 자유글 제목 -> api로 전송해야 함.
 
-  const handleValueChange = (value: string) => {
+  // 에디터 내용 변경을 반영하는하기 위함
+  const [_editorContent, setEditorContent] = useState<string>("");
+  const handleEditorChange = (value: string) => {
+    setEditorContent(value);
+    console.log("에디터 내용 변경 in WritingPage ", value);
+  };
+
+  //제목 변경을 반영하는 함수
+  const handleTitleValueChange = (value: string) => {
     if (value === _title_free) {
       setFreeTitle(""); // 자유글 선택 시 제목 초기화
-      setValue(_title_free);
+      setTitleValue(_title_free);
     } else {
-      setValue(_title_question);
+      setTitleValue(_title_question);
     }
     return value;
   };
@@ -26,8 +34,8 @@ const WritingPage = () => {
   };
 
   useEffect(() => {
-    console.log(value);
-  }, [value]);
+    console.log(_titleValue);
+  }, [_titleValue]);
 
   return (
     <div className="px-4 py-2 bg-gray-100">
@@ -44,9 +52,9 @@ const WritingPage = () => {
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
-            onClick={handleValueChange}
+            onClick={handleTitleValueChange}
           />
-          {value === "자유글" && (
+          {_titleValue === "자유글" && (
             <input
               onChange={(e) => setFreeTitle(e.target.value)}
               type="text"
@@ -54,14 +62,15 @@ const WritingPage = () => {
               placeholder="제목을 입력하세요."
             ></input>
           )}
-          {value === "질문글" && (
+          {_titleValue === "질문글" && (
             <div className="w-full flex items-center justify-between rounded-lg gap-5">
               <div className="w-full bg-gray-200 rounded-md p-3 mt-5">
                 질문글 생성기
               </div>
               <div>
                 <button
-                  className="group w-25 mt-5 p-2 h-12 flex items-center gap-1  border border-gray-300 hover:border-gray-700 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition cursor-pointer"
+                  className="group w-25 mt-5 p-2 h-12 flex items-center gap-1  border border-gray-300 hover:border-gray-700 rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition cursor-pointer
+                  active:outline-1 focus:outline-gray-500"
                   onClick={_handleRefresh}
                 >
                   {/* 정상 아이콘: 기본에선 보이고, hover 시 숨김 */}
@@ -79,16 +88,16 @@ const WritingPage = () => {
                       />
                     </div>
                   </div>
-                  <span className="">새로고침</span>
+                  <span>새로고침</span>
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        <div className="w-full mt-5 ">
+        <div className="w-full h-full mt-5 ">
           {/*글쓰기 영역*/}
-          <WritingEditor />
+          <WritingEditor value={_editorContent} onChange={handleEditorChange} />
         </div>
       </div>
     </div>

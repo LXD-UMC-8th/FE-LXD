@@ -186,3 +186,19 @@ body {
     background-color: #e4fff2;
   }
 }
+
+/*custom editor*/
+
+.ql-container.ql-snow {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.ql-toolbar.ql-snow {
+  border-top: 0 !important;
+  border-bottom: 3 !important;
+  border-right: 0 !important;
+  border-left: 0 !important;
+
+  box-shadow: none !important;
+}
