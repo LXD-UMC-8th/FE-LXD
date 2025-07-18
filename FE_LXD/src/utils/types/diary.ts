@@ -6,7 +6,7 @@ export type DiaryUploadRequestDTO = {
   visibility: "PUBLIC" | "FRIEND" | "PRIVATE";
   commentPermission: "PUBLIC" | "FRIEND" | "PRIVATE";
   language: string;
-  thumbImg: "string";
+  thumbImg: string;
 };
 
 export type DiaryUploadResponseDTO = {
