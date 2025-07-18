@@ -15,7 +15,7 @@ const Sidebar = () => {
         <SideBarNavLink
           imgSrcOn="/images/DiaryOnIcon.svg"
           imgSrcOff="/images/DiaryOffIcon.svg"
-          toURL="/diary"
+          toURL="/mydiary"
           label="나의 다이어리"
           alt="나의 다이어리 아이콘"
         />
