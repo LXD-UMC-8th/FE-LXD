@@ -196,7 +196,7 @@ body {
 
 .ql-toolbar.ql-snow {
   border-top: 0 !important;
-  border-bottom: 3 !important;
+  border-bottom: 3px !important;
   border-right: 0 !important;
   border-left: 0 !important;
 
