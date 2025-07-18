@@ -3,7 +3,7 @@ import {
   type DiaryUploadResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
-import { LOCAL_STORAGE_KEY } from "../constants/key";
+// import { LOCAL_STORAGE_KEY } from "../constants/key";
 
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
