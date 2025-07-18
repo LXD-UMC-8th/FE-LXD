@@ -48,7 +48,7 @@ const EnrollModal = (_props: EnrollModalProps) => {
               checked={visibility === "private"}
               onChange={(e) => setVisibility(e.target.value)}
             />
-            친구공개
+            비공개
           </label>
         </div>
       </div>
