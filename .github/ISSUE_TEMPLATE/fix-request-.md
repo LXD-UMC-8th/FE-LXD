@@ -1,7 +1,7 @@
 ---
 name: 'Fix request '
 about: 'fix design '
-title: "[FIX]"
+title: fix/
 labels: ''
 assignees: ''
 
