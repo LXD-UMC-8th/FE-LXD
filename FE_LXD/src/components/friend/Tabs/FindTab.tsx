@@ -19,7 +19,7 @@ const FindTab = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)]">
-      <div className="w-[400px] bg-white">
+      <div className="bg-white">
         <FriendListPanel
           onSelect={setSelectedUsername}
           selectedUsername={selectedUsername}
