@@ -1,6 +1,6 @@
 const ProfileComponent = () => {
   return (
-    <div className="flex gap-2 p-5">
+    <div className="flex gap-2">
       {/* 프로필 이미지 */}
       <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
 
