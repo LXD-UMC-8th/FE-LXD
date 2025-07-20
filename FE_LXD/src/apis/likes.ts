@@ -27,7 +27,7 @@ export const postCommentLike = async (
     commentId: number,
 ): Promise<LikeResponseDto> => {
     const { data } = await axiosInstance.post<LikeResponseDto>(
-        `/diaries/${diaryId}/commnets/${commentId}/likes`
+        `/diaries/${diaryId}/comments/${commentId}/likes`
     );
     return data;
 };
