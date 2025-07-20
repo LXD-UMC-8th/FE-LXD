@@ -1,15 +1,23 @@
+import { useState } from "react";
 import ProfileComponent from "./ProfileComponent";
 
 const CorrectionComponent = () => {
+  const [liked, setLiked] = useState(false);
+
+  const handleLikeToggle = () => {
+    setLiked((prev) => !prev);
+  }
+
   return (
     <div className="w-full max-w-[800px] h-80 bg-white rounded-[10px] border border-gray-300">
       <div className="flex flex-col">
         <div className="flex items-center justify-between px-6 pt-5">
           <ProfileComponent />
           <img
-            src="/images/EmptyHeartIcon.svg"
-            alt="빈 하트"
-            className="w-6 h-6"
+            src={liked? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
+            alt={liked? "채워진 하트" : "빈 하트"}
+            className="w-6 h-6 cursor-pointer"
+            onClick={handleLikeToggle}
           />
         </div>
 
