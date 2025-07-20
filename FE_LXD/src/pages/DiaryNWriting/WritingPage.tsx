@@ -6,27 +6,14 @@ import WritingEditor from "../../components/WritingPage/WritingEditor";
 import { useState, useEffect } from "react";
 import QuestionTitle from "./QuestionTitle";
 import { useThrottle } from "../../hooks/useThrottle";
-import useWritingSubmit from "../../hooks/useWritingSubmit";
 import type { DiaryUploadRequestDTO } from "../../utils/types/diary";
 
 const WritingPage = () => {
-  const _title_free = "자유글";
-  const _title_question = "질문글";
-  const [form, setForm] = useState<DiaryUploadRequestDTO>({
-    title: "",
-    content: "",
-    style: "FREE",
-    visibility: "PRIVATE",
-    commentPermission: "FRIEND",
-    language: "en",
-    thumbImg: "",
-  });
-  const { data, isPending, isError, submitWriting } = useWritingSubmit<{
-    id: string;
-  }>();
+  const _title_free = "FREE";
+  const _title_question = "QUESTION";
 
   // 글쓰기 페이지에서 사용할 제목 상태
-  const [_titleValue, setTitleValue] = useState<string>(_title_free);
+  const [_style, setStyle] = useState<"FREE" | "QUESTION">("FREE");
 
   //제목 이름 상태 관리
   const [_titleName, setTitleName] = useState<string>("");
@@ -52,32 +39,22 @@ const WritingPage = () => {
   //제목 변경을 반영하는 함수
   const handleTitleValueChange = (value: string) => {
     if (value === _title_free) {
-      setTitleName(""); // 자유글 선택 시 제목 초기화
-      setTitleValue(_title_free);
+      setTitleName(""); // FREE 선택 시 제목 초기화
+      setStyle(_title_free);
     } else {
-      setTitleValue(_title_question);
+      setStyle(_title_question);
     }
     return value;
   };
   const _handleRefresh = () => {
-    //질문글 재생성
-    console.log("질문글 재생성");
+    //QUESTION 재생성
+    console.log("QUESTION 재생성");
   };
 
+  //나중에 지우기!! ㅈ
   useEffect(() => {
-    console.log(_titleValue);
-  }, [_titleValue]);
-
-  //API submit handler
-  //1. title내용을 저장
-  //2. enrollmodal에서 handlesubmit이 작동했을 때 여기에서 공개설정/댓글설정 한 내용 불러오기
-  //3. 공개/댓글 설정을 불러오면 해당 내용과 함께 title, content, style(자유글/질문글), visibility(공개설정), commentPermission(댓글설정), language(유저 정보에서 빼와야할듯?), thumbImg를 첨부하여 전송해야 함.
-  //음... 내 생각엔 먼저 editor내용을 불러오고
-  // 마지막에 handlesubmit을 할 때 enrollModal에서 설정한 내용들을 불러와서
-  //enrollModal에서 API내용을 전달하는 것이 제일 나은 방법인 것 같음.
-  const _handleSubmit = () => {
-    submitWriting(form);
-  };
+    console.log(_style);
+  }, [_style]);
 
   return (
     <div className="px-4 py-2 bg-gray-100">
@@ -85,18 +62,22 @@ const WritingPage = () => {
         <PrevButton navigateURL="/mydiary" />
         <TitleHeader title="글쓰기" />
         <div className="ml-auto mr-6">
-          <EnrollWrapper />
+          <EnrollWrapper
+            _titleName={_titleName}
+            _editorRawContent={_editorRawContent}
+            _style={_style}
+          />
         </div>
       </div>
       <div className=" flex flex-col items-start p-5 gap-[15px] self-stretch w-full">
-        {/*자유글 / 질문글 구분 영역*/}
+        {/*FREE / QUESTION 구분 영역*/}
         <div className="bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] mt-5 w-full p-5 gap-3">
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
             onClick={handleTitleValueChange}
           />
-          {_titleValue === "자유글" && (
+          {_style === "FREE" && (
             <input
               onChange={(e) => setTitleName(e.target.value)}
               type="text"
@@ -104,9 +85,7 @@ const WritingPage = () => {
               placeholder="제목을 입력하세요."
             ></input>
           )}
-          {_titleValue === "질문글" && (
-            <QuestionTitle onClick={_handleRefresh} />
-          )}
+          {_style === "QUESTION" && <QuestionTitle onClick={_handleRefresh} />}
         </div>
 
         <div className="w-full h-full mt-5 ">

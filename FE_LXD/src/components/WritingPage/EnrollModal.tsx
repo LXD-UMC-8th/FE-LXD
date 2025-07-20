@@ -1,17 +1,41 @@
 import { useState } from "react";
+import useWritingSubmit from "../../hooks/useWritingSubmit";
 
 interface EnrollModalProps {
-  onClose?: () => void;
+  _onClose?: () => void;
+  _titleName: string;
+  _editorRawContent: string;
+  _style: "FREE" | "QUESTION";
 }
 
-const EnrollModal = (_props: EnrollModalProps) => {
-  const [visibility, setVisibility] = useState("public");
-  const [commentPermission, setCommentPermission] = useState("everyone");
+const EnrollModal = ({
+  _onClose,
+  _titleName,
+  _editorRawContent,
+  _style,
+}: EnrollModalProps) => {
+  const [visibility, setVisibility] = useState<"PUBLIC" | "FRIEND" | "PRIVATE">(
+    "PUBLIC",
+  );
+  const [commentPermission, setCommentPermission] = useState<
+    "PUBLIC" | "FRIEND" | "PRIVATE"
+  >("PUBLIC");
+
+  const { submitWriting } = useWritingSubmit({
+    title: _titleName,
+    content: _editorRawContent,
+    style: _style,
+    visibility: visibility,
+    commentPermission: commentPermission,
+    language: "ko", // Example language, adjust as needed
+    thumbImg: "", // Example thumbnail image, adjust as needed
+  });
 
   const handleSubmit = () => {
     //최종 API전송할 때 이용되는 함수임
-    console.log("공개 설정:", visibility);
-    console.log("댓글 설정:", commentPermission);
+    //마지막으로 여기서 전송하는 게 나을 것 같긴 함.
+    // submitWriting();
+    console.log({ submitWriting });
   };
 
   return (
@@ -24,9 +48,11 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="visibility"
-              value="public"
-              checked={visibility === "public"}
-              onChange={(e) => setVisibility(e.target.value)}
+              value="PUBLIC"
+              checked={visibility === "PUBLIC"}
+              onChange={(e) =>
+                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
+              }
             />
             공개
           </label>
@@ -34,9 +60,11 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="visibility"
-              value="friends"
-              checked={visibility === "friends"}
-              onChange={(e) => setVisibility(e.target.value)}
+              value="FRIEND"
+              checked={visibility === "FRIEND"}
+              onChange={(e) =>
+                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
+              }
             />
             친구공개
           </label>
@@ -44,9 +72,11 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="visibility"
-              value="private"
-              checked={visibility === "private"}
-              onChange={(e) => setVisibility(e.target.value)}
+              value="PRIVATE"
+              checked={visibility === "PRIVATE"}
+              onChange={(e) =>
+                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
+              }
             />
             비공개
           </label>
@@ -61,9 +91,13 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="comment"
-              value="everyone"
-              checked={commentPermission === "everyone"}
-              onChange={(e) => setCommentPermission(e.target.value)}
+              value="PUBLIC"
+              checked={commentPermission === "PUBLIC"}
+              onChange={(e) =>
+                setCommentPermission(
+                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                )
+              }
             />
             전체허용
           </label>
@@ -71,9 +105,13 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="comment"
-              value="friends"
-              checked={commentPermission === "friends"}
-              onChange={(e) => setCommentPermission(e.target.value)}
+              value="FRIEND"
+              checked={commentPermission === "FRIEND"}
+              onChange={(e) =>
+                setCommentPermission(
+                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                )
+              }
             />
             친구허용
           </label>
@@ -81,9 +119,13 @@ const EnrollModal = (_props: EnrollModalProps) => {
             <input
               type="radio"
               name="comment"
-              value="private"
-              checked={commentPermission === "private"}
-              onChange={(e) => setCommentPermission(e.target.value)}
+              value="PRIVATE"
+              checked={commentPermission === "PRIVATE"}
+              onChange={(e) =>
+                setCommentPermission(
+                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                )
+              }
             />
             비허용
           </label>
