@@ -23,7 +23,7 @@ const LogoutModal = ({onClose}: LogoutModalProps) => {
 
             <div className="flex gap-3 px-16 py-5">
               <button
-                onClick = {() => {
+                onClick={() => {
                   alert("로그아웃이 완료되었습니다");
                   navigate("/home");
                 }}
