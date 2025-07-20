@@ -2,7 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import EnrollButton from "./EnrollButton";
 import EnrollModal from "./EnrollModal";
 
-const EnrollWrapper = () => {
+interface EnrollWrapperProps {
+  _titleName: string;
+  _editorRawContent: string;
+  _style: "FREE" | "QUESTION";
+}
+
+const EnrollWrapper = ({
+  _titleName,
+  _editorRawContent,
+  _style,
+}: EnrollWrapperProps) => {
   const [openModal, setOpenModal] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +44,12 @@ const EnrollWrapper = () => {
 
       {openModal && (
         <div className="absolute top-full right-0 mt-2 z-50">
-          <EnrollModal onClose={handleCloseModal} />
+          <EnrollModal
+            _onClose={handleCloseModal}
+            _titleName={_titleName}
+            _style={_style}
+            _editorRawContent={_editorRawContent}
+          />
         </div>
       )}
     </div>

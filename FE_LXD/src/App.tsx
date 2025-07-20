@@ -7,8 +7,8 @@ import {
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
-import WritingPage from "./pages/Diary/WritingPage";
-import DiaryPage from "./pages/Diary/DiaryPage";
+import WritingPage from "./pages/DiaryNWriting/WritingPage";
+import DiaryPage from "./pages/DiaryNWriting/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/Login/SignupPage";
