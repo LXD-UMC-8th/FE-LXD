@@ -9,6 +9,9 @@ export type DiaryUploadRequestDTO = {
   thumbImg: string;
 };
 
-export type DiaryUploadResponseDTO = {
+export type DiaryUploadResponseDTO<T> = {
   isSuccess: boolean;
+  code: string;
+  message: string;
+  result: T;
 };
