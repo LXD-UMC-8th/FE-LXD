@@ -4,7 +4,6 @@ import ProfileModal from "../ProfileModal";
 import ConfirmModal from "../ConfirmModal";
 
 const FriendTab = () => {
-  //더미데이터
   const friendList = [
     { id: "1", name: "김태현", username: "kimtaehyun" },
     { id: "2", name: "홍길동", username: "honggildong" },
@@ -23,51 +22,35 @@ const FriendTab = () => {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  //
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
-  const selectedUser = [
-    ...friendList,
-    ...receivedRequests,
-    ...sentRequests,
-  ].find((u) => u.username === selectedUsername);
 
-  const onCloseProfileModal = () => {
-    setShowProfileModal(false);
-  };
+  const selectedUser = [...friendList, ...receivedRequests, ...sentRequests].find(
+    (u) => u.username === selectedUsername
+  );
 
-  const onCardClick = (user: {
-    id: string;
-    name: string;
-    username: string;
-  }) => {
+  const onCardClick = (user: { id: string; name: string; username: string }) => {
     setSelectedUsername(user.username);
     setShowProfileModal(true);
   };
 
-  const onFriendButtonClick = (user: {
-    id: string;
-    name: string;
-    username: string;
-  }) => {
+  const onFriendButtonClick = (user: { id: string; name: string; username: string }) => {
     setSelectedUsername(user.username);
     setShowConfirmModal(true);
   };
 
-  const onOpenConfirmModal = () => {
-    setShowConfirmModal(true);
-  };
+  const onOpenConfirmModal = () => setShowConfirmModal(true);
   const onCloseConfirmModal = () => {
     setShowConfirmModal(false);
     setSelectedUsername(null);
   };
+
   const onConfirmDelete = () => {
     console.log("❌ 친구 삭제:", selectedUser);
-    setShowConfirmModal(false);
-    setSelectedUsername(null);
+    onCloseConfirmModal();
   };
 
   return (
-    <div className="w-3/5">
+    <div className="w-full sm:w-3/5">
       <UserListSection
         users={friendList}
         onUserCardClick={onCardClick}
@@ -77,9 +60,9 @@ const FriendTab = () => {
       {showProfileModal && selectedUser && (
         <ProfileModal
           user={selectedUser}
-          onClose={onCloseProfileModal}
+          onClose={() => setShowProfileModal(false)}
           onUnfriendClick={() => {
-            onCloseProfileModal();
+            setShowProfileModal(false);
             onOpenConfirmModal();
           }}
         />
