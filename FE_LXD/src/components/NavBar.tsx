@@ -1,30 +1,13 @@
-import { useEffect, useRef, useState } from "react";
-import NavProfileModal from "./ProfileModal";
+import { useRef, useState } from "react";
+import NavProfileModal from "./NavProfileModal";
 import { NavLink } from "react-router-dom";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        modalRef.current &&
-        !modalRef.current.contains(event.target as Node)
-      ) {
-        setIsModalOpen(false);
-      }
-    };
-
-    if (isModalOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isModalOpen]);
+  useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">

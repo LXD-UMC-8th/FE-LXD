@@ -1,11 +1,20 @@
+import { useRef } from "react";
+import useOutsideClick from "../hooks/useOutsideClick";
+
 interface LogoutModalProps {
     onClose: () => void;
 }
 
 const LogoutModal = ({onClose}: LogoutModalProps) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useOutsideClick(ref, onClose);
+
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white w-120 h-65 rounded-xl text-center">
+      <div 
+        ref={ref}
+        className="bg-white w-120 h-65 rounded-xl text-center"
+      >
         <div className="p-10">
             <p className="text-subhead1 font-bold">정말 로그아웃 하시겠습니까?</p>
             <p className="text-gray-700 text-body1 py-5">LXD에서 kimtaehyun0809@gmail.com 계정을 로그아웃 하시겠습니까?</p>
