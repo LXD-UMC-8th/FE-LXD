@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import useOutsideClick from "../hooks/useOutsideClick";
+import { useNavigate } from "react-router-dom";
 
 interface LogoutModalProps {
     onClose: () => void;
@@ -8,6 +9,7 @@ interface LogoutModalProps {
 const LogoutModal = ({onClose}: LogoutModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideClick(ref, onClose);
+  const navigate = useNavigate();
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -20,15 +22,22 @@ const LogoutModal = ({onClose}: LogoutModalProps) => {
             <p className="text-gray-700 text-body1 py-5">LXD에서 kimtaehyun0809@gmail.com 계정을 로그아웃 하시겠습니까?</p>
 
             <div className="flex gap-3 px-16 py-5">
-                <button className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300">
-                    로그아웃
-                </button>
-                <button 
-                    className="w-31 h-12 bg-onPrimary rounded-[5px] text-[#5076F3] text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
-                    onClick = {onClose}
-                >
-                    닫기
-                </button>
+              <button
+                onClick = {() => {
+                  alert("로그아웃이 완료되었습니다");
+                  navigate("/home");
+                }}
+                className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
+              >
+                  로그아웃
+              </button>
+
+              <button 
+                className="w-31 h-12 bg-onPrimary rounded-[5px] text-[#5076F3] text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
+                onClick = {onClose}
+              >
+                닫기
+              </button>
             </div>
         </div>
       </div>
