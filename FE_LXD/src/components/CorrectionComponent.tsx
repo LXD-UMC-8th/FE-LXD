@@ -14,8 +14,8 @@ const CorrectionComponent = () => {
         <div className="flex items-center justify-between px-6 pt-5">
           <ProfileComponent />
           <img
-            src={liked? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
-            alt={liked? "채워진 하트" : "빈 하트"}
+            src={liked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
+            alt={liked ? "채워진 하트" : "빈 하트"}
             className="w-6 h-6 cursor-pointer"
             onClick={handleLikeToggle}
           />
