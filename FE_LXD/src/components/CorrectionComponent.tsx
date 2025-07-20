@@ -16,7 +16,7 @@ const CorrectionComponent = () => {
         {/* 본문 */}
         <div className="flex flex-col gap-3 px-8 pt-5">
           <div className="flex gap-2">
-            <div className="w-1 h-6s bg-[#4170FE]"/>
+            <div className="w-1 h-6 bg-[#4170FE]"/>
             <p className="text-body1 font-semibold">오늘<span className="text-[#4170FE]">은</span> 피자데이입니다</p>
           </div>
           <p className="text-body2">‘오늘’ 뒤의 보조사로는 ‘는’ 보다는 ‘은’이 더 적합합니다. 오늘에 종성이 있기 때문인데요. 앞말에 종성이 있다면 그 뒤에는 은이 와야합니다. 어쩌고 저쩌고 교정을 </p>
