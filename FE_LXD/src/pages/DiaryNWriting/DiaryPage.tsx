@@ -1,4 +1,4 @@
-import DiaryHeader from "../../components/DiaryPage/DirayHeader";
+import DiaryHeader from "../../components/DiaryPage/DiaryHeader";
 import ModalWithTabs from "../../components/ModalWithTabs";
 // import diaryvector from "../../../public/images/diaryvector.svg";
 
@@ -9,7 +9,7 @@ const DiaryPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 w-3/5">
+    <div className="min-h-screen bg-gray-100 w-[450px]">
       <DiaryHeader />
 
       {/*다이어리 밑 내용 추가 구분선*/}

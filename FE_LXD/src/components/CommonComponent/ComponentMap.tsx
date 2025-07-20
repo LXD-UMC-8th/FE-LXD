@@ -6,12 +6,13 @@ import FriendTab from "../friend/Tabs/FriendTab";
 import RequestTab from "../friend/Tabs/RequestTab";
 import FindTab from "../friend/Tabs/FindTab";
 import CorrectionComponent from "../CorrectionComponent";
+import DiaryFeed from "../DiaryPage/DiaryTotalFeed";
 
 const componentMap: Record<string, React.ReactElement> = {
   friendINfeed: <FeedFriendTab />,
   searchINfeed: <ExploreTab />,
   likeINfeed: <LikesTab />,
-  totalINdiary: <div>모두/다이어리 컴포넌트</div>,
+  totalINdiary: <DiaryFeed />,
   likeINdiary: <div>좋아요/다이어리 컴포넌트</div>,
   findINfriend: <FindTab />,
   friendINfriend: <FriendTab />,

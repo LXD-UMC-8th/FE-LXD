@@ -22,7 +22,7 @@ const CorrectionsPage = () => {
   );
 
   return (
-    <div className="w-full">
+    <div className="w-[600px] min-h-screen bg-gray-100">
       {/* Tabs */}
       <div className="flex gap-7">{tabs.map((tab) => renderTab(tab))}</div>
 

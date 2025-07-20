@@ -6,7 +6,7 @@ import type {
 } from "../utils/types/diary";
 import { postDiaryUpload } from "../apis/diary";
 
-function useWritingSubmit<T = object>({
+function useWritingSubmit({
   title,
   content,
   style,
@@ -15,7 +15,7 @@ function useWritingSubmit<T = object>({
   language,
   thumbImg,
 }: DiaryUploadRequestDTO) {
-  const [data, setData] = useState<DiaryUploadResponseDTO<T> | null>(null);
+  const [data, setData] = useState<DiaryUploadResponseDTO | null>(null);
   const [isPending, setIsPending] = useState(true);
   const [isError, setIsError] = useState(false);
 
