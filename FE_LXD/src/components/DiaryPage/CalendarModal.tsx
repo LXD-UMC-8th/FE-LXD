@@ -9,10 +9,11 @@ const CalendarMap = () => {
   const [value, onChange] = useState<Value>(new Date());
   const [activeStartDate, setActiveStartDate] = useState<Date>(new Date());
 
+  //titleDisable -> 일시적으로 설정한 것임. 지우면 됨.
   return (
     <div className="w-70">
       <Calendar
-        className="no-holiday-colors border-radius-lg shadow-md"
+        className="no-holiday-colors border-radius-lg shadow-md "
         onChange={onChange}
         value={value}
         formatDay={(locale, date) => date.getDate().toString()}
@@ -28,6 +29,7 @@ const CalendarMap = () => {
           const isWeekend = date.getDay() === 0 || date.getDay() === 6;
           return isNotCurrentMonth || isWeekend ? "text-gray-300 " : "";
         }}
+        tileDisabled={() => true}
       />
     </div>
   );

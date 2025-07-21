@@ -225,3 +225,7 @@ body {
   color: #c0c0c0; /* light gray */
   pointer-events: none; /* optional: disable hover/click */
 }
+
+.react-calendar__title--disable {
+  border-radius: 0 !important;
+}
