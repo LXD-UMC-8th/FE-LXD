@@ -1,12 +1,36 @@
-import CalendarHeatmap from "react-calendar-heatmap";
+import { useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-const CalendarModal = () => {
-  //여기에 api주소를 이용하여 사용자의 d
+type ValuePiece = Date | null;
+type Value = ValuePiece | [ValuePiece, ValuePiece];
+
+const CalendarMap = () => {
+  const [value, onChange] = useState<Value>(new Date());
+  const [activeStartDate, setActiveStartDate] = useState<Date>(new Date());
+
   return (
-    <div>
-      <CalendarHeatmap values={[]} />
+    <div className="w-70">
+      <Calendar
+        className="no-holiday-colors border-radius-lg shadow-md"
+        onChange={onChange}
+        value={value}
+        formatDay={(locale, date) => date.getDate().toString()}
+        formatMonthYear={(locale, date) =>
+          `${date.getMonth() + 1}. ${date.getFullYear()} `
+        }
+        formatShortWeekday={() => ""}
+        locale="en-US"
+        tileClassName={({ date, view }) => {
+          if (view !== "month") return "";
+          const isNotCurrentMonth =
+            date.getMonth() !== activeStartDate.getMonth();
+          const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+          return isNotCurrentMonth || isWeekend ? "text-gray-300 " : "";
+        }}
+      />
     </div>
   );
 };
 
-export default CalendarModal;
+export default CalendarMap;

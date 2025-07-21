@@ -202,3 +202,26 @@ body {
 
   box-shadow: none !important;
 }
+
+.react-calendar__tile {
+  border-radius: 50%; /* Makes them circular */
+
+  /* Or, for slightly rounded corners: */
+  /* border-radius: 8px; */
+}
+
+/* 선택된 날에 대한 설정 */
+.react-calendar__tile--active {
+  border-radius: 50%; /* Makes the highlight circular */
+  height: 20px;
+  width: 20px;
+}
+
+/* 오늘 날에 대한 설정 */
+.react-calendar__tile--now {
+  border-radius: 50%; /* Makes the current date highlight circular */
+}
+.react-calendar__tile--neighboringMonth {
+  color: #c0c0c0; /* light gray */
+  pointer-events: none; /* optional: disable hover/click */
+}
