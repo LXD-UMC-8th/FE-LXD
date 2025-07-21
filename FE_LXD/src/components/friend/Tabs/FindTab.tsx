@@ -16,7 +16,7 @@ const FindTab = () => {
 
   return (
     <div className="flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
-      {/* ✅ 친구 목록 패널: lg 이상일 때만 표시 */}
+      {/*  친구 목록 패널: lg 이상일 때만 표시 */}
       <div className="hidden lg:block w-[419px] border-r border-gray-200 bg-white">
         <FriendListPanel
           onSelect={setSelectedUsername}
@@ -24,7 +24,7 @@ const FindTab = () => {
         />
       </div>
 
-      {/* ✅ 우측 본문 */}
+      {/*  우측 본문 */}
       <div
         className="
           flex-1 flex items-center justify-center bg-[#F8F9FA] 
