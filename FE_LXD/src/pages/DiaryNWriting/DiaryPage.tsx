@@ -1,8 +1,7 @@
-import CalendarMap from "../../components/DiaryPage/CalendarModal";
-import CalendarModal from "../../components/DiaryPage/CalendarModal";
 import DiaryHeader from "../../components/DiaryPage/DiaryHeader";
 import ModalWithTabs from "../../components/ModalWithTabs";
 // import diaryvector from "../../../public/images/diaryvector.svg";
+import CalendarModal from "../../components/DiaryPage/CalendarModal";
 
 const DiaryPage = () => {
   const tabvalue = [
@@ -19,7 +18,7 @@ const DiaryPage = () => {
       </div>
       <div>
         <div className="top-0 bg-gray-100 z-10 mx-10">
-          <CalendarMap />
+          <CalendarModal />
         </div>
       </div>
     </div>
