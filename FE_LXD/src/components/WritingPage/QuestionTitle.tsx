@@ -1,9 +1,8 @@
 interface QuestionTitleProps {
-  _titleName?: string;
   onClick?: () => void;
 }
 
-const QuestionTitle = ({ _titleName, onClick }: QuestionTitleProps) => {
+const QuestionTitle = ({ onClick }: QuestionTitleProps) => {
   return (
     <div className="w-full flex items-center justify-between rounded-lg gap-5">
       <div className="w-full bg-gray-200 rounded-md p-3 mt-5">

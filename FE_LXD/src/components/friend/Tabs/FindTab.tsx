@@ -15,8 +15,9 @@ const FindTab = () => {
   const onClearSelection = () => setSelectedUsername(null);
 
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
+    <div className="flex h-full font-[Pretendard]">
       {/* ✅ 친구 목록 패널: lg 이상일 때만 표시 */}
+
       <div className="hidden lg:block w-[419px] border-r border-gray-200 bg-white">
         <FriendListPanel
           onSelect={setSelectedUsername}
@@ -36,7 +37,9 @@ const FindTab = () => {
           <ProfileView user={selectedUser} onClose={onClearSelection} />
         ) : (
           <div className="text-center text-gray-400 px-4">
-            <p className="text-lg font-semibold">전세계에서 친구를 찾아보세요</p>
+            <p className="text-lg font-semibold">
+              전세계에서 친구를 찾아보세요
+            </p>
             <p className="text-sm mt-1">아이디를 검색해서</p>
           </div>
         )}

@@ -4,9 +4,8 @@ import ValueSettingButton from "../../components/ValueSettingButton";
 import EnrollWrapper from "../../components/WritingPage/EnrollWrapper";
 import WritingEditor from "../../components/WritingPage/WritingEditor";
 import { useState, useEffect } from "react";
-import QuestionTitle from "./QuestionTitle";
+import QuestionTitle from "../../components/WritingPage/QuestionTitle";
 import { useThrottle } from "../../hooks/useThrottle";
-import type { DiaryUploadRequestDTO } from "../../utils/types/diary";
 
 const WritingPage = () => {
   const _title_free = "FREE";
