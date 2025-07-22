@@ -17,7 +17,7 @@ const FeedPage = () => {
   };
 
   return (
-    <div className="w-[450px] min-h-screen bg-gray-100">
+    <div className="w-3/5">
       <ModalWithTabs tabvalue={tabvalue} />
       <div className="px-4 space-y-4 cursor-pointer">
         <div onClick={handleSkeletonClick}>
