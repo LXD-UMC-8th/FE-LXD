@@ -1,5 +1,5 @@
 interface FormInputProps {
-  name: string;
+  name?: string;
   placeholder: string;
   input: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -21,7 +21,7 @@ const FormInput = ({
         value={input}
         onChange={onChange}
         onBlur={onBlur}
-        className="w-full h-[55px] px-[32px] py-[16px] border rounded-md 
+        className="w-full h-14 px-8 py-4 border rounded-md 
               border-gray-300 bg-gray-50 text-gray-500 text-body1
              focus:outline-none focus:ring-2 focus:ring-blue-400"
       />

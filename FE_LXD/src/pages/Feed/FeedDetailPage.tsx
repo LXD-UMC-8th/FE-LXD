@@ -75,8 +75,8 @@ const FeedDetailPage = () => {
 
         {/* 본문 이미지 + 텍스트 */}
         <div className="text-center mx-20">
-          <div className="w-full h-52 bg-gray-200 rounded mb-4" />
-          <p className="text-[15px] leading-relaxed text-gray-800 whitespace-pre-line">
+          <div className="w-full h-52 bg-gray-200 rounded-[10px] mb-4" />
+          <p className="text-body2 leading-relaxed text-gray-800 whitespace-pre-line">
             요즘 하루가 정말 빨리 지나간다. 오늘도 눈 뜨고 정신 차려보니 벌써
             저녁. 오랜만에 간단하게 집 정리하고, 밀린 설거지 해결했다. 생각보다
             시간이 오래 걸려서 커피 한 잔 마시고 나니 벌써 점심시간. 점심은
@@ -88,7 +88,7 @@ const FeedDetailPage = () => {
         <div className="border-t border-gray-200 my-5"/>
 
         {/* 댓글 전체 래퍼 카드 */}
-        <div className="mt-10 bg-white rounded-xl border border-gray-200 p-6 shadow-md">
+        <div className="mt-10 bg-white rounded-[10px] p-6">
           {/* 댓글 헤더 */}
           <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
             <img
@@ -120,12 +120,13 @@ const FeedDetailPage = () => {
               className="border border-gray-200 rounded-lg p-5 mb-6"
             >
               <div className="flex items-center gap-3 mb-2">
+                {/* 댓글 작성자 프로필 */}
                 <div className="w-9 h-9 rounded-full bg-gray-300" />
-                <div className="flex flex-col">
-                  <span className="font-semibold text-sm">김태현</span>
-                  <span className="text-xs text-gray-400">
-                    @kimtaehyun · 0분 전
-                  </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-body2">김태현</span>
+                  <div className="w-px h-5 bg-gray-500"/>
+                  <span className="text-xs text-gray-600">@kimtaehyun</span>
+                  <p className="text-caption text-gray-500">0분전</p>
                 </div>
               </div>
               <p className="text-body2 text-black whitespace-pre-line leading-relaxed mb-4">

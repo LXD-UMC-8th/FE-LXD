@@ -25,7 +25,7 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
       label: "프로필 수정하기",
       onClick: () => {
         setActive("edit");
-        navigate("/profileedit");
+        navigate("/editprofile");
       }
     },
     {

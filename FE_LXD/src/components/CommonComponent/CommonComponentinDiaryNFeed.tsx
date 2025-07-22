@@ -18,7 +18,7 @@ const CommonComponentInDiaryNFeed = (
     { label: "교정 수", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
   return (
-    <div className="w-[550px] h-72 rounded-tl-[10px] rounded-tr-[10px] pt-5 pr-4 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
+    <div className="w-[500px] h-72 rounded-tl-[10px] rounded-tr-[10px] pt-5 pr-4 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
       {/* 우측 상단 언어 + 더보기 아이콘 */}
       <div className="flex justify-between items-center space-x-5 -translate-x-[15px]">
         {_props.userId && _props.userNickname && _props.specificData ? (
@@ -38,7 +38,7 @@ const CommonComponentInDiaryNFeed = (
         </div>
       </div>
 
-      <div className="flex justify-between w-full h-40 gap-10 mt-6">
+      <div className="flex justify-between w-full mt-6">
         <div className="flex flex-col gap-4 w-full h-25">
           {/* 공개 범위 + 제목 */}
           <div className="flex gap-3 text-subhead3 text-black">
@@ -64,7 +64,7 @@ const CommonComponentInDiaryNFeed = (
         </div>
 
         {/* 대표 사진 */}
-        <div className="w-43 h-43 bg-gray-300 rounded-[10px]">
+        <div className="w-40 h-40 bg-gray-300 rounded-[10px] flex-shrink-0">
           {/* <img alt="대표 이미지" className="w-full h-full object-cover"/> */}
         </div>
       </div>

@@ -14,10 +14,10 @@ import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
-import FeedDetailPage from "./pages/Feed/FeedDetailPage";
-import ProfileEditPage from "./pages/ProfileEditPage";
+import EditProfilePage from "./pages/EditProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
+import FeedDetailPage from "./pages/Feed/FeedDetailPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -70,10 +70,9 @@ const protectedRoutes: RouteObject[] = [
       },
 
       {
-        path: "/profileedit",
-        element: <ProfileEditPage />,
+        path: "/editprofile",
+        element: <EditProfilePage />,
       },
-
       {
         path: "/settings",
         element: <SettingsPage />,
