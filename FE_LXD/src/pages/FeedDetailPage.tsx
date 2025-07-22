@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ProfileComponent from "../components/ProfileComponent";
+import PrevButton from "../components/PrevButton";
 
 const FeedDetailPage = () => {
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
@@ -9,22 +9,11 @@ const FeedDetailPage = () => {
     setOpenReplyIndex((prev) => (prev === idx ? null : idx));
   };
 
-  const navigate = useNavigate();
-
   return (
     <div className="w-full max-w-[750px] mx-auto px-6 pt-6">
       {/* ← 뒤로가기 + 교정하기 */}
       <div className="mb-4 flex items-center justify-between">
-        <button
-          className="flex items-center text-gray-600 hover:text-black cursor-pointer"
-          onClick={() => navigate(-1)}
-        >
-          <img
-            src="/images/backIcon.svg"
-            alt="뒤로가기 아이콘"
-            className="w-[11x] h-[22px]"
-          />
-        </button>
+        <PrevButton navigateURL="/feed" />
         <button className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-pretendard font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer">
           <img
             src="/images/correctionpencil.svg"
