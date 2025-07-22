@@ -15,6 +15,7 @@ import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -65,6 +66,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/diary/writing",
         element: <WritingPage />,
+      },
+      {
+        path: "/editprofile",
+        element: <EditProfilePage />,
       },
     ],
   },

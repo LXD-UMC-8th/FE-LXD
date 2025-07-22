@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom"
+
 const NavBar = () => {
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
@@ -12,7 +14,8 @@ const NavBar = () => {
         <img src="/images/NoticeIcon.svg" alt="알림" className="w-7 h-7 cursor-pointer"/>
         <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-gray-300"></div>
-            <div className="text-body2 font-semibold text-gray-800 cursor-pointer">이용자 님</div>
+            <Link to="/editprofile"
+             className="text-body2 font-semibold text-gray-800 cursor-pointer">이용자 님</Link>
         </div>
       </div>
     </div>
