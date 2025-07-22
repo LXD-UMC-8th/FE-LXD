@@ -50,7 +50,7 @@ const FriendTab = () => {
   };
 
   return (
-    <div className="w-full sm:w-3/5">
+    <div className="w-full max-w-[1200px] mx-auto px-4">
       <UserListSection
         users={friendList}
         onUserCardClick={onCardClick}
