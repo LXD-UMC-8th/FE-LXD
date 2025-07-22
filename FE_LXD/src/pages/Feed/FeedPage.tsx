@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import CommonComponentSkeleton from "../components/CommonComponent/CommonComponentSkeleton";
-import ModalWithTabs from "../components/ModalWithTabs";
+import ModalWithTabs from "../../components/ModalWithTabs";
+import CommonComponentSkeleton from "../../components/CommonComponent/CommonComponentSkeleton";
+import CommonComponentInDiaryNFeed from "../../components/CommonComponent/CommonComponentinDiaryNFeed";
 
 const FeedPage = () => {
   const navigate = useNavigate();
@@ -19,7 +20,10 @@ const FeedPage = () => {
   return (
     <div className="w-3/5">
       <ModalWithTabs tabvalue={tabvalue} />
-      <div className="px-4 space-y-4 cursor-pointer">
+      <div className="px-4 cursor-pointer">
+        <div onClick={handleSkeletonClick}>
+          <CommonComponentInDiaryNFeed />
+        </div>
         <div onClick={handleSkeletonClick}>
           <CommonComponentSkeleton />
         </div>

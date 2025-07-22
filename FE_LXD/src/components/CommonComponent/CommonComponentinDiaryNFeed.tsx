@@ -18,7 +18,7 @@ const CommonComponentInDiaryNFeed = (
     { label: "교정 수", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
   return (
-    <div className="w-[450px] h-72 rounded-tl-[10px] rounded-tr-[10px] pt-5 pr-4 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
+    <div className="w-[550px] h-72 rounded-tl-[10px] rounded-tr-[10px] pt-5 pr-4 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
       {/* 우측 상단 언어 + 더보기 아이콘 */}
       <div className="flex justify-between items-center space-x-5 -translate-x-[15px]">
         {_props.userId && _props.userNickname && _props.specificData ? (
