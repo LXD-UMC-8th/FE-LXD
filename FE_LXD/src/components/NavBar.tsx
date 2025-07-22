@@ -29,6 +29,7 @@ const NavBar = () => {
           onClick={() => setIsModalOpen(!isModalOpen)}
         >
           <div className="w-7 h-7 rounded-full bg-gray-300"></div>
+
           <div className="text-body2 font-semibold text-gray-800 cursor-pointer">
             이용자 님
           </div>
@@ -37,10 +38,7 @@ const NavBar = () => {
 
       {/* 프로필 모달 */}
       {isModalOpen && (
-        <div 
-          ref={modalRef}
-          className="absolute top-full right-6 z-10"
-        >
+        <div ref={modalRef} className="absolute top-full right-6 z-10">
           <NavProfileModal onClose={() => setIsModalOpen(false)} />
         </div>
       )}
