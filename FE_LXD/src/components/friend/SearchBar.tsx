@@ -1,13 +1,13 @@
-import SearchIcon from "../../assets/Icons/Search.png";
+import SearchIcon from "../../../public/images/Search.svg";
 
-type Props = {
+type SearchBarProps = {
   value: string;
   onChange: (v: string) => void;
 };
 
-export default function SearchBar({ value, onChange }: Props) {
+const SearchBar = ({ value, onChange }: SearchBarProps) => {
   return (
-    <div className="flex items-center w-[399px] h-[53px] bg-[#EDEEF0] rounded px-4 py-2 font-[Pretendard]">
+    <div className="flex items-center w-full h-[53px] bg-[#EDEEF0] rounded px-4 py-2 font-[Pretendard]">
       <img src={SearchIcon} alt="Search" className="w-5 h-5 mr-2" />
       <input
         type="text"
@@ -18,4 +18,6 @@ export default function SearchBar({ value, onChange }: Props) {
       />
     </div>
   );
-}
+};
+
+export default SearchBar;

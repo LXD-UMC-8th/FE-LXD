@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ProfileModalProps {
   user: {
     name: string;
@@ -9,11 +7,11 @@ interface ProfileModalProps {
   onUnfriendClick: () => void;
 }
 
-const ProfileModal: React.FC<ProfileModalProps> = ({
+const ProfileModal = ({
   user,
   onClose,
   onUnfriendClick,
-}) => {
+}: ProfileModalProps) => {
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-2xl w-96 p-6">
