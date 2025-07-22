@@ -1,9 +1,5 @@
 const LikesTab = () => {
-  return (
-    <div>
-      좋아요 목록
-    </div>
-  )
-}
+  return <div></div>;
+};
 
-export default LikesTab
+export default LikesTab;

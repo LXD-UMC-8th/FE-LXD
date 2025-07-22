@@ -1,48 +1,68 @@
-import React from "react";
+import { useState } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
 import ConfirmModal from "../ConfirmModal";
 
+const FriendTab = () => {
+  const friendList = [
+    { id: "1", name: "김태현", username: "kimtaehyun" },
+    { id: "2", name: "홍길동", username: "honggildong" },
+    { id: "3", name: "김태현", username: "kimtaehyun" },
+    { id: "4", name: "김태현", username: "kimtaehyun" },
+  ];
+  const receivedRequests = [
+    { id: "3", name: "이지은", username: "jieun" },
+    { id: "4", name: "박민수", username: "parkminsu" },
+  ];
 
-interface FriendTabProps {
-  friendList: { id: string; name: string; username: string }[];
-  selectedUser: { id: string; name: string; username: string } | undefined;
-  showProfileModal: boolean;
-  showConfirmModal: boolean;
-  onUserCardClick: (user: { id: string; name: string; username: string }) => void;
-  onFriendButtonClick: (user: { id: string; name: string; username: string }) => void;
-  onCloseProfileModal: () => void;
-  onOpenConfirmModal: () => void;
-  onCloseConfirmModal: () => void;
-  onConfirmDelete: () => void;
-}
+  const sentRequests = [
+    { id: "5", name: "김철수", username: "kimcheolsu" },
+    { id: "6", name: "오하나", username: "ohanaz" },
+  ];
 
-export default function FriendTab({
-  friendList,
-  selectedUser,
-  showProfileModal,
-  showConfirmModal,
-  onUserCardClick,
-  onFriendButtonClick,
-  onCloseProfileModal,
-  onOpenConfirmModal,
-  onCloseConfirmModal,
-  onConfirmDelete,
-}: FriendTabProps) {
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+
+  const selectedUser = [...friendList, ...receivedRequests, ...sentRequests].find(
+    (u) => u.username === selectedUsername
+  );
+
+  const onCardClick = (user: { id: string; name: string; username: string }) => {
+    setSelectedUsername(user.username);
+    setShowProfileModal(true);
+  };
+
+  const onFriendButtonClick = (user: { id: string; name: string; username: string }) => {
+    setSelectedUsername(user.username);
+    setShowConfirmModal(true);
+  };
+
+  const onOpenConfirmModal = () => setShowConfirmModal(true);
+  const onCloseConfirmModal = () => {
+    setShowConfirmModal(false);
+    setSelectedUsername(null);
+  };
+
+  const onConfirmDelete = () => {
+    console.log("❌ 친구 삭제:", selectedUser);
+    onCloseConfirmModal();
+  };
+
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="w-full sm:w-3/5">
       <UserListSection
         users={friendList}
-        onUserCardClick={onUserCardClick}
+        onUserCardClick={onCardClick}
         onFriendButtonClick={onFriendButtonClick}
       />
 
       {showProfileModal && selectedUser && (
         <ProfileModal
           user={selectedUser}
-          onClose={onCloseProfileModal}
+          onClose={() => setShowProfileModal(false)}
           onUnfriendClick={() => {
-            onCloseProfileModal();
+            setShowProfileModal(false);
             onOpenConfirmModal();
           }}
         />
@@ -57,4 +77,6 @@ export default function FriendTab({
       )}
     </div>
   );
-}
+};
+
+export default FriendTab;

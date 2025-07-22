@@ -12,10 +12,10 @@ interface FriendListPanelProps {
   selectedUsername: string | null;
 }
 
-export default function FriendListPanel({
+const FriendListPanel = ({
   onSelect,
   selectedUsername,
-}: FriendListPanelProps) {
+}: FriendListPanelProps) => {
   const [search, setSearch] = useState("");
 
   const friends: Friend[] = [
@@ -25,11 +25,11 @@ export default function FriendListPanel({
   ];
 
   return (
-    <div className="bg-white flex flex-col border-r w-[420px] h-[780px] p-5 gap-5 font-[Pretendard]">
+    <div className="h-full flex flex-col p-5 gap-5">
       {/* 검색창 */}
       <SearchBar value={search} onChange={setSearch} />
 
-      {/* 최근 검색 목록 헤더 */}
+      {/* 최근 검색 헤더 */}
       <div className="flex justify-between text-sm font-semibold text-gray-700">
         <span>최근 검색항목</span>
         <button className="text-xs text-blue-500 hover:underline">
@@ -38,7 +38,7 @@ export default function FriendListPanel({
       </div>
 
       {/* 친구 리스트 */}
-      <ul className="flex-1 overflow-y-auto flex flex-col gap-4">
+      <ul className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1">
         {friends.map((f, idx) => (
           <FriendItem
             key={idx}
@@ -51,4 +51,6 @@ export default function FriendListPanel({
       </ul>
     </div>
   );
-}
+};
+
+export default FriendListPanel;

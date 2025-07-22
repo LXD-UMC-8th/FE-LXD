@@ -7,8 +7,8 @@ import {
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
-import WritingPage from "./pages/Diary/WritingPage";
-import DiaryPage from "./pages/Diary/DiaryPage";
+import WritingPage from "./pages/DiaryNWriting/WritingPage";
+import DiaryPage from "./pages/DiaryNWriting/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/Login/SignupPage";
@@ -16,6 +16,9 @@ import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
+import FeedDetailPage from "./pages/FeedDetailPage";
+import ProfileEditPage from "./pages/ProfileEditPage";
+import SettingsPage from "./pages/SettingsPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -41,14 +44,13 @@ const protectedRoutes: RouteObject[] = [
         element: <FeedPage />,
       },
       {
-        path: "/diary",
+        path: "/feed/:id",
+        element: <FeedDetailPage />,
+      },
+      {
+        path: "/mydiary",
         element: <DiaryPage />,
       },
-
-      // {
-      //   path: "/corrections",
-      //   element: <CorrectionsPage />,
-      // },
       {
         path: "/friendslist",
         element: <FriendsListPage />,
@@ -64,12 +66,23 @@ const protectedRoutes: RouteObject[] = [
       },
 
       {
-        path: "/diary/writing",
+        path: "/mydiary/writing",
         element: <WritingPage />,
       },
+
       {
         path: "/editprofile",
         element: <EditProfilePage />,
+      },
+
+      {
+        path: "/profileedit",
+        element: <ProfileEditPage />,
+      },
+
+      {
+        path: "/settings",
+        element: <SettingsPage />,
       },
     ],
   },
@@ -84,4 +97,3 @@ function App() {
 }
 
 export default App;
-
