@@ -37,10 +37,32 @@ const FeedDetailPage = () => {
         {/* 작성자 + 우측 정보 */}
         <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
           <ProfileComponent />
-          <div className="flex items-center gap-4 text-xs text-gray-500">
-            <span>180</span>
-            <span>89</span>
-            <span>5</span>
+          <div className="flex items-center gap-3 text-caption text-gray-700 pt-3">
+            {/* 댓글 수 */}
+            <div className="flex gap-1">
+              <img 
+                src="/images/CommonComponentIcon/CommentIcon.svg"
+                className="w-4 h-4"
+              />
+              <span>180</span>
+            </div>
+            {/* 좋아요 수 */}
+            <div className="flex gap-1">
+              <img 
+                src="/images/CommonComponentIcon/LikeIcon.svg"
+                className="w-4 h-4"
+              />
+              <span>89</span>
+            </div>
+            {/* 교정 수 */}
+            <div className="flex gap-1">
+              <img 
+                src="/images/CommonComponentIcon/CorrectIcon.svg"
+                className="w-4 h-4"
+              />
+              <span>5</span>
+            </div>
+            
             <img 
               src="/images/more_options.svg" 
               className="w-5 h-5 cursor-pointer"
