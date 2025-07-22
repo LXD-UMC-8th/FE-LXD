@@ -9,9 +9,24 @@ export type DiaryUploadRequestDTO = {
   thumbImg: string;
 };
 
-export type DiaryUploadResponseDTO<T> = {
+export type DiaryUploadResponseDTO = {
   isSuccess: boolean;
   code: string;
   message: string;
-  result: T;
+  result: DiaryUploadResult;
+};
+
+type DiaryUploadResult = {
+  diaryId: number;
+  visibility: "PUBLIC" | "FRIEND" | "PRIVATE";
+  title: string;
+  language: string;
+  profileImg: string;
+  writerNickName: string;
+  writerUserName: string;
+  createdAt: string;
+  commentCount: number;
+  likeCount: number;
+  correctCount: number;
+  content: string;
 };
