@@ -134,8 +134,8 @@ const FeedDetailPage = () => {
               </p>
               <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
                 <div
-                  className={`flex items-center gap-1 cursor-pointer
-                    ${openReplyIndex === idx ? "bg-gray-200 rounded-[5px] text-black p-1" : ""}`}
+                  className={`flex items-center gap-1 cursor-pointer p-1
+                    ${openReplyIndex === idx ? "bg-gray-200 rounded-[5px] text-black" : ""}`}
                   onClick={() => toggleReplyInput(idx)}
                 >
                   <img
