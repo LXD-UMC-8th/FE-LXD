@@ -24,7 +24,7 @@ const ValueSettingButton = ({
     <div className="flex gap-2">
       <button
         onClick={() => handleClick(title1)}
-        className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200
+        className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title1
               ? "bg-gray-900 text-blue-50"
@@ -36,7 +36,7 @@ const ValueSettingButton = ({
       </button>
       <button
         onClick={() => handleClick(title2)}
-        className={`w-20 h-10 rounded-[5px] cursor-pointer transition duration-200
+        className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title2
               ? "bg-gray-900 text-blue-50"

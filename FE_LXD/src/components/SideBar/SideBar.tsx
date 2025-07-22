@@ -2,7 +2,7 @@ import SideBarNavLink from "./SideBarNavLink";
 
 const Sidebar = () => {
   return (
-    <div className="absolute top-0 left-0 h-full bg-white shadow-md px-4 py-6 flex flex-col gap-6 w-[200px]">
+    <div className="fixed top-0 left-0 inset-y-0 z-20  bg-white shadow-md px-4 py-6 flex flex-col gap-6 w-[200px]">
       {/* <div className="text-xl font-bold">LXD</div> */}
       <nav className="flex flex-col mt-10">
         <SideBarNavLink

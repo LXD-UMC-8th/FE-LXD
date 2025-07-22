@@ -1,22 +1,24 @@
 import "./App.css";
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
   type RouteObject,
 } from "react-router-dom";
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
 import FeedPage from "./pages/FeedPage";
-import WritingPage from "./pages/Diary/WritingPage";
-import DiaryPage from "./pages/Diary/DiaryPage";
+import WritingPage from "./pages/DiaryNWriting/WritingPage";
+import DiaryPage from "./pages/DiaryNWriting/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SignupPage from "./pages/Login/SignupPage";
 import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
+import EditProfilePage from "./pages/EditProfilePage";
 import FeedDetailPage from "./pages/FeedDetailPage";
-import ProfileEditPage from "./pages/ProfileEditPage";
+import SettingsPage from "./pages/SettingsPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -37,6 +39,10 @@ const protectedRoutes: RouteObject[] = [
     element: <ProtectedLayout />,
     errorElement: <NotFoundPage />,
     children: [
+      {
+        index: true,
+        element: <Navigate to="/feed" replace />,
+      },
       {
         path: "/feed",
         element: <FeedPage />,
@@ -69,8 +75,12 @@ const protectedRoutes: RouteObject[] = [
       },
 
       {
-        path: "/profileedit",
-        element: <ProfileEditPage />,
+        path: "/editprofile",
+        element: <EditProfilePage />,
+      },
+      {
+        path: "/settings",
+        element: <SettingsPage />,
       },
     ],
   },

@@ -1,9 +1,13 @@
-import { useState } from "react";
-import NavProfileModal from "./ProfileModal";
+import { useRef, useState } from "react";
+import NavProfileModal from "./NavProfileModal";
 import { NavLink } from "react-router-dom";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
@@ -25,6 +29,7 @@ const NavBar = () => {
           onClick={() => setIsModalOpen(!isModalOpen)}
         >
           <div className="w-7 h-7 rounded-full bg-gray-300"></div>
+
           <div className="text-body2 font-semibold text-gray-800 cursor-pointer">
             이용자 님
           </div>
@@ -33,7 +38,7 @@ const NavBar = () => {
 
       {/* 프로필 모달 */}
       {isModalOpen && (
-        <div className="absolute top-full right-6 z-10">
+        <div ref={modalRef} className="absolute top-full right-6 z-10">
           <NavProfileModal onClose={() => setIsModalOpen(false)} />
         </div>
       )}
