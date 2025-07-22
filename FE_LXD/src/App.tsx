@@ -17,7 +17,6 @@ import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
 import FeedDetailPage from "./pages/FeedDetailPage";
-import ProfileEditPage from "./pages/ProfileEditPage";
 import SettingsPage from "./pages/SettingsPage";
 
 const publicRoutes: RouteObject[] = [
@@ -74,16 +73,10 @@ const protectedRoutes: RouteObject[] = [
         path: "/editprofile",
         element: <EditProfilePage />,
       },
-
-      {
-        path: "/profileedit",
-        element: <ProfileEditPage />,
-      },
-
       {
         path: "/settings",
         element: <SettingsPage />,
-      },
+      }
     ],
   },
 ];
