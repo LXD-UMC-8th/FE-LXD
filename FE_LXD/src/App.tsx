@@ -1,6 +1,7 @@
 import "./App.css";
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
   type RouteObject,
 } from "react-router-dom";
@@ -39,6 +40,10 @@ const protectedRoutes: RouteObject[] = [
     errorElement: <NotFoundPage />,
     children: [
       {
+        index: true,
+        element: <Navigate to="/feed" replace />,
+      },
+      {
         path: "/feed",
         element: <FeedPage />,
       },
@@ -76,7 +81,7 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/settings",
         element: <SettingsPage />,
-      }
+      },
     ],
   },
 ];
