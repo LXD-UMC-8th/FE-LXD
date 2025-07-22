@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import NavProfileModal from "./NavProfileModal";
 import { NavLink } from "react-router-dom";
@@ -31,12 +30,9 @@ const NavBar = () => {
         >
           <div className="w-7 h-7 rounded-full bg-gray-300"></div>
 
-          <Link
-            to="/editprofile"
-            className="text-body2 font-semibold text-gray-800 cursor-pointer"
-          >
+          <div className="text-body2 font-semibold text-gray-800 cursor-pointer">
             이용자 님
-          </Link>
+          </div>
         </div>
       </div>
 

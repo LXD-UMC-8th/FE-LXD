@@ -2,26 +2,26 @@ import { useRef } from "react";
 import FormInput from "../Login/FormInput";
 
 interface ProfileInfoProps {
-  profilePreview: string | null;
-  profileName: string;
-  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onRemoveImage: () => void;
-  nickname: string;
-  onNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  _profilePreview: string | null;
+  _profileName: string;
+  _onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  _onRemoveImage: () => void;
+  _nickname: string;
+  _onNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileInfo = ({
-  profilePreview,
-  profileName,
-  onImageChange,
-  onRemoveImage,
-  nickname,
-  onNicknameChange,
+  _profilePreview,
+  _profileName,
+  _onImageChange,
+  _onRemoveImage,
+  _nickname,
+  _onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onImageChange(e);
+    _onImageChange(e);
   };
 
   return (
@@ -35,18 +35,18 @@ const ProfileInfo = ({
           {/* 동그라미 */}
           <div className="relative w-30 h-30">
             <div className="w-full h-full rounded-full bg-gray-300 overflow-hidden">
-              {profilePreview ? (
+              {_profilePreview ? (
                 <img
-                  src={profilePreview}
+                  src={_profilePreview}
                   alt="프로필 이미지"
                   className="w-full h-full object-cover"
                 />
               ) : null}
             </div>
-            {profilePreview && (
+            {_profilePreview && (
               <button
                 type="button"
-                onClick={onRemoveImage}
+                onClick={_onRemoveImage}
                 className="bg-[url('/images/x_icon.svg')]
                 bg-no-repeat bg-center bg-contain absolute top-1 right-1 w-5 h-5  
                  flex items-center justify-center cursor-pointer"
@@ -59,9 +59,9 @@ const ProfileInfo = ({
               <div className="flex-1">
                 <input
                   readOnly
-                  value={profileName ? profileName : ""}
+                  value={_profileName ? _profileName : ""}
                   placeholder={
-                    profileName ? profileName : "파일을 선택해주세요"
+                    _profileName ? _profileName : "파일을 선택해주세요"
                   }
                   className="w-full h-14 px-8 py-4 border rounded-md 
               border-gray-300 bg-gray-50 text-gray-500 text-body1 focus:outline-none"
@@ -98,9 +98,9 @@ const ProfileInfo = ({
       <div className="space-y-2">
         <FormInput
           name="닉네임"
-          placeholder={nickname ? nickname : "닉네임을 입력해주세요"}
-          input={nickname}
-          onChange={onNicknameChange}
+          placeholder={_nickname ? _nickname : "닉네임을 입력해주세요"}
+          input={_nickname}
+          onChange={_onNicknameChange}
         />
         <p className="text-gray-600 text-sm mb-3">
           1자 이상 40자 이내로 입력해주세요(혹시 닉네임 바이트 수에 제한 있다면)
