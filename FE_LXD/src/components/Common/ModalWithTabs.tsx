@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ComponentMap from "./CommonComponent/ComponentMap";
+import TabsMap from "./TabsMap";
 
 type Tabvalue = {
   value: string;
@@ -54,7 +54,7 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
         {tabvalue.map(
           (tabvalue) =>
             activeTab === tabvalue.title && (
-              <ComponentMap key={tabvalue.value} tabvalue={tabvalue} />
+              <TabsMap key={tabvalue.value} tabvalue={tabvalue} />
             ),
         )}
       </div>

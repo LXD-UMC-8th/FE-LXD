@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useWritingSubmit from "../../hooks/useWritingSubmit";
+import useWritingSubmit from "../../../hooks/useWritingSubmit";
 
 interface EnrollModalProps {
   _onClose?: () => void;

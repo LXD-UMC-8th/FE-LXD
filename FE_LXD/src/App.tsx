@@ -7,18 +7,18 @@ import {
 } from "react-router-dom";
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
-import WritingPage from "./pages/DiaryNWriting/WritingPage";
-import DiaryPage from "./pages/DiaryNWriting/DiaryPage";
+import WritingPage from "./pages/Diary/WritingPage";
+import DiaryPage from "./pages/Diary/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
-import NotFoundPage from "./pages/NotFoundPage";
+import NotFoundPage from "./pages/Etc/NotFoundPage";
 import SignupPage from "./pages/Login/SignupPage";
-import FriendsListPage from "./pages/FriendsListPage";
-import CorrectionsPage from "./pages/CorrectionsPage";
+import FriendsListPage from "./pages/Friends/FriendsListPage";
+import CorrectionsPage from "./pages/Corrections/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
-import EditProfilePage from "./pages/EditProfilePage";
-import SettingsPage from "./pages/SettingsPage";
+import EditProfilePage from "./pages/Navbar/EditProfilePage";
+import SettingsPage from "./pages/Settings/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
-import FeedDetailPage from "./pages/Feed/FeedDetailPage";
+import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -49,7 +49,7 @@ const protectedRoutes: RouteObject[] = [
       },
       {
         path: "/feed/:id",
-        element: <FeedDetailPage />,
+        element: <DiaryDetailPage />,
       },
       {
         path: "/mydiary",

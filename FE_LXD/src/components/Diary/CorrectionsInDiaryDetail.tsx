@@ -1,7 +1,7 @@
 import { useState } from "react";
-import ProfileComponent from "../ProfileComponent";
+import ProfileComponent from "../Common/ProfileComponent";
 
-const CorrectionsInFeedDetail = () => {
+const CorrectionsInDiaryDetail = () => {
     const [ openCorrectoinReply, setOpenCorrectionReply ] = useState(false);
 
     const _toggleCorrectionReply = () => {
@@ -65,4 +65,4 @@ const CorrectionsInFeedDetail = () => {
   )
 }
 
-export default CorrectionsInFeedDetail
+export default CorrectionsInDiaryDetail

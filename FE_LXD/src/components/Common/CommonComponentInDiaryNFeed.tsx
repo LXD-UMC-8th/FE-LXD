@@ -1,4 +1,4 @@
-import ProfileComponent from "../ProfileComponent";
+import ProfileComponent from "./ProfileComponent";
 
 interface CommonComponentInDiaryNFeedProps {
   imgUrl?: string;

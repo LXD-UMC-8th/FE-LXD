@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import FormInput from "../Login/FormInput";
+import FormInput from "../../Login/FormInput";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;

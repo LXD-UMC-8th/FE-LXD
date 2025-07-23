@@ -1,4 +1,4 @@
-import prevvector from "../../public/images/prevvector.svg";
+import prevvector from "../../../public/images/prevvector.svg";
 import { useNavigate } from "react-router-dom";
 
 interface PrevButtonProps {
