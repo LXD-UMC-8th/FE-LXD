@@ -1,10 +1,10 @@
-import PrevButton from "../../components/PrevButton";
-import TitleHeader from "../../components/TitleHeader";
-import ValueSettingButton from "../../components/ValueSettingButton";
-import EnrollWrapper from "../../components/WritingPage/EnrollWrapper";
-import WritingEditor from "../../components/WritingPage/WritingEditor";
+import PrevButton from "../../components/Common/PrevButton";
+import TitleHeader from "../../components/Common/TitleHeader";
+import ValueSettingButton from "../../components/Common/ValueSettingButton";
+import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
+import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useState, useEffect } from "react";
-import QuestionTitle from "../../components/WritingPage/QuestionTitle";
+import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useThrottle } from "../../hooks/useThrottle";
 
 const WritingPage = () => {

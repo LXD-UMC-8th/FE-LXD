@@ -1,12 +1,12 @@
 import { useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import LangOptionsButton from "../../components/Login/LangOptionsButton";
-import PrevButton from "../../components/PrevButton";
+import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
-import TitleHeader from "../../components/TitleHeader";
+import TitleHeader from "../../components/Common/TitleHeader";
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState({

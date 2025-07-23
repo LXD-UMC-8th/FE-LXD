@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import ModalWithTabs from "../../components/ModalWithTabs";
-import CommonComponentSkeleton from "../../components/CommonComponent/CommonComponentSkeleton";
-import CommonComponentInDiaryNFeed from "../../components/CommonComponent/CommonComponentinDiaryNFeed";
+import ModalWithTabs from "../../components/Common/ModalWithTabs";
+import CommonComponentSkeleton from "../../components/Common/CommonComponentSkeleton";
+import CommonComponentInDiaryNFeed from "../../components/Common/CommonComponentInDiaryNFeed";
 
 const FeedPage = () => {
   const navigate = useNavigate();

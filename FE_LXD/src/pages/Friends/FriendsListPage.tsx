@@ -1,4 +1,4 @@
-import ModalWithTabs from "../components/ModalWithTabs";
+import ModalWithTabs from "../../components/Common/ModalWithTabs";
 
 const FriendsListPage = () => {
   const tabvalue = [

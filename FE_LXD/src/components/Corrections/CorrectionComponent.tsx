@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ProfileComponent from "./ProfileComponent";
+import ProfileComponent from "../Common/ProfileComponent";
 
 const CorrectionComponent = () => {
   const [liked, setLiked] = useState(false);

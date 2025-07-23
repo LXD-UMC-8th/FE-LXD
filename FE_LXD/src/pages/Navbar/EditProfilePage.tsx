@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import TitleHeader from "../components/TitleHeader";
-import AccountInfo from "../components/EditProfile/AccountInfo";
-import ProfileInfo from "../components/EditProfile/ProfileInfo";
+import TitleHeader from "../../components/Common/TitleHeader";
+import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
+import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 
 const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState({

@@ -1,4 +1,4 @@
-import ValueSettingButton from "../ValueSettingButton";
+import ValueSettingButton from "../../Common/ValueSettingButton";
 
 const ExploreTab = () => {
   return (

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import ProfileComponent from "../../components/ProfileComponent";
-import PrevButton from "../../components/PrevButton";
-import CorrectionsInFeedDetail from "../../components/FeedPage/CorrectionsInFeedDetail";
+import ProfileComponent from "../../components/Common/ProfileComponent";
+import PrevButton from "../../components/Common/PrevButton";
+import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 
-const FeedDetailPage = () => {
+const DiaryDetailPage = () => {
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
 
@@ -188,4 +188,4 @@ const FeedDetailPage = () => {
   );
 };
 
-export default FeedDetailPage;
+export default DiaryDetailPage;

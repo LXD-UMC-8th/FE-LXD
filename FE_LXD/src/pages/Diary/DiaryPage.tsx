@@ -1,7 +1,7 @@
-import DiaryHeader from "../../components/DiaryPage/DiaryHeader";
-import ModalWithTabs from "../../components/ModalWithTabs";
+import DiaryHeader from "../../components/Diary/DiaryHeader";
+import ModalWithTabs from "../../components/Common/ModalWithTabs";
 // import diaryvector from "../../../public/images/diaryvector.svg";
-import CalendarModal from "../../components/DiaryPage/CalendarModal";
+import CalendarModal from "../../components/Common/CalendarModal";
 
 const DiaryPage = () => {
   const tabvalue = [

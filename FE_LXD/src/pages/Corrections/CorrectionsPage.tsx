@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CorrectionComponent from "../components/CorrectionComponent";
+import CorrectionComponent from "../../components/Corrections/CorrectionComponent";
 
 const CorrectionsPage = () => {
   const tabs = ["내가 받은 교정", "내가 제공한 교정"];
