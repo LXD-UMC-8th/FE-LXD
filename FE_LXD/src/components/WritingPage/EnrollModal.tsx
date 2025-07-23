@@ -9,7 +9,6 @@ interface EnrollModalProps {
 }
 
 const EnrollModal = ({
-  _onClose,
   _titleName,
   _editorRawContent,
   _style,

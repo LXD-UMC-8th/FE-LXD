@@ -9,6 +9,12 @@ const FeedDetailPage = () => {
     setOpenReplyIndex((prev) => (prev === idx ? null : idx));
   };
 
+  const _stats = [
+    { label: "180", icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
+    { label: "89", icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
+    { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
+  ]
+
   return (
     <div className="w-full max-w-[750px] mx-auto px-6 pt-6">
       {/* ← 뒤로가기 + 교정하기 */}
@@ -37,31 +43,14 @@ const FeedDetailPage = () => {
         {/* 작성자 + 우측 정보 */}
         <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
           <ProfileComponent />
-          <div className="flex items-center gap-3 text-caption text-gray-700 pt-3">
-            {/* 댓글 수 */}
-            <div className="flex gap-1">
-              <img 
-                src="/images/CommonComponentIcon/CommentIcon.svg"
-                className="w-4 h-4"
-              />
-              <span>180</span>
-            </div>
-            {/* 좋아요 수 */}
-            <div className="flex gap-1">
-              <img 
-                src="/images/CommonComponentIcon/LikeIcon.svg"
-                className="w-4 h-4"
-              />
-              <span>89</span>
-            </div>
-            {/* 교정 수 */}
-            <div className="flex gap-1">
-              <img 
-                src="/images/CommonComponentIcon/CorrectIcon.svg"
-                className="w-4 h-4"
-              />
-              <span>5</span>
-            </div>
+
+          <div className="flex items-center gap-3 text-caption text-gray-700 pt-5">
+            {_stats.map((item, index) => (
+              <div key={index} className="flex gap-1">
+                <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-4 h-4" />
+                <span>{item.label}</span>
+              </div>
+            ))}
             
             {/* 더보기 */}
             <img 
