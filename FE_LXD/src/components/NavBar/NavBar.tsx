@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
-import NavProfileModal from "./NavProfileModal";
 import { NavLink } from "react-router-dom";
-import useOutsideClick from "../hooks/useOutsideClick";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import NavProfileModal from "./NavProfileModal";
 
 const NavBar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import HomeLayout from "./layouts/HomeLayout";
 import ProtectedLayout from "./layouts/ProtectedLayout";
-import FeedPage from "./pages/FeedPage";
 import WritingPage from "./pages/DiaryNWriting/WritingPage";
 import DiaryPage from "./pages/DiaryNWriting/DiaryPage";
 import LoginPage from "./pages/Login/LoginPage";
@@ -17,8 +16,9 @@ import FriendsListPage from "./pages/FriendsListPage";
 import CorrectionsPage from "./pages/CorrectionsPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import EditProfilePage from "./pages/EditProfilePage";
-import FeedDetailPage from "./pages/FeedDetailPage";
 import SettingsPage from "./pages/SettingsPage";
+import FeedPage from "./pages/Feed/FeedPage";
+import FeedDetailPage from "./pages/Feed/FeedDetailPage";
 
 const publicRoutes: RouteObject[] = [
   {

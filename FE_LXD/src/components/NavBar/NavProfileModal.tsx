@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoutModal from "./LogoutModal";
+import LogoutModal from "../LogoutModal";
 
 interface ProfileModalProps {
     onClose: () => void;
