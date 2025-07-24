@@ -19,7 +19,7 @@ import EditProfilePage from "./pages/Navbar/EditProfilePage";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
-import CorrectInDiaryDetail from "./components/Diary/CorrectInDiaryDetail";
+import ProvideCorrections from "./components/Diary/ProvideCorrections";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -54,7 +54,7 @@ const protectedRoutes: RouteObject[] = [
       },
       {
         path: "/feed/:id/corrections",
-        element: <CorrectInDiaryDetail />,
+        element: <ProvideCorrections />,
       },
       {
         path: "/mydiary",
