@@ -17,37 +17,35 @@ const ProvideCorrections = () => {
     const selection = window.getSelection();
     const text = selection?.toString().trim();
 
-    // 모달 클릭 시 무시 (모달 영역에 클릭되면 return)
     const modalEl = document.getElementById("correction-modal");
     if (modalEl?.contains(e.target as Node)) return;
 
     if (text && selection?.rangeCount) {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
-      const containerRect = containerRef.current?.getBoundingClientRect();
 
-      if (containerRect) {
-        setModalPosition({
-          top: rect.bottom - containerRect.top + 8,
-          left: rect.left - containerRect.left,
-        });
-      }
+      const container = containerRef.current;
+      if (!container) return;
 
-      // ✅ 새 텍스트가 선택됐을 때만 showModal true
-      if (text !== selectedText) {
-        setSelectedText(text);
-        setEditedText(text);
-        setShowModal(true);
-      }
+      const containerRect = container.getBoundingClientRect();
+
+      // container 내부 기준으로 위치 계산
+      const top = rect.bottom - containerRect.top + 10;
+      const left = rect.left - containerRect.left;
+
+      setModalPosition({ top, left });
+      setSelectedText(text);
+      setEditedText(text);
+      setShowModal(true);
     } else {
-      // 선택 텍스트 없을 때만 닫기
       setShowModal(false);
     }
   };
 
   document.addEventListener("mouseup", handleMouseUp);
   return () => document.removeEventListener("mouseup", handleMouseUp);
-}, [selectedText]);
+}, []);
+
 
 
   const _stats = [
@@ -57,7 +55,10 @@ const ProvideCorrections = () => {
   ];
 
   return (
-    <div className="flex justify-center items-start mx-auto px-6 pt-6 relative" ref={containerRef}>
+    <div 
+      className="flex justify-center items-start mx-auto px-6 pt-6 relative" 
+      ref={containerRef}
+    >
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 */}
         <div className="mb-4 flex items-center gap-3">
@@ -86,7 +87,7 @@ const ProvideCorrections = () => {
       {showModal && (
         <div
           id="correction-modal"
-          className="absolute z-50 w-[450px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
+          className="absolute z-50 w-[450px] h-[330px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
           style={{
             top: modalPosition.top,
             left: modalPosition.left,
@@ -94,52 +95,67 @@ const ProvideCorrections = () => {
         >
           <button
             onClick={() => setShowModal(false)}
-            className="absolute top-3 right-3 text-gray-600 text-xl cursor-pointer"
+            className="absolute top-7 right-5 cursor-pointer"
           >
-            ×
+            <img 
+              src="/images/DeleteButton.svg"
+              className="w-3 h-3"
+              alt="닫기 버튼"
+            />
           </button>
 
           <h2 className="text-subhead3 font-semibold mb-4">교정 제공하기</h2>
 
           <div className="border-t border-gray-300 my-4"/>
 
-          {/* 선택된 텍스트 & 수정 입력 영역 */}
-          <div className="flex flex-col border border-gray-400 rounded-[10px] p-4 text-body2 gap-2">
-            <div className="font-medium">
-              {selectedText}
+          <div className="flex flex-col gap-3">
+            {/* 선택된 텍스트 & 수정 입력 영역 */}
+            <div className="flex flex-col border border-gray-300 rounded-[10px] p-4 text-body2 gap-2">
+              <div className="font-medium">
+                {selectedText}
+              </div>
+
+              <div className="flex items-center">
+                <div className="w-1 h-9 bg-primary-500"/>
+                <textarea     
+                  onChange={(e) => setEditedText(e.target.value)}
+                  className="w-full px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-200 text-primary-500 font-medium bg-primary-50"
+                  rows={1}
+                  placeholder="수정된 문장을 입력하세요."
+                />
+              </div>
+
             </div>
 
-            <div>
-              <div className=""/>
-              <textarea     
-                onChange={(e) => setEditedText(e.target.value)}
-                className="w-full py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 text-[#4170FE] font-medium bg-[#F1F5FD]"
-                rows={1}
-                placeholder="수정된 문장을 입력하세요."
+            <div className="rounded-[10px] bg-gray-200 border border-gray-300 text-gray-900">
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full rounded-[10px] px-3 py-3 text-body2 h-15 resize-none focus:outline-none"
+                rows={2}
+                placeholder="수정 이유를 작성해주세요."
               />
             </div>
           </div>
 
-          <div className="rounded-[10px] bg-gray-200 border border-gray-400 text-gray-900">
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full border rounded px-3 py-2 text-sm h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-200"
-              placeholder="수정 이유를 작성해주세요."
-            />
-          </div>
-
-          <div className="flex justify-end mt-6">
+          {/* 등록하기 버튼 */}
+          <div className="flex justify-end mt-5">
             <button
               onClick={() => {
                 console.log({ selectedText, editedText, description });
                 setShowModal(false);
               }}
-              className="bg-blue-600 text-white text-sm font-semibold px-5 py-2 rounded hover:bg-blue-700 transition"
+              className="absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:scale-105 duration-300"
             >
+              <img 
+                src="/images/correctionpencil.svg"
+                className="w-5 h-5"
+                alt="교정 아이콘"
+              />
               등록하기
             </button>
           </div>
+
         </div>
       )}
     </div>
