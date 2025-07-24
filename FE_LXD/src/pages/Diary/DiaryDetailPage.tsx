@@ -9,7 +9,6 @@ const DiaryDetailPage = () => {
 
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
-
   const _toggleReplyInput = (idx: number) => {
     setOpenReplyIndex((prev) => (prev === idx ? null : idx));
   };
