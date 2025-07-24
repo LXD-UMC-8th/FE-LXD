@@ -1,9 +1,12 @@
 import { useState } from "react";
-import ProfileComponent from "../../components/Common/ProfileComponent";
 import PrevButton from "../../components/Common/PrevButton";
 import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
+import { useNavigate } from "react-router-dom";
+import DiaryContent from "../../components/Diary/DiaryContent";
 
 const DiaryDetailPage = () => {
+  const navigate = useNavigate();
+
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
 
@@ -11,6 +14,10 @@ const DiaryDetailPage = () => {
     setOpenReplyIndex((prev) => (prev === idx ? null : idx));
   };
 
+  const _handleCorrectionsClick = () => {
+    // 임시로 id = 1로 보냄
+    navigate("/feed/1/corrections");
+  }
 
   const _stats = [
     { label: "180", icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
@@ -24,7 +31,10 @@ const DiaryDetailPage = () => {
         {/* ← 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL="/feed" />
-          <button className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-pretendard font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer">
+          <button 
+            onClick={_handleCorrectionsClick}
+            className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-pretendard font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer"
+          >
             <img
               src="/images/correctionpencil.svg"
               alt="교정 아이콘"
@@ -35,60 +45,13 @@ const DiaryDetailPage = () => {
         </div>
         
         <div className="bg-white p-8 rounded-[10px]">
-          {/* 제목 & 상태 */}
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded">
-              전체공개
-            </span>
-            <h1 className="text-subhead2 font-semibold">제목</h1>
-            <span className="text-blue-600 text-body2 font-medium ml-auto">한국어</span>
-          </div>
-
-          {/* 작성자 + 우측 정보 */}
-          <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-            <ProfileComponent />
-
-            <div className="flex items-center gap-3 text-caption text-gray-700 pt-5">
-              {/* 아이콘 */}
-              {_stats.map((item, index) => (
-                <div key={index} className="flex gap-1">
-                  <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </div>
-              ))}
-              
-              {/* 더보기 */}
-              <img 
-                src="/images/more_options.svg" 
-                className="w-5 h-5 cursor-pointer"
-              />
-            </div>
-          </div>
-
-          <div className="border-t border-gray-200 my-5"/>
-
-          {/* 본문 이미지 + 텍스트 */}
-          <div className="text-center mx-20">
-            <div className="w-full h-52 bg-gray-200 rounded-[10px] mb-4" />
-            <p className="text-body2 leading-relaxed text-gray-800 whitespace-pre-line">
-              요즘 하루가 정말 빨리 지나간다. 오늘도 눈 뜨고 정신 차려보니 벌써
-              저녁. 오랜만에 간단하게 집 정리하고, 밀린 설거지 해결했다. 생각보다
-              시간이 오래 걸려서 커피 한 잔 마시고 나니 벌써 점심시간. 점심은
-              냉장고에 남아있던 재료들로 대충 볶음밥. 의외로 낫다. 오후엔 컴퓨터
-              앞에 앉아서 이것저것 정리했다.
-            </p>
-          </div>
-
-          <div className="border-t border-gray-200 my-5"/>
-
-          <div className="flex items-center gap-3 text-caption text-gray-700">
-            {_stats.map((item, index) => (
-                <div key={index} className="flex gap-1">
-                  <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </div>
-              ))}
-          </div>
+          <DiaryContent 
+            title="제목"
+            language="한국어"
+            visibility="전체공개"
+            content={`본문 내용`}
+            stats={_stats}
+          />
 
           {/* 댓글 전체 래퍼 카드 */}
           <div className="mt-10 bg-white rounded-[10px] p-6">
