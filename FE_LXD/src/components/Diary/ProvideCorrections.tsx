@@ -86,7 +86,7 @@ const ProvideCorrections = () => {
       {showModal && (
         <div
           id="correction-modal"
-          className="absolute z-50 w-[500px] bg-white border border-gray-400 shadow-xl rounded-[10px] p-5"
+          className="absolute z-50 w-[450px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
           style={{
             top: modalPosition.top,
             left: modalPosition.left,
@@ -101,19 +101,23 @@ const ProvideCorrections = () => {
 
           <h2 className="text-subhead3 font-semibold mb-4">교정 제공하기</h2>
 
-          <div className="border-t border-gray-400 my-4"/>
+          <div className="border-t border-gray-300 my-4"/>
 
           {/* 선택된 텍스트 & 수정 입력 영역 */}
-          <div className="border border-gray-400 rounded-[10px] p-4 text-body2">
-            <div className="">
+          <div className="flex flex-col border border-gray-400 rounded-[10px] p-4 text-body2 gap-2">
+            <div className="font-medium">
               {selectedText}
             </div>
-            <textarea     
-              onChange={(e) => setEditedText(e.target.value)}
-              className="w-full rounded py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 text-[#4170FE]"
-              rows={2}
-              placeholder="수정된 문장을 입력하세요."
-            />
+
+            <div>
+              <div className=""/>
+              <textarea     
+                onChange={(e) => setEditedText(e.target.value)}
+                className="w-full py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-200 text-[#4170FE] font-medium bg-[#F1F5FD]"
+                rows={1}
+                placeholder="수정된 문장을 입력하세요."
+              />
+            </div>
           </div>
 
           <div className="rounded-[10px] bg-gray-200 border border-gray-400 text-gray-900">
