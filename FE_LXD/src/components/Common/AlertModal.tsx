@@ -4,10 +4,10 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 interface AlertModalProps {
     onClose: () => void;
     title: string;
-    description: string;
+    description?: string;
     confirmText: string;
     onConfirm: () => void;
-    alertMessage?: string;
+    alertMessage: string;
 }
 
 const AlertModal = ({
