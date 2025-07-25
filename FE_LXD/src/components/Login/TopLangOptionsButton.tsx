@@ -57,15 +57,17 @@ const TopLangOptionsButton = ({
               {[
                 { value: "ko", label: "한국어" },
                 { value: "en", label: "English" },
-              ].map((lang) => (
+              ].map((lang, idx) => (
                 <li
                   key={lang.value}
-                  className="cursor-pointer select-none px-4 py-2 
-                      hover:bg-gray-100 text-gray-900"
                   onClick={() => {
                     onSelect(lang.value);
                     setIsOpen(false);
                   }}
+                  className={`cursor-pointer px-4 py-2 
+                      hover:bg-gray-100 text-gray-900 ${
+                        idx !== 0 ? "border-t border-gray-300" : ""
+                      }`}
                 >
                   {lang.label}
                 </li>

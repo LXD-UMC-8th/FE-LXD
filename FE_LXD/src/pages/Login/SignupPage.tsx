@@ -6,6 +6,11 @@ import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
+import {
+  isEmailValid,
+  isPasswordMatch,
+  isPasswordValid,
+} from "../../utils/validate";
 
 const SignupPage = () => {
   const [userInfo, setUserInfo] = useState({
@@ -14,24 +19,46 @@ const SignupPage = () => {
     password: "",
     checkPassword: "",
   });
+  const [emailVerified, setEmailVerified] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false);
-
   const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailCheck = () => {
-    // 이메일 유효성 확인 API 나중에 작성 예정
-    // 유효하지 않으면 밑에 빨간글씨 뜨게하기
-    console.log("이메일 유효성 확인 요청");
-  };
-  const isValid = () => {
-    const isEmailValid =
-      userInfo.email.trim() !== "" && userInfo.email.includes("@"); // 이메일 유효성, 나중에 수정
-    const isPasswordValid = userInfo.password.trim().length >= 6; // 비밀번호 유효성, 나중에 수정
-    const isPasswordChecked = userInfo.password === userInfo.checkPassword;
+  // 모킹 함수 (나중에 삭제)
+  async function fakeEmailVerify(email: string) {
+    return new Promise<{ ok: boolean }>((resolve) => {
+      setTimeout(() => resolve({ ok: true }), 1000);
+    });
+  }
 
-    return isEmailValid && isPasswordValid && isPasswordChecked && agreed;
+  const handleEmailCheck = async () => {
+    try {
+      // 여기에 실제 API 요청이 들어감 (나중에 axios로 대체)
+      const response = await fakeEmailVerify(userInfo.email);
+
+      if (!response.ok) {
+        throw new Error("인증 실패");
+      }
+
+      setEmailVerified(true); // 성공 시 상태 변경
+      console.log("이메일 인증 성공");
+    } catch (error) {
+      alert("인증할 수 없는 이메일입니다");
+      console.error("인증 실패:", error);
+    }
+  };
+
+  const isAllValid = () => {
+    const _isEmailValid = isEmailValid(userInfo.email);
+    const _isPasswordValid = isPasswordValid(userInfo.password);
+    const _isPasswordChecked = isPasswordMatch(
+      userInfo.password,
+      userInfo.checkPassword
+    );
+
+    return _isEmailValid && _isPasswordValid && _isPasswordChecked && agreed;
   };
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
@@ -39,8 +66,9 @@ const SignupPage = () => {
   };
 
   const handleNextPage = () => {
-    if (!isValid()) return;
-    console.log(userInfo.email, userInfo.password)
+    if (!isAllValid()) return;
+    // 서버로 가입 정보 전송해야함, 나중에 수정
+    console.log(userInfo.email, userInfo.password);
     navigate("profile");
   };
 
@@ -71,20 +99,34 @@ const SignupPage = () => {
                   onBlur={() => setEmailTouched(true)}
                 />
               </div>
-              <IDButton name="인증하기" onClick={handleEmailCheck} />
+              <IDButton
+                name={emailVerified ? "인증완료" : "인증하기"}
+                onClick={handleEmailCheck}
+                disabled={!isEmailValid(userInfo.email) || emailVerified}
+              />
             </div>
-            {emailTouched && !userInfo.email.includes("@") && (
+            {emailTouched && !isEmailValid(userInfo.email) && (
               <span className="text-body2 text-red-500">
                 유효하지 않은 이메일입니다
               </span>
             )}
           </div>
-          <FormInput
-            name="비밀번호"
-            placeholder="비밀번호를 입력해주세요"
-            input={userInfo.password}
-            onChange={(e) => handleInputChange("password", e.target.value)}
-          />
+          <div className="flex flex-col space-y-2">
+            <FormInput
+              name="비밀번호"
+              placeholder="비밀번호를 입력해주세요"
+              input={userInfo.password}
+              onChange={(e) => handleInputChange("password", e.target.value)}
+              onBlur={() => setPasswordTouched(true)}
+              type="password"
+            />
+            {passwordTouched && !isPasswordValid(userInfo.password) && (
+              <span className="text-body2 text-red-500">
+                비밀번호는 10자 이상, 영문 대소문자/숫자/특수문자를 포함해야
+                합니다
+              </span>
+            )}
+          </div>
           <div className="flex flex-col space-y-2">
             <FormInput
               name="비밀번호 확인"
@@ -94,13 +136,19 @@ const SignupPage = () => {
                 handleInputChange("checkPassword", e.target.value)
               }
               onBlur={() => setCheckPasswordTouched(true)}
+              type="password"
             />
             {checkPasswordTouched &&
-              userInfo.password !== userInfo.checkPassword && (
+              isPasswordValid(userInfo.password) &&
+              (isPasswordMatch(userInfo.password, userInfo.checkPassword) ? (
+                <span className="text-body2 text-mint-500">
+                  비밀번호가 일치합니다
+                </span>
+              ) : (
                 <span className="text-body2 text-red-500">
                   비밀번호가 일치하지 않습니다
                 </span>
-              )}
+              ))}
           </div>
         </form>
 
@@ -110,7 +158,7 @@ const SignupPage = () => {
               type="checkbox"
               checked={agreed}
               onChange={(e) => setAgreed(e.target.checked)}
-              className="w-[18px] h-[18px]"
+              className="w-[19px] h-[19px]"
             />
             <span className="text-body1">
               개인정보 처리 방침 및 이용약관에 동의합니다
@@ -119,7 +167,7 @@ const SignupPage = () => {
           <SignupButton
             name="다음으로"
             onClick={handleNextPage}
-            disabled={!isValid()}
+            disabled={!isAllValid()}
           />
         </section>
       </div>

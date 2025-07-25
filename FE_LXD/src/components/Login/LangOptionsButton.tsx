@@ -67,7 +67,7 @@ const LangOptionsButton = ({
                   }}
                   className={`cursor-pointer px-4 py-3 
                       hover:bg-gray-100 text-gray-900 ${
-                        idx !== 0 ? "border-t border-gray-200" : ""
+                        idx !== 0 ? "border-t border-gray-300" : ""
                       }`}
                 >
                   {lang.label}

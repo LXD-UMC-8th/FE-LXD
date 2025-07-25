@@ -8,9 +8,9 @@ const SignupButton = ({ name, onClick, disabled }: SignupButtonProps) => {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full h-[69px] rounded-md 
+      className={`w-full h-[69px] rounded-md transition ease-in-out
         ${
-          disabled ? "bg-gray-400" : "bg-black hover:bg-gray-800 cursor-pointer"
+          disabled ? "bg-gray-400" : "bg-primary hover:bg-blue-700 cursor-pointer"
         }`}
     >
       <span className="text-subhead3 font-medium text-white">{name}</span>
