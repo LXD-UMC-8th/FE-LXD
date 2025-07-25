@@ -1,11 +1,14 @@
 import { useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 const LoginPage = () => {
-  const [lang, setLang] = useState("ko"); // 언어선택 상태 관리
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const handleLogin = () => {
     // 로그인 요청 API 나중에 작성 예정
@@ -23,7 +26,7 @@ const LoginPage = () => {
       className="flex flex-col min-h-screen 
     items-center justify-center space-y-12 px-4"
     >
-      <TopLangOptionsButton selected={lang} onSelect={setLang} />
+      <TopLangOptionsButton />
 
       <header className="flex flex-col items-center space-y-8">
         <img src="images/LXD_logo.svg" />
@@ -34,7 +37,7 @@ const LoginPage = () => {
         <form className="flex flex-col space-y-5">
           <FormInput
             name="이메일"
-            placeholder="이메일을 입력해주세요"
+            placeholder={t.emailPlaceholder}
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
