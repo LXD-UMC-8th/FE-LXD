@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoutModal from "./LogoutModal";
+// import LogoutModal from "./LogoutModal";
+import AlertModal from "../Common/AlertModal";
 
 interface ProfileModalProps {
     onClose: () => void;
@@ -81,7 +82,16 @@ const NavProfileModal = ({onClose}: ProfileModalProps) => {
       </div>
 
       {/* 모달 */}
-      {showlogoutModal && <LogoutModal onClose={()=> setShowlogoutModal(false)}/>}
+      {/* {showlogoutModal && <LogoutModal onClose={()=> setShowlogoutModal(false)}/>} */}
+      {showlogoutModal && 
+        <AlertModal 
+          onClose={()=> setShowlogoutModal(false)}
+          title="정말 로그아웃 하시겠습니까?"
+          description="LXD에서 kimtaehyun0809@gmail.com 계정을 로그아웃 하시겠습니까?"
+          confirmText="로그아웃"
+          alertMessage="로그아웃이 완료되었습니다."
+          onConfirm={() => navigate("/home")}
+        />}
     </div>
   )
 }

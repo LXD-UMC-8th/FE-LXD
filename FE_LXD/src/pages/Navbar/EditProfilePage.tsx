@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
+import AlertModal from "../../components/Common/AlertModal";
 
 const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState({
@@ -17,6 +18,9 @@ const EditProfilePage = () => {
   });
   const [_initialUserInfo, setInitialUserInfo] = useState(_userInfo); // 최초 상태 기억
   const [_objectURL, setObjectURL] = useState<string | null>(null);
+  const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     const _fetchUserInfo = async () => {
@@ -114,12 +118,13 @@ const EditProfilePage = () => {
       </div>
 
       <section className="flex w-[775px] items-center justify-between">
-        <Link
-          to="/"
-          className="text-subhead3 text-gray-600 underline underline-offset-3"
+        <button
+          className="text-subhead3 text-gray-600 underline underline-offset-3 cursor-pointer"
+          onClick={() => setSHowModal(true)}
         >
           회원탈퇴
-        </Link>
+        </button>
+
         <button
           onClick={_handleSaveChanges}
           disabled={!_isModified}
@@ -133,6 +138,17 @@ const EditProfilePage = () => {
           변경 내용 저장
         </button>
       </section>
+
+      {showModal && (
+        <AlertModal 
+          onClose={() => setSHowModal(false)}
+          title="정말 탈퇴 하시겠습니까?"
+          description="LXD에서 sohnjiahn@gmail.com 계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다."
+          confirmText="탈퇴하기"
+          alertMessage="회원탈퇴가 완료되었습니다."
+          onConfirm={() => navigate("/home")}
+        />
+      )}
     </div>
   );
 };

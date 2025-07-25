@@ -1,7 +1,7 @@
 import { useState } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
-import ConfirmModal from "../ConfirmModal";
+import AlertModal from "../../Common/AlertModal";
 
 const FriendTab = () => {
   const friendList = [
@@ -69,10 +69,12 @@ const FriendTab = () => {
       )}
 
       {showConfirmModal && selectedUser && (
-        <ConfirmModal
-          user={selectedUser}
-          onConfirm={onConfirmDelete}
+        <AlertModal 
           onClose={onCloseConfirmModal}
+          onConfirm={onConfirmDelete}
+          title={`${selectedUser.name}님과 친구를 취소하시겠습니까?`}
+          confirmText="친구 취소하기"
+          alertMessage={`${selectedUser.name}님과 친구 취소가 완료되었습니다.`}
         />
       )}
     </div>
