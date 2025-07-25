@@ -62,7 +62,7 @@ const ProvideCorrections = () => {
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 */}
         <div className="mb-4 flex items-center gap-3">
-          <PrevButton navigateURL="/feed/:id" />
+          <PrevButton navigateURL={`/feed/${id}`} />
           <TitleHeader title="교정하기" />
         </div>
 
