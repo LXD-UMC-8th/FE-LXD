@@ -60,15 +60,18 @@ const TopLangOptionsButton = () => {
               border-gray-300 rounded-md shadow-md"
           >
             <ul className="max-h-60 py-1 overflow-auto text-sm">
+
               {options.map((lang) => (
                 <li
                   key={lang.value}
-                  className="cursor-pointer select-none px-4 py-2 
-                      hover:bg-gray-100 text-gray-900"
                   onClick={() => {
                     setLanguage(lang.value);
                     setIsOpen(false);
                   }}
+                  className={`cursor-pointer px-4 py-2 
+                      hover:bg-gray-100 text-gray-900 ${
+                        idx !== 0 ? "border-t border-gray-300" : ""
+                      }`}
                 >
                   {lang.label}
                 </li>
