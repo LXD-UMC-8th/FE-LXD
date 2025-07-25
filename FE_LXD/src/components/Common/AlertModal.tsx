@@ -25,13 +25,21 @@ const AlertModal = ({
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div 
         ref={ref}
-        className="bg-white w-120 h-65 rounded-xl text-center"
+        className={`relative bg-white w-120 rounded-xl text-center ${description ? 'h-65' : 'h-45'}`}
       >
-        <div className="p-10">
-            <p className="text-subhead1 font-bold">{title}</p>
-            <p className="text-gray-700 text-body1 py-5">{description}</p>
+        <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-600 text-l p-2 font-bold cursor-pointer"
+        >
+            ✕
+        </button>
+        <div className="pt-15 px-5">
+            <p className="text-subhead2 font-bold">{title}</p>
+            {description && (
+              <p className="text-gray-700 text-body1 py-2 px-10">{description}</p>  
+            )}
 
-            <div className="flex gap-3 px-16 py-5">
+            <div className={`flex gap-3 px-16 ${description ? 'pt-3' : 'pt-6'}`}>
               <button
                 onClick={() => {
                   if (alertMessage) alert(alertMessage);
