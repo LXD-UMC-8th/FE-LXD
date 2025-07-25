@@ -37,7 +37,7 @@ const CalendarModal = () => {
             })
             .toUpperCase()}`
         }
-        formatShortWeekday={(locale, date) =>
+        formatShortWeekday={(_locale, date) =>
           ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][date.getDay()]
         }
         locale="en-US"
