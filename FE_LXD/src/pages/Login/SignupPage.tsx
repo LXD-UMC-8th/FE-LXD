@@ -19,16 +19,35 @@ const SignupPage = () => {
     password: "",
     checkPassword: "",
   });
+  const [emailVerified, setEmailVerified] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailCheck = () => {
-    // 이메일 유효성 확인 API 나중에 작성 예정
-    // 유효하지 않으면 밑에 빨간글씨 뜨게하기
-    console.log("이메일 유효성 확인 요청");
+  // 모킹 함수 (나중에 삭제)
+  async function fakeEmailVerify(email: string) {
+    return new Promise<{ ok: boolean }>((resolve) => {
+      setTimeout(() => resolve({ ok: true }), 1000);
+    });
+  }
+
+  const handleEmailCheck = async () => {
+    try {
+      // 여기에 실제 API 요청이 들어감 (나중에 axios로 대체)
+      const response = await fakeEmailVerify(userInfo.email);
+
+      if (!response.ok) {
+        throw new Error("인증 실패");
+      }
+
+      setEmailVerified(true); // 성공 시 상태 변경
+      console.log("이메일 인증 성공");
+    } catch (error) {
+      alert("인증할 수 없는 이메일입니다");
+      console.error("인증 실패:", error);
+    }
   };
 
   const isAllValid = () => {
@@ -80,9 +99,9 @@ const SignupPage = () => {
                 />
               </div>
               <IDButton
-                name="인증하기"
+                name={emailVerified ? "인증완료" : "인증하기"}
                 onClick={handleEmailCheck}
-                disabled={!isEmailValid(userInfo.email)}
+                disabled={!isEmailValid(userInfo.email) || emailVerified}
               />
             </div>
             {emailTouched && !isEmailValid(userInfo.email) && (
