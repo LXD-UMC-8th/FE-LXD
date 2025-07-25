@@ -6,18 +6,17 @@ interface Props {
 
 const UserListSection = ({ users, onUserCardClick, onFriendButtonClick }: Props) => {
   return (
-    <div className="w-full">
-      {/* 친구 수 텍스트 */}
-      <div className="text-base font-semibold text-black mb-5 font-[Pretendard]">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6">
+    <div className="w-full flex flex-col items-center px-4">
+      <div className="text-lg font-semibold text-black mb-4 self-start">
         총 친구 수 {users.length}명
       </div>
 
-      {/* 카드 레이아웃 */}
-      <div className="flex flex-wrap justify-start gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full max-w-[1200px]">
         {users.map((user) => (
           <div
             key={user.id}
-            className="w-[353px] h-[87px] bg-white hover:bg-gray-100 transition-colors cursor-pointer rounded-xl px-4 py-3 flex items-center justify-between shadow-sm border border-[#E5E5E5]"
+            className="bg-white hover:bg-gray-100 transition-colors cursor-pointer rounded-xl px-4 py-3 flex items-center justify-between shadow-sm border border-[#E5E5E5]"
             onClick={() => onUserCardClick?.(user)}
           >
             {/* 유저 정보 */}
@@ -36,7 +35,7 @@ const UserListSection = ({ users, onUserCardClick, onFriendButtonClick }: Props)
             {/* 친구 버튼 */}
             {onFriendButtonClick && (
               <button
-                className="ml-3 px-3 py-1 text-xs text-[#747785] bg-[#EDEEF0] rounded-lg hover:bg-gray-300 transition-colors font-semibold font-[Pretendard] shrink-0 whitespace-nowrap w-12 h-8 cursor-pointer"
+                className="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-[Pretendard] shrink-0 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   onFriendButtonClick(user);
@@ -49,7 +48,9 @@ const UserListSection = ({ users, onUserCardClick, onFriendButtonClick }: Props)
         ))}
       </div>
     </div>
+    </div>
   );
 };
 
 export default UserListSection;
+
