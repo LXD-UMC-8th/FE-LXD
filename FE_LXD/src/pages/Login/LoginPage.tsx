@@ -44,6 +44,7 @@ const LoginPage = () => {
             placeholder="비밀번호를 입력해주세요"
             input={password}
             onChange={(e) => setPassword(e.target.value)}
+            type="password"
           />
         </form>
 
@@ -53,7 +54,7 @@ const LoginPage = () => {
             onClick={handleLogin}
             disabled={!isFormValid}
             className="w-full h-[55px] justify-center py-3 rounded-md  
-      bg-blue-600 hover:bg-blue-700 cursor-pointer transition 
+      bg-[#4170FE] hover:bg-blue-600 cursor-pointer transition 
       disabled:bg-gray-300"
           >
             <span className="text-subhead3 text-white">로그인</span>
@@ -61,11 +62,12 @@ const LoginPage = () => {
           <button
             type="submit"
             onClick={handleGoogleLogin}
-            className="w-full h-[55px] justify-center border border-gray-500 
+            className="flex gap-3 w-full h-[55px] justify-center border border-gray-400 
             py-3 rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer transition"
           >
+            <img src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
-              Google로 시작하기
+              Google 로 시작하기
             </span>
           </button>
 
