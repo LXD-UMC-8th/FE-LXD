@@ -1,29 +1,54 @@
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
-// interface value {
-//   date: string;
-//   count: number;
-// }
-const CalendarModal = () => {
-  //titleDisable -> 일시적으로 설정한 것임. 지우면 됨.
+interface value {
+  date: string;
+  count: number;
+}
 
-  // const _values: value[] = [
-  // { date: "2016-01-01", count: 1 },
-  // { date: "2016-01-03", count: 4 },
-  // { date: "2016-01-06", count: 2 },
-  // ];
+const CalendarModal = () => {
+  //시험용 더미 데이터
+  const _values: value[] = [
+    { date: "2025-07-23", count: 1 },
+    { date: "2025-07-21", count: 3 },
+    { date: "2025-07-13", count: 2 },
+  ];
+
+  const _dateToCount = _values.reduce<Record<string, number>>((acc, cur) => {
+    acc[cur.date] = cur.count;
+    return acc;
+  }, {});
+
+  // Return heat class
+  const _getHeatClass = (count: number | undefined) => {
+    if (!count) return "";
+    return `heat-${count}`;
+  };
 
   return (
     <div className="w-70">
       <Calendar
-        className="no-holiday-colors border-radius-lg shadow-md"
+        className="border-radius-lg "
         formatDay={(_locale, date) => date.getDate().toString()}
         formatMonthYear={(_locale, date) =>
-          `${date.getMonth() + 1}. ${date.getFullYear()} `
+          `${date.getFullYear()} ${date
+            .toLocaleString("default", {
+              month: "short",
+            })
+            .toUpperCase()}`
         }
-        formatShortWeekday={() => ""}
+        formatShortWeekday={(locale, date) =>
+          ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][date.getDay()]
+        }
         locale="en-US"
+        prev2Label={null}
+        next2Label={null}
+        tileClassName={({ date, view }) => {
+          if (view !== "month") return "";
+          const dateStr = date.toISOString().split("T")[0];
+          const count = _dateToCount[dateStr];
+          return _getHeatClass(count);
+        }}
       />
     </div>
   );

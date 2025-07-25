@@ -75,10 +75,10 @@ body {
     color: #2c54f1;
   }
   .text-primary-50 {
-    color: #F1F5FD;
+    color: #f1f5fd;
   }
   .text-primary-500 {
-    color: #4170FE;
+    color: #4170fe;
   }
   .text-onPrimary {
     color: #cfdfff;
@@ -139,10 +139,10 @@ body {
     background-color: #2c54f1;
   }
   .bg-primary-50 {
-    background-color: #F1F5FD;
+    background-color: #f1f5fd;
   }
   .bg-primary-500 {
-    background-color: #4170FE;
+    background-color: #4170fe;
   }
   .bg-onPrimary {
     background-color: #cfdfff;
@@ -208,7 +208,7 @@ body {
 
 .ql-toolbar.ql-snow {
   border-top: 0 !important;
-  border-bottom: 3pxㅎ !important;
+  border-bottom: 3px !important;
   border-right: 0 !important;
   border-left: 0 !important;
 
@@ -216,17 +216,12 @@ body {
 }
 
 .react-calendar__tile {
-  border-radius: 50%; /* Makes them circular */
-
-  /* Or, for slightly rounded corners: */
-  /* border-radius: 8px; */
+  border-radius: 50%;
 }
 
 /* 선택된 날에 대한 설정 */
 .react-calendar__tile--active {
-  border-radius: 50%; /* Makes the highlight circular */
-  height: 20px;
-  width: 20px;
+  border-radius: 50%;
 }
 
 /* 오늘 날에 대한 설정 */
@@ -245,33 +240,35 @@ body {
   justify-content: space-between;
   margin-bottom: 0.5rem;
 }
+.react-calendar__navigation__label {
+  pointer-events: none;
+}
+
 .react-calendar__navigation button {
-  background: transparent;
   border: none;
   cursor: pointer;
   font-size: 1rem;
-}
-.react-calendar__navigation__label {
-  font-weight: bold;
-  font-size: 1.125rem;
+  background: transparent !important;
 }
 
 /* weekdays row */
 .react-calendar__month-view__weekdays {
   text-align: center;
-  margin-bottom: 0.25rem;
+}
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  border: none !important;
 }
 /* tiles */
 .react-calendar__tile {
   text-align: center;
-  pointer-events: none;
   padding: 0;
   height: 2.5rem;
   line-height: 2.5rem;
-  font-size: 0.875rem;
+  font-size: 50%;
+  pointer-events: none;
 }
 
-/* today */
 .react-calendar__tile--now {
   background: #212429 !important;
   color: #fff;
@@ -279,13 +276,25 @@ body {
   font-weight: bold;
 }
 .react-calendar__title {
-  .heat-1 {
-    background-color: #e4fff2;
-  }
-  .heat-2 {
-    background-color: #bffbef;
-  }
-  .heat-3 {
-    background-color: #7fe6d1;
-  }
+  color: #fff;
+}
+
+.react-calendar__tile.heat-1 {
+  background-color: #cfdfff !important;
+  color: #618bfd;
+  border-radius: 8px !important;
+}
+.react-calendar__tile.heat-2 {
+  background-color: #8aacfc !important;
+  color: #fff;
+  border-radius: 8px !important;
+}
+.react-calendar__tile.heat-3 {
+  background-color: #3461f4 !important;
+  color: #fff;
+  border-radius: 8px !important;
+}
+
+.react-calendar__tile--neighboringMonth {
+  color: gainsboro;
 }
