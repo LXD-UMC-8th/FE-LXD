@@ -74,6 +74,12 @@ body {
   .text-primary {
     color: #2c54f1;
   }
+  .text-primary-50 {
+    color: #F1F5FD;
+  }
+  .text-primary-500 {
+    color: #4170FE;
+  }
   .text-onPrimary {
     color: #cfdfff;
   }
@@ -131,6 +137,12 @@ body {
   /* Background Colors */
   .bg-primary {
     background-color: #2c54f1;
+  }
+  .bg-primary-50 {
+    background-color: #F1F5FD;
+  }
+  .bg-primary-500 {
+    background-color: #4170FE;
   }
   .bg-onPrimary {
     background-color: #cfdfff;
