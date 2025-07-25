@@ -1,16 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLanguage, Language } from "../../context/LanguageProvider";
 
-interface TopLangOptionsButtonProps {
-  selected: string;
-  onSelect: (lang: string) => void;
+interface LanguageOption {
+  value: Language;
+  label: string;
 }
-
-const TopLangOptionsButton = ({
-  selected,
-  onSelect,
-}: TopLangOptionsButtonProps) => {
+const TopLangOptionsButton = () => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
+  const { language, setLanguage } = useLanguage();
 
+  const options: LanguageOption[] = [
+    { value: Language.KOREAN, label: "한국어" },
+    { value: Language.ENGLISH, label: "English" },
+  ];
+
+  useEffect(() => {
+    console.log("Selected language:", language);
+  }, [language]);
   return (
     <div className="absolute top-10 right-30 flex items-center space-x-4">
       <span className="text-body2 text-gray-700 font-medium">language</span>
@@ -24,7 +30,7 @@ const TopLangOptionsButton = ({
               rounded-md focus:outline-none focus:ring-1"
         >
           <span className="block truncate text-gray-900">
-            {selected === "ko" ? "한국어" : "English"}
+            {language === "ko" ? "한국어" : "English"}
           </span>
 
           {/* Arrow Icon */}
@@ -54,14 +60,12 @@ const TopLangOptionsButton = ({
               border-gray-300 rounded-md shadow-md"
           >
             <ul className="max-h-60 py-1 overflow-auto text-sm">
-              {[
-                { value: "ko", label: "한국어" },
-                { value: "en", label: "English" },
-              ].map((lang, idx) => (
+
+              {options.map((lang) => (
                 <li
                   key={lang.value}
                   onClick={() => {
-                    onSelect(lang.value);
+                    setLanguage(lang.value);
                     setIsOpen(false);
                   }}
                   className={`cursor-pointer px-4 py-2 
