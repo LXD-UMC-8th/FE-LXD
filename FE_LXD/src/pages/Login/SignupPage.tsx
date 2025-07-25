@@ -67,6 +67,7 @@ const SignupPage = () => {
 
   const handleNextPage = () => {
     if (!isAllValid()) return;
+    // 서버로 가입 정보 전송해야함, 나중에 수정
     console.log(userInfo.email, userInfo.password);
     navigate("profile");
   };

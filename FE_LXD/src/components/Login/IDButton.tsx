@@ -1,7 +1,7 @@
 interface IDButtonProps {
   name: string;
   onClick: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const IDButton = ({ name, onClick, disabled }: IDButtonProps) => {
