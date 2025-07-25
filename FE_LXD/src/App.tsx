@@ -30,6 +30,7 @@ const publicRoutes: RouteObject[] = [
       { index: true, element: <LoginPage /> },
       { path: "signup", element: <SignupPage /> },
       { path: "signup/profile", element: <ProfilePage /> },
+
     ],
   },
 ];
