@@ -10,7 +10,7 @@ const DiaryPage = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-gray-100 w-[450px] flex flex-cols gap-20 justify-between">
+    <div className="relative min-h-screen bg-gray-100 w-[450px] flex flex-cols gap-10 justify-between">
       <div>
         <DiaryHeader />
         {/*다이어리 밑 내용 추가 구분선*/}

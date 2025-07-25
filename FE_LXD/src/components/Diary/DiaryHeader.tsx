@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const DiaryHeader = () => {
   return (
     <div>
-      <div className="h-45 rounded-t-[12px] rounded-b-none bg-[var(--Primary-500,#4170FE)] ">
+      <div className="h-45 w-260 rounded-t-[12px] rounded-b-none bg-[var(--Primary-500,#4170FE)] ">
         <div className="grid grid-cols-[3fr_1fr] h-1/2 px-5">
           <div>
             <div className="pt-15 pb-2 text-white text-xl font-bold grid grid-rows-2">
