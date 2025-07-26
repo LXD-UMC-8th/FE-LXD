@@ -11,7 +11,7 @@ export function isPasswordValid(password: string): boolean {
   const lowerCheck = /[a-z]/.test(password);
   const numberCheck = /[0-9]/.test(password);
   const specialCheck = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
+
   return lengthCheck && upperCheck && lowerCheck && numberCheck && specialCheck;
 }
 
@@ -21,4 +21,17 @@ export function isPasswordMatch(
   checkPassword: string
 ): boolean {
   return password === checkPassword;
+}
+
+// 아이디 유효성 검사 함수: 영어 소문자, 숫자, 특수기호만. 2자이상. 공백 없음
+// 중복확인 API 거친 후 사용 가능할 때만 유효
+export function isIdValid(id: string): boolean {
+  const pattern = /^[a-z0-9._-]{2,}$/;
+  return pattern.test(id) && !/\s/.test(id);
+}
+
+// 닉네임 유효성 검사 함수: 영어 또는 한글. 1~40자 이하
+export function isNicknameValid(nickname: string) {
+  const pattern = /^[a-zA-Z가-힣]{1,40}$/;
+  return pattern.test(nickname);
 }
