@@ -1,15 +1,21 @@
+import Avatar from "../Common/Avatar";
+
 interface FriendItemProps {
   name: string;
   username: string;
+  image?: string; // 프로필 이미지 경로 (없으면 기본 Avatar 사용)
   isSelected: boolean;
   onClick: () => void;
+  showDelete?: boolean; // X 버튼 노출 여부
 }
 
 const FriendItem = ({
   name,
   username,
+  image,
   isSelected,
   onClick,
+  showDelete = true,
 }: FriendItemProps) => {
   return (
     <li
@@ -18,8 +24,8 @@ const FriendItem = ({
         isSelected ? "bg-blue-50" : "hover:bg-gray-100"
       }`}
     >
-      {/* 프로필 이미지 자리 */}
-      <div className="w-10 h-10 rounded-full bg-gray-200" />
+      {/* 프로필 이미지 */}
+      <Avatar src={image} alt={`${name} profile`} size="w-10 h-10" />
 
       {/* 이름과 아이디 */}
       <div className="flex flex-col">
@@ -27,8 +33,10 @@ const FriendItem = ({
         <div className="text-sm text-gray-500">@{username}</div>
       </div>
 
-      {/* X 버튼 - 최근 검색에서 쓸 때만 조건부로 보여주기 가능 */}
-      <div className="ml-auto text-gray-400 hover:text-gray-600 text-lg">✕</div>
+      {/* X 버튼 - showDelete가 true일 때만 노출 */}
+      {showDelete && (
+        <div className="ml-auto text-gray-400 hover:text-gray-600 text-lg">✕</div>
+      )}
     </li>
   );
 };
