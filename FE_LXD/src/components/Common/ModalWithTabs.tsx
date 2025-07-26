@@ -3,7 +3,7 @@ import TabsMap from "./TabsMap";
 
 type Tabvalue = {
   value: string;
-  title: string;
+  title?: string;
   count?: number | undefined;
 };
 interface ModalWithTabsProps {
@@ -11,7 +11,9 @@ interface ModalWithTabsProps {
 }
 
 const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
-  const [activeTab, setActiveTab] = useState(tabvalue[0].title);
+  const [activeTab, setActiveTab] = useState<string | undefined>(
+    tabvalue[0].title,
+  );
 
   const renderTab = (value: string, title: string, count?: number) => (
     <button
@@ -46,7 +48,9 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
         className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
         role="tablist"
       >
-        {tabvalue.map((tab) => renderTab(tab.value, tab.title, tab.count))}
+        {tabvalue.map((tab) =>
+          renderTab(tab.value, tab.title as string, tab.count),
+        )}
       </div>
 
       {/* Content */}

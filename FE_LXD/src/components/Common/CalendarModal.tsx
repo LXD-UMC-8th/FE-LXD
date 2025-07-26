@@ -8,16 +8,26 @@ interface value {
 
 const CalendarModal = () => {
   //시험용 더미 데이터
+  function formatLocalYMDD(date: Date) {
+    // “en-CA” → “YYYY-MM-DD”
+    return date.toLocaleDateString("en-CA");
+  }
+
   const _values: value[] = [
     { date: "2025-07-23", count: 1 },
     { date: "2025-07-21", count: 3 },
     { date: "2025-07-13", count: 2 },
+    { date: "2025-07-12", count: 3 },
+    { date: "2025-07-31", count: 1 },
   ];
 
-  const _dateToCount = _values.reduce<Record<string, number>>((acc, cur) => {
-    acc[cur.date] = cur.count;
-    return acc;
-  }, {});
+  const _dateToCount = _values.reduce<Record<string, number>>(
+    (acc, { date, count }) => {
+      acc[date] = count;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
 
   // Return heat class
   const _getHeatClass = (count: number | undefined) => {
@@ -45,7 +55,7 @@ const CalendarModal = () => {
         next2Label={null}
         tileClassName={({ date, view }) => {
           if (view !== "month") return "";
-          const dateStr = date.toISOString().split("T")[0];
+          const dateStr = formatLocalYMDD(date);
           const count = _dateToCount[dateStr];
           return _getHeatClass(count);
         }}

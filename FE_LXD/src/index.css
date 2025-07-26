@@ -271,7 +271,7 @@ body {
 
 .react-calendar__tile--now {
   background: #212429 !important;
-  color: #fff;
+  color: #fff !important;
   border-radius: 8px !important;
   font-weight: bold;
 }
@@ -297,4 +297,8 @@ body {
 
 .react-calendar__tile--neighboringMonth {
   color: gainsboro;
+}
+
+.no-holiday-colors .react-calendar__month-view__days__day--weekend {
+  color: inherit;
 }

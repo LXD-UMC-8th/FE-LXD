@@ -8,7 +8,6 @@ interface PrevButtonProps {
 const PrevButton = ({ navigateURL }: PrevButtonProps) => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    console.log(`Navigating to: ${navigateURL}`);
     navigate(navigateURL);
   };
 

@@ -1,16 +1,20 @@
 import DiaryHeader from "../../components/Diary/DiaryHeader";
 import ModalWithTabs from "../../components/Common/ModalWithTabs";
-// import diaryvector from "../../../public/images/diaryvector.svg";
 import CalendarModal from "../../components/Common/CalendarModal";
+import { translate } from "../../context/translate";
+import { useLanguage } from "../../context/LanguageProvider";
 
 const DiaryPage = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
+
   const tabvalue = [
-    { value: "totalINdiary", title: "모두" },
-    { value: "likeINdiary", title: "좋아요" },
+    { value: "totalINdiary", title: t.modaltabtitle_total },
+    { value: "likeINdiary", title: t.modaltabtitle_likes },
   ];
 
   return (
-    <div className="relative min-h-screen bg-gray-100 w-[450px] flex flex-cols gap-10 justify-between">
+    <div className="relative min-h-screen bg-gray-100 w-260 flex flex-cols gap-10 justify-between">
       <div>
         <DiaryHeader />
         {/*다이어리 밑 내용 추가 구분선*/}
