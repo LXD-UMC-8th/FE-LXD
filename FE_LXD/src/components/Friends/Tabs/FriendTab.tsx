@@ -1,32 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
 import AlertModal from "../../Common/AlertModal";
 
 const FriendTab = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
   const friendList = [
     { id: "1", name: "김태현", username: "kimtaehyun" },
     { id: "2", name: "홍길동", username: "honggildong" },
     { id: "3", name: "김태현", username: "kimtaehyun" },
     { id: "4", name: "김태현", username: "kimtaehyun" },
   ];
-  const receivedRequests = [
-    { id: "3", name: "이지은", username: "jieun" },
-    { id: "4", name: "박민수", username: "parkminsu" },
-  ];
-
-  const sentRequests = [
-    { id: "5", name: "김철수", username: "kimcheolsu" },
-    { id: "6", name: "오하나", username: "ohanaz" },
-  ];
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
 
-  const selectedUser = [...friendList, ...receivedRequests, ...sentRequests].find(
-    (u) => u.username === selectedUsername
-  );
+  const selectedUser = friendList.find((u) => u.username === selectedUsername);
 
   const onCardClick = (user: { id: string; name: string; username: string }) => {
     setSelectedUsername(user.username);
@@ -49,10 +40,17 @@ const FriendTab = () => {
     onCloseConfirmModal();
   };
 
+  useEffect(() => {
+    // API 호출 시뮬레이션 (1.5초 뒤 로딩 완료)
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="w-full max-w-[1200px] mx-auto px-4">
       <UserListSection
         users={friendList}
+        isLoading={isLoading}
         onUserCardClick={onCardClick}
         onFriendButtonClick={onFriendButtonClick}
       />
