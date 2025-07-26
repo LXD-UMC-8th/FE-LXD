@@ -23,10 +23,16 @@ const LangOptionsButton = ({
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="w-[250px] h-[55px] px-[32px] py-[16px] border rounded-md 
-              border-gray-300 bg-gray-50 text-gray-500 text-body1 
-              focus:outline-none"
+              border-gray-300 bg-gray-50 focus:outline-none"
         >
-          <span className="block truncate text-left text-body1 text-gray-400">
+          <span
+            className={`block truncate text-left text-body1 
+            ${
+              selected === "ko" || selected === "en"
+                ? "text-black"
+                : "text-gray-500"
+            }`}
+          >
             {selected === "ko"
               ? "한국어"
               : selected === "en"

@@ -11,31 +11,31 @@ import {
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
+import type { SignupFlowProps } from "./SignupFlow";
 
-const SignupPage = () => {
-  const [userInfo, setUserInfo] = useState({
-    lang: "ko",
-    email: "",
-    password: "",
-    checkPassword: "",
-  });
+interface SignupPageProps {
+  userInfo: SignupFlowProps;
+  setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+}
+
+const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [emailVerified, setEmailVerified] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false);
-  const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
 
-  // 모킹 함수 (나중에 삭제)
+  // 이메일 인증 모킹 함수 (나중에 삭제)
   async function fakeEmailVerify(email: string) {
     return new Promise<{ ok: boolean }>((resolve) => {
       setTimeout(() => resolve({ ok: true }), 1000);
+      console.log(email)
     });
   }
 
   const handleEmailCheck = async () => {
     try {
-      // 여기에 실제 API 요청이 들어감 (나중에 axios로 대체)
+      // 여기에 이메일 인증 API 요청이 들어감 (나중에 axios로 대체)
       const response = await fakeEmailVerify(userInfo.email);
 
       if (!response.ok) {
@@ -50,6 +50,14 @@ const SignupPage = () => {
     }
   };
 
+  const handleInputChange = (key: keyof typeof userInfo, value: string) => {
+    setUserInfo((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleIsPrivacy = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUserInfo((prev) => ({ ...prev, isPrivacy: e.target.checked }));
+  };
+
   const isAllValid = () => {
     const _isEmailValid = isEmailValid(userInfo.email);
     const _isPasswordValid = isPasswordValid(userInfo.password);
@@ -58,16 +66,11 @@ const SignupPage = () => {
       userInfo.checkPassword
     );
 
-    return _isEmailValid && _isPasswordValid && _isPasswordChecked && agreed;
-  };
-
-  const handleInputChange = (key: keyof typeof userInfo, value: string) => {
-    setUserInfo((prev) => ({ ...prev, [key]: value }));
+    return _isEmailValid && _isPasswordValid && _isPasswordChecked && userInfo.isPrivacy;
   };
 
   const handleNextPage = () => {
     if (!isAllValid()) return;
-    // 서버로 가입 정보 전송해야함, 나중에 수정
     console.log(userInfo.email, userInfo.password);
     navigate("profile");
   };
@@ -77,10 +80,7 @@ const SignupPage = () => {
       className="flex flex-col min-h-screen
     items-center justify-center px-4"
     >
-      <TopLangOptionsButton
-        selected={userInfo.lang}
-        onSelect={(val) => handleInputChange("lang", val)}
-      />
+      <TopLangOptionsButton />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />
@@ -108,6 +108,11 @@ const SignupPage = () => {
             {emailTouched && !isEmailValid(userInfo.email) && (
               <span className="text-body2 text-red-500">
                 유효하지 않은 이메일입니다
+              </span>
+            )}
+            {emailTouched && isEmailValid(userInfo.email) && (
+              <span className="text-body2 text-mint-500">
+                사용가능한 이메일입니다
               </span>
             )}
           </div>
@@ -156,8 +161,8 @@ const SignupPage = () => {
           <label className="flex gap-2 items-center">
             <input
               type="checkbox"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
+              checked={userInfo.isPrivacy}
+              onChange={handleIsPrivacy}
               className="w-[19px] h-[19px]"
             />
             <span className="text-body1">
