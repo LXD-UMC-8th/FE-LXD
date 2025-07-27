@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import SignupPage from "./SignupPage";
 import ProfilePage from "./ProfilePage";
+import ChangePWPage from "./ChangePWPage";
 
 export interface SignupFlowProps {
   email: string;
@@ -11,8 +12,8 @@ export interface SignupFlowProps {
   id: string;
   nickname: string;
   profileImg: string;
-  nativeLang: string;
-  studyLang: string;
+  nativeLanguage: string;
+  studyLanguage: string;
 }
 
 const SignupFlow = () => {
@@ -24,8 +25,8 @@ const SignupFlow = () => {
     id: "",
     nickname: "",
     profileImg: "",
-    nativeLang: "",
-    studyLang: "",
+    nativeLanguage: "",
+    studyLanguage: "",
   });
 
   return (
@@ -37,6 +38,10 @@ const SignupFlow = () => {
       <Route
         path="profile"
         element={<ProfilePage userInfo={userInfo} setUserInfo={setUserInfo} />}
+      />
+      <Route
+        path="change-pw"
+        element={<ChangePWPage userInfo={userInfo} setUserInfo={setUserInfo} />}
       />
     </Routes>
   );

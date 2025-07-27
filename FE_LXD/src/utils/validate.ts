@@ -1,4 +1,4 @@
-// 이메일 유효성 검사 함수
+// 이메일 유효성 검사 함수: 올바른 이메일 형식
 export function isEmailValid(email: string): boolean {
   const pattern = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
   return pattern.test(email);

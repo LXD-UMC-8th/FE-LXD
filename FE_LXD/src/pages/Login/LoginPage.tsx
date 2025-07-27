@@ -78,7 +78,7 @@ const LoginPage = () => {
         underline underline-offset-2 cursor-pointer"
           >
             <a href="/home/signup">회원가입</a>
-            <a href="/home/change-pw">비밀번호 변경</a>
+            <a href="/home/signup/change-pw">비밀번호 변경</a>
           </div>
         </section>
       </div>
