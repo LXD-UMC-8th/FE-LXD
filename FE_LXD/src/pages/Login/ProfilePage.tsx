@@ -79,18 +79,18 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     }
   };
 
-  const handleNativeLangSelect = (lang: string) => {
+  const handleNativeLanguageSelect = (lang: string) => {
     setUserInfo((prev) => ({
       ...prev,
-      nativeLang: lang,
-      studyLang: lang === "ko" ? "en" : "ko",
+      nativeLanguage: lang,
+      studyLanguage: lang === "ko" ? "en" : "ko",
     }));
   };
 
-  const handleStudyLangSelect = (lang: string) => {
+  const handleStudyLanguageSelect = (lang: string) => {
     setUserInfo((prev) => ({
       ...prev,
-      studyLang: lang,
+      studyLanguage: lang,
     }));
   };
 
@@ -235,12 +235,12 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
             <LangOptionsButton
               name="모국어 / 주사용 언어"
               selected={userInfo.nativeLanguage}
-              onSelect={handleNativeLangSelect}
+              onSelect={handleNativeLanguageSelect}
             />
             <LangOptionsButton
               name="학습언어"
               selected={userInfo.studyLanguage}
-              onSelect={handleStudyLangSelect}
+              onSelect={handleStudyLanguageSelect}
             />
           </div>
         </form>

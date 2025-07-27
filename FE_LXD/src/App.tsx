@@ -28,7 +28,7 @@ const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <LoginPage /> },
       { path: "signup/*", element: <SignupFlow /> },
-
+      
     ],
   },
 ];
