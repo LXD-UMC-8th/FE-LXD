@@ -63,11 +63,11 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     const file = e.target.files?.[0];
     if (file) {
       const imageURL = URL.createObjectURL(file);
-      setUserInfo((prev) => ({ ...prev, preview: imageURL }));
+      setUserInfo((prev) => ({ ...prev, profileImg: imageURL }));
     }
   };
   const handleRemoveImage = () => {
-    setUserInfo((prev) => ({ ...prev, preview: "" }));
+    setUserInfo((prev) => ({ ...prev, profileImg: "" }));
   };
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
@@ -95,10 +95,10 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   };
 
   const isAllValid = () => {
-    const { nativeLang, studyLang } = userInfo;
+    const { nativeLanguage, studyLanguage } = userInfo;
     const _isIdValid = isIdValid(userInfo.id) && isIdAvailable === true;
     const _isNicknameValid = isNicknameValid(userInfo.nickname);
-    const _isLangValid = nativeLang !== "" && studyLang !== "";
+    const _isLangValid = nativeLanguage !== "" && studyLanguage !== "";
 
     return _isIdValid && _isNicknameValid && _isLangValid;
   };
@@ -110,18 +110,18 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       username: userInfo.id,
       nickname: userInfo.nickname,
       profileImg: userInfo.profileImg,
-      nativeLang: userInfo.nativeLang,
-      studyLang: userInfo.studyLang,
+      nativeLanguage: userInfo.nativeLanguage,
+      studyLanguage: userInfo.studyLanguage,
       isPrivacy: userInfo.isPrivacy,
     };
 
     try {
       const response = await axios.post("/members/join", payload);
       console.log("회원가입 성공", response.data);
-      alert("회원가입 성공")
+      alert("회원가입 성공");
     } catch (err) {
       console.error("회원가입 실패:", err);
-      alert("회원가입 실패, 다시 시도해주세요")
+      alert("회원가입 실패, 다시 시도해주세요");
     }
     navigate("/home");
   };
@@ -234,12 +234,12 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           <div className="flex justify-between">
             <LangOptionsButton
               name="모국어 / 주사용 언어"
-              selected={userInfo.nativeLang}
+              selected={userInfo.nativeLanguage}
               onSelect={handleNativeLangSelect}
             />
             <LangOptionsButton
               name="학습언어"
-              selected={userInfo.studyLang}
+              selected={userInfo.studyLanguage}
               onSelect={handleStudyLangSelect}
             />
           </div>
