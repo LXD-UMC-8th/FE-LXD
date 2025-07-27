@@ -27,7 +27,6 @@ const LoginPage = () => {
     items-center justify-center space-y-12 px-4"
     >
       <TopLangOptionsButton />
-
       <header className="flex flex-col items-center space-y-8">
         <img src="images/LXD_logo.svg" />
         <img src="images/language_x_diary.svg" />
