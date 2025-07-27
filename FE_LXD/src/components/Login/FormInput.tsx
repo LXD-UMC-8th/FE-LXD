@@ -5,6 +5,7 @@ interface FormInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   type?: string;
+  disabled?: boolean;
 }
 
 const FormInput = ({
@@ -14,6 +15,7 @@ const FormInput = ({
   onChange,
   onBlur,
   type = "text",
+  disabled,
 }: FormInputProps) => {
   return (
     <div className="space-y-[10px]">
@@ -24,6 +26,7 @@ const FormInput = ({
         value={input}
         onChange={onChange}
         onBlur={onBlur}
+        disabled={disabled}
         className="w-full h-14 px-8 py-4 border rounded-md 
               border-gray-300 bg-gray-50 placeholder-gray-400 text-body1
              focus:outline-none focus:ring-2 focus:ring-blue-400"

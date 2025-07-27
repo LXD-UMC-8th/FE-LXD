@@ -19,30 +19,42 @@ interface SignupPageProps {
 }
 
 const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
-  const [emailVerified, setEmailVerified] = useState(false);
-  const [emailTouched, setEmailTouched] = useState(false);
-  const [passwordTouched, setPasswordTouched] = useState(false);
-  const [checkPasswordTouched, setCheckPasswordTouched] = useState(false);
+  const [hasTriedVerify, setHasTriedVerify] = useState(false); //인증하기 버튼 눌렀는지 상태관리
+  const [emailVerified, setEmailVerified] = useState(false); //이메일 인증 완료 여부 상태관리
+  const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리
+  const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
+  const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const navigate = useNavigate();
 
   // 이메일 인증 모킹 함수 (나중에 삭제)
-  async function fakeEmailVerify(email: string) {
-    return new Promise<{ ok: boolean }>((resolve) => {
-      setTimeout(() => resolve({ ok: true }), 1000);
-      console.log(email)
+  async function fakeEmailVerify(
+    email: string,
+    mode: "available" | "taken" | "random" = "available"
+  ): Promise<{ ok: boolean }> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (mode === "random") {
+          const available = Math.random() > 0.5;
+          resolve({ ok: available });
+          return;
+        }
+        resolve({ ok: mode === "available" });
+      }, 500);
     });
   }
 
   const handleEmailCheck = async () => {
+    setHasTriedVerify(true);
     try {
       // 여기에 이메일 인증 API 요청이 들어감 (나중에 axios로 대체)
-      const response = await fakeEmailVerify(userInfo.email);
+      const response = await fakeEmailVerify(userInfo.email, "random");
 
       if (!response.ok) {
-        throw new Error("인증 실패");
+        console.log("인증 실패");
+        setEmailVerified(false);
+        return;
       }
-
-      setEmailVerified(true); // 성공 시 상태 변경
+      setEmailVerified(true);
       console.log("이메일 인증 성공");
     } catch (error) {
       alert("인증할 수 없는 이메일입니다");
@@ -59,14 +71,19 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   };
 
   const isAllValid = () => {
-    const _isEmailValid = isEmailValid(userInfo.email);
+    const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
       userInfo.checkPassword
     );
 
-    return _isEmailValid && _isPasswordValid && _isPasswordChecked && userInfo.isPrivacy;
+    return (
+      _isEmailValid &&
+      _isPasswordValid &&
+      _isPasswordChecked &&
+      userInfo.isPrivacy
+    );
   };
 
   const handleNextPage = () => {
@@ -97,6 +114,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                   input={userInfo.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => setEmailTouched(true)}
+                  disabled={emailVerified}
                 />
               </div>
               <IDButton
@@ -105,15 +123,25 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                 disabled={!isEmailValid(userInfo.email) || emailVerified}
               />
             </div>
-            {emailTouched && !isEmailValid(userInfo.email) && (
-              <span className="text-body2 text-red-500">
-                유효하지 않은 이메일입니다
-              </span>
-            )}
-            {emailTouched && isEmailValid(userInfo.email) && (
-              <span className="text-body2 text-mint-500">
-                사용가능한 이메일입니다
-              </span>
+            {emailTouched &&
+              userInfo.email.trim() !== "" &&
+              !isEmailValid(userInfo.email) && (
+                <span className="text-body2 text-red-500">
+                  유효하지 않은 형식입니다
+                </span>
+              )}
+            {emailTouched && isEmailValid(userInfo.email) && hasTriedVerify && (
+              <>
+                {emailVerified ? (
+                  <span className="text-body2 text-mint-500">
+                    인증되었습니다
+                  </span>
+                ) : (
+                  <span className="text-body2 text-red-500">
+                    사용할 수 없는 이메일입니다
+                  </span>
+                )}
+              </>
             )}
           </div>
           <div className="flex flex-col space-y-2">
@@ -125,12 +153,14 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
               onBlur={() => setPasswordTouched(true)}
               type="password"
             />
-            {passwordTouched && !isPasswordValid(userInfo.password) && (
-              <span className="text-body2 text-red-500">
-                비밀번호는 10자 이상, 영문 대소문자/숫자/특수문자를 포함해야
-                합니다
-              </span>
-            )}
+            {passwordTouched &&
+              userInfo.password.trim() !== "" &&
+              !isPasswordValid(userInfo.password) && (
+                <span className="text-body2 text-red-500">
+                  비밀번호는 10자 이상, 영문 대소문자/숫자/특수문자를 포함해야
+                  합니다
+                </span>
+              )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
