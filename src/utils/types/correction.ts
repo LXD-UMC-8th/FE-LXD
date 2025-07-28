@@ -1,6 +1,7 @@
 import type { APIResponse } from "./APIresponse";
 import type { CorrectionsMemberDTO } from "./member";
 
+// 교정 등록
 export type CorrectionsUploadRequestDTO = {
     diaryId: number;
     original: string;
@@ -18,7 +19,7 @@ export type CorrectionsDetailDTO = {
     commentText: string;
     likeCount: number;
     commentCount: number;
-    likeByMe: boolean;
+    likedByMe: boolean;
 }
 
 export type CorrectionsUploadResponseDTO = APIResponse<CorrectionsDetailDTO>;
