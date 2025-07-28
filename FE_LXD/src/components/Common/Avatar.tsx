@@ -1,7 +1,7 @@
 interface AvatarProps {
-  src?: string;       // 사용자 프로필 이미지
-  alt?: string;       // 대체 텍스트
-  size?: string;      // tailwind 사이즈 클래스 (기본값 "w-10 h-10")
+  src?: string; // 사용자 프로필 이미지
+  alt?: string; // 대체 텍스트
+  size?: string; // tailwind 사이즈 클래스 (기본값 "w-10 h-10")
   className?: string; // 추가 커스텀 클래스
 }
 

@@ -1,9 +1,1 @@
-.no-holiday-colors .react-calendar__month-view__days__day--weekend {
-  color: inherit;
-}
 
-.react-calendar__tile--active {
-  width: 36px !important;
-  height: 36px !important;
-  border-radius: 50% !important;
-}

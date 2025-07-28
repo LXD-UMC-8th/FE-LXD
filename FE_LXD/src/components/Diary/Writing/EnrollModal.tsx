@@ -1,11 +1,12 @@
 import { useState } from "react";
 import useWritingSubmit from "../../../hooks/useWritingSubmit";
-
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 interface EnrollModalProps {
   _onClose?: () => void;
   _titleName: string;
   _editorRawContent: string;
-  _style: "FREE" | "QUESTION";
+  _style: string;
 }
 
 const EnrollModal = ({
@@ -13,6 +14,8 @@ const EnrollModal = ({
   _editorRawContent,
   _style,
 }: EnrollModalProps) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const [visibility, setVisibility] = useState<"PUBLIC" | "FRIEND" | "PRIVATE">(
     "PUBLIC",
   );
@@ -35,10 +38,15 @@ const EnrollModal = ({
     //마지막으로 여기서 전송하는 게 나을 것 같긴 함.
     // submitWriting();
     console.log({ submitWriting });
+
+    //diary/{diaryId}로 navigate
   };
 
+  //isLoading설정 -> api구현된 이후에 작업하기
+  const [_isLoading, _setIsLoading] = useState(false);
+
   return (
-    <div className="w-[300px] p-6 bg-white rounded-xl shadow-lg">
+    <div className="w-90 p-6 bg-white rounded-xl shadow-lg">
       {/* 공개 설정 */}
       <div className="mb-6">
         <h3 className="text-gray-500 font-semibold mb-3">공개 설정</h3>
@@ -53,7 +61,7 @@ const EnrollModal = ({
                 setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
               }
             />
-            공개
+            {t.visibility_PUBLIC}
           </label>
           <label className="flex items-center gap-1">
             <input
@@ -65,7 +73,7 @@ const EnrollModal = ({
                 setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
               }
             />
-            친구공개
+            {t.visibility_FRIEND}
           </label>
           <label className="flex items-center gap-1">
             <input
@@ -77,7 +85,7 @@ const EnrollModal = ({
                 setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
               }
             />
-            비공개
+            {t.visibility_PRIVATE}
           </label>
         </div>
       </div>
@@ -98,7 +106,7 @@ const EnrollModal = ({
                 )
               }
             />
-            전체허용
+            {t.commentPermission_PUBLIC}
           </label>
           <label className="flex items-center gap-1">
             <input
@@ -112,7 +120,7 @@ const EnrollModal = ({
                 )
               }
             />
-            친구허용
+            {t.commentPermission_FRIEND}
           </label>
           <label className="flex items-center gap-1">
             <input
@@ -126,7 +134,7 @@ const EnrollModal = ({
                 )
               }
             />
-            비허용
+            {t.commentPermission_PRIVATE}
           </label>
         </div>
       </div>
@@ -137,7 +145,7 @@ const EnrollModal = ({
           onClick={handleSubmit}
           className="rounded-[8px] bg-[var(--Primary-500,#4170FE)] text-white hover:bg-[var(--Primary-600,#3259D9)] px-4 py-2 transition-all duration-300"
         >
-          등록하기
+          {t.enrollButtonText}
         </button>
       </div>
     </div>

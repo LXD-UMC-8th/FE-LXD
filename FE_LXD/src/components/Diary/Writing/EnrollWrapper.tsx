@@ -5,7 +5,7 @@ import EnrollModal from "./EnrollModal";
 interface EnrollWrapperProps {
   _titleName: string;
   _editorRawContent: string;
-  _style: "FREE" | "QUESTION";
+  _style: string;
 }
 
 const EnrollWrapper = ({
