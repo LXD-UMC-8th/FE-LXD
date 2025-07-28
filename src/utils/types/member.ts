@@ -23,3 +23,10 @@ export type MemberDTO = {
 export type JoinResponseDTO = {
   member: MemberDTO;
 };
+
+export type CorrectionsMemberDTO = {
+  memberId: number;
+  userId: string;
+  nickname: string;
+  profileImageUrl: string;
+}
