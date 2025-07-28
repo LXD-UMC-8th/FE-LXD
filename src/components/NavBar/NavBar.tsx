@@ -9,6 +9,7 @@ const NavBar = () => {
 
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
+  //해야될 것 modal은 한 번에 하나의 모달만 띄울 수 있게 설정하기
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
       {/* 로고 */}

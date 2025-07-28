@@ -9,6 +9,7 @@ import { useThrottle } from "../../hooks/useThrottle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { getDiaryRandomQuestion } from "../../apis/diary";
+import LoadingModal from "../../components/Common/LoadingModal";
 
 const WritingPage = () => {
   const { language } = useLanguage();

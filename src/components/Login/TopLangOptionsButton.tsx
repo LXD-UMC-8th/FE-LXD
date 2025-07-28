@@ -60,7 +60,6 @@ const TopLangOptionsButton = () => {
               border-gray-300 rounded-md shadow-md"
           >
             <ul className="max-h-60 py-1 overflow-auto text-sm">
-
               {options.map((lang) => (
                 <li
                   key={lang.value}
