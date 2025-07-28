@@ -6,13 +6,18 @@ import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useState, useEffect } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useThrottle } from "../../hooks/useThrottle";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
+import { getDiaryRandomQuestion } from "../../apis/diary";
 
 const WritingPage = () => {
-  const _title_free = "FREE";
-  const _title_question = "QUESTION";
+  const { language } = useLanguage();
+  const t = translate[language];
+  const _title_free = t.titleStyle_FREE;
+  const _title_question = t.titleStyle_QUESTION;
 
   // 글쓰기 페이지에서 사용할 제목 상태
-  const [_style, setStyle] = useState<"FREE" | "QUESTION">("FREE");
+  const [_style, setStyle] = useState<string>(t.titleStyle_FREE);
 
   //제목 이름 상태 관리
   const [_titleName, setTitleName] = useState<string>("");
@@ -48,12 +53,22 @@ const WritingPage = () => {
   const _handleRefresh = () => {
     //QUESTION 재생성
     console.log("QUESTION 재생성");
+
+    //api연결함수 여기다가 작성해줘야함
+    getDiaryRandomQuestion({ language }).then((data) => {
+      console.log("새로운 질문:", data);
+      setTitleName(data.result.content); // data.question에 새로운 질문이 있다고 가정
+      // 여기서 data를 사용하여 필요한 작업을 수행
+      // 예: setEditorRawContent(data.question); 등
+    });
   };
 
-  //나중에 지우기!! ㅈ
+  //나중에 지우기!!
   useEffect(() => {
+    const data = getDiaryRandomQuestion({ language });
+    console.log(data);
     console.log(_style);
-  }, [_style]);
+  }, []);
 
   return (
     <div className="px-4 py-2 bg-gray-100">
@@ -76,15 +91,17 @@ const WritingPage = () => {
             title2={_title_question}
             onClick={handleTitleValueChange}
           />
-          {_style === "FREE" && (
+          {_style === t.titleStyle_FREE && (
             <input
               onChange={(e) => setTitleName(e.target.value)}
               type="text"
               className="w-full bg-gray-200 rounded-md p-3 mt-5"
-              placeholder="제목을 입력하세요."
+              placeholder={t.titleInputPlaceholder}
             ></input>
           )}
-          {_style === "QUESTION" && <QuestionTitle onClick={_handleRefresh} />}
+          {_style === t.titleStyle_QUESTION && (
+            <QuestionTitle _titleName={_titleName} onClick={_handleRefresh} />
+          )}
         </div>
 
         <div className="w-full h-full mt-5 ">

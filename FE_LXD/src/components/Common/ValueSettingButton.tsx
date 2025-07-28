@@ -14,9 +14,9 @@ const ValueSettingButton = ({
   const [selected, setSelected] = useState(title1);
 
   const handleClick = (value: string) => {
-    setSelected(value); // update UI state
+    setSelected(value);
     if (onClick) {
-      onClick(value); // notify parent
+      onClick(value);
     }
   };
 

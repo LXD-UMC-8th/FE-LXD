@@ -33,17 +33,17 @@ const removeLocalStorageItem = (key: string) => {
 
 // Request interceptor
 //axiosInstance의 request을 가로채어 accessToken을 헤더에 추가함.
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const accessToken = getLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
-    if (accessToken) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
+// axiosInstance.interceptors.request.use(
+//   (config) => {
+//     const accessToken = getLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+//     if (accessToken) {
+//       config.headers = config.headers || {};
+//       config.headers.Authorization = `Bearer ${accessToken}`;
+//     }
+//     return config;
+//   },
+//   (error) => Promise.reject(error),
+// );
 
 // Response interceptor
 //axiosInstance의 response를 가로채어 401 에러 발생 시 refresh 토큰을 이용해 accessToken을 재발급함.

@@ -1,8 +1,13 @@
 import { Link } from "react-router-dom";
 import TitleHeader from "../Common/TitleHeader";
 import Avatar from "../Common/Avatar";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 const DiaryHeader = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
+
   return (
     <div>
       <div className="h-37 mt-8 w-260 rounded-t-[12px] rounded-b-none">
@@ -27,7 +32,7 @@ const DiaryHeader = () => {
               to="/mydiary/writing"
               className="w-30 z-10 rounded-[8px] bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white p-3 flex flex-row gap-3 items-center justify-center"
             >
-              <img src="/images/plusimg.svg" alt="+" /> 새 글 쓰기
+              <img src="/images/plusimg.svg" alt="+" /> {t.createNewDiary}
             </Link>
           </div>
         </div>

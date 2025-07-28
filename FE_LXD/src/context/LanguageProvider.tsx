@@ -2,8 +2,8 @@ import { useContext, useState, createContext } from "react";
 import type { PropsWithChildren } from "react";
 
 export enum Language {
-  ENGLISH = "en",
-  KOREAN = "ko",
+  ENGLISH = "EN",
+  KOREAN = "KO",
 }
 
 export type TLanguage = Language.ENGLISH | Language.KOREAN;
