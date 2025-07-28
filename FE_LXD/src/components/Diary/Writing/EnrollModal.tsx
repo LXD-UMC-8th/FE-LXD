@@ -38,6 +38,8 @@ const EnrollModal = ({
     //마지막으로 여기서 전송하는 게 나을 것 같긴 함.
     // submitWriting();
     console.log({ submitWriting });
+
+    //diary/{diaryId}로 navigate
   };
 
   //isLoading설정 -> api구현된 이후에 작업하기

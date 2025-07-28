@@ -50,6 +50,9 @@ const WritingPage = () => {
     }
     return value;
   };
+
+  //--------------------------------------------//
+  //QUESTION 재생성 버튼
   const _handleRefresh = () => {
     //QUESTION 재생성
     console.log("QUESTION 재생성");
@@ -63,7 +66,7 @@ const WritingPage = () => {
     });
   };
 
-  //나중에 지우기!!
+  //useEffect를 사용하여 컴포넌트가 마운트될 때 질문을 가져옴
   useEffect(() => {
     const data = getDiaryRandomQuestion({ language });
     console.log(data);
