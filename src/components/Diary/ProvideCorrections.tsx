@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import PrevButton from "../Common/PrevButton";
 import TitleHeader from "../Common/TitleHeader";
 import DiaryContent from "./DiaryContent";
+import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
 
 const ProvideCorrections = () => {
   const [selectedText, setSelectedText] = useState("");
@@ -11,6 +12,8 @@ const ProvideCorrections = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { mutate: postCorrection } = usePostCorrection();
 
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
@@ -45,6 +48,19 @@ const ProvideCorrections = () => {
     document.addEventListener("mouseup", handleMouseUp);
     return () => document.removeEventListener("mouseup", handleMouseUp);
   }, []);
+
+  const handleSubmit = () => {
+    if (!editedText.trim() || !description.trim()) return;
+
+    postCorrection({
+      diaryId: 1,
+      original: selectedText,
+      corrected: editedText,
+      commentText: description,
+    });
+
+    setShowModal(false);
+  };
 
   const _stats = [
     {
@@ -126,6 +142,7 @@ const ProvideCorrections = () => {
               <div className="flex items-center">
                 <div className="w-1 h-9 bg-primary-500" />
                 <textarea
+                  value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
                   className="w-full px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-200 text-primary-500 font-medium bg-primary-50"
                   rows={1}
@@ -148,10 +165,7 @@ const ProvideCorrections = () => {
           {/* 등록하기 버튼 */}
           <div className="flex justify-end mt-5">
             <button
-              onClick={() => {
-                console.log({ selectedText, editedText, description });
-                setShowModal(false);
-              }}
+              onClick={handleSubmit}
               className="absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:scale-105 duration-300"
             >
               <img
