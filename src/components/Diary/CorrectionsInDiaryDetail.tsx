@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
 import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import { usePostLike } from "../../hooks/mutations/usePostLike";
 
 interface Props {
   correction: CorrectionsDetailDTO;
@@ -9,6 +10,7 @@ interface Props {
 const CorrectionsInDiaryDetail = ({ correction }: Props) => {
     const [ openCorrectoinReply, setOpenCorrectionReply ] = useState(false);
     const [ commentText, setCommentText ] = useState("");
+    const { mutate: likeCorrection, isPending } = usePostLike();
 
     const _toggleCorrectionReply = () => {
         setOpenCorrectionReply((prev) => !prev);
@@ -60,13 +62,17 @@ const CorrectionsInDiaryDetail = ({ correction }: Props) => {
                 <p>{correction.commentCount}</p>
               </button>
               {/* 좋아요 */}
-              <div className="flex items-center gap-1">
+              <button 
+                onClick={() => likeCorrection({ targetType: "corrections", targetId: correction.correctionId })}
+                disabled={isPending}
+                className="flex items-center gap-1"
+              >
                 <img 
                   src="/images/CommonComponentIcon/LikeIcon.svg"
                   className="w-4 h-4"
                 />
                 <p>{correction.likeCount}</p>
-              </div>
+              </button>
             </div>
             {openCorrectoinReply && (
               <div>

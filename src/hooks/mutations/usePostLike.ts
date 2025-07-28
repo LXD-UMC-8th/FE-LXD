@@ -1,16 +1,19 @@
-// import { useMutation } from "@tanstack/react-query";
-// import { postCommentLike, postLike } from "../../apis/likes";
+import { useMutation } from "@tanstack/react-query";
+import type { LikeResponseDto, LikeTargetType } from "../../utils/types/likes";
+import { postLike } from "../../apis/likes";
 
-// function usePostLike() {
-//   return useMutation({
-//     mutationFn: async (_params) => {
-//       if (_params.type === "comments") {
-//         return await postCommentLike(_params.diaryId, _params.commentId);
-//       } else {
-//         return await postLike(_params.type, _params.id);
-//       }
-//     },
-//   });
-// }
+interface Params {
+    targetType: LikeTargetType;
+    targetId: number;
+}
 
-// export default usePostLike;
+export const usePostLike = () => 
+    useMutation<LikeResponseDto, Error, Params>({
+        mutationFn: ({ targetType, targetId }) => postLike(targetType, targetId),
+        onSuccess: (data) => {
+            console.log("좋아요 완료", data);
+        },
+        onError: (err) => {
+            console.error("좋아요 실패", err.message);
+        },
+    });
