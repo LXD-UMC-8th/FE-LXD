@@ -19,6 +19,7 @@ import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
 import ProvideCorrections from "./components/Diary/ProvideCorrections";
 import SignupFlow from "./pages/Login/SignupFlow";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -85,10 +86,15 @@ const protectedRoutes: RouteObject[] = [
   },
 ];
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <div className="p-0">
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient} >
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </div>
   );
 }

@@ -1,13 +1,10 @@
 import {
-  type DiaryUploadRequestDTO,
-  type DiaryUploadResponseDTO,
   type ImageRequestDTO,
   type DiaryRefreshRequestDTO,
   type DiaryRefreshResponseDTO,
   type DiaryUploadRequestDTO,
   type DiaryUploadResponseDTO,
   type ImageResponseDTO,
-
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 // import { LOCAL_STORAGE_KEY } from "../constants/key";
@@ -63,5 +60,4 @@ export const postDiaryImage = async (
     console.error("Error uploading image:", error);
     throw error;
   }
-
 };
