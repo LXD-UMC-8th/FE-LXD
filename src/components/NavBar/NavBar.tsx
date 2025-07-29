@@ -15,9 +15,7 @@ const NavBar = () => {
 
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
-  useEffect(() => {
-    console.log(isModalOpen);
-  }, [isModalOpen]);
+// Removed unnecessary useEffect block that logged isModalOpen state.
 
   //해야될 것 modal은 한 번에 하나의 모달만 띄울 수 있게 설정하기
   return (
