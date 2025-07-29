@@ -6,4 +6,4 @@ const ReceivedCorrectionTab = () => {
   )
 }
 
-export default ReceivedCorrectionTab
+export default ReceivedCorrectionTab;

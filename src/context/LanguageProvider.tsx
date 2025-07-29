@@ -24,10 +24,6 @@ export const LanguageProvider = ({ children }: PropsWithChildren) => {
     <LanguageContext.Provider
       value={{ language, setLanguage: (lang: TLanguage) => setLanguage(lang) }}
     >
-      {/*
-        The setLanguage function can be modified to toggle between languages.
-        For example, it could be set to switch between Language.ENGLISH and Language.KOREAN.
-      */}
       {children}
     </LanguageContext.Provider>
   );

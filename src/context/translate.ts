@@ -19,6 +19,7 @@ export const translate: Record<
     questionGeneratorButtonText: string;
     titleInputPlaceholder: string;
     createNewDiary: string;
+    alertImage: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -38,6 +39,7 @@ export const translate: Record<
     questionGeneratorButtonText: "Generate Question",
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
+    alertImage: "Alert",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -56,5 +58,6 @@ export const translate: Record<
     questionGeneratorButtonText: "질문 생성하기",
     titleInputPlaceholder: "제목을 입력하세요.",
     createNewDiary: "새 글 쓰기",
+    alertImage: "알림",
   },
 };

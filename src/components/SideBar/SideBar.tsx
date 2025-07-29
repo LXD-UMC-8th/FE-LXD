@@ -2,7 +2,7 @@ import SideBarNavLink from "./SideBarNavLink";
 
 const Sidebar = () => {
   return (
-    <div className="fixed top-0 left-0 inset-y-0 z-20  bg-white shadow-md px-4 py-6 flex flex-col gap-6 w-[200px]">
+    <div className="fixed top-0 left-0 inset-y-0 z-20 bg-white py-6 flex flex-col gap-6 w-[200px] items-center ">
       {/* <div className="text-xl font-bold">LXD</div> */}
       <nav className="flex flex-col mt-10">
         <SideBarNavLink
@@ -35,7 +35,7 @@ const Sidebar = () => {
         />
       </nav>
 
-      <div className="mt-auto flex items-center gap-[12px] w-[204px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300">
+      <div className="mt-auto flex items-center gap-[12px] w-[170px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300">
         <SideBarNavLink
           imgSrcOn=""
           imgSrcOff="/images/SettingIcon.svg"
