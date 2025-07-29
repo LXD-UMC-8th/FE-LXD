@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import DiaryContent from "../../components/Diary/DiaryContent";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import LoadingModal from "../../components/Common/LoadingModal";
 // import type { CorrectionsDetailDTO } from "../../utils/types/correction";
 
 // 예시
@@ -178,7 +179,7 @@ const DiaryDetailPage = () => {
       <div className="flex flex-col px-5 gap-3">
         <p className="text-subhead3 font-semibold py-3">작성된 교정</p>
 
-        {isPending && <p>로딩 중</p>}
+        {isPending && <LoadingModal />}
         
         {correctionData?.result.corrections.map((correction: CorrectionsDetailDTO) => (
           <CorrectionsInFeedDetail 
