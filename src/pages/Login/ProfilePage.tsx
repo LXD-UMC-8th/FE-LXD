@@ -25,8 +25,8 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
   // 모킹 함수 (나중에 삭제)
   async function fakeIdCheck(
-    id: string,
-    mode: "available" | "taken" | "random" = "available"
+    _id: string,
+    mode: "available" | "taken" | "random" = "available",
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {

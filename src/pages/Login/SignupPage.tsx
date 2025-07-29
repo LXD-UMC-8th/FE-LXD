@@ -30,8 +30,8 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
 
   // 이메일 인증 모킹 함수 (나중에 삭제)
   async function fakeEmailVerify(
-    email: string,
-    mode: "available" | "taken" | "random" = "available"
+    _email: string,
+    mode: "available" | "taken" | "random" = "available",
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -84,7 +84,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
-      userInfo.checkPassword
+      userInfo.checkPassword,
     );
 
     return (

@@ -28,7 +28,6 @@ const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <LoginPage /> },
       { path: "signup/*", element: <SignupFlow /> },
-      
     ],
   },
 ];
@@ -67,10 +66,6 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/corrections",
         element: <CorrectionsPage />,
-      },
-      {
-        path: "/friendslist",
-        element: <FriendsListPage />,
       },
 
       {

@@ -29,8 +29,8 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
 
   // 이메일 인증 모킹 함수 (나중에 삭제)
   async function fakeEmailVerify(
-    email: string,
-    mode: "available" | "taken" | "random" = "available"
+    _email: string,
+    mode: "available" | "taken" | "random" = "available",
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -72,7 +72,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
-      userInfo.checkPassword
+      userInfo.checkPassword,
     );
 
     return _isEmailValid && _isPasswordValid && _isPasswordChecked;
@@ -80,10 +80,13 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
 
   const handlePWChange = async () => {
     const payload = {
-        password: userInfo.password,
-    }
+      password: userInfo.password,
+    };
     try {
-      const response = await axios.post("비밀번호 변경 API (로그인 전)", payload);
+      const response = await axios.post(
+        "비밀번호 변경 API (로그인 전)",
+        payload,
+      );
       console.log("비밀번호 변경 성공", response.data);
       alert("비밀번호가 정상적으로 변경되었습니다");
     } catch (err) {
