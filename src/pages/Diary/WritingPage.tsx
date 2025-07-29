@@ -74,7 +74,7 @@ const WritingPage = () => {
   }, []);
 
   return (
-    <div className="py-2 bg-gray-100 ml-10">
+    <div className="py-2 bg-gray-100 mx-10">
       <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
         <TitleHeader title="글쓰기" />
