@@ -24,7 +24,7 @@ const componentMap: Record<string, React.ReactElement> = {
 };
 
 interface TabsMapProps {
-  tabvalue: { value: string; title: string; count?: number | undefined };
+  tabvalue: { value: string; title?: string; count?: number | undefined };
 }
 const TabsMap = ({ tabvalue }: TabsMapProps) => {
   return componentMap[tabvalue.value];

@@ -16,12 +16,14 @@
     "axios": "^1.11.0",
     "lucide-react": "^0.525.0",
     "quill": "^2.0.3",
+    "quill-image-drop-module": "^1.0.3",
     "react": "^18.3.1",
     "react-activity-calendar": "^2.7.13",
     "react-calendar": "^6.0.0",
     "react-calendar-heatmap": "^1.10.0",
     "react-dom": "^18.3.1",
     "react-quill": "^2.0.0",
+    "react-quill-new": "^3.4.6",
     "react-router-dom": "^7.7.0"
   },
   "devDependencies": {

@@ -12,6 +12,7 @@ import {
   isPasswordValid,
 } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
+import ToSModal from "../../components/Login/ToSModal";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -24,12 +25,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
+  const [isToSOpen, setIsToSOpen] = useState(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
 
   // 이메일 인증 모킹 함수 (나중에 삭제)
   async function fakeEmailVerify(
-    email: string,
-    mode: "available" | "taken" | "random" = "available"
+    _email: string,
+    mode: "available" | "taken" | "random" = "available",
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -70,12 +72,19 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     setUserInfo((prev) => ({ ...prev, isPrivacy: e.target.checked }));
   };
 
+  const handleOpenTosModal = () => {
+    setIsToSOpen(true);
+  };
+  const handleCloseTosModal = () => {
+    setIsToSOpen(false);
+  };
+
   const isAllValid = () => {
     const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
-      userInfo.checkPassword
+      userInfo.checkPassword,
     );
 
     return (
@@ -174,6 +183,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
               type="password"
             />
             {checkPasswordTouched &&
+              userInfo.checkPassword.trim() !== "" &&
               isPasswordValid(userInfo.password) &&
               (isPasswordMatch(userInfo.password, userInfo.checkPassword) ? (
                 <span className="text-body2 text-mint-500">
@@ -188,17 +198,28 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
         </form>
 
         <section className="flex flex-col space-y-7">
-          <label className="flex gap-2 items-center">
-            <input
-              type="checkbox"
-              checked={userInfo.isPrivacy}
-              onChange={handleIsPrivacy}
-              className="w-[19px] h-[19px]"
-            />
-            <span className="text-body1">
-              개인정보 처리 방침 및 이용약관에 동의합니다
-            </span>
-          </label>
+          <div className="flex gap-2 items-center">
+            <label className="flex">
+              <input
+                type="checkbox"
+                checked={userInfo.isPrivacy}
+                onChange={handleIsPrivacy}
+                className="w-[19px] h-[19px] cursor-pointer"
+              />
+            </label>
+            <div className="flex">
+              <span
+                onClick={handleOpenTosModal}
+                className="text-body1 hover:underline hover:underline-offset-3 
+            hover:cursor-pointer active:text-blue-600"
+              >
+                개인정보 처리 방침 및 이용약관
+              </span>
+              <span className="text-body1">에 동의합니다</span>
+            </div>
+            {isToSOpen && <ToSModal onClose={handleCloseTosModal} />}
+          </div>
+
           <SignupButton
             name="다음으로"
             onClick={handleNextPage}

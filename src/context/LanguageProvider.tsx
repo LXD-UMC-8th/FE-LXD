@@ -2,8 +2,8 @@ import { useContext, useState, createContext } from "react";
 import type { PropsWithChildren } from "react";
 
 export enum Language {
-  ENGLISH = "en",
-  KOREAN = "ko",
+  ENGLISH = "EN",
+  KOREAN = "KO",
 }
 
 export type TLanguage = Language.ENGLISH | Language.KOREAN;
@@ -18,16 +18,12 @@ export const LanguageContext = createContext<ILanguageContext | undefined>(
 );
 
 export const LanguageProvider = ({ children }: PropsWithChildren) => {
-  const [language, setLanguage] = useState<TLanguage>(Language.ENGLISH);
+  const [language, setLanguage] = useState<TLanguage>(Language.KOREAN);
 
   return (
     <LanguageContext.Provider
       value={{ language, setLanguage: (lang: TLanguage) => setLanguage(lang) }}
     >
-      {/*
-        The setLanguage function can be modified to toggle between languages.
-        For example, it could be set to switch between Language.ENGLISH and Language.KOREAN.
-      */}
       {children}
     </LanguageContext.Provider>
   );

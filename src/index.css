@@ -211,7 +211,9 @@ body {
   border-bottom: 3px !important;
   border-right: 0 !important;
   border-left: 0 !important;
-
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #f5f5f8 !important;
   box-shadow: none !important;
 }
 
@@ -271,12 +273,14 @@ body {
 
 .react-calendar__tile--now {
   background: #212429 !important;
-  color: #fff;
+  color: #fff !important;
   border-radius: 8px !important;
   font-weight: bold;
 }
 .react-calendar__title {
   color: #fff;
+  width: 60% !important;
+  height: 60% !important;
 }
 
 .react-calendar__tile.heat-1 {
@@ -297,4 +301,8 @@ body {
 
 .react-calendar__tile--neighboringMonth {
   color: gainsboro;
+}
+
+.no-holiday-colors .react-calendar__month-view__days__day--weekend {
+  color: inherit;
 }
