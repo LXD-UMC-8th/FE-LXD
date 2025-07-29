@@ -28,7 +28,7 @@ const CorrectionComponent = () => {
         
 
         {/* 본문 */}
-        <div className="flex flex-col gap-3 px-8 pt-5">
+        <div className="flex flex-col gap-3 px-8 pt-2">
           <div className="flex flex-col gap-2">
             <p className="text-body1 font-semibold">오늘는 피자데이입니다</p>
             <div className="flex gap-2">
@@ -89,7 +89,7 @@ const CorrectionComponent = () => {
         )}
       
         {/* 메모 */}
-        <div className="flex items-center gap-2 mt-7 mx-7">
+        <div className="flex items-center gap-2 mt-5 mx-7">
           <div className="flex-1 flex items-center bg-gray-100 rounded-[5px] border border-gray-300 px-2 py-2 gap-2">
             <img
               src="/images/MemoPlusIcon.svg"

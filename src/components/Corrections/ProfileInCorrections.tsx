@@ -6,7 +6,7 @@ const ProfileInCorrections = () => {
         {/* 프로필 사진 */}
         <div className="w-9 h-9 rounded-full bg-gray-300"/>
         {/* 사용자 이름 + 아이디 */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
             <div className="text-body1 font-medium">김지윤</div>
             <div className="w-px h-5 bg-gray-500"/>
             <div className="text-body1 text-gray-600">@zeeyoooon</div>
