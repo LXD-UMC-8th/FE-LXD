@@ -12,6 +12,13 @@ import { axiosInstance } from "./axios";
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
 ): Promise<DiaryUploadResponseDTO> => {
+  const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
+    "/diaries",
+    body,
+  );
+
+  return data;
+
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
       "/diaries",
