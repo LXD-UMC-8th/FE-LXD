@@ -1,11 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 import { useNavigate } from "react-router-dom";
 import DiaryContent from "../../components/Diary/DiaryContent";
+import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
+import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import LoadingModal from "../../components/Common/LoadingModal";
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
+  const diaryId = 1;
 
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
@@ -15,7 +19,7 @@ const DiaryDetailPage = () => {
 
   const _handleCorrectionsClick = () => {
     // 임시로 id = 1로 보냄
-    navigate("/feed/1/corrections");
+    navigate(`/feed/${diaryId}/corrections`);
   }
 
   const _stats = [
@@ -23,6 +27,17 @@ const DiaryDetailPage = () => {
     { label: "89", icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
   ]
+
+  const {
+    mutate: fetchCorrections,
+    data: correctionData,
+    isPending,
+  } = useGetCorrections();
+
+  useEffect(() => {
+    fetchCorrections({ diaryId:1, page:0, size:10 });
+  }, [fetchCorrections]);
+  console.log(correctionData);
 
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
@@ -143,8 +158,15 @@ const DiaryDetailPage = () => {
       
       <div className="flex flex-col px-5 gap-3">
         <p className="text-subhead3 font-semibold py-3">작성된 교정</p>
-        <CorrectionsInFeedDetail />
-        <CorrectionsInFeedDetail />
+
+        {isPending && <LoadingModal />}
+        
+        {correctionData?.result.corrections.map((correction: CorrectionsDetailDTO) => (
+          <CorrectionsInFeedDetail 
+            key={correction.correctionId}
+            correction={correction}
+          />
+        ))}
       </div>
     </div>
   );

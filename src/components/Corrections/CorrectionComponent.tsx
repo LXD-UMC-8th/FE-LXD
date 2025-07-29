@@ -16,7 +16,7 @@ const CorrectionComponent = () => {
 
   return (
     <div
-      className={`w-full max-w-[800px] bg-white rounded-[10px] border border-gray-300 ${
+      className={`w-300 bg-white rounded-[10px] border border-gray-300 ${
         openCorrectoinReply ? "h-[570px]" : "h-[380px]"
       }`}
     >
@@ -102,10 +102,10 @@ const CorrectionComponent = () => {
             <input
               type="text"
               placeholder="메모를 추가하기"
-              className="w-full h-full text-body1 text-gray-600 bg-transparent outline-none"
+              className="w-full h-full text-body1 text-black placeholder-gray-400 bg-transparent outline-none"
             />
           </div>
-          <button className="px-3 py-2 rounded-[5px] bg-primary-500 text-white whitespace-nowrap text-body1 cursor-pointer hover:scale-105 transition transform-300">
+          <button className="px-3 py-2 rounded-[5px] bg-primary-500 text-white whitespace-nowrap text-body1 cursor-pointer hover:bg-blue-600 transition transform-300">
             수정하기
           </button>
         </div>
