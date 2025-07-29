@@ -23,3 +23,17 @@ export type CorrectionsDetailDTO = {
 }
 
 export type CorrectionsUploadResponseDTO = APIResponse<CorrectionsDetailDTO>;
+
+// 일기 상세 내 교정 목록 조회
+export type CorrectionsGetRequestDTO = {
+    diaryId: number;
+    page?: number;
+    size?: number;
+}
+export type CorrectionsGetDetailDTO = {
+    diaryId: number;
+    totalCount: number;
+    hasNext: boolean;
+    corrections: CorrectionsDetailDTO[];
+}
+export type CorrectionsGetResponseDTO = APIResponse<CorrectionsGetDetailDTO>;

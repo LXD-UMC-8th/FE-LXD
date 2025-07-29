@@ -38,7 +38,7 @@ const ProvideCorrections = () => {
 
         setModalPosition({ top, left });
         setSelectedText(text);
-        setEditedText(text);
+        setEditedText("");
         setShowModal(true);
       } else {
         setShowModal(false);

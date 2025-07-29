@@ -1,31 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 import { useNavigate } from "react-router-dom";
 import DiaryContent from "../../components/Diary/DiaryContent";
+import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+// import type { CorrectionsDetailDTO } from "../../utils/types/correction";
 
 // 예시
-const exampleCorrection: CorrectionsDetailDTO = {
-  correctionId: 0,
-  diaryId: 1,
-  createdAt: "2025-07-28",
-  member: {
-    memberId: 123,
-    userId: "user1",
-    nickname: "닉네임",
-    profileImageUrl: "/images/profileimages.svg",
-  },
-  original: "오늘는 피자데이입니다",
-  corrected: "오늘은 피자데이입니다",
-  commentText: "‘오늘’ 뒤의 보조사로는 ‘는’ 보다는 ‘은’이 더 적합합니다. 오늘에 종성이 있기 때문입니다.",
-  likeCount: 89,
-  commentCount: 180,
-  likedByMe: false,
-}
+// const exampleCorrection: CorrectionsDetailDTO = {
+//   correctionId: 0,
+//   diaryId: 1,
+//   createdAt: "2025-07-28",
+//   member: {
+//     memberId: 123,
+//     userId: "user1",
+//     nickname: "닉네임",
+//     profileImageUrl: "/images/profileimages.svg",
+//   },
+//   original: "오늘는 피자데이입니다",
+//   corrected: "오늘은 피자데이입니다",
+//   commentText: "‘오늘’ 뒤의 보조사로는 ‘는’ 보다는 ‘은’이 더 적합합니다. 오늘에 종성이 있기 때문입니다.",
+//   likeCount: 89,
+//   commentCount: 180,
+//   likedByMe: false,
+// }
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
+  const diaryId = 1;
 
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
@@ -35,7 +38,7 @@ const DiaryDetailPage = () => {
 
   const _handleCorrectionsClick = () => {
     // 임시로 id = 1로 보냄
-    navigate("/feed/1/corrections");
+    navigate(`/feed/${diaryId}/corrections`);
   }
 
   const _stats = [
@@ -43,6 +46,17 @@ const DiaryDetailPage = () => {
     { label: "89", icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
   ]
+
+  const {
+    mutate: fetchCorrections,
+    data: correctionData,
+    isPending,
+  } = useGetCorrections();
+
+  useEffect(() => {
+    fetchCorrections({ diaryId:1, page:0, size:10 });
+  }, [fetchCorrections]);
+  console.log(correctionData);
 
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
@@ -163,7 +177,15 @@ const DiaryDetailPage = () => {
       
       <div className="flex flex-col px-5 gap-3">
         <p className="text-subhead3 font-semibold py-3">작성된 교정</p>
-        <CorrectionsInFeedDetail correction={exampleCorrection}/>
+
+        {isPending && <p>로딩 중</p>}
+        
+        {correctionData?.result.corrections.map((correction: CorrectionsDetailDTO) => (
+          <CorrectionsInFeedDetail 
+            key={correction.correctionId}
+            correction={correction}
+          />
+        ))}
       </div>
     </div>
   );
