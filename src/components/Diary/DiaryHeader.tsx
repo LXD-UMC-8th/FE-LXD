@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
 import TitleHeader from "../Common/TitleHeader";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import { Link } from "react-router-dom";
 
 const DiaryHeader = () => {
   const { language } = useLanguage();

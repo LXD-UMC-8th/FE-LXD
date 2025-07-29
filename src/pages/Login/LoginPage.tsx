@@ -3,23 +3,41 @@ import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import { postSignin } from "../../apis/auth";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // 로그인 요청 API 나중에 작성 예정
-    console.log("로그인 요청", { email, password });
+  // 로그인 요청 함수
+  const handleLogin = async () => {
+    try {
+      const response = await postSignin({ email, password });
+
+      if (response.isSuccess) {
+        const { accessToken, member } = response.result;
+        localStorage.setItem("accessToken", accessToken); // 토큰 저장
+        console.log("로그인 성공", member);
+        navigate("/");
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.log("로그인 실패", error);
+      alert("로그인 중 오류가 발생했습니다.");
+    }
   };
+
   const handleGoogleLogin = () => {
     // 구글로그인 요청 API 나중에 작성 예정
     console.log("구글 로그인 요청");
   };
   // 로그인 버튼 활성화 조건, 나중에 수정
-  const isFormValid = email.length >= 5 && password.length >= 5;
+  const isFormValid = email.trim() !== "" && password.trim() !== "";
 
   return (
     <div
