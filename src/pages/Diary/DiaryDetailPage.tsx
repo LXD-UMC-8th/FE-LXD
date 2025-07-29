@@ -6,26 +6,6 @@ import DiaryContent from "../../components/Diary/DiaryContent";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { CorrectionsDetailDTO } from "../../utils/types/correction";
 import LoadingModal from "../../components/Common/LoadingModal";
-// import type { CorrectionsDetailDTO } from "../../utils/types/correction";
-
-// 예시
-// const exampleCorrection: CorrectionsDetailDTO = {
-//   correctionId: 0,
-//   diaryId: 1,
-//   createdAt: "2025-07-28",
-//   member: {
-//     memberId: 123,
-//     userId: "user1",
-//     nickname: "닉네임",
-//     profileImageUrl: "/images/profileimages.svg",
-//   },
-//   original: "오늘는 피자데이입니다",
-//   corrected: "오늘은 피자데이입니다",
-//   commentText: "‘오늘’ 뒤의 보조사로는 ‘는’ 보다는 ‘은’이 더 적합합니다. 오늘에 종성이 있기 때문입니다.",
-//   likeCount: 89,
-//   commentCount: 180,
-//   likedByMe: false,
-// }
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
