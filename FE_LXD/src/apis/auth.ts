@@ -1,4 +1,5 @@
-import axios from "axios";
+// 로그인, 로그아웃 등 인증 관련
+import { axiosInstance } from "./axios";
 
 export interface LoginRequest {
   email: string;
@@ -26,7 +27,7 @@ export interface LoginResponse {
 export const postSignin = async (
   payload: LoginRequest
 ): Promise<LoginResponse> => {
-  const { data } = await axios.post<LoginResponse>("/auth/login", payload, {
+  const { data } = await axiosInstance.post<LoginResponse>("/auth/login", payload, {
     headers: {
       "Content-Type": "application/json",
     },
