@@ -3,13 +3,24 @@ import ProfileComponent from "../Common/ProfileComponent";
 
 const CorrectionComponent = () => {
   const [liked, setLiked] = useState(false);
+  const [ openCorrectoinReply, setOpenCorrectionReply ] = useState(false);
+  const [ comments, setcomments ] = useState([
+    `댓글 내용1`,
+    `댓글 내용2`,
+  ]);
 
-  const handleLikeToggle = () => {
+  const _handleLikeToggle = () => {
     setLiked((prev) => !prev);
   }
 
+  const _toggleCorrectionReply = () => {
+    setOpenCorrectionReply((prev) => !prev);
+  };
+
   return (
-    <div className="w-full max-w-[800px] h-[400px] bg-white rounded-[10px] border border-gray-300">
+    <div className={`w-full max-w-[800px] bg-white rounded-[10px] border border-gray-300 ${
+      openCorrectoinReply ? "h-[500px]" : "h-[400px]"
+    }`}>
       <div className="flex flex-col">
         <div className="flex items-center justify-between px-6 pt-5">
           <ProfileComponent />
@@ -29,23 +40,49 @@ const CorrectionComponent = () => {
         </div>
 
         {/* 메모 + 좋아요 */}
-        <div className="flex items-center text-body2 text-gray-700 gap-3 ml-auto mr-5">
+        <div className="flex items-center text-body2 text-gray-700 gap-3 ml-auto mr-5 mt-3">
           {/* 메모 */}
-          <div className="flex gap-1">
-            <img />
+          <button 
+            onClick={_toggleCorrectionReply}
+            className={`flex gap-1 p-1 cursor-pointer ${
+              openCorrectoinReply ? "bg-gray-300 text-black rounded-[5px]" : ""
+            }`}
+          >
+            <img 
+              src={
+                openCorrectoinReply 
+                ? "/images/commentIcon.svg" 
+                : "/images/CommonComponentIcon/CommentIcon.svg"
+              }
+              className="w-5 h-5"
+            />
             <p>메모 수</p>
-          </div>
+          </button>
           {/* 좋아요 */}
-          <div className="flex gap-1">
+          <button className="flex gap-1 p-1">
             <img
               src={liked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
               alt={liked ? "채워진 하트" : "빈 하트"}
               className="w-5 h-5 cursor-pointer"
-              onClick={handleLikeToggle}
+              onClick={_handleLikeToggle}
             />
             <p>좋아요 수</p>
-          </div>
+          </button>
         </div>
+
+        {/* 댓글 */}
+        {openCorrectoinReply && (
+          <div className="px-10">
+            {comments.map((comment, index) => (
+              <div>
+                <div>
+                  <div className="border-t border-gray-300 mt-5"/>
+                  {comment}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       
         {/* 메모 */}
         <div className="flex items-center gap-2 mt-7 mx-7">
