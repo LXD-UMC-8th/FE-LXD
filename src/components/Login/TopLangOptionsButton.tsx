@@ -30,7 +30,7 @@ const TopLangOptionsButton = () => {
               rounded-md focus:outline-none focus:ring-1"
         >
           <span className="block truncate text-gray-900">
-            {language === "ko" ? "한국어" : "English"}
+            {/* {language === "ko" ? "한국어" : "English"} */}
           </span>
 
           {/* Arrow Icon */}
@@ -60,7 +60,7 @@ const TopLangOptionsButton = () => {
               border-gray-300 rounded-md shadow-md"
           >
             <ul className="max-h-60 py-1 overflow-auto text-sm">
-              {options.map((lang) => (
+              {options.map((lang, idx) => (
                 <li
                   key={lang.value}
                   onClick={() => {

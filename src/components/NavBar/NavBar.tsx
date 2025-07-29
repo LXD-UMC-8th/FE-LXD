@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import NavProfileModal from "./NavProfileModal";
@@ -15,7 +15,7 @@ const NavBar = () => {
 
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
-// Removed unnecessary useEffect block that logged isModalOpen state.
+  // Removed unnecessary useEffect block that logged isModalOpen state.
 
   //해야될 것 modal은 한 번에 하나의 모달만 띄울 수 있게 설정하기
   return (
