@@ -3,7 +3,7 @@ interface NotificationContentProps {
   title?: string;
   body?: string;
 }
-const NotificationContent = ({ title, body }: NotificationContentProps) => {
+const NotificationContent = ({ title }: NotificationContentProps) => {
   return (
     <div
       className="bg-white w-100 h-25 justify-start items-center gap-2 shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg
