@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ProfileComponent from "../Common/ProfileComponent";
+import ProfileInCorrections from "./ProfileInCorrections";
 
 const CorrectionComponent = () => {
   const [liked, setLiked] = useState(false);
@@ -22,9 +22,10 @@ const CorrectionComponent = () => {
       openCorrectoinReply ? "h-[500px]" : "h-[400px]"
     }`}>
       <div className="flex flex-col">
-        <div className="flex items-center justify-between px-6 pt-5">
-          <ProfileComponent />
+        <div className="px-5 pt-5">
+          <ProfileInCorrections />
         </div>
+        
 
         {/* 본문 */}
         <div className="flex flex-col gap-3 px-8 pt-5">
@@ -72,12 +73,15 @@ const CorrectionComponent = () => {
 
         {/* 댓글 */}
         {openCorrectoinReply && (
-          <div className="px-10">
-            {comments.map((comment, index) => (
-              <div>
-                <div>
-                  <div className="border-t border-gray-300 mt-5"/>
-                  {comment}
+          <div className="px-10 text-body1">
+            {comments.map((comment, index) => (      
+              <div key={index} className="flex flex-col gap-2">
+                <div className="border-t border-gray-300 mt-5"/>
+                <div className="flex flex-col">
+                  <ProfileInCorrections />
+                  <div>
+                    {comment}
+                  </div>
                 </div>
               </div>
             ))}
