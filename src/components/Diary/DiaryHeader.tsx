@@ -10,7 +10,7 @@ const DiaryHeader = () => {
 
   return (
     <div>
-      <div className="h-37 mt-8 w-260 rounded-t-[12px] rounded-b-none">
+      <div className="h-37 mt-8 rounded-t-[12px] rounded-b-none">
         <div className="grid grid-cols-[1fr_4fr_1fr] px-5">
           <div className="flex justify-start items-center">
             <Avatar size="w-30 h-30" />

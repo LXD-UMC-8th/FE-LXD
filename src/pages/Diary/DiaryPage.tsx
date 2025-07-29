@@ -14,14 +14,14 @@ const DiaryPage = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-gray-100 w-260 flex flex-cols gap-10 justify-between">
-      <div>
+    <div className="bg-gray-100 flex gap-10 justify-between ml-10">
+      <div className="flex-cols items-center ">
         <DiaryHeader />
         {/*다이어리 밑 내용 추가 구분선*/}
         <ModalWithTabs tabvalue={tabvalue} />
       </div>
       <div>
-        <div className="top-0 bg-gray-100 z-10 mx-10">
+        <div className="z-10 mx-10">
           <CalendarModal />
         </div>
       </div>

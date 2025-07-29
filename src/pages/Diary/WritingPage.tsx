@@ -74,8 +74,8 @@ const WritingPage = () => {
   }, []);
 
   return (
-    <div className="px-4 py-2 bg-gray-100">
-      <div className="flex items-center gap-x-6 ">
+    <div className="py-2 bg-gray-100 ml-10">
+      <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
         <TitleHeader title="글쓰기" />
         <div className="ml-auto mr-6">
@@ -86,7 +86,7 @@ const WritingPage = () => {
           />
         </div>
       </div>
-      <div className=" flex flex-col items-start p-5 gap-[15px] self-stretch w-full">
+      <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
         {/*FREE / QUESTION 구분 영역*/}
         <div className="bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] mt-5 w-full p-5 gap-3">
           <ValueSettingButton

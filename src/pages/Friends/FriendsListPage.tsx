@@ -8,7 +8,7 @@ const FriendsListPage = () => {
   ];
 
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="bg-gray-100 ml-10">
       {/* 탭 메뉴 */}
       <ModalWithTabs tabvalue={tabvalue} />
     </div>

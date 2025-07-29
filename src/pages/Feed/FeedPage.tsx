@@ -9,11 +9,11 @@ const FeedPage = () => {
   ];
 
   return (
-    <div className="relative min-h-screen bg-gray-100 w-260 flex flex-cols gap-20 justify-between">
+    <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
       <div className="">
         <ModalWithTabs tabvalue={tabvalue} />
       </div>
-      <div>
+      <div className="z-10 mx-10">
         <CalendarModal />
       </div>
     </div>

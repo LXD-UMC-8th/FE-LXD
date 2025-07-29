@@ -1,7 +1,5 @@
 const ReceivedCorrectionTab = () => {
-  return (
-    <div>교정탭: 내가받은교정</div>
-  )
-}
+  return <div className="w-260">교정탭: 내가받은교정</div>;
+};
 
-export default ReceivedCorrectionTab
+export default ReceivedCorrectionTab;
