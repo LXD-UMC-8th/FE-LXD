@@ -20,6 +20,8 @@ export const translate: Record<
     titleInputPlaceholder: string;
     createNewDiary: string;
     alertImage: string;
+    receivedCorrections: string;
+    givenCorrections: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -40,6 +42,8 @@ export const translate: Record<
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
     alertImage: "Alert",
+    receivedCorrections: "Received",
+    givenCorrections: "Given",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -59,5 +63,7 @@ export const translate: Record<
     titleInputPlaceholder: "제목을 입력하세요.",
     createNewDiary: "새 글 쓰기",
     alertImage: "알림",
+    receivedCorrections: "내가 받은 교정",
+    givenCorrections: "내가 제공한 교정",
   },
 };

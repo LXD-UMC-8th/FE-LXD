@@ -1,10 +1,14 @@
 import ModalWithTabs from "../../components/Common/ModalWithTabs";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 const CorrectionsPage = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const tabvalue = [
-      { value: "receivedCorrections", title: "내가 받은 교정" },
-      { value: "providedCorrections", title: "내가 제공한 교정" },
+      { value: "receivedCorrections", title: t.receivedCorrections },
+      { value: "providedCorrections", title: t.givenCorrections },
     ]
 
   return (
