@@ -19,7 +19,7 @@ const CorrectionComponent = () => {
 
   return (
     <div className={`w-full max-w-[800px] bg-white rounded-[10px] border border-gray-300 ${
-      openCorrectoinReply ? "h-[500px]" : "h-[400px]"
+      openCorrectoinReply ? "h-[570px]" : "h-[380px]"
     }`}>
       <div className="flex flex-col">
         <div className="px-5 pt-5">
