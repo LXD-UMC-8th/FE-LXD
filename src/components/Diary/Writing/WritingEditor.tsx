@@ -110,6 +110,10 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         modules={modules}
         theme="snow"
       />
+      <p>
+        <span className="font-bold">@hyunzzip</span>&nbsp;commented on the
+        <span className="font-bold">&nbsp;제목</span>&nbsp;diary entery
+      </p>
     </div>
   );
 };
