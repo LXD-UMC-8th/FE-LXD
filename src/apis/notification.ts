@@ -15,7 +15,7 @@ export function subscribeToNotifications<T>(
   onEvent: (payload: T) => void,
   onError?: (err: Event) => void,
 ): EventSource {
-  const token = localStorage.getItem("accessToken")!;
+  const token = localStorage.getItem("accessToken");
   const es = new EventSourcePolyfill(`${API}notifications/subscribe`, {
     headers: {
       Authorization: `Bearer ${token}`,
