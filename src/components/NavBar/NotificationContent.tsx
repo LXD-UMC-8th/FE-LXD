@@ -1,32 +1,47 @@
 import Avatar from "../Common/Avatar";
+
+type part = { type: string; value: string };
 interface NotificationContentProps {
   title?: string;
-  body?: string;
+  id?: number;
+  profileImg?: string;
+  message: { parts: part[] };
+  redirectUrl?: string;
+  createdAt?: string;
+  read?: boolean;
 }
-const NotificationContent = ({ title }: NotificationContentProps) => {
+const NotificationContent = ({
+  notifications,
+}: {
+  notifications: NotificationContentProps;
+}) => {
   return (
     <div
-      className="bg-white w-100 h-25 justify-start items-center gap-2 shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg
-    cursor-pointer hover:scale-102 transition-transform flex"
+      className={`${
+        notifications.read ? "bg-gray-200" : "bg-white"
+      } w-full h-25 flex items-center gap-2 shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
     >
-      <div className="mx-4">
+      <div className="px-4">
         <Avatar />
       </div>
       <div>
         <div className="flex">
-          <span className="font-bold">@sdhuf</span>님
-          {title === "requestFriend" && <div>이 친구를 요청했습니다</div>}
-          {title === "tobeFriend" && <div>친구가 되었습니다</div>}
-          {title === "commentCorrection" && (
-            <div>이 diary.title에 교정을 추가했습니다</div>
-          )}
-          {title === "comment" && <div>이 diary.title에 댓글을 남겼습니다</div>}
-          {title === "like" && <div>이 diary.title에 좋아요를 눌렀습니다</div>}
-          {title === "reply" && <div>이 댓글에 답글을 남겼습니다</div>}
-          {title === "replyCorrection" && (
-            <div>이 diary.title에 제공한 교정에 답글을 추가했습니다.</div>
-          )}
-          <span className="text-gray-500"> &nbsp;&nbsp;&nbsp;N시간 전</span>
+          <p className="text-sm">
+            {notifications.message.parts.map((part, idx) => {
+              if (part.type === "bold") {
+                return (
+                  <span key={idx} className="font-bold">
+                    {part.value}
+                  </span>
+                );
+              } else {
+                return <span key={idx}>{part.value}</span>;
+              }
+            })}
+            <span className="text-gray-500">
+              &nbsp;&nbsp;&nbsp; {notifications.createdAt}
+            </span>
+          </p>
         </div>
       </div>
     </div>
