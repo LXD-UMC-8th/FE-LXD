@@ -48,7 +48,7 @@ export type DiaryRefreshResponseDTO = {
 };
 
 export type ImageRequestDTO = {
-  image: string;
+  formData: FormData;
 };
 
 export type ImageResponseDTO = {

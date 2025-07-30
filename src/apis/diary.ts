@@ -50,6 +50,7 @@ export const getDiaryRandomQuestion = async (
 export const postDiaryImage = async (
   body: ImageRequestDTO,
 ): Promise<ImageResponseDTO> => {
+  console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
       "/diaries/image",
