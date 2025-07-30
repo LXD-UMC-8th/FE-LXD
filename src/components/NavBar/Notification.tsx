@@ -70,7 +70,7 @@ const Notification = () => {
         <div className="flex flex-col gap-4 justify-center items-center ">
           {notifications.map((_note) => (
             // 2) Use map to repeat — **always** give a unique key
-            <NotificationContent notifications={_note} />
+            <NotificationContent key={_note.id} notifications={_note} />
           ))}{" "}
         </div>
       </div>
