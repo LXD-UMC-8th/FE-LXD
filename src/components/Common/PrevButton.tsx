@@ -2,13 +2,18 @@ import prevvector from "../../../public/images/prevvector.svg";
 import { useNavigate } from "react-router-dom";
 
 interface PrevButtonProps {
-  navigateURL: string;
+  navigateURL: string | number;
 }
 
 const PrevButton = ({ navigateURL }: PrevButtonProps) => {
   const navigate = useNavigate();
+
   const handleNavigate = () => {
-    navigate(navigateURL);
+    if (typeof navigateURL === "number") {
+      navigate(navigateURL); // 예: -1
+    } else {
+      navigate(navigateURL); // 예: "/feed"
+    }
   };
 
   return (
@@ -17,6 +22,7 @@ const PrevButton = ({ navigateURL }: PrevButtonProps) => {
         src={prevvector}
         className="cursor-pointer"
         onClick={handleNavigate}
+        alt="뒤로가기"
       />
     </div>
   );

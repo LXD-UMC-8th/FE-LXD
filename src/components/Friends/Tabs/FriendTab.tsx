@@ -7,10 +7,10 @@ const FriendTab = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const friendList = [
-    { id: "1", name: "김태현", username: "kimtaehyun" },
-    { id: "2", name: "홍길동", username: "honggildong" },
-    { id: "3", name: "김태현", username: "kimtaehyun" },
-    { id: "4", name: "김태현", username: "kimtaehyun" },
+    { id: "1", name: "김태현", username: "kimtaehyun", isFriend: true },
+    { id: "2", name: "홍길동", username: "honggildong", isFriend: true },
+    { id: "3", name: "이지은", username: "jieun", isFriend: false },
+    { id: "4", name: "민지", username: "minji", isFriend: false },
   ];
 
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -40,8 +40,12 @@ const FriendTab = () => {
     onCloseConfirmModal();
   };
 
+  const onSendRequestClick = () => {
+    console.log("📨 친구 요청 보냄:", selectedUser);
+    setShowProfileModal(false);
+  };
+
   useEffect(() => {
-    // API 호출 시뮬레이션 (1.5초 뒤 로딩 완료)
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -63,11 +67,12 @@ const FriendTab = () => {
             setShowProfileModal(false);
             onOpenConfirmModal();
           }}
+          onSendRequestClick={onSendRequestClick}
         />
       )}
 
       {showConfirmModal && selectedUser && (
-        <AlertModal 
+        <AlertModal
           onClose={onCloseConfirmModal}
           onConfirm={onConfirmDelete}
           title={`${selectedUser.name}님과 친구를 취소하시겠습니까?`}
