@@ -1,8 +1,6 @@
 import { X } from "lucide-react";
 import Avatar from "../Common/Avatar";
-import { useEffect, useState } from "react";
-import ProfileViewSkeleton from "./Skeleton/ProfileViewSkeleton";
-import { useNavigate } from "react-router-dom"; // ✅ 라우터 이동용
+import { useNavigate } from "react-router-dom";
 
 interface ProfileViewProps {
   user: {
@@ -26,15 +24,7 @@ const ProfileView = ({
   isRequesting,
   onSendRequestClick,
 }: ProfileViewProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate(); // ✅ 라우터 이동 훅
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) return <ProfileViewSkeleton />;
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow">
@@ -88,7 +78,7 @@ const ProfileView = ({
         )}
 
         <button
-          onClick={() => navigate("/feed/1")} // ✅ 다이어리 페이지로 이동
+          onClick={() => navigate("/feed/1", { state: { from: "profile" } })}
           className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100 cursor-pointer"
         >
           다이어리 보러가기
