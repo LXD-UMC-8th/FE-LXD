@@ -1,13 +1,14 @@
-import {
-  type ImageRequestDTO,
-  type DiaryRefreshRequestDTO,
-  type DiaryRefreshResponseDTO,
-  type DiaryUploadRequestDTO,
-  type DiaryUploadResponseDTO,
-  type ImageResponseDTO,
+import type {
+  ImageRequestDTO,
+  DiaryRefreshRequestDTO,
+  DiaryRefreshResponseDTO,
+  DiaryUploadRequestDTO,
+  DiaryUploadResponseDTO,
+  ImageResponseDTO,
+  CalendarDiaryRequestDTO,
+  CalendarDiaryResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
-import axios from "axios";
 
 // import { DiaryItems } from "../constants/key";
 // import { LOCAL_STORAGE_KEY } from "../constants/key";
@@ -49,7 +50,7 @@ export const postDiaryImage = async (
   console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
-      "diaries/image",
+      "/diaries/image",
       body,
       { withCredentials: true },
     );
@@ -60,33 +61,16 @@ export const postDiaryImage = async (
   }
 };
 
-export const postDiary = async (
-  body: DiaryUploadRequestDTO,
-): Promise<DiaryUploadResponseDTO> => {
+export const getDiaryStats = async (
+  body: CalendarDiaryRequestDTO,
+): Promise<CalendarDiaryResponseDTO | undefined> => {
   try {
-    const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
-      "diaries",
-      body,
-      { withCredentials: true },
-    );
-
+    const { data } = await axiosInstance.get("/diaries/stats", {
+      params: body,
+    });
     return data;
-  } catch (err: unknown) {
-    if (axios.isAxiosError(err)) {
-      // err.config.data is the JSON string that was sent
-      console.error("Request payload:", err.config.data);
-
-      // If you want the original object, you can parse it:
-      try {
-        console.log("Parsed payload:", error.config.data);
-      } catch {
-        // config.data might already be an object in some setups
-        console.log("Payload (raw):", err.config.data);
-      }
-
-      // And you can still log the server’s response body:
-      console.error("Server replied:", err.response?.data);
-    }
-    throw err; // Re-throw the error after logging it
+  } catch (e) {
+    console.log("Error fetching diary stats:", e);
+    return undefined; // Explicitly return undefined in case of an error
   }
 };

@@ -1,3 +1,5 @@
+import type { APIResponse } from "./APIresponse";
+
 //diary upload
 export type DiaryUploadRequestDTO = {
   title: string;
@@ -61,3 +63,15 @@ export type ImageResponseDTO = {
 };
 
 export type styleType = "FREE" | "QUESTION";
+
+export type CalendarDiaryRequestDTO = {
+  year: number;
+  month: number;
+};
+
+export type CalendarDiary = {
+  date: string;
+  count: number;
+};
+
+export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;

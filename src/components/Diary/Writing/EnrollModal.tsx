@@ -2,7 +2,7 @@ import { useState } from "react";
 // import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import { postDiary } from "../../../apis/diary";
+import { postDiaryUpload } from "../../../apis/diary";
 import { useNavigate } from "react-router-dom";
 interface EnrollModalProps {
   _onClose?: () => void;
@@ -33,7 +33,7 @@ const EnrollModal = ({
         thumbImg: "",
       }),
     );
-    postDiary({
+    postDiaryUpload({
       title: _titleName,
       content: _editorRawContent,
       style: _style,
