@@ -8,7 +8,7 @@ import {
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
-// ✅ 일기 업로드
+
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
 ): Promise<DiaryUploadResponseDTO> => {
@@ -24,7 +24,7 @@ export const postDiaryUpload = async (
   }
 };
 
-// ✅ 질문 재요청 (랜덤 질문)
+
 export const getDiaryRandomQuestion = async (
   body: DiaryRefreshRequestDTO,
 ): Promise<DiaryRefreshResponseDTO> => {
@@ -40,7 +40,7 @@ export const getDiaryRandomQuestion = async (
   }
 };
 
-// ✅ 일기 이미지 업로드
+
 export const postDiaryImage = async (
   body: ImageRequestDTO,
 ): Promise<ImageResponseDTO> => {
@@ -56,7 +56,7 @@ export const postDiaryImage = async (
   }
 };
 
-// ✅ 일기 삭제
+
 export const deleteDiary = async (diaryId: number): Promise<void> => {
   try {
     await axiosInstance.delete(`/diaries/${diaryId}`);
@@ -66,7 +66,7 @@ export const deleteDiary = async (diaryId: number): Promise<void> => {
   }
 };
 
-// ✅ 일기 수정
+
 export const updateDiary = async ({
   diaryId,
   body,
@@ -91,7 +91,6 @@ export const updateDiary = async ({
   }
 };
 
-// ✅ 단일 일기 조회 (수정 시 내용 불러올 때 사용)
 export const getDiaryDetail = async (diaryId: number) => {
   try {
     const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
