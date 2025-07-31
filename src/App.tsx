@@ -20,6 +20,7 @@ import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
 import ProvideCorrections from "./components/Diary/ProvideCorrections";
 import SignupFlow from "./pages/Login/SignupFlow";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -58,6 +59,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/mydiary",
         element: <DiaryPage />,
+      },
+      {
+      path: "/mydiary/edit/:diaryId", // ✅ 추가된 라우트
+      element: <DiaryEditPage />,
       },
       {
         path: "/friendslist",
