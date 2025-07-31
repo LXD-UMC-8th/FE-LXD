@@ -22,10 +22,10 @@ const WritingPage = () => {
   const [_titleName, setTitleName] = useState<string>(
     () => localStorage.getItem("title") ?? "",
   );
+
   const _ThrottledTitleName = useThrottle(_titleName, 500);
   useEffect(() => {
     localStorage.setItem("title", _ThrottledTitleName);
-    console.log("Throttled Title Name: ", localStorage.getItem("title"));
   }, [_ThrottledTitleName]);
 
   const [_editorRawContent, setEditorRawContent] = useState<string>(
@@ -33,9 +33,13 @@ const WritingPage = () => {
   );
   const _throttledEditorContent = useThrottle(_editorRawContent, 1500);
 
+  //이 과정에서 local에 너무 많은 값이 입력되면 page rendering error가 발생함,,
+  ///나중에 뭐,,, 해결해보도록 하기..
   useEffect(() => {
-    localStorage.setItem("content", _throttledEditorContent);
+    localStorage.setItem("content", JSON.stringify(_throttledEditorContent));
+    console.log(localStorage.getItem("content"));
   }, [_throttledEditorContent]);
+
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
   };
@@ -43,14 +47,14 @@ const WritingPage = () => {
   const handleTitleValueChange = (value: string) => {
     //제목 value변경하기
     localStorage.setItem("title", "");
+    setTitleName("");
     localStorage.setItem("style", "");
     if (value === _title_free) {
-      setTitleName("");
-      setStyle(_title_free);
-      localStorage.setItem("style", _title_free);
+      setStyle("FREE");
+      localStorage.setItem("style", "FREE");
     } else {
-      setStyle(_title_question);
-      localStorage.setItem("style", _title_question);
+      setStyle("QUESTION");
+      localStorage.setItem("style", "QUESTION");
     }
     console.log("localStorage style:", localStorage.getItem("style"));
 
@@ -70,7 +74,7 @@ const WritingPage = () => {
     <div className="py-2 bg-gray-100 mx-10">
       <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
-        <TitleHeader title="글쓰기" />
+        <TitleHeader title={t.writingHeader} />
         <div className="ml-auto mr-6">
           <EnrollWrapper
             _titleName={_titleName}
@@ -80,14 +84,13 @@ const WritingPage = () => {
         </div>
       </div>
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
-        {/*FREE / QUESTION 구분 영역*/}
         <div className="bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] mt-5 w-full p-5 gap-3">
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
             onClick={handleTitleValueChange}
           />
-          {_style === t.titleStyle_FREE && (
+          {_style === "FREE" && (
             <input
               value={_titleName}
               onChange={(e) => setTitleName(e.target.value)}
@@ -96,7 +99,7 @@ const WritingPage = () => {
               placeholder={t.titleInputPlaceholder}
             ></input>
           )}
-          {_style === t.titleStyle_QUESTION && (
+          {_style === "QUESTION" && (
             <QuestionTitle _titleName={_titleName} onClick={_handleRefresh} />
           )}
         </div>

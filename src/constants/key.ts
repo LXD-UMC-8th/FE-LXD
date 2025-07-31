@@ -8,3 +8,8 @@ export const DiaryItems = {
   title: "title",
   content: "content",
 };
+
+export const QUERY_KEY = {
+  diary: "diary",
+  diaryUpload: "diaryUpload",
+};

@@ -3,8 +3,8 @@ export type DiaryUploadRequestDTO = {
   title: string;
   content: string;
   style: string;
-  visibility: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE"
-  commentPermission: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE";
+  visibility: string;
+  commentPermission: string;
   language: string;
   thumbImg: string;
 };
@@ -18,7 +18,7 @@ export type DiaryUploadResponseDTO = {
 
 type DiaryUploadResult = {
   diaryId: number;
-  visibility: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE"
+  visibility: string;
   title: string;
   language: string;
   profileImg: string;
@@ -59,3 +59,5 @@ export type ImageResponseDTO = {
     imageUrl: string;
   };
 };
+
+export type styleType = "FREE" | "QUESTION";

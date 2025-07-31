@@ -14,6 +14,7 @@ interface WritingEditorProps {
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
   const quillRef = useRef<ReactQuill>(null);
 
+  //image삭제할 때도 반영할 수 있는 것을 만들어야 함,,,
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
     if (!editor) return;
