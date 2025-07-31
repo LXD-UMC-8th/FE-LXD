@@ -1,4 +1,4 @@
-import ProfileComponent from "../Common/ProfileComponent";
+// import ProfileComponent from "../Common/ProfileComponent";
 
 interface DiaryContentProps {
     title: string;
@@ -22,7 +22,7 @@ const DiaryContent = ({ title, language, visibility, content, stats }: DiaryCont
 
       {/* 작성자 + 우측 정보 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-        <ProfileComponent />
+        {/* <ProfileComponent /> 작성자 프로필 */}
         <div className="flex items-center gap-3 text-caption text-gray-700 pt-5">
           {stats.map((item, index) => (
             <div key={index} className="flex gap-1">
