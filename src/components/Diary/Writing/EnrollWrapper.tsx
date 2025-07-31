@@ -6,6 +6,7 @@ interface EnrollWrapperProps {
   _titleName: string;
   _editorRawContent: string;
   _style: string;
+  onSubmit?: () => void;
 }
 
 const EnrollWrapper = ({
