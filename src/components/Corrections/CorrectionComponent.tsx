@@ -1,7 +1,24 @@
 import { useState } from "react";
 import ProfileInCorrections from "./ProfileInCorrections";
 
-const CorrectionComponent = () => {
+interface CorrectionItem {
+  /* your fields */
+}
+
+interface CorrectionComponentProps {
+  corrections: CorrectionItem[];
+  loadMore: () => void;
+  hasMore: boolean;
+  isLoading: boolean;
+  isFetchingNextPage: boolean;
+  error?: Error;
+}
+
+const CorrectionComponent = ({
+  props,
+}: {
+  props: CorrectionComponentProps;
+}) => {
   const [liked, setLiked] = useState(false);
   const [openCorrectoinReply, setOpenCorrectionReply] = useState(false);
   const [comments, _setcomments] = useState([`댓글 내용1`, `댓글 내용2`]);
@@ -20,6 +37,7 @@ const CorrectionComponent = () => {
         openCorrectoinReply ? "h-[570px]" : "h-[380px]"
       }`}
     >
+      {[]}
       <div className="flex flex-col">
         <div className="px-5 pt-5">
           <ProfileInCorrections />
