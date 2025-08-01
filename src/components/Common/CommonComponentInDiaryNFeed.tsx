@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { useMutation } from "@tanstack/react-query";
 import { deleteDiary } from "../../apis/diary";
+import type { DiaryDeleteRequestDTO } from "../../utils/types/diary";
 
 interface CommonComponentInDiaryNFeedProps {
   diaryId: number;
@@ -13,6 +14,23 @@ interface CommonComponentInDiaryNFeedProps {
   postNumber?: string;
   date?: string;
 }
+
+
+export const useDeleteDiaryMutation = (diaryId: number) => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () => deleteDiary({ diaryId } as DiaryDeleteRequestDTO),
+    onSuccess: () => {
+      alert("일기가 삭제되었습니다.");
+      navigate("/mydiary");
+    },
+    onError: (err) => {
+      alert("삭제에 실패했습니다.");
+      console.error(err);
+    },
+  });
+};
 
 const CommonComponentInDiaryNFeed = ({
   diaryId,
@@ -42,26 +60,17 @@ const CommonComponentInDiaryNFeed = ({
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteDiary(diaryId),
-    onSuccess: () => {
-      alert("일기가 삭제되었습니다.");
-      navigate("/mydiary");
-    },
-    onError: (err) => {
-      alert("삭제에 실패했습니다.");
-      console.error(err);
-    },
-  });
+
+  const deleteMutation = useDeleteDiaryMutation(diaryId);
+
+  const handleEdit = () => {
+    navigate(`/mydiary/edit/${diaryId}`);
+  };
 
   const handleDelete = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
       deleteMutation.mutate();
     }
-  };
-
-  const handleEdit = () => {
-    navigate(`/mydiary/edit/${diaryId}`);
   };
 
   return (
@@ -125,7 +134,7 @@ const CommonComponentInDiaryNFeed = ({
         <img
           src="/images/public_icon.svg"
           alt="전체 공개 아이콘"
-          className="w-6 h-6"
+          
         />
         <p className="font-bold text-lg">요즘 7월 루틴을 체크해보자~~</p>
       </div>

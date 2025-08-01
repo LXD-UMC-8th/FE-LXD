@@ -59,3 +59,19 @@ export type ImageResponseDTO = {
     imageUrl: string;
   };
 };
+
+export interface DiaryUpdateRequestDTO {
+  title: string;
+  content: string;
+  visibility: string;
+  commentPermission: string;
+  language: string;
+  style: string;
+  thumbImg: string;
+}
+
+export interface DiaryDeleteRequestDTO {
+  diaryId: number;
+}
+
+
