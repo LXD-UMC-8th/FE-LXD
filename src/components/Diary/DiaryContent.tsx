@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import ProfileComponent from "../Common/ProfileComponent";
 
 interface DiaryContentProps {
   title: string;
@@ -50,12 +49,8 @@ const DiaryContent = ({
 
       {/* 작성자 + 우측 정보 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-        <ProfileComponent />
-
-        <div
-          className="flex items-center gap-3 text-caption text-gray-700 pt-5 relative"
-          ref={menuRef}
-        >
+        {/* <ProfileComponent /> */}
+        <div className="flex items-center gap-3 text-caption text-gray-700 pt-5">
           {stats.map((item, index) => (
             <div key={index} className="flex gap-1">
               <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-4 h-4" />
