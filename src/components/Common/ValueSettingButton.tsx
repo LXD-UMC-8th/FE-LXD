@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface ValueSettingButtonProps {
   title1: string;
@@ -20,9 +20,16 @@ const ValueSettingButton = ({
     }
   };
 
+  useEffect(() => {
+    const storedValue = localStorage.getItem("style");
+    if (storedValue) {
+      setSelected(storedValue);
+    }
+  }, []);
   return (
     <div className="flex gap-2">
       <button
+        value={title1}
         onClick={() => handleClick(title1)}
         className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
@@ -35,6 +42,7 @@ const ValueSettingButton = ({
         {title1}
       </button>
       <button
+        value={title2}
         onClick={() => handleClick(title2)}
         className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${

@@ -65,7 +65,7 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   return (
-    <div className="relative w-full bg-white rounded-2xl shadow px-6 py-5 space-y-4">
+    <div className="relative w-full bg-white rounded-t-2xl shadow px-6 py-5 space-y-4">
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
         <div>
@@ -132,8 +132,8 @@ const CommonComponentInDiaryNFeed = ({
 
       {/* 본문 */}
       <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직
-        완벽하진 않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
+        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직 완벽하진
+        않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
       </p>
 
       {/* 통계 */}

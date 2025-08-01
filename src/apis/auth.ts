@@ -25,12 +25,16 @@ export interface LoginResponse {
 
 // 로그인 요청 API
 export const postSignin = async (
-  payload: LoginRequest
+  payload: LoginRequest,
 ): Promise<LoginResponse> => {
-  const { data } = await axiosInstance.post<LoginResponse>("/auth/login", payload, {
-    headers: {
-      "Content-Type": "application/json",
+  const { data } = await axiosInstance.post<LoginResponse>(
+    "auth/login",
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
     },
-  });
+  );
   return data;
 };

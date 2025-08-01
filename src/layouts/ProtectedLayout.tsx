@@ -9,7 +9,7 @@ const ProtectedLayout = () => {
         <NavBar />
       </div>
 
-      <aside className="hidden lg:block lg:w-50">
+      <aside className="hidden sm:block sm:w-50">
         <SideBar />
       </aside>
 

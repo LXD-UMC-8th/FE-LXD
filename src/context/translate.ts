@@ -22,6 +22,7 @@ export const translate: Record<
     alertImage: string;
     receivedCorrections: string;
     givenCorrections: string;
+    writingHeader: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -44,6 +45,7 @@ export const translate: Record<
     alertImage: "Alert",
     receivedCorrections: "Received",
     givenCorrections: "Given",
+    writingHeader: "New Post",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -65,5 +67,6 @@ export const translate: Record<
     alertImage: "알림",
     receivedCorrections: "내가 받은 교정",
     givenCorrections: "내가 제공한 교정",
+    writingHeader: "글쓰기",
   },
 };

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import EnrollButton from "./EnrollButton";
 import EnrollModal from "./EnrollModal";
+import useOutsideClick from "../../../hooks/useOutsideClick";
 
 interface EnrollWrapperProps {
   _titleName: string;
@@ -17,27 +18,10 @@ const EnrollWrapper = ({
   const [openModal, setOpenModal] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  useOutsideClick(wrapperRef, () => setOpenModal(false));
+
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
-
-  // Optional: click outside to close
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
-        setOpenModal(false);
-      }
-    };
-
-    if (openModal) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [openModal]);
 
   return (
     <div className="relative inline-block" ref={wrapperRef}>

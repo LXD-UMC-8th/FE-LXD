@@ -1,7 +1,9 @@
 import { useState } from "react";
-import useWritingSubmit from "../../../hooks/useWritingSubmit";
+// import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { postDiaryUpload } from "../../../apis/diary";
+import { useNavigate } from "react-router-dom";
 interface EnrollModalProps {
   _onClose?: () => void;
   _titleName: string;
@@ -16,34 +18,33 @@ const EnrollModal = ({
 }: EnrollModalProps) => {
   const { language } = useLanguage();
   const t = translate[language];
-  const [visibility, setVisibility] = useState<"PUBLIC" | "FRIEND" | "PRIVATE">(
-    "PUBLIC",
-  );
-  const [commentPermission, setCommentPermission] = useState<
-    "PUBLIC" | "FRIEND" | "PRIVATE"
-  >("PUBLIC");
-
-  const { submitWriting } = useWritingSubmit({
-    title: _titleName,
-    content: _editorRawContent,
-    style: _style,
-    visibility: visibility,
-    commentPermission: commentPermission,
-    language: "ko", // Example language, adjust as needed
-    thumbImg: "", // Example thumbnail image, adjust as needed
-  });
+  const [visibility, setVisibility] = useState<string>("PUBLIC");
+  const [commentPermission, setCommentPermission] = useState<string>("ALL");
 
   const handleSubmit = () => {
-    //최종 API전송할 때 이용되는 함수임
-    //마지막으로 여기서 전송하는 게 나을 것 같긴 함.
-    // submitWriting();
-    console.log({ submitWriting });
-
-    //diary/{diaryId}로 navigate
+    console.log(
+      JSON.stringify({
+        title: _titleName,
+        content: _editorRawContent,
+        style: _style,
+        visibility,
+        commentPermission,
+        language: "KO",
+        thumbImg: "",
+      }),
+    );
+    postDiaryUpload({
+      title: _titleName,
+      content: _editorRawContent,
+      style: _style,
+      visibility,
+      commentPermission,
+      language: "KO",
+      thumbImg: "",
+    }).then((response) => {
+      console.log(response);
+    });
   };
-
-  //isLoading설정 -> api구현된 이후에 작업하기
-  const [_isLoading, _setIsLoading] = useState(false);
 
   return (
     <div className="w-90 p-6 bg-white rounded-xl shadow-lg">
@@ -99,10 +100,10 @@ const EnrollModal = ({
               type="radio"
               name="comment"
               value="PUBLIC"
-              checked={commentPermission === "PUBLIC"}
+              checked={commentPermission === "ALL"}
               onChange={(e) =>
                 setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                  e.target.value as "ALL" | "FRIEND" | "NONE",
                 )
               }
             />
@@ -116,7 +117,7 @@ const EnrollModal = ({
               checked={commentPermission === "FRIEND"}
               onChange={(e) =>
                 setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                  e.target.value as "ALL" | "FRIEND" | "NONE",
                 )
               }
             />
@@ -127,10 +128,10 @@ const EnrollModal = ({
               type="radio"
               name="comment"
               value="PRIVATE"
-              checked={commentPermission === "PRIVATE"}
+              checked={commentPermission === "NONE"}
               onChange={(e) =>
                 setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
+                  e.target.value as "ALL" | "FRIEND" | "NONE",
                 )
               }
             />

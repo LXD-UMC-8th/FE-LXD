@@ -24,7 +24,8 @@ const QuestionTitle = ({ _titleName, onClick }: QuestionTitleProps) => {
   return (
     <div className="w-full flex items-center justify-between rounded-lg gap-5">
       <div className="w-full bg-gray-200 rounded-md p-3 mt-5">
-        {t.questionGeneratorButtonText} 표시될 제목 : {_titleName}
+        {!_titleName && <div>{t.questionGeneratorButtonText} </div>}
+        {_titleName && <div>{_titleName}</div>}
       </div>
       <div>
         <button

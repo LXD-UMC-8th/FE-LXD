@@ -1,13 +1,14 @@
-import {
-  type ImageRequestDTO,
-  type DiaryRefreshRequestDTO,
-  type DiaryRefreshResponseDTO,
-  type DiaryUploadRequestDTO,
-  type DiaryUploadResponseDTO,
-  type ImageResponseDTO,
+import type {
+  ImageRequestDTO,
+  DiaryRefreshRequestDTO,
+  DiaryRefreshResponseDTO,
+  DiaryUploadRequestDTO,
+  DiaryUploadResponseDTO,
+  ImageResponseDTO,
+  CalendarDiaryRequestDTO,
+  CalendarDiaryResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
-
 
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
@@ -15,7 +16,7 @@ export const postDiaryUpload = async (
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
       "/diaries",
-      body
+      body,
     );
     return data;
   } catch (error) {
@@ -24,14 +25,13 @@ export const postDiaryUpload = async (
   }
 };
 
-
 export const getDiaryRandomQuestion = async (
   body: DiaryRefreshRequestDTO,
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
       "/diaries/random-question",
-      { params: body }
+      { params: body },
     );
     return data;
   } catch (error) {
@@ -40,14 +40,15 @@ export const getDiaryRandomQuestion = async (
   }
 };
 
-
 export const postDiaryImage = async (
   body: ImageRequestDTO,
 ): Promise<ImageResponseDTO> => {
+  console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
       "/diaries/image",
-      body
+      body,
+      { withCredentials: true },
     );
     return data;
   } catch (error) {
@@ -56,6 +57,19 @@ export const postDiaryImage = async (
   }
 };
 
+export const getDiaryStats = async (
+  body: CalendarDiaryRequestDTO,
+): Promise<CalendarDiaryResponseDTO | undefined> => {
+  try {
+    const { data } = await axiosInstance.get("/diaries/stats", {
+      params: body,
+    });
+    return data;
+  } catch (e) {
+    console.log("Error fetching diary stats:", e);
+    return undefined; // Explicitly return undefined in case of an error
+  }
+};
 
 export const deleteDiary = async (diaryId: number): Promise<void> => {
   try {
@@ -65,7 +79,6 @@ export const deleteDiary = async (diaryId: number): Promise<void> => {
     throw error;
   }
 };
-
 
 export const updateDiary = async ({
   diaryId,
