@@ -29,7 +29,7 @@ const CalendarModal = () => {
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
       });
-  });
+  }, []);
 
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(

@@ -10,14 +10,13 @@ import type {
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
-
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
 ): Promise<DiaryUploadResponseDTO> => {
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
       "/diaries",
-      body
+      body,
     );
     return data;
   } catch (error) {
@@ -26,14 +25,13 @@ export const postDiaryUpload = async (
   }
 };
 
-
 export const getDiaryRandomQuestion = async (
   body: DiaryRefreshRequestDTO,
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
       "/diaries/random-question",
-      { params: body }
+      { params: body },
     );
     return data;
   } catch (error) {
@@ -41,7 +39,6 @@ export const getDiaryRandomQuestion = async (
     throw error;
   }
 };
-
 
 export const postDiaryImage = async (
   body: ImageRequestDTO,
@@ -52,7 +49,6 @@ export const postDiaryImage = async (
       "/diaries/image",
       body,
       { withCredentials: true },
-
     );
     return data;
   } catch (error) {
@@ -72,7 +68,8 @@ export const getDiaryStats = async (
   } catch (e) {
     console.log("Error fetching diary stats:", e);
     return undefined; // Explicitly return undefined in case of an error
-=======
+  }
+};
 
 export const deleteDiary = async (diaryId: number): Promise<void> => {
   try {
@@ -82,7 +79,6 @@ export const deleteDiary = async (diaryId: number): Promise<void> => {
     throw error;
   }
 };
-
 
 export const updateDiary = async ({
   diaryId,
@@ -115,3 +111,5 @@ export const getDiaryDetail = async (diaryId: number) => {
   } catch (error) {
     console.error("Error fetching diary detail:", error);
     throw error;
+  }
+};

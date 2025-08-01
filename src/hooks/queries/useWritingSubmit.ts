@@ -4,7 +4,7 @@ import type {
   DiaryUploadRequestDTO,
   DiaryUploadResponseDTO,
 } from "../../utils/types/diary";
-import { postDiary } from "../../apis/diary";
+import { postDiaryUpload } from "../../apis/diary";
 import { QUERY_KEY } from "../../constants/key";
 
 export function useWritingSubmit() {
@@ -12,7 +12,7 @@ export function useWritingSubmit() {
 
   return useMutation<DiaryUploadResponseDTO, Error, DiaryUploadRequestDTO>({
     mutationKey: [QUERY_KEY.diaryUpload],
-    mutationFn: (newDiary) => postDiary(newDiary),
+    mutationFn: (newDiary) => postDiaryUpload(newDiary),
     onSuccess: () => {
       // clear draft
       localStorage.removeItem("style");

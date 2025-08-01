@@ -41,27 +41,6 @@ const CommonComponentInDiaryNFeed = ({
     { label: "89", icon: "/images/CommonComponentIcon/LikeIcon.svg" },
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
-  return (
-    <div className="w-250 h-72 rounded-tl-[10px] rounded-tr-[10px] pt-5 pr-4 pl-8 gap-3 shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)] bg-white">
-      {/* 우측 상단 언어 + 더보기 아이콘 */}
-      <div className="flex justify-between items-center space-x-5 -translate-x-[15px]">
-        {_props.userId && _props.userNickname && _props.specificData ? (
-          <ProfileComponent />
-        ) : (
-          <div>#number//date</div>
-        )}
-        <div className="flex items-center gap-5">
-          <span className="font-semibold justify-end text-body2 text-blue-500">
-            언어
-          </span>
-          <img
-            src="/images/more_options.svg"
-            alt="더보기 아이콘"
-            className="cursor-pointer"
-          />
-        </div>
-      </div>
-
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteDiary(diaryId),
@@ -153,8 +132,8 @@ const CommonComponentInDiaryNFeed = ({
 
       {/* 본문 */}
       <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직
-        완벽하진 않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
+        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직 완벽하진
+        않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
       </p>
 
       {/* 통계 */}
