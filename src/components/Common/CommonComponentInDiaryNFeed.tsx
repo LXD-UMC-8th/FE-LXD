@@ -65,7 +65,7 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   return (
-    <div className="relative w-full bg-white rounded-2xl shadow px-6 py-5 space-y-4">
+    <div className="relative w-full bg-white rounded-t-2xl shadow px-6 py-5 space-y-4">
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
         <div>

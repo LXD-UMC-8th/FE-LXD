@@ -2,8 +2,8 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 
 const DiaryTotalTab = () => {
   return (
-    <div className="w-300">
-      <CommonComponentInDiaryNFeed diaryId={1}/>
+    <div className="w-250">
+      <CommonComponentInDiaryNFeed diaryId={1} />
     </div>
   );
 };
