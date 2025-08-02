@@ -11,6 +11,8 @@ interface EnrollModalProps {
   _style: string;
 }
 
+//여기에 전달되는 _style값은 FREE || "자유글" or QUESTION || "질문글" 임
+//자유글 ->FREE로 바꾸고, 질문글 -> QUESTION으로 바꾸어 API를 요청하여야 한다.
 const EnrollModal = ({
   _titleName,
   _editorRawContent,
@@ -20,13 +22,27 @@ const EnrollModal = ({
   const t = translate[language];
   const [visibility, setVisibility] = useState<string>("PUBLIC");
   const [commentPermission, setCommentPermission] = useState<string>("ALL");
+  const navigate = useNavigate();
 
+  const normalizeStyle = (style: string) => {
+    switch (style) {
+      case "자유글":
+      case "FREE":
+        return "FREE";
+      case "질문글":
+      case "QUESTION":
+        return "QUESTION";
+      default:
+        return "FREE";
+    }
+  };
   const handleSubmit = () => {
+    const style = normalizeStyle(_style);
     console.log(
       JSON.stringify({
         title: _titleName,
         content: _editorRawContent,
-        style: _style,
+        style,
         visibility,
         commentPermission,
         language: "KO",
@@ -36,13 +52,14 @@ const EnrollModal = ({
     postDiaryUpload({
       title: _titleName,
       content: JSON.stringify(_editorRawContent),
-      style: _style,
+      style,
       visibility,
       commentPermission,
       language: "KO",
       thumbImg: "",
     }).then((response) => {
       console.log(response);
+      navigate(`diary/${response.result.diaryId}`);
     });
   };
 
