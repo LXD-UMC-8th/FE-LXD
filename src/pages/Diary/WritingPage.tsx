@@ -36,7 +36,7 @@ const WritingPage = () => {
   //이 과정에서 local에 너무 많은 값이 입력되면 page rendering error가 발생함,,
   ///나중에 뭐,,, 해결해보도록 하기..
   useEffect(() => {
-    localStorage.setItem("content", JSON.stringify(_throttledEditorContent));
+    localStorage.setItem("content", _throttledEditorContent);
     console.log(localStorage.getItem("content"));
   }, [_throttledEditorContent]);
 

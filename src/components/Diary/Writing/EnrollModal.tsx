@@ -35,7 +35,7 @@ const EnrollModal = ({
     );
     postDiaryUpload({
       title: _titleName,
-      content: _editorRawContent,
+      content: JSON.stringify(_editorRawContent),
       style: _style,
       visibility,
       commentPermission,
