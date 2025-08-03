@@ -24,23 +24,24 @@ interface SignupPageProps {
 }
 
 const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
-  const [hasTriedVerify, setHasTriedVerify] = useState(false); //인증하기 버튼 눌렀는지 상태관리
-  const [emailVerified, setEmailVerified] = useState(false); //이메일 인증 완료 여부 상태관리
+  const [hasVerifiedByToken, setHasVerifiedByToken] = useState(false); // 이메일 토큰 인증 시도 여부 상태관리
+  const [emailVerified, setEmailVerified] = useState(false); // 이메일 최종 인증 여부 상태관리
   const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [isToSOpen, setIsToSOpen] = useState(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
- const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
-    setHasTriedVerify(true);
-
     try {
       const response = await postEmailVerificationRequest(userInfo.email);
 
       if (response.isSuccess) {
+        alert(
+          "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요."
+        );
         console.log("이메일 인증 링크 전송 성공");
         return;
       }
@@ -64,17 +65,17 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       const response = await getEmailVerification(token);
 
       if (response.isSuccess) {
+        setHasVerifiedByToken(true);
         setEmailVerified(true);
         console.log("이메일 인증 성공");
       }
     } catch (error) {
+      setHasVerifiedByToken(true);
       setEmailVerified(false);
       alert("인증 처리 중 오류 발생");
       console.error("인증 실패:", error);
     }
   };
-
-  
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
     setUserInfo((prev) => ({ ...prev, [key]: value }));
@@ -151,19 +152,21 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                   유효하지 않은 형식입니다
                 </span>
               )}
-            {emailTouched && isEmailValid(userInfo.email) && hasTriedVerify && (
-              <>
-                {emailVerified ? (
-                  <span className="text-body2 text-mint-500">
-                    인증되었습니다
-                  </span>
-                ) : (
-                  <span className="text-body2 text-red-500">
-                    사용할 수 없는 이메일입니다
-                  </span>
-                )}
-              </>
-            )}
+            {emailTouched &&
+              isEmailValid(userInfo.email) &&
+              hasVerifiedByToken && (
+                <>
+                  {emailVerified ? (
+                    <span className="text-body2 text-mint-500">
+                      인증되었습니다
+                    </span>
+                  ) : (
+                    <span className="text-body2 text-red-500">
+                      사용할 수 없는 이메일입니다
+                    </span>
+                  )}
+                </>
+              )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
