@@ -31,7 +31,6 @@ const WritingPage = () => {
   const _DebounceTitleName = useDebounce(_titleName, 500);
   useEffect(() => {
     localStorage.setItem("title", _DebounceTitleName);
-    console.log("localStorage title:", localStorage.getItem("title"));
   }, [_DebounceTitleName]);
 
   const [_editorRawContent, setEditorRawContent] = useState<string>(
