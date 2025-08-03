@@ -26,15 +26,3 @@ export function useInfiniteProvidedCorrectionList(
     enabled,
   });
 }
-
-// const {
-//   data,
-//   fetchNextPage,
-//   hasNextPage,
-//   isFetchingNextPage,
-//   isLoading,
-//   isError,
-//   error,
-// } = useInfiniteProvidedCorrectionList(20, "KO");
-
-// const corrections = data?.pages.flatMap((p) => p.corrections) ?? [];
