@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import {
   isEmailValid,
@@ -13,7 +13,10 @@ import {
 } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
-import { postEmailVerificationRequest } from "../../apis/auth";
+import {
+  getEmailVerification,
+  postEmailVerificationRequest,
+} from "../../apis/auth";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -28,42 +31,50 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [isToSOpen, setIsToSOpen] = useState(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
-
-  // // 이메일 인증 모킹 함수 (나중에 삭제)
-  // async function fakeEmailVerify(
-  //   _email: string,
-  //   mode: "available" | "taken" | "random" = "available"
-  // ): Promise<{ ok: boolean }> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       if (mode === "random") {
-  //         const available = Math.random() > 0.5;
-  //         resolve({ ok: available });
-  //         return;
-  //       }
-  //       resolve({ ok: mode === "available" });
-  //     }, 500);
-  //   });
-  // }
+ const [searchParams] = useSearchParams();
 
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     setHasTriedVerify(true);
+
     try {
       const response = await postEmailVerificationRequest(userInfo.email);
 
-      if (!response.isSuccess) {
-        console.log("이메일 인증 실패");
-        setEmailVerified(false);
+      if (response.isSuccess) {
+        console.log("이메일 인증 링크 전송 성공");
         return;
       }
-      setEmailVerified(true);
-      console.log("이메일 인증 링크 발송 성공");
     } catch (error) {
-      alert("인증할 수 없는 이메일입니다");
+      alert("인증 메일 발송 중 오류 발생");
+      console.error("발송 실패:", error);
+    }
+  };
+
+  // 이메일 인증 링크에서 토큰 받아오기
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      handleVerifyEmailToken(token);
+    }
+  }, [searchParams]);
+
+  // 이메일에서 들어온 인증 링크 토큰 처리 함수
+  const handleVerifyEmailToken = async (token: string) => {
+    try {
+      const response = await getEmailVerification(token);
+
+      if (response.isSuccess) {
+        setEmailVerified(true);
+        console.log("이메일 인증 성공");
+      }
+    } catch (error) {
+      setEmailVerified(false);
+      alert("인증 처리 중 오류 발생");
       console.error("인증 실패:", error);
     }
   };
+
+  
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
     setUserInfo((prev) => ({ ...prev, [key]: value }));
