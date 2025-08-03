@@ -1,4 +1,5 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
+import type { SignupFlowProps } from "../pages/Login/SignupFlow";
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -28,13 +29,36 @@ export interface SignupResponse {
   };
 }
 
+// 회원가입 API
 export const postSignup = async (
-  payload: SignupRequest
+  userInfo: SignupFlowProps
 ): Promise<SignupResponse> => {
-  const { data } = await axiosInstance.post("/members/join", payload, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const formData = new FormData();
+
+  const userData = {
+    email: userInfo.email,
+    password: userInfo.password,
+    isPrivacyAgreed: userInfo.isPrivacy,
+    username: userInfo.id,
+    nickname: userInfo.nickname,
+    nativeLanguage: userInfo.nativeLanguage,
+    language: userInfo.studyLanguage,
+    loginType: "LOCAL",
+  };
+  // JSON 데이터는 Blob으로 추가
+  formData.append(
+    "data",
+    new Blob([JSON.stringify(userData)], { type: "application/json" })
+  );
+  // 프로필 이미지가 있으면 파일 추가
+  if (userInfo.profileImg) {
+    formData.append("profileImg", userInfo.profileImg);
+  }
+
+  const { data } = await axiosInstance.post<SignupResponse>(
+    "/members/join",
+    formData
+  );
+
   return data;
 };

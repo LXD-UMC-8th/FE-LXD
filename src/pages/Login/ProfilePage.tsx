@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
-import axios from "axios";
+import { postSignup } from "../../apis/members";
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -26,7 +26,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   // 모킹 함수 (나중에 삭제)
   async function fakeIdCheck(
     _id: string,
-    mode: "available" | "taken" | "random" = "available",
+    mode: "available" | "taken" | "random" = "available"
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -62,12 +62,11 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setUserInfo((prev) => ({ ...prev, profileImg: imageURL }));
+      setUserInfo((prev) => ({ ...prev, profileImg: file }));
     }
   };
   const handleRemoveImage = () => {
-    setUserInfo((prev) => ({ ...prev, profileImg: "" }));
+    setUserInfo((prev) => ({ ...prev, profileImg: null }));
   };
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
@@ -103,27 +102,22 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     return _isIdValid && _isNicknameValid && _isLangValid;
   };
 
+  // 회원가입 진행 함수
   const handleCompleteSignup = async () => {
-    const payload = {
-      email: userInfo.email,
-      password: userInfo.password,
-      username: userInfo.id,
-      nickname: userInfo.nickname,
-      profileImg: userInfo.profileImg,
-      nativeLanguage: userInfo.nativeLanguage,
-      studyLanguage: userInfo.studyLanguage,
-      isPrivacy: userInfo.isPrivacy,
-    };
-
     try {
-      const response = await axios.post("/members/join", payload);
-      console.log("회원가입 성공", response.data);
-      alert("회원가입 성공");
-    } catch (err) {
-      console.error("회원가입 실패:", err);
-      alert("회원가입 실패, 다시 시도해주세요");
+      const response = await postSignup(userInfo);
+
+      if (response.isSuccess) {
+        console.log("회원가입 성공", response.result.member);
+        alert("회원가입 완료!");
+        navigate("/home");
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
     }
-    navigate("/home");
   };
 
   return (
@@ -149,7 +143,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
             >
               {userInfo.profileImg ? (
                 <img
-                  src={userInfo.profileImg}
+                  src={URL.createObjectURL(userInfo.profileImg)} // 미리보기 렌더링
                   alt="profileImg"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -248,7 +242,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
         <section>
           <SignupButton
             name="가입완료"
-            onClick={handleCompleteSignup}
+            onClick={() => handleCompleteSignup()}
             disabled={!isAllValid()}
           />
         </section>
