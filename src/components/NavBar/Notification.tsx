@@ -37,21 +37,20 @@ const Notification = () => {
     },
   ];
   const [_notifications, setNotifications] = useState(notifications);
-  // useEffect(() => {
-  //   const es = subscribeToNotifications<any>(
-  //     (newNotif) => {
-  //       console.log("got a new notif:", newNotif);
-  //     },
-  //     (err) => {
-  //       console.error("SSE crashed", err);
-  //     },
-  //   );
-  //   console.log("subscribe notification", es);
 
-  //   fetchNotifications().then((pastNotifs) => {
-  //     setNotifications((prev) => [...prev, pastNotifs]);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const es = subscribeToNotifications((newNotif) => {
+      console.log("got a new notif:", newNotif);
+    });
+
+    es.onopen = () => console.log("📡 onopen: connection established.");
+    es.onerror = (err) => console.error("❗onerror:", err);
+
+    fetchNotifications().then((pastNotifs) => {
+      setNotifications((prev) => [...prev, pastNotifs]);
+      console.log("pastNotifs", pastNotifs);
+    });
+  }, []);
 
   const handleReadAll = () => {
     console.log("모두 읽음 클릭됨");

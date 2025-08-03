@@ -6,23 +6,27 @@ import type { APIResponse } from "../utils/types/APIresponse";
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export async function fetchNotifications() {
-  const res = await axiosInstance.get(`${API}/notifications`);
+  const res = await axiosInstance.get(`${API}notifications`);
   return res.data;
 }
 
 export function subscribeToNotifications<T>(
   onEvent: (payload: T) => void,
-  onError?: (err: Event) => void,
 ): EventSource {
   const token = localStorage.getItem("accessToken");
   const es = new EventSourcePolyfill(`${API}notifications/subscribe`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    heartbeatTimeout: 300_000,
     withCredentials: true,
+    heartbeatTimeout: 300_000,
   });
 
+  es.onopen = () => {
+    fetchNotifications().then((data) => {
+      console.log("fetchNotification :", data);
+    });
+  };
   es.onmessage = (evt) => {
     try {
       const envelope = JSON.parse(evt.data) as APIResponse<T>;
@@ -39,7 +43,7 @@ export function subscribeToNotifications<T>(
   };
 
   es.onerror = (err) => {
-    onError?.(err);
+    console.log(err);
   };
 
   return es;
