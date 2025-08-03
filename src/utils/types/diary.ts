@@ -62,6 +62,22 @@ export type ImageResponseDTO = {
   };
 };
 
+export interface DiaryUpdateRequestDTO {
+  title: string;
+  content: string;
+  visibility: string;
+  commentPermission: string;
+  language: string;
+  style: string;
+  thumbImg: string;
+}
+
+export interface DiaryDeleteRequestDTO {
+  diaryId: number;
+}
+
+
+
 export type styleType = "FREE" | "QUESTION";
 
 export type CalendarDiaryRequestDTO = {
@@ -75,3 +91,4 @@ export type CalendarDiary = {
 };
 
 export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;
+

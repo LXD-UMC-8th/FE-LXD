@@ -1,12 +1,14 @@
-import type {
-  ImageRequestDTO,
-  DiaryRefreshRequestDTO,
-  DiaryRefreshResponseDTO,
-  DiaryUploadRequestDTO,
-  DiaryUploadResponseDTO,
-  ImageResponseDTO,
-  CalendarDiaryRequestDTO,
-  CalendarDiaryResponseDTO,
+
+import {
+  type ImageRequestDTO,
+  type DiaryRefreshRequestDTO,
+  type DiaryRefreshResponseDTO,
+  type DiaryUploadRequestDTO,
+  type DiaryUploadResponseDTO,
+  type ImageResponseDTO,
+  type DiaryUpdateRequestDTO,
+  type DiaryDeleteRequestDTO,
+
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -34,9 +36,9 @@ export const getDiaryRandomQuestion = async (
       { params: body },
     );
     return data;
-  } catch (error) {
-    console.error("Error fetching random question:", error);
-    throw error;
+  } catch (e) {
+    console.log("에러 발생:", e);
+    throw e;
   }
 };
 
@@ -71,7 +73,9 @@ export const getDiaryStats = async (
   }
 };
 
-export const deleteDiary = async (diaryId: number): Promise<void> => {
+export const deleteDiary = async ({
+  diaryId,
+}: DiaryDeleteRequestDTO): Promise<void> => {
   try {
     await axiosInstance.delete(`/diaries/${diaryId}`);
   } catch (error) {
@@ -80,21 +84,13 @@ export const deleteDiary = async (diaryId: number): Promise<void> => {
   }
 };
 
-export const updateDiary = async ({
-  diaryId,
-  body,
-}: {
-  diaryId: number;
-  body: {
-    title: string;
-    content: string;
-    visibility: string;
-    commentPermission: string;
-    language: string;
-    style: string;
-    thumbImg: string;
-  };
-}) => {
+
+
+export const updateDiary = async (
+  diaryId: number,
+  body: DiaryUpdateRequestDTO
+): Promise<any> => {
+
   try {
     const { data } = await axiosInstance.put(`/diaries/${diaryId}`, body);
     return data;
@@ -104,7 +100,10 @@ export const updateDiary = async ({
   }
 };
 
-export const getDiaryDetail = async (diaryId: number) => {
+
+export const getDiaryDetail = async (
+  diaryId: number
+): Promise<any> => {
   try {
     const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
     return data;

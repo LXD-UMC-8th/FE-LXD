@@ -4,7 +4,6 @@ import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
 import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
 import WritingEditor from "../../components/Diary/Writing/WritingEditor";
-import ValueSettingButton from "../../components/Common/ValueSettingButton";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useThrottle } from "../../hooks/useThrottle";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -20,41 +19,27 @@ const DiaryEditPage = () => {
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
 
-  // 상태 정의
-  const [_style, setStyle] = useState<string>(_title_free);
+  const [_style, setStyle] = useState<string>("");
   const [_titleName, setTitleName] = useState<string>("");
   const [_editorRawContent, setEditorRawContent] = useState<string>("");
 
   const _throttledEditorContent = useThrottle(_editorRawContent, 1500);
   const _throttledTitleName = useThrottle(_titleName, 500);
 
-  // 수정 모드: 기존 일기 내용 불러오기
   useEffect(() => {
     if (!diaryId) return;
     getDiaryDetail(Number(diaryId)).then((res) => {
       const d = res.result;
       setTitleName(d.title);
       setEditorRawContent(d.content);
-      setStyle(d.style);
+      setStyle(d.style); // "QUESTION" or "FREE"
     });
   }, [diaryId]);
 
-  // 에디터 변경 핸들러
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
   };
 
-  // 제목 유형 선택 핸들러
-  const handleTitleValueChange = (value: string) => {
-    if (value === _title_free) {
-      setStyle(_title_free);
-    } else {
-      setStyle(_title_question);
-    }
-    return value;
-  };
-
-  // 수정 완료 버튼 눌렀을 때
   const handleEditSubmit = () => {
     if (!diaryId) return;
 
@@ -65,16 +50,22 @@ const DiaryEditPage = () => {
       commentPermission: "ALL",
       language,
       style: _style,
-      thumbImg: "", // 필요시 썸네일 값 추가
+      thumbImg: "",
     };
 
-    updateDiary({ diaryId: Number(diaryId), body }).then(() => {
-      alert("일기 수정 완료!");
-      navigate("/mydiary");
-    }).catch((err) => {
-      console.error("수정 실패", err);
-      alert("수정에 실패했습니다.");
-    });
+    updateDiary(Number(diaryId), body)
+      .then(() => {
+        alert("일기 수정 완료!");
+        navigate("/mydiary");
+      })
+      .catch((err) => {
+        console.error("수정 실패", err);
+        alert("수정에 실패했습니다.");
+      });
+  };
+
+  const getStyleDisplayText = () => {
+    return _style === "QUESTION" ? _title_question : _title_free;
   };
 
   return (
@@ -87,19 +78,21 @@ const DiaryEditPage = () => {
             _titleName={_titleName}
             _editorRawContent={_editorRawContent}
             _style={_style}
-            onSubmit={handleEditSubmit} // 🔥 수정 완료 핸들러 연결
+            onSubmit={handleEditSubmit}
           />
         </div>
       </div>
 
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
         <div className="bg-white rounded-[12px] shadow mt-5 w-full p-5 gap-3">
-          <ValueSettingButton
-            title1={_title_free}
-            title2={_title_question}
-            onClick={handleTitleValueChange}
+          <input
+            type="text"
+            value={getStyleDisplayText()}
+            readOnly
+            className="w-full bg-gray-200 rounded-md p-3 text-gray-600"
           />
-          {_style === _title_free && (
+
+          {getStyleDisplayText() === _title_free && (
             <input
               onChange={(e) => setTitleName(e.target.value)}
               type="text"
@@ -108,7 +101,8 @@ const DiaryEditPage = () => {
               value={_titleName}
             />
           )}
-          {_style === _title_question && (
+
+          {getStyleDisplayText() === _title_question && (
             <QuestionTitle _titleName={_titleName} onClick={() => {}} />
           )}
         </div>
