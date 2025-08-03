@@ -25,7 +25,7 @@ export interface LoginResponse {
 
 // 로그인 요청 API
 export const postSignin = async (
-  payload: LoginRequest,
+  payload: LoginRequest
 ): Promise<LoginResponse> => {
   const { data } = await axiosInstance.post<LoginResponse>(
     "auth/login",
@@ -34,7 +34,23 @@ export const postSignin = async (
       headers: {
         "Content-Type": "application/json",
       },
-    },
+    }
   );
   return data;
+};
+
+export interface EmailVerificationResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: string;
+}
+
+// 이메일 인증 링크 발송 API
+export const postEmailVerificationRequest = async (email: string) => {
+  const response = await axiosInstance.post<EmailVerificationResponse>(
+    "auth/emails/verification-requests",
+    { email }
+  );
+  return response.data;
 };
