@@ -19,6 +19,7 @@ export function useWritingSubmit() {
       localStorage.removeItem("title");
       localStorage.removeItem("content");
       console.log("writing submit successful");
+      console.log(data);
       navigate(`/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
