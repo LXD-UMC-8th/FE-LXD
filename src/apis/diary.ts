@@ -1,4 +1,3 @@
-
 import {
   type ImageRequestDTO,
   type DiaryRefreshRequestDTO,
@@ -8,7 +7,8 @@ import {
   type ImageResponseDTO,
   type DiaryUpdateRequestDTO,
   type DiaryDeleteRequestDTO,
-
+  type CalendarDiaryRequestDTO,
+  type CalendarDiaryResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -84,13 +84,11 @@ export const deleteDiary = async ({
   }
 };
 
-
-
+//Promise 타입 정의필요
 export const updateDiary = async (
   diaryId: number,
-  body: DiaryUpdateRequestDTO
+  body: DiaryUpdateRequestDTO,
 ): Promise<any> => {
-
   try {
     const { data } = await axiosInstance.put(`/diaries/${diaryId}`, body);
     return data;
@@ -100,10 +98,8 @@ export const updateDiary = async (
   }
 };
 
-
-export const getDiaryDetail = async (
-  diaryId: number
-): Promise<any> => {
+//Promise 타입 정의필요
+export const getDiaryDetail = async (diaryId: number): Promise<any> => {
   try {
     const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
     return data;
