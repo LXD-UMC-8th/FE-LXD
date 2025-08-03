@@ -13,6 +13,7 @@ import {
 } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
+import { postEmailVerificationRequest } from "../../apis/auth";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -28,36 +29,36 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [isToSOpen, setIsToSOpen] = useState(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
 
-  // 이메일 인증 모킹 함수 (나중에 삭제)
-  async function fakeEmailVerify(
-    _email: string,
-    mode: "available" | "taken" | "random" = "available",
-  ): Promise<{ ok: boolean }> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (mode === "random") {
-          const available = Math.random() > 0.5;
-          resolve({ ok: available });
-          return;
-        }
-        resolve({ ok: mode === "available" });
-      }, 500);
-    });
-  }
+  // // 이메일 인증 모킹 함수 (나중에 삭제)
+  // async function fakeEmailVerify(
+  //   _email: string,
+  //   mode: "available" | "taken" | "random" = "available"
+  // ): Promise<{ ok: boolean }> {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       if (mode === "random") {
+  //         const available = Math.random() > 0.5;
+  //         resolve({ ok: available });
+  //         return;
+  //       }
+  //       resolve({ ok: mode === "available" });
+  //     }, 500);
+  //   });
+  // }
 
+  // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     setHasTriedVerify(true);
     try {
-      // 여기에 이메일 인증 API 요청이 들어감 (나중에 axios로 대체)
-      const response = await fakeEmailVerify(userInfo.email, "random");
+      const response = await postEmailVerificationRequest(userInfo.email);
 
-      if (!response.ok) {
-        console.log("인증 실패");
+      if (!response.isSuccess) {
+        console.log("이메일 인증 실패");
         setEmailVerified(false);
         return;
       }
       setEmailVerified(true);
-      console.log("이메일 인증 성공");
+      console.log("이메일 인증 링크 발송 성공");
     } catch (error) {
       alert("인증할 수 없는 이메일입니다");
       console.error("인증 실패:", error);
@@ -84,7 +85,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
-      userInfo.checkPassword,
+      userInfo.checkPassword
     );
 
     return (
