@@ -54,3 +54,11 @@ export const postEmailVerificationRequest = async (email: string) => {
   );
   return response.data;
 };
+
+// 이메일 인증 API
+export const getEmailVerification = async (token: string) => {
+  const response = await axiosInstance.get("/auth/emails/verifications", {
+    params: { token },
+  });
+  return response.data;
+};
