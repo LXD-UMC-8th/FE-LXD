@@ -1,0 +1,82 @@
+{
+  "hash": "aaf1694c",
+  "configHash": "86b263f5",
+  "lockfileHash": "a1079536",
+  "browserHash": "a59d089d",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "6fef2650",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b193d59f",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "c2cb20b2",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "4129c8f1",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "3edca2fc",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "d13d57a3",
+      "needsInterop": false
+    },
+    "react-calendar": {
+      "src": "../../node_modules/react-calendar/dist/index.js",
+      "file": "react-calendar.js",
+      "fileHash": "8d683fa9",
+      "needsInterop": false
+    },
+    "react-quill-new": {
+      "src": "../../node_modules/react-quill-new/lib/index.js",
+      "file": "react-quill-new.js",
+      "fileHash": "951f3d14",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "7f3c9aba",
+      "needsInterop": false
+    },
+    "event-source-polyfill": {
+      "src": "../../node_modules/event-source-polyfill/src/eventsource.js",
+      "file": "event-source-polyfill.js",
+      "fileHash": "83b4edd5",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "chunk-V2X5ZORR": {
+      "file": "chunk-V2X5ZORR.js"
+    },
+    "chunk-J3GJSMK3": {
+      "file": "chunk-J3GJSMK3.js"
+    },
+    "chunk-32E4H3EV": {
+      "file": "chunk-32E4H3EV.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
