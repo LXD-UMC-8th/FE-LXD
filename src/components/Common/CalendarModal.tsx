@@ -10,26 +10,35 @@ interface value {
 
 const CalendarModal = () => {
   const [_values, setValues] = useState<value[]>([]);
+  const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
-  //시험용 더미 데이터
-  function formatLocalYMDD(date: Date) {
-    // “en-CA” → “YYYY-MM-DD”
-    return date.toLocaleDateString("en-CA");
-  }
+  const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
 
   useEffect(() => {
-    getDiaryStats({
-      year: 2025,
-      month: 7,
-    })
-      .then((response) => {
-        console.log("Diary Stats:", response);
-        setValues(response?.result);
+    const current = new Date(activeStartDate);
+    const prev = new Date(current);
+    const next = new Date(current);
+
+    prev.setMonth(current.getMonth() - 1);
+    next.setMonth(current.getMonth() + 1);
+
+    const datesToRequest = [
+      { year: prev.getFullYear(), month: prev.getMonth() + 1 },
+      { year: current.getFullYear(), month: current.getMonth() + 1 },
+    ];
+
+    Promise.all(datesToRequest.map(getDiaryStats))
+      .then((responses) => {
+        const merged: value[] = responses.flatMap((r) => r?.result || []);
+        setValues(merged);
+        localStorage.removeItem("content");
+        localStorage.removeItem("title");
+        localStorage.removeItem("style");
       })
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
       });
-  }, []);
+  }, [activeStartDate]);
 
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(
@@ -44,7 +53,7 @@ const CalendarModal = () => {
   // Return heat class
   const _getHeatClass = (count: number | undefined) => {
     if (!count) return "";
-    return `heat-${count}`; // ensure your CSS defines .heat-1, .heat-2, etc.
+    return `heat-${count}`;
   };
 
   return (

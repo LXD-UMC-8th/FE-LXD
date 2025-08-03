@@ -4,14 +4,18 @@ interface ValueSettingButtonProps {
   title1: string;
   title2: string;
   onClick?: (value: string) => string;
+  selectedValue?: string;
 }
 
 const ValueSettingButton = ({
   title1,
   title2,
   onClick,
+  selectedValue,
 }: ValueSettingButtonProps) => {
-  const [selected, setSelected] = useState(title1);
+  const [selected, setSelected] = useState(
+    () => localStorage.getItem("style") || title1,
+  );
 
   const handleClick = (value: string) => {
     setSelected(value);
@@ -20,12 +24,6 @@ const ValueSettingButton = ({
     }
   };
 
-  useEffect(() => {
-    const storedValue = localStorage.getItem("style");
-    if (storedValue) {
-      setSelected(storedValue);
-    }
-  }, []);
   return (
     <div className="flex gap-2">
       <button

@@ -16,9 +16,14 @@ const WritingPage = () => {
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
   const [_style, setStyle] = useState<string>(
-    () => localStorage.getItem("style") ?? t.titleStyle_FREE,
+    () => localStorage.getItem("style") ?? "FREE",
   );
 
+  useEffect(() => {
+    console.log("WritingPage _style:", _style);
+  });
+
+  console.log("style:", _style);
   const [_titleName, setTitleName] = useState<string>(
     () => localStorage.getItem("title") ?? "",
   );
@@ -36,7 +41,7 @@ const WritingPage = () => {
   //이 과정에서 local에 너무 많은 값이 입력되면 page rendering error가 발생함,,
   ///나중에 뭐,,, 해결해보도록 하기..
   useEffect(() => {
-    localStorage.setItem("content", JSON.stringify(_throttledEditorContent));
+    localStorage.setItem("content", _throttledEditorContent);
     console.log(localStorage.getItem("content"));
   }, [_throttledEditorContent]);
 
@@ -50,11 +55,11 @@ const WritingPage = () => {
     setTitleName("");
     localStorage.setItem("style", "");
     if (value === _title_free) {
-      setStyle("FREE");
-      localStorage.setItem("style", "FREE");
+      setStyle(t.titleStyle_FREE);
+      localStorage.setItem("style", t.titleStyle_FREE);
     } else {
-      setStyle("QUESTION");
-      localStorage.setItem("style", "QUESTION");
+      setStyle(t.titleStyle_QUESTION);
+      localStorage.setItem("style", t.titleStyle_QUESTION);
     }
     console.log("localStorage style:", localStorage.getItem("style"));
 
@@ -88,9 +93,10 @@ const WritingPage = () => {
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
+            selectedValue={_style}
             onClick={handleTitleValueChange}
           />
-          {_style === "FREE" && (
+          {(_style === "FREE" || _style === "자유글") && (
             <input
               value={_titleName}
               onChange={(e) => setTitleName(e.target.value)}
@@ -99,7 +105,7 @@ const WritingPage = () => {
               placeholder={t.titleInputPlaceholder}
             ></input>
           )}
-          {_style === "QUESTION" && (
+          {(_style === "QUESTION" || _style === "질문글") && (
             <QuestionTitle _titleName={_titleName} onClick={_handleRefresh} />
           )}
         </div>
