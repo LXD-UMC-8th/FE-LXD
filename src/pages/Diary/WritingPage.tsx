@@ -15,69 +15,66 @@ const WritingPage = () => {
   const t = translate[language];
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
+  const [_style, setStyle] = useState<string>(
+    () => localStorage.getItem("style") ?? t.titleStyle_FREE,
+  );
 
-  // 글쓰기 페이지에서 사용할 제목 상태
-  const [_style, setStyle] = useState<string>(t.titleStyle_FREE);
+  const [_titleName, setTitleName] = useState<string>(
+    () => localStorage.getItem("title") ?? "",
+  );
 
-  //제목 이름 상태 관리
-  const [_titleName, setTitleName] = useState<string>("");
   const _ThrottledTitleName = useThrottle(_titleName, 500);
-  //디버깅 용임. 나중에 배포할 땐 지우기
   useEffect(() => {
-    console.log("Throttled Title Name: ", _ThrottledTitleName);
+    localStorage.setItem("title", _ThrottledTitleName);
   }, [_ThrottledTitleName]);
 
-  // 에디터 내용 변경을 반영하는하기 위함
-  //useThrottle을 통해서 내용이 바뀐 뒤 1500ms 후에 _throttledEditorContent가 업데이트됨
-  const [_editorRawContent, setEditorRawContent] = useState<string>("");
+  const [_editorRawContent, setEditorRawContent] = useState<string>(
+    () => localStorage.getItem("content") ?? "",
+  );
   const _throttledEditorContent = useThrottle(_editorRawContent, 1500);
-  //디버깅 용임. 나중에 배포할 땐 지우기
+
+  //이 과정에서 local에 너무 많은 값이 입력되면 page rendering error가 발생함,,
+  ///나중에 뭐,,, 해결해보도록 하기..
   useEffect(() => {
-    console.log("Throttled Editor Content: ", _throttledEditorContent);
+    localStorage.setItem("content", JSON.stringify(_throttledEditorContent));
+    console.log(localStorage.getItem("content"));
   }, [_throttledEditorContent]);
+
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
   };
 
-  //--------------------------------------------//
-  //제목 변경을 반영하는 함수
   const handleTitleValueChange = (value: string) => {
+    //제목 value변경하기
+    localStorage.setItem("title", "");
+    setTitleName("");
+    localStorage.setItem("style", "");
     if (value === _title_free) {
-      setTitleName(""); // FREE 선택 시 제목 초기화
-      setStyle(_title_free);
+      setStyle("FREE");
+      localStorage.setItem("style", "FREE");
     } else {
-      setStyle(_title_question);
+      setStyle("QUESTION");
+      localStorage.setItem("style", "QUESTION");
     }
+    console.log("localStorage style:", localStorage.getItem("style"));
+
     return value;
   };
 
-  //--------------------------------------------//
-  //QUESTION 재생성 버튼
   const _handleRefresh = () => {
-    //QUESTION 재생성
-    console.log("QUESTION 재생성");
-
-    //api연결함수 여기다가 작성해줘야함
+    localStorage.setItem("title", "");
     getDiaryRandomQuestion({ language }).then((data) => {
       console.log("새로운 질문:", data);
-      setTitleName(data.result.content); // data.question에 새로운 질문이 있다고 가정
-      // 여기서 data를 사용하여 필요한 작업을 수행
-      // 예: setEditorRawContent(data.question); 등
+      setTitleName(data.result.content);
+      localStorage.setItem("title", data.result.content);
     });
   };
-
-  //useEffect를 사용하여 컴포넌트가 마운트될 때 질문을 가져옴
-  useEffect(() => {
-    const data = getDiaryRandomQuestion({ language });
-    console.log(data);
-    console.log(_style);
-  }, []);
 
   return (
     <div className="py-2 bg-gray-100 mx-10">
       <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
-        <TitleHeader title="글쓰기" />
+        <TitleHeader title={t.writingHeader} />
         <div className="ml-auto mr-6">
           <EnrollWrapper
             _titleName={_titleName}
@@ -87,28 +84,27 @@ const WritingPage = () => {
         </div>
       </div>
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
-        {/*FREE / QUESTION 구분 영역*/}
         <div className="bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] mt-5 w-full p-5 gap-3">
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
             onClick={handleTitleValueChange}
           />
-          {_style === t.titleStyle_FREE && (
+          {_style === "FREE" && (
             <input
+              value={_titleName}
               onChange={(e) => setTitleName(e.target.value)}
               type="text"
               className="w-full bg-gray-200 rounded-md p-3 mt-5"
               placeholder={t.titleInputPlaceholder}
             ></input>
           )}
-          {_style === t.titleStyle_QUESTION && (
+          {_style === "QUESTION" && (
             <QuestionTitle _titleName={_titleName} onClick={_handleRefresh} />
           )}
         </div>
 
         <div className="w-full h-full mt-5 ">
-          {/*글쓰기 영역*/}
           <WritingEditor
             value={_editorRawContent}
             onChange={handleEditorChange}
