@@ -1,5 +1,6 @@
 // hooks/useWritingSubmit.ts
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import type {
   DiaryUploadRequestDTO,
   DiaryUploadResponseDTO,
@@ -8,22 +9,21 @@ import { postDiaryUpload } from "../../apis/diary";
 import { QUERY_KEY } from "../../constants/key";
 
 export function useWritingSubmit() {
-  const qc = useQueryClient();
-
+  const navigate = useNavigate();
   return useMutation<DiaryUploadResponseDTO, Error, DiaryUploadRequestDTO>({
     mutationKey: [QUERY_KEY.diaryUpload],
     mutationFn: (newDiary) => postDiaryUpload(newDiary),
-    onSuccess: () => {
+    onSuccess: (data) => {
       // clear draft
       localStorage.removeItem("style");
       localStorage.removeItem("title");
       localStorage.removeItem("content");
-      // refresh diry list
-      qc.invalidateQueries([QUERY_KEY.diaryList]);
       console.log("writing submit successful");
+      navigate(`/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
       console.error("Writing submission failed:", err);
+      alert();
     },
   });
 }

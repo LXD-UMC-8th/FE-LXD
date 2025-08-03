@@ -25,13 +25,15 @@ const CalendarModal = () => {
     const datesToRequest = [
       { year: prev.getFullYear(), month: prev.getMonth() + 1 },
       { year: current.getFullYear(), month: current.getMonth() + 1 },
-      { year: next.getFullYear(), month: next.getMonth() + 1 },
     ];
 
     Promise.all(datesToRequest.map(getDiaryStats))
       .then((responses) => {
         const merged: value[] = responses.flatMap((r) => r?.result || []);
         setValues(merged);
+        localStorage.removeItem("content");
+        localStorage.removeItem("title");
+        localStorage.removeItem("style");
       })
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
