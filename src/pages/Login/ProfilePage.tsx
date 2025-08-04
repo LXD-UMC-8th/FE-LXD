@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
@@ -21,6 +21,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [idChecked, setIdChecked] = useState(false);
   const [nicknameTouched, setNicknameTouched] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // 모킹 함수 (나중에 삭제)
@@ -58,6 +59,18 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       console.error("ID 중복 확인 실패:", err);
     }
   };
+
+  useEffect(() => {
+    if (userInfo.profileImg) {
+      const imageUrl = URL.createObjectURL(userInfo.profileImg);
+      setPreviewUrl(imageUrl);
+      return () => {
+        URL.revokeObjectURL(imageUrl); // 메모리 누수 방지
+      };
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [userInfo.profileImg]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -141,9 +154,9 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
             border border-gray-400 bg-gray-300 text-body2 text-gray-600 
             underline underline-offset-2 rounded-full cursor-pointer"
             >
-              {userInfo.profileImg ? (
+              {previewUrl ? (
                 <img
-                  src={URL.createObjectURL(userInfo.profileImg)} // 미리보기 렌더링
+                  src={previewUrl} // 미리보기 렌더링
                   alt="profileImg"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -242,7 +255,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
         <section>
           <SignupButton
             name="가입완료"
-            onClick={() => handleCompleteSignup()}
+            onClick={handleCompleteSignup}
             disabled={!isAllValid()}
           />
         </section>
