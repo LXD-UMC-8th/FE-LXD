@@ -17,10 +17,14 @@ export function subscribeToNotifications<T>(
   const es = new EventSourcePolyfill(`${API}notifications/subscribe`, {
     headers: {
       Authorization: `Bearer ${token}`,
+      "Content-Type": "text/event-stream",
+      Accept: "text/event-stream",
+      "Access-Control-Allow-Origin": "*",
     },
-    withCredentials: true,
     heartbeatTimeout: 300_000,
   });
+
+  console.log(es);
 
   es.onopen = () => {
     fetchNotifications().then((data) => {
