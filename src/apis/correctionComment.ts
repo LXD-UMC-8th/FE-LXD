@@ -15,10 +15,10 @@ export const postCorrectionComments = async (
 export const getCorrectionComments = async (
     body: CorrectionCommentGetRequestDTO,
 ): Promise<CorrectionCommentGetResponseDTO> => {
-    const { diaryId, page, size } = body;
+    const { correctionId, page, size } = body;
 
     const { data } = await axiosInstance.get<CorrectionCommentGetResponseDTO>(
-        `/diaries/${diaryId}/comments`,
+        `/corrections/${correctionId}/comments`,
         {
             params: {
                 page,

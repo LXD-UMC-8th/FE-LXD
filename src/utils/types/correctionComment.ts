@@ -22,9 +22,9 @@ export type CorrectionCommentDTO = {
 
 export type CorrectionCommentResponseDTO = APIResponse<CorrectionCommentDTO>;
 
-// 일기 댓글 조회
+// 교정 댓글 조회
 export type CorrectionCommentGetRequestDTO = {
-    diaryId: number;
+    correctionId: number;
     page?: number;
     size?: number;
 };
@@ -33,3 +33,5 @@ export type CorrectionCommentGetResponseDTO = APIResponse<{
     content: CorrectionCommentDTO[];
     totalElements: number;
 }>;
+
+// 
