@@ -2,7 +2,7 @@ import { useState } from "react";
 // import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import { useWritingSubmit } from "../../../hooks/queries/useWritingSubmit";
+import { useWritingSubmit } from "../../../hooks/mutations/useWritingSubmit";
 import LoadingModal from "../../Common/LoadingModal";
 interface EnrollModalProps {
   _onClose?: () => void;

@@ -5,51 +5,48 @@ import {
 } from "../../apis/notification";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
+import type { NotificationContentProps } from "../../utils/types/notification";
 
 const Notification = () => {
-  //mock data
-  const notifications = [
-    {
-      id: 20,
-      profileImg: "string",
-      message: {
-        parts: [
-          { type: "bold", value: "@hyunzzip" },
-          { type: "text", value: "님이 친구 요청을 보냈습니다." },
-        ],
-      },
-      redirectUrl: "/>H9L$lr=yXC+B*",
-      createdAt: "2025. 07. 30 오후 03:07",
-      read: false,
-    },
-    {
-      id: 31,
-      profileImg: "string",
-      message: {
-        parts: [
-          { type: "bold", value: "@hyunzzip" },
-          { type: "text", value: "님이 친구 요청을 보냈습니다." },
-        ],
-      },
-      redirectUrl: "/>H9L$lr=yXC+B*",
-      createdAt: "2025. 07. 30 오후 02:07",
-      read: true,
-    },
-  ];
-  const [_notifications, setNotifications] = useState(notifications);
+  const { language } = useLanguage();
+  const t = translate[language];
+
+  const [_notifications, setNotifications] =
+    useState<NotificationContentProps>();
 
   useEffect(() => {
-    const es = subscribeToNotifications((newNotif) => {
-      console.log("got a new notif:", newNotif);
-    });
+    let es: EventSource | null = null;
+    const setupSSE = () => {
+      if (es) {
+        es.close();
+      }
+      es = subscribeToNotifications();
 
-    es.onopen = () => console.log("📡 onopen: connection established.");
-    es.onerror = (err) => console.error("❗onerror:", err);
+      es.onopen = (data) => {
+        console.log("📡 onopen: connection established.", data);
+      };
+      es.onerror = (err) => console.error("❗onerror:", err);
+    };
+
+    setupSSE();
 
     fetchNotifications().then((pastNotifs) => {
-      setNotifications((prev) => [...prev, pastNotifs]);
       console.log("pastNotifs", pastNotifs);
+      setNotifications(pastNotifs.result?.content || []);
+      console.log(_notifications);
     });
+
+    const intervalId = setInterval(() => {
+      console.log("🔁 Re-subscribing to SSE after 50 minutes...");
+      setupSSE();
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      if (es) es.close();
+    };
   }, []);
 
   const handleReadAll = () => {
@@ -59,18 +56,32 @@ const Notification = () => {
     <div className="w-120 h-150 flex flex-col bg-white rounded-lg shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)]">
       <div className="bg-white p-5 rounded-t-lg border-b-1 border-gray-300">
         <div className="mt-2 flex justify-between">
-          <h1 className="font-bold text-xl">알림</h1>
-          <button className="white cursor-pointer" onClick={handleReadAll}>
-            모두 읽음
+          <h1 className="font-bold text-xl">{t.notificationHeader}</h1>
+          <button
+            className="white cursor-pointer border border-gray-500 px-3 py-1 rounded hover:bg-gray-200 transition-colors"
+            onClick={handleReadAll}
+          >
+            {t.allReadInNotification}
           </button>
         </div>
       </div>
       <div className="bg-gray-100 flex-1 overflow-y-auto rounded-b-lg p-4">
         <div className="flex flex-col gap-4 justify-center items-center ">
-          {notifications.map((_note) => (
-            // 2) Use map to repeat — **always** give a unique key
-            <NotificationContent key={_note.id} notifications={_note} />
-          ))}{" "}
+          {!_notifications ? (
+            <div className="flex items-center text-gray-500 justify-center flex-col h-full">
+              <div
+                className="
+            w-10 h-10 mb-4 border-4 border-gray-200
+            border-t-gray-300 rounded-full animate-spin
+          "
+              />
+              Loading notifications...
+            </div>
+          ) : (
+            _notifications.map((_note) => (
+              <NotificationContent key={_note.id} notifications={_note} />
+            ))
+          )}
         </div>
       </div>
     </div>
