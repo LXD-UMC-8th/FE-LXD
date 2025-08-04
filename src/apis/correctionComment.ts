@@ -1,4 +1,4 @@
-import type { CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
+import type { CorrectionCommentDeleteResponseDTO, CorrectionCommentDeleteRequestDTO, CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
 import { axiosInstance } from "./axios";
 
 export const postCorrectionComments = async (
@@ -25,6 +25,15 @@ export const getCorrectionComments = async (
                 size,
             },
         },
+    );
+    return data;
+}
+
+export const deleteCorrectionComments = async (
+    { correctionId, commentId }: CorrectionCommentDeleteRequestDTO
+): Promise<CorrectionCommentDeleteResponseDTO> => {
+    const { data } = await axiosInstance.delete<CorrectionCommentDeleteResponseDTO>(
+        `/corrections/${correctionId}/comments/${commentId}`
     );
     return data;
 }

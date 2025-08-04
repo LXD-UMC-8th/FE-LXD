@@ -34,4 +34,17 @@ export type CorrectionCommentGetResponseDTO = APIResponse<{
     totalElements: number;
 }>;
 
-// 
+// 교정 댓글 삭제
+export type CorrectionCommentDeleteRequestDTO = {
+    correctionId: number;
+    commentId: number;
+}
+
+export type CorrectionCommentDeleteDTO = {
+    commentId: number;
+    content: string;
+    deletedAt: string;
+    deleted: boolean
+}
+
+export type CorrectionCommentDeleteResponseDTO = APIResponse<CorrectionCommentDeleteDTO>
