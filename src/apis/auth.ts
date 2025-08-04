@@ -57,7 +57,24 @@ export const postEmailVerificationRequest = async (email: string) => {
 
 // 이메일 인증 API
 export const getEmailVerification = async (token: string) => {
-  const response = await axiosInstance.get("/auth/emails/verifications", {
+  const response = await axiosInstance.get("auth/emails/verifications", {
+    params: { token },
+  });
+  return response.data;
+};
+
+export interface EmailResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    email: string
+  }
+}
+
+// 이메일 인증 후 토큰 주인 반환 API
+export const getEmail = async (token: string) => {
+  const response = await axiosInstance.get<EmailResponse>("auth/email", {
     params: { token },
   });
   return response.data;

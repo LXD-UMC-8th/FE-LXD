@@ -14,6 +14,7 @@ import {
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
 import {
+  getEmail,
   getEmailVerification,
   postEmailVerificationRequest,
 } from "../../apis/auth";
@@ -26,10 +27,11 @@ interface SignupPageProps {
 const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [hasVerifiedByToken, setHasVerifiedByToken] = useState(false); // 이메일 토큰 인증 시도 여부 상태관리
   const [emailVerified, setEmailVerified] = useState(false); // 이메일 최종 인증 여부 상태관리
-  const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리
-  const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
-  const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
-  const [isToSOpen, setIsToSOpen] = useState(false); // 이용약관 모달 띄움 상태관리
+  const [emailTouched, setEmailTouched] = useState<boolean>(false); // 이메일 인풋 눌렀는지 상태관리
+  const [passwordTouched, setPasswordTouched] = useState<boolean>(false); // 비밀번호 인풋 눌렀는지 상태관리
+  const [checkPasswordTouched, setCheckPasswordTouched] =
+    useState<boolean>(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
+  const [isToSOpen, setIsToSOpen] = useState<boolean>(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -62,13 +64,21 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일에서 들어온 인증 링크 토큰 처리 함수
   const handleVerifyEmailToken = async (token: string) => {
     try {
-      const response = await getEmailVerification(token);
-
-      if (response.isSuccess) {
-        setHasVerifiedByToken(true);
-        setEmailVerified(true);
-        console.log("이메일 인증 성공");
+      const verifyRes = await getEmailVerification(token);
+      if (!verifyRes.isSuccess) {
+        console.error("이메일 인증 실패");
       }
+
+      const emailInfoRes = await getEmail(token);
+      if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
+        console.error("이메일 조회 실패");
+      }
+      const verifiedEmail = emailInfoRes.result.email;
+
+      setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
+      setHasVerifiedByToken(true);
+      setEmailVerified(true);
+      console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
     } catch (error) {
       setHasVerifiedByToken(true);
       setEmailVerified(false);
