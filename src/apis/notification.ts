@@ -5,7 +5,6 @@ import type { APIResponse } from "../utils/types/APIresponse";
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
-// 1) fetch the “past” notifications
 export async function fetchNotifications() {
   const res = await axiosInstance.get(`${API}/notifications`);
   return res.data;

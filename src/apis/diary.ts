@@ -1,3 +1,4 @@
+
 import {
   type ImageRequestDTO,
   type DiaryRefreshRequestDTO,
@@ -5,9 +6,11 @@ import {
   type DiaryUploadRequestDTO,
   type DiaryUploadResponseDTO,
   type ImageResponseDTO,
+  type DiaryUpdateRequestDTO,
+  type DiaryDeleteRequestDTO,
+
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
-
 
 export const postDiaryUpload = async (
   body: DiaryUploadRequestDTO,
@@ -15,7 +18,7 @@ export const postDiaryUpload = async (
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
       "/diaries",
-      body
+      body,
     );
     return data;
   } catch (error) {
@@ -24,30 +27,30 @@ export const postDiaryUpload = async (
   }
 };
 
-
 export const getDiaryRandomQuestion = async (
   body: DiaryRefreshRequestDTO,
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
       "/diaries/random-question",
-      { params: body }
+      { params: body },
     );
     return data;
-  } catch (error) {
-    console.error("Error fetching random question:", error);
-    throw error;
+  } catch (e) {
+    console.log("에러 발생:", e);
+    throw e;
   }
 };
-
 
 export const postDiaryImage = async (
   body: ImageRequestDTO,
 ): Promise<ImageResponseDTO> => {
+  console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
       "/diaries/image",
-      body
+      body,
+      { withCredentials: true },
     );
     return data;
   } catch (error) {
@@ -56,8 +59,23 @@ export const postDiaryImage = async (
   }
 };
 
+export const getDiaryStats = async (
+  body: CalendarDiaryRequestDTO,
+): Promise<CalendarDiaryResponseDTO | undefined> => {
+  try {
+    const { data } = await axiosInstance.get("/diaries/stats", {
+      params: body,
+    });
+    return data;
+  } catch (e) {
+    console.log("Error fetching diary stats:", e);
+    return undefined; // Explicitly return undefined in case of an error
+  }
+};
 
-export const deleteDiary = async (diaryId: number): Promise<void> => {
+export const deleteDiary = async ({
+  diaryId,
+}: DiaryDeleteRequestDTO): Promise<void> => {
   try {
     await axiosInstance.delete(`/diaries/${diaryId}`);
   } catch (error) {
@@ -67,21 +85,12 @@ export const deleteDiary = async (diaryId: number): Promise<void> => {
 };
 
 
-export const updateDiary = async ({
-  diaryId,
-  body,
-}: {
-  diaryId: number;
-  body: {
-    title: string;
-    content: string;
-    visibility: string;
-    commentPermission: string;
-    language: string;
-    style: string;
-    thumbImg: string;
-  };
-}) => {
+
+export const updateDiary = async (
+  diaryId: number,
+  body: DiaryUpdateRequestDTO
+): Promise<any> => {
+
   try {
     const { data } = await axiosInstance.put(`/diaries/${diaryId}`, body);
     return data;
@@ -91,7 +100,10 @@ export const updateDiary = async ({
   }
 };
 
-export const getDiaryDetail = async (diaryId: number) => {
+
+export const getDiaryDetail = async (
+  diaryId: number
+): Promise<any> => {
   try {
     const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
     return data;

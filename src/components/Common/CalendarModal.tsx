@@ -1,5 +1,7 @@
+import { useEffect, useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { getDiaryStats } from "../../apis/diary";
 
 interface value {
   date: string;
@@ -7,27 +9,46 @@ interface value {
 }
 
 const CalendarModal = () => {
-  //시험용 더미 데이터
-  function formatLocalYMDD(date: Date) {
-    // “en-CA” → “YYYY-MM-DD”
-    return date.toLocaleDateString("en-CA");
-  }
+  const [_values, setValues] = useState<value[]>([]);
+  const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
-  const _values: value[] = [
-    { date: "2025-07-23", count: 1 },
-    { date: "2025-07-21", count: 3 },
-    { date: "2025-07-13", count: 2 },
-    { date: "2025-07-12", count: 3 },
-    { date: "2025-07-31", count: 1 },
-  ];
+  const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
 
-  const _dateToCount = _values.reduce<Record<string, number>>(
-    (acc, { date, count }) => {
-      acc[date] = count;
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
+  useEffect(() => {
+    const current = new Date(activeStartDate);
+    const prev = new Date(current);
+    const next = new Date(current);
+
+    prev.setMonth(current.getMonth() - 1);
+    next.setMonth(current.getMonth() + 1);
+
+    const datesToRequest = [
+      { year: prev.getFullYear(), month: prev.getMonth() + 1 },
+      { year: current.getFullYear(), month: current.getMonth() + 1 },
+    ];
+
+    Promise.all(datesToRequest.map(getDiaryStats))
+      .then((responses) => {
+        const merged: value[] = responses.flatMap((r) => r?.result || []);
+        setValues(merged);
+        localStorage.removeItem("content");
+        localStorage.removeItem("title");
+        localStorage.removeItem("style");
+      })
+      .catch((err) => {
+        console.error("Error fetching diary stats:", err);
+      });
+  }, [activeStartDate]);
+
+  const _dateToCount = useMemo<Record<string, number>>(() => {
+    return _values.reduce<Record<string, number>>(
+      (acc: Record<string, number>, { date, count }: value) => {
+        acc[date] = count;
+        return acc;
+      },
+      {},
+    );
+  }, [_values]);
 
   // Return heat class
   const _getHeatClass = (count: number | undefined) => {

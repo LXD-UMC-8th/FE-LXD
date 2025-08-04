@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { useMutation } from "@tanstack/react-query";
 import { deleteDiary } from "../../apis/diary";
+import type { DiaryDeleteRequestDTO } from "../../utils/types/diary";
 
 interface CommonComponentInDiaryNFeedProps {
-  diaryId: number;
+  diaryId?: number;
   imgUrl?: string;
   userId?: string;
   userNickname?: string;
@@ -13,6 +14,23 @@ interface CommonComponentInDiaryNFeedProps {
   postNumber?: string;
   date?: string;
 }
+
+
+export const useDeleteDiaryMutation = (diaryId: number) => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () => deleteDiary({ diaryId } as DiaryDeleteRequestDTO),
+    onSuccess: () => {
+      alert("일기가 삭제되었습니다.");
+      navigate("/mydiary");
+    },
+    onError: (err) => {
+      alert("삭제에 실패했습니다.");
+      console.error(err);
+    },
+  });
+};
 
 const CommonComponentInDiaryNFeed = ({
   diaryId,
@@ -42,17 +60,12 @@ const CommonComponentInDiaryNFeed = ({
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteDiary(diaryId),
-    onSuccess: () => {
-      alert("일기가 삭제되었습니다.");
-      navigate("/mydiary");
-    },
-    onError: (err) => {
-      alert("삭제에 실패했습니다.");
-      console.error(err);
-    },
-  });
+
+  const deleteMutation = useDeleteDiaryMutation(diaryId);
+
+  const handleEdit = () => {
+    navigate(`/mydiary/edit/${diaryId}`);
+  };
 
   const handleDelete = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
@@ -60,12 +73,8 @@ const CommonComponentInDiaryNFeed = ({
     }
   };
 
-  const handleEdit = () => {
-    navigate(`/mydiary/edit/${diaryId}`);
-  };
-
   return (
-    <div className="relative w-full bg-white rounded-2xl shadow px-6 py-5 space-y-4">
+    <div className="relative w-260 bg-white rounded-t-2xl shadow px-6 py-5 space-y-4">
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
         <div>
@@ -125,15 +134,15 @@ const CommonComponentInDiaryNFeed = ({
         <img
           src="/images/public_icon.svg"
           alt="전체 공개 아이콘"
-          className="w-6 h-6"
+          
         />
         <p className="font-bold text-lg">요즘 7월 루틴을 체크해보자~~</p>
       </div>
 
       {/* 본문 */}
       <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직
-        완벽하진 않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
+        요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직 완벽하진
+        않은데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화 같음...
       </p>
 
       {/* 통계 */}

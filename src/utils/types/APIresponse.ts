@@ -4,3 +4,9 @@ export type APIResponse<T> = {
   message: string;
   result: T;
 };
+
+export type PaginationDTO = {
+  cursor?: number;
+  limit?: number;
+  search?: string;
+};

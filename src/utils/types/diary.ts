@@ -1,10 +1,12 @@
+import type { APIResponse } from "./APIresponse";
+
 //diary upload
 export type DiaryUploadRequestDTO = {
   title: string;
   content: string;
   style: string;
-  visibility: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE"
-  commentPermission: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE";
+  visibility: string;
+  commentPermission: string;
   language: string;
   thumbImg: string;
 };
@@ -16,9 +18,9 @@ export type DiaryUploadResponseDTO = {
   result: DiaryUploadResult;
 };
 
-type DiaryUploadResult = {
+export type DiaryUploadResult = {
   diaryId: number;
-  visibility: string; // st: "PUBLIC" | "FRIEND" | "PRIVATE"
+  visibility: string;
   title: string;
   language: string;
   profileImg: string;
@@ -48,7 +50,7 @@ export type DiaryRefreshResponseDTO = {
 };
 
 export type ImageRequestDTO = {
-  image: string;
+  formData: FormData;
 };
 
 export type ImageResponseDTO = {
@@ -59,3 +61,34 @@ export type ImageResponseDTO = {
     imageUrl: string;
   };
 };
+
+export interface DiaryUpdateRequestDTO {
+  title: string;
+  content: string;
+  visibility: string;
+  commentPermission: string;
+  language: string;
+  style: string;
+  thumbImg: string;
+}
+
+export interface DiaryDeleteRequestDTO {
+  diaryId: number;
+}
+
+
+
+export type styleType = "FREE" | "QUESTION";
+
+export type CalendarDiaryRequestDTO = {
+  year: number;
+  month: number;
+};
+
+export type CalendarDiary = {
+  date: string;
+  count: number;
+};
+
+export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;
+

@@ -14,6 +14,7 @@ interface WritingEditorProps {
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
   const quillRef = useRef<ReactQuill>(null);
 
+  //image삭제할 때도 반영할 수 있는 것을 만들어야 함,,,
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
     if (!editor) return;
@@ -51,23 +52,25 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
               // Move the cursor after the inserted image
               editor.setSelection(range.index + 1, 0);
             }
-
-            console.log(imageUrl);
-            postDiaryImage({ image: imageUrl })
-              .then((response) => {
-                console.log("Image uploaded successfully:", response);
-                const imageUrl = response.result.imageUrl;
-                editor.deleteText(range.index, 1);
-                editor.insertEmbed(range.index, "image", imageUrl);
-                editor.setSelection(range.index + 1, 0);
-              })
-              .catch((error) => {
-                console.error("Error uploading image:", error);
-                editor.deleteText(range.index, 1);
-                alert("Image upload failed. Please try again.");
-              });
           };
           reader.readAsDataURL(file);
+
+          const fd = new FormData();
+          fd.append("image", file);
+          postDiaryImage(fd)
+            .then((res) => {
+              const url = res.result.imageUrl;
+              const range = editor.getSelection(true)!;
+              editor.deleteText(range.index - 1, 1);
+              editor.insertEmbed(range.index - 1, "image", url);
+              editor.setSelection(range.index, 0);
+            })
+            .catch((err) => {
+              console.error("Upload failed", err.response || err);
+              alert("Upload failed—check console for details.");
+              const range = editor.getSelection(true)!;
+              editor.deleteText(range.index - 1, 1);
+            });
         });
       }
     };
