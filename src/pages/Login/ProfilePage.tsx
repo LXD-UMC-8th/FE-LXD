@@ -10,6 +10,7 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import axios from "axios";
+import { getCheckDuplicatedID } from "../../apis/members";
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -23,39 +24,39 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
-  // 모킹 함수 (나중에 삭제)
-  async function fakeIdCheck(
-    _id: string,
-    mode: "available" | "taken" | "random" = "available",
-  ): Promise<{ ok: boolean }> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (mode === "random") {
-          const available = Math.random() > 0.5;
-          resolve({ ok: available });
-          return;
-        }
-        resolve({ ok: mode === "available" });
-      }, 500);
-    });
-  }
+  // // 모킹 함수 (나중에 삭제)
+  // async function fakeIdCheck(
+  //   _id: string,
+  //   mode: "available" | "taken" | "random" = "available",
+  // ): Promise<{ ok: boolean }> {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       if (mode === "random") {
+  //         const available = Math.random() > 0.5;
+  //         resolve({ ok: available });
+  //         return;
+  //       }
+  //       resolve({ ok: mode === "available" });
+  //     }, 500);
+  //   });
+  // }
 
   const handleIDCheck = async () => {
     setIdTouched(true);
     setIdChecked(true);
     try {
-      // 여기에 아이디 중복 확인 API 요청이 들어감 (axios)
-      const response = await fakeIdCheck(userInfo.id, "random");
-      if (!response.ok) {
-        setIsIdAvailable(false); // 이미 사용 중
-        console.log("아이디 중복됨");
-      } else {
+      const response = await getCheckDuplicatedID(userInfo.id);
+
+      if (!response.result.duplicated) {
         setIsIdAvailable(true); // 사용 가능
         console.log("사용 가능한 아이디");
+      } else {
+        setIsIdAvailable(false); // 사용 불가능
+        console.log("이미 사용중인 아이디");
       }
-    } catch (err) {
+    } catch (error) {
       alert("아이디 확인 중 오류가 발생했습니다");
-      console.error("ID 중복 확인 실패:", err);
+      console.error("ID 중복 확인 실패:", error);
     }
   };
 
