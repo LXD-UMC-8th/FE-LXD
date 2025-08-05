@@ -18,19 +18,15 @@ export const postCorrection = async (
 };
 
 export const getCorrection = async (
-  body: CorrectionsGetRequestDTO,
+  body: CorrectionsGetRequestDTO
 ): Promise<CorrectionsGetResponseDTO> => {
-  const { diaryId, page, size } = body;
+  const { diaryId, page = 1, size = 10 } = body;
 
   const { data } = await axiosInstance.get<CorrectionsGetResponseDTO>(
     `/corrections/diary/${diaryId}`,
-    {
-      params: {
-        page,
-        size,
-      },
-    },
+    { params: { page, size } }
   );
+
   return data;
 };
 

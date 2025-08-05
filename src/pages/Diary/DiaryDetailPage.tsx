@@ -44,7 +44,7 @@ const DiaryDetailPage = () => {
   useEffect(() => {
     if (parsedDiaryId) {
       fetchDiaryDetail({ diaryId: parsedDiaryId });
-      fetchCorrections({ diaryId: parsedDiaryId, page: 0, size: 10 });
+      fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
     }
   }, [parsedDiaryId, fetchCorrections, fetchDiaryDetail]);
 
@@ -192,12 +192,15 @@ const DiaryDetailPage = () => {
 
         {isCorrectionsPending && <LoadingModal />}
 
-        {correctionData?.result.corrections.map((correction: CorrectionsDetailDTO) => (
-          <CorrectionsInFeedDetail
-            key={correction.correctionId}
-            correction={correction}
-          />
-        ))}
+        {correctionData?.result.corrections?.contents?.map(
+          (correction: CorrectionsDetailDTO) => (
+            <CorrectionsInFeedDetail
+              key={correction.correctionId}
+              correction={correction}
+            />
+          )
+        )}
+
       </div>
     </div>
   );
