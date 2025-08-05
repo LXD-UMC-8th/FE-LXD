@@ -56,7 +56,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
 
           const fd = new FormData();
           fd.append("image", file);
-          postDiaryImage(fd)
+          postDiaryImage({ formData: fd })
             .then((res) => {
               const url = res.result.imageUrl;
               const range = editor.getSelection(true)!;

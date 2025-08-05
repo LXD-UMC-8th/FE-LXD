@@ -9,10 +9,7 @@ import { translate } from "../../context/translate";
 import { useNotificationReadAll } from "../../hooks/mutations/useNotification";
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
-import type {
-  getNotificationsResponseDTO,
-  getNotificationsResponseContent,
-} from "../../utils/types/notification";
+import type { getNotificationsResponseDTO } from "../../utils/types/notification";
 
 const Notification = () => {
   const { language } = useLanguage();

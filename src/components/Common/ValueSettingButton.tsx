@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface ValueSettingButtonProps {
   title1: string;
@@ -11,7 +11,6 @@ const ValueSettingButton = ({
   title1,
   title2,
   onClick,
-  selectedValue,
 }: ValueSettingButtonProps) => {
   const [selected, setSelected] = useState(
     () => localStorage.getItem("style") || title1,

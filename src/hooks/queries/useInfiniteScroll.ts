@@ -2,7 +2,6 @@ import {
   type QueryKey,
   type QueryFunctionContext,
   useInfiniteQuery,
-  type UseInfiniteQueryOptions,
 } from "@tanstack/react-query";
 
 export const useInfiniteScroll = <TData, TPageParam>({
