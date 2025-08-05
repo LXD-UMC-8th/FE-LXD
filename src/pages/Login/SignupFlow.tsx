@@ -11,7 +11,7 @@ export interface SignupFlowProps {
   isPrivacy: boolean;
   id: string;
   nickname: string;
-  profileImg: string;
+  profileImg: File | null;
   nativeLanguage: string;
   studyLanguage: string;
 }
@@ -24,7 +24,7 @@ const SignupFlow = () => {
     isPrivacy: false,
     id: "",
     nickname: "",
-    profileImg: "",
+    profileImg: null,
     nativeLanguage: "",
     studyLanguage: "",
   });

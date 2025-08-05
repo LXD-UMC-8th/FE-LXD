@@ -2,7 +2,6 @@ import { useMemo, useRef, useCallback } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
-// import Quill from "quill";
 
 const MAX_IMAGES = 5;
 
