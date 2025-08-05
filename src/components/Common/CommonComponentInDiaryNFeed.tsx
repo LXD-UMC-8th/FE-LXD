@@ -15,7 +15,6 @@ interface CommonComponentInDiaryNFeedProps {
   date?: string;
 }
 
-
 export const useDeleteDiaryMutation = (diaryId: number) => {
   const navigate = useNavigate();
 
@@ -60,8 +59,7 @@ const CommonComponentInDiaryNFeed = ({
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
 
-
-  const deleteMutation = useDeleteDiaryMutation(diaryId);
+  const deleteMutation = useDeleteDiaryMutation(diaryId as number);
 
   const handleEdit = () => {
     navigate(`/mydiary/edit/${diaryId}`);
@@ -131,11 +129,7 @@ const CommonComponentInDiaryNFeed = ({
 
       {/* 제목 */}
       <div className="flex gap-3 text-subhead3 text-black">
-        <img
-          src="/images/public_icon.svg"
-          alt="전체 공개 아이콘"
-          
-        />
+        <img src="/images/public_icon.svg" alt="전체 공개 아이콘" />
         <p className="font-bold text-lg">요즘 7월 루틴을 체크해보자~~</p>
       </div>
 

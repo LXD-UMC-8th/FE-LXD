@@ -61,8 +61,8 @@ const protectedRoutes: RouteObject[] = [
         element: <DiaryPage />,
       },
       {
-      path: "/mydiary/edit/:diaryId", // ✅ 추가된 라우트
-      element: <DiaryEditPage />,
+        path: "/mydiary/edit/:diaryId",
+        element: <DiaryEditPage />,
       },
       {
         path: "/friendslist",
@@ -87,6 +87,10 @@ const protectedRoutes: RouteObject[] = [
         path: "/settings",
         element: <SettingsPage />,
       },
+      {
+        path: "/error",
+        element: <NotFoundPage />,
+      },
     ],
   },
 ];
@@ -97,7 +101,7 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <div className="p-0">
-      <QueryClientProvider client={queryClient} >
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
       </QueryClientProvider>
     </div>

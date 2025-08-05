@@ -1,12 +1,15 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import ProfileComponent from "../Common/ProfileComponent";
+import Avatar from "../Common/Avatar"; // 경로 맞게 수정
 
 interface DiaryContentProps {
   title: string;
   language: string;
   visibility: string;
   content: string;
+  profileImg: string;
+  writerUserName: string;
+  writerNickName: string;
   stats: { label: string; icon: string; alt: string }[];
 }
 
@@ -15,6 +18,9 @@ const DiaryContent = ({
   language,
   visibility,
   content,
+  profileImg,
+  writerUserName,
+  writerNickName,
   stats,
 }: DiaryContentProps) => {
   const location = useLocation();
@@ -48,9 +54,19 @@ const DiaryContent = ({
         <span className="text-blue-600 text-body2 font-medium ml-auto">{language}</span>
       </div>
 
-      {/* 작성자 + 우측 정보 */}
+      {/* 작성자 + 우측 메뉴 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-        <ProfileComponent />
+        <div className="flex items-center gap-2">
+          <Avatar 
+            src={profileImg} 
+            alt={writerNickName} 
+            size="w-8 h-8" 
+            className=""
+          />
+          <span className="text-black font-medium">{writerNickName}</span>
+          <div className="w-px h-4 bg-gray-600"/>
+          <span className="text-gray-600">@{writerUserName}</span>
+        </div>
 
         <div
           className="flex items-center gap-3 text-caption text-gray-700 pt-5 relative"

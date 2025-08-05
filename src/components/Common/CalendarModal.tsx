@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getDiaryStats } from "../../apis/diary";
@@ -14,31 +14,62 @@ const CalendarModal = () => {
 
   const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
 
-  useEffect(() => {
+  const _isFirstRender = useRef(true);
+
+  const _datesToRequest = useMemo(() => {
     const current = new Date(activeStartDate);
-    const prev = new Date(current);
-    const next = new Date(current);
 
-    prev.setMonth(current.getMonth() - 1);
-    next.setMonth(current.getMonth() + 1);
-
-    const datesToRequest = [
-      { year: prev.getFullYear(), month: prev.getMonth() + 1 },
-      { year: current.getFullYear(), month: current.getMonth() + 1 },
+    return [
+      {
+        year: current.getFullYear(),
+        month: current.getMonth(),
+      },
+      {
+        year: current.getFullYear(),
+        month: current.getMonth() + 1,
+      },
     ];
+  }, [activeStartDate]);
 
-    Promise.all(datesToRequest.map(getDiaryStats))
-      .then((responses) => {
-        const merged: value[] = responses.flatMap((r) => r?.result || []);
+  useEffect(() => {
+    if (_isFirstRender.current) {
+      _isFirstRender.current = false;
+      return;
+    }
+    console.log("calendarModal re-rendering");
+
+    Promise.all(_datesToRequest.map(getDiaryStats))
+      .then((response) => {
+        const merged: value[] = response.flatMap((r) => r?.result || []);
         setValues(merged);
-        localStorage.removeItem("content");
-        localStorage.removeItem("title");
-        localStorage.removeItem("style");
       })
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
       });
-  }, [activeStartDate]);
+  }, [_datesToRequest]);
+
+  // useEffect(() => {
+  //   const current = new Date(activeStartDate);
+  //   const prev = new Date(current);
+  //   const next = new Date(current);
+
+  //   prev.setMonth(current.getMonth() - 1);
+  //   next.setMonth(current.getMonth() + 1);
+
+  //   const datesToRequest = [
+  //     { year: prev.getFullYear(), month: prev.getMonth() + 1 },
+  //     { year: current.getFullYear(), month: current.getMonth() + 1 },
+  //   ];
+
+  //   Promise.all(datesToRequest.map(getDiaryStats))
+  //     .then((responses) => {
+  //       const merged: value[] = responses.flatMap((r) => r?.result || []);
+  //       setValues(merged);
+  //     })
+  //     .catch((err) => {
+  //       console.error("Error fetching diary stats:", err);
+  //     });
+  // }, [activeStartDate]);
 
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(

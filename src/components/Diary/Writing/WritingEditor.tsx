@@ -2,7 +2,6 @@ import { useMemo, useRef, useCallback } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
-// import Quill from "quill";
 
 const MAX_IMAGES = 5;
 
@@ -57,7 +56,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
 
           const fd = new FormData();
           fd.append("image", file);
-          postDiaryImage(fd)
+          postDiaryImage({ formData: fd })
             .then((res) => {
               const url = res.result.imageUrl;
               const range = editor.getSelection(true)!;

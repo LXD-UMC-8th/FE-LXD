@@ -28,14 +28,14 @@ const LangOptionsButton = ({
           <span
             className={`block truncate text-left text-body1 
             ${
-              selected === "ko" || selected === "en"
+              selected === "KO" || selected === "ENG"
                 ? "text-black"
                 : "text-gray-500"
             }`}
           >
-            {selected === "ko"
+            {selected === "KO"
               ? "한국어"
-              : selected === "en"
+              : selected === "ENG"
               ? "English"
               : "언어 선택"}
           </span>
@@ -62,8 +62,8 @@ const LangOptionsButton = ({
           >
             <ul className="text-body1 overflow-auto">
               {[
-                { value: "ko", label: "한국어" },
-                { value: "en", label: "English" },
+                { value: "KO", label: "한국어" },
+                { value: "ENG", label: "English" },
               ].map((lang, idx) => (
                 <li
                   key={lang.value}

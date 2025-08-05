@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
-import { useNavigate, useLocation } from "react-router-dom"; // ✅ 추가
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import DiaryContent from "../../components/Diary/DiaryContent";
 import LoadingModal from "../../components/Common/LoadingModal";
 import type { CorrectionsDetailDTO } from "../../utils/types/correction";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
+import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail"; // ✅ 일기 상세 조회 훅
+import type { DiaryUploadResult } from "../../utils/types/diary";
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ 추가
-  const diaryId = 1;
+  const location = useLocation();
+  const { diaryId } = useParams<{ diaryId: string }>(); // URL 파라미터로 받기
+  const parsedDiaryId = Number(diaryId || 1);
 
-  const backURL = location.state?.from === "profile" ? -1 : "/feed"; // ✅ 추가
+  const backURL = location.state?.from === "profile" ? -1 : "/feed";
 
   const [openReplyIndex, setOpenReplyIndex] = useState<number | null>(null);
 
@@ -21,31 +24,41 @@ const DiaryDetailPage = () => {
   };
 
   const _handleCorrectionsClick = () => {
-    navigate(`/feed/${diaryId}/corrections`);
+    navigate(`/feed/${parsedDiaryId}/corrections`);
   };
 
-  const _stats = [
-    { label: "180", icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
-    { label: "89", icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
-    { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
-  ];
-
+  /** 교정 댓글 조회 */
   const {
     mutate: fetchCorrections,
     data: correctionData,
-    isPending,
+    isPending: isCorrectionsPending,
   } = useGetCorrections();
 
+  /** 일기 상세 조회 */
+  const {
+    mutate: fetchDiaryDetail,
+    data: diaryData,
+    isPending: isDiaryPending,
+  } = useGetDiaryDetail();
+
   useEffect(() => {
-    fetchCorrections({ diaryId: 1, page: 0, size: 10 });
-  }, [fetchCorrections]);
+    if (parsedDiaryId) {
+      fetchDiaryDetail({ diaryId: parsedDiaryId });
+      fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+    }
+  }, [parsedDiaryId, fetchCorrections, fetchDiaryDetail]);
+
+  /** 로딩 처리 */
+  if (isDiaryPending) return <LoadingModal />;
+
+  const diary: DiaryUploadResult | undefined = diaryData?.result;
 
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
       <div className="w-full max-w-[750px]">
         {/* ← 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
-          <PrevButton navigateURL={backURL} /> {/* ✅ 수정된 부분 */}
+          <PrevButton navigateURL={backURL} />
           <button
             onClick={_handleCorrectionsClick}
             className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-pretendard font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer"
@@ -60,13 +73,34 @@ const DiaryDetailPage = () => {
         </div>
 
         <div className="bg-white p-8 rounded-[10px]">
-          <DiaryContent
-            title="제목"
-            language="한국어"
-            visibility="전체공개"
-            content={`본문 내용`}
-            stats={_stats}
-          />
+          {diary && (
+            <DiaryContent
+              title={diary.title}
+              language={diary.language}
+              visibility={diary.visibility}
+              content={diary.content}
+              profileImg={diary.profileImg}
+              writerUserName={diary.writerUserName}
+              writerNickName={diary.writerNickName}
+              stats={[
+                {
+                  label: diary.commentCount.toString(),
+                  icon: "/images/CommonComponentIcon/CommentIcon.svg",
+                  alt: "댓글",
+                },
+                {
+                  label: diary.likeCount.toString(),
+                  icon: "/images/CommonComponentIcon/LikeIcon.svg",
+                  alt: "좋아요",
+                },
+                {
+                  label: diary.correctCount.toString(),
+                  icon: "/images/CommonComponentIcon/CorrectIcon.svg",
+                  alt: "교정",
+                },
+              ]}
+            />
+          )}
 
           {/* 댓글 전체 래퍼 카드 */}
           <div className="mt-10 bg-white rounded-[10px] p-6">
@@ -76,9 +110,10 @@ const DiaryDetailPage = () => {
                 alt="댓글 아이콘"
                 className="w-[24px] h-[24px]"
               />
-              <span>댓글 (5)</span>
+              <span>댓글 ({diary?.commentCount || 0})</span>
             </div>
 
+            {/* 댓글 입력창 */}
             <div className="mb-5">
               <textarea
                 placeholder="댓글을 입력하세요."
@@ -92,6 +127,7 @@ const DiaryDetailPage = () => {
               </div>
             </div>
 
+            {/* 댓글 리스트 예시 */}
             {[1, 2].map((_, idx) => (
               <div key={idx} className="border border-gray-200 rounded-lg p-5 mb-6">
                 <div className="flex items-center gap-3 mb-2">
@@ -150,17 +186,21 @@ const DiaryDetailPage = () => {
         </div>
       </div>
 
+      {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
         <p className="text-subhead3 font-semibold py-3">작성된 교정</p>
 
-        {isPending && <LoadingModal />}
+        {isCorrectionsPending && <LoadingModal />}
 
-        {correctionData?.result.corrections.map((correction: CorrectionsDetailDTO) => (
-          <CorrectionsInFeedDetail
-            key={correction.correctionId}
-            correction={correction}
-          />
-        ))}
+        {correctionData?.result.corrections?.contents?.map(
+          (correction: CorrectionsDetailDTO) => (
+            <CorrectionsInFeedDetail
+              key={correction.correctionId}
+              correction={correction}
+            />
+          )
+        )}
+
       </div>
     </div>
   );
