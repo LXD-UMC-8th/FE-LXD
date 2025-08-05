@@ -13,7 +13,7 @@ export type NotificationContentProps = {
 
 type part = { type: string; value: string };
 
-type getNotificationsResponseContent = {
+export type getNotificationsResponseContent = {
   totalElements: number;
   content: NotificationContentProps[];
   hasNext: boolean;

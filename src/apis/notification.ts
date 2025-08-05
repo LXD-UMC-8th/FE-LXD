@@ -36,11 +36,23 @@ export function getSubscribeToNotifications() {
   return es;
 }
 
-export async function patchReadAllNotifications(): Promise<patchReadAllNotificationResponseDTO> {
+export async function patchReadAllNotifications(
+  totalElements: number,
+): Promise<patchReadAllNotificationResponseDTO> {
   try {
+    console.log(
+      "patchReadAllNotifications called with totalElements:",
+      totalElements,
+    );
     const { data } =
       await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
         "notifications/read-all",
+        {
+          params: {
+            page: 1,
+            size: totalElements,
+          },
+        },
       );
 
     return data;
@@ -50,9 +62,9 @@ export async function patchReadAllNotifications(): Promise<patchReadAllNotificat
   }
 }
 
-export async function patchRedirectNotification(
-  notificationId: patchRedirectNotificationRequestDTO,
-): Promise<patchRedirectNotificationResponseDTO> {
+export async function patchRedirectNotification({
+  notificationId,
+}: patchRedirectNotificationRequestDTO): Promise<patchRedirectNotificationResponseDTO> {
   try {
     const { data } = await axiosInstance.patch(
       `notifications/${notificationId}/read-redirect`,

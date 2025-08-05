@@ -1,13 +1,8 @@
 import Avatar from "../Common/Avatar";
-import type {
-  NotificationContentProps,
-  patchRedirectNotificationRequestDTO,
-} from "../../utils/types/notification";
+import type { NotificationContentProps } from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { useNavigate } from "react-router-dom";
 import { postFriendAccept, postFriendRefuse } from "../../apis/friend";
-import type { FriendRequesterId } from "../../utils/types/friend";
 import { patchRedirectNotification } from "../../apis/notification";
 
 const NotificationContent = ({
@@ -17,25 +12,18 @@ const NotificationContent = ({
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
-  const navigate = useNavigate();
 
   const handleAcceptFriend = () => {
-    postFriendAccept(notifications.id as FriendRequesterId);
-    patchRedirectNotification(
-      notifications.id as patchRedirectNotificationRequestDTO,
-    );
+    postFriendAccept({ requesterId: notifications.id });
+    patchRedirectNotification({ notificationId: notifications.id });
   };
   const handleRefuseFriend = () => {
-    postFriendRefuse(notifications.id as FriendRequesterId);
-    patchRedirectNotification(
-      notifications.id as patchRedirectNotificationRequestDTO,
-    );
+    postFriendRefuse({ requesterId: notifications.id });
+    patchRedirectNotification({ notificationId: notifications.id });
   };
 
   const handleNotificationContentClick = () => {
-    patchRedirectNotification(
-      notifications.id as patchRedirectNotificationRequestDTO,
-    );
+    patchRedirectNotification({ notificationId: notifications.id });
   };
 
   return (

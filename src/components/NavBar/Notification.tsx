@@ -9,7 +9,11 @@ import { translate } from "../../context/translate";
 import { useNotificationReadAll } from "../../hooks/mutations/useNotification";
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
-import type { getNotificationsResponseDTO } from "../../utils/types/notification";
+import type {
+  getNotificationsResponseDTO,
+  getNotificationsResponseContent,
+} from "../../utils/types/notification";
+
 const Notification = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -69,7 +73,11 @@ const Notification = () => {
 
   const handleReadAll = () => {
     console.log("모두 읽음 클릭됨");
-    patchReadAllNotifications();
+    console.log(
+      "data?.pages[0].result.totalElements",
+      data?.pages[0].result.totalElements,
+    );
+    patchReadAllNotifications(data?.pages[0].result.totalElements as number);
     setIsRender((prev) => !prev);
   };
 
