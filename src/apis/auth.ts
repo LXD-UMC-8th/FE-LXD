@@ -58,10 +58,8 @@ export const postEmailVerificationRequest = async (email: string) => {
 
 // 이메일 인증 API
 export const getEmailVerification = async (token: string) => {
-  const response = await axiosInstance.get("auth/emails/verifications", {
-    params: { token },
-  });
-  return response.data;
+  const apiURL = import.meta.env.VITE_API_BASE_URL + `auth/emails/verifications?token=${token}`;
+  window.location.href = apiURL;
 };
 
 export interface EmailResponse {
