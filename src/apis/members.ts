@@ -62,3 +62,24 @@ export const postSignup = async (
 
   return data;
 };
+
+export interface CheckDuplicatedIDResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    username: string;
+    duplicated: boolean;
+  };
+}
+
+// 아이디 중복 확인 api
+export const getCheckDuplicatedID = async (username: string) => {
+  const response = await axiosInstance.get<CheckDuplicatedIDResponse>(
+    "/members/check-username",
+    {
+      params: { username },
+    }
+  );
+  return response.data;
+};
