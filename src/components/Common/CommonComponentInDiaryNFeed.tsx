@@ -61,7 +61,7 @@ const CommonComponentInDiaryNFeed = ({
   ];
 
 
-  const deleteMutation = useDeleteDiaryMutation(diaryId);
+  const deleteMutation = diaryId !== undefined ? useDeleteDiaryMutation(diaryId) : undefined;
 
   const handleEdit = () => {
     navigate(`/mydiary/edit/${diaryId}`);
@@ -69,7 +69,7 @@ const CommonComponentInDiaryNFeed = ({
 
   const handleDelete = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteMutation.mutate();
+      deleteMutation?.mutate();
     }
   };
 

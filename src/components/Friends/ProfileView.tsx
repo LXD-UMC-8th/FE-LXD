@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import Avatar from "../Common/Avatar";
 import { useNavigate } from "react-router-dom";
+import { addRecentSearch } from "../../utils/types/recentSearch";
 
 interface ProfileViewProps {
   user: {
@@ -25,6 +27,13 @@ const ProfileView = ({
   onSendRequestClick,
 }: ProfileViewProps) => {
   const navigate = useNavigate();
+
+  // 🔹 마운트 시 최근 검색 추가
+  useEffect(() => {
+    if (user?.username) {
+      addRecentSearch(user.username);
+    }
+  }, [user?.username]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow">

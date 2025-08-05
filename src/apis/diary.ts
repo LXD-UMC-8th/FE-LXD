@@ -8,6 +8,8 @@ import {
   type ImageResponseDTO,
   type DiaryUpdateRequestDTO,
   type DiaryDeleteRequestDTO,
+  type CalendarDiaryRequestDTO,
+  type CalendarDiaryResponseDTO,
 
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";

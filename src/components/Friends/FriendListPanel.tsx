@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 import SearchBar from "./SearchBar";
 import FriendItem from "./FriendItem";
 import FriendListSkeleton from "./Skeleton/FriendListSkeleton";
+import {
+  getRecentSearches,
+  addRecentSearch,
+  removeRecentSearch,
+  clearRecentSearches,
+} from "../../utils/types/recentSearch";
 
 interface Friend {
   name: string;
@@ -21,9 +27,10 @@ const FriendListPanel = ({
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState<Friend[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
+  // 친구 목록 로드
   useEffect(() => {
-    // API 요청 시뮬레이션 (2초 후에 데이터 로드)
     setTimeout(() => {
       const mockData: Friend[] = [
         { name: "김태현", username: "kimtaehyun", image: "" },
@@ -32,8 +39,39 @@ const FriendListPanel = ({
       ];
       setFriends(mockData);
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
+
+  // 최근 검색 로드
+  useEffect(() => {
+    setRecentSearches(getRecentSearches());
+  }, []);
+
+  // 검색어 필터링
+  const filteredFriends = search
+    ? friends.filter((f) =>
+        f.username.toLowerCase().includes(search.toLowerCase())
+      )
+    : [];
+
+  // 최근 검색 클릭 시
+  const handleSelectFriend = (username: string) => {
+    addRecentSearch(username);
+    setRecentSearches(getRecentSearches());
+    onSelect(username);
+  };
+
+  // 최근 검색 삭제
+  const handleRemoveRecent = (username: string) => {
+    removeRecentSearch(username);
+    setRecentSearches(getRecentSearches());
+  };
+
+  // 최근 검색 전체 삭제
+  const handleClearRecent = () => {
+    clearRecentSearches();
+    setRecentSearches([]);
+  };
 
   return (
     <div className="h-full flex flex-col p-5 gap-5">
@@ -41,28 +79,54 @@ const FriendListPanel = ({
       <SearchBar value={search} onChange={setSearch} />
 
       {/* 최근 검색 헤더 */}
-      <div className="flex justify-between text-sm font-semibold text-gray-700">
-        <span>최근 검색항목</span>
-        <button className="text-xs text-blue-500 hover:underline">
-          모두 지우기
-        </button>
-      </div>
+      {!search && (
+        <div className="flex justify-between text-sm font-semibold text-gray-700">
+          <span>최근 검색항목</span>
+          <button
+            onClick={handleClearRecent}
+            className="text-xs text-blue-500 hover:underline"
+          >
+            모두 지우기
+          </button>
+        </div>
+      )}
 
-      {/* 친구 리스트 (스켈레톤 vs 실제 데이터) */}
+      {/* 목록 */}
       {isLoading ? (
         <FriendListSkeleton count={6} />
       ) : (
         <ul className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1">
-          {friends.map((f, idx) => (
-            <FriendItem
-              key={idx}
-              name={f.name}
-              username={f.username}
-              image={f.image}
-              onClick={() => onSelect(f.username)}
-              isSelected={selectedUsername === f.username}
-            />
-          ))}
+          {/* 검색 시 → 필터링된 목록 표시 */}
+          {search
+            ? filteredFriends.map((friend) => (
+                <FriendItem
+                  key={friend.username}
+                  name={friend.name}
+                  username={friend.username}
+                  image={friend.image}
+                  onClick={() => handleSelectFriend(friend.username)}
+                  isSelected={selectedUsername === friend.username}
+                  showDelete={false}
+                />
+              ))
+            : // 검색 없을 때 → 최근 검색 표시
+              recentSearches.map((username) => {
+                const friend = friends.find((f) => f.username === username);
+                if (!friend) return null;
+                return (
+                  <FriendItem
+                    key={username}
+                    name={friend.name}
+                    username={friend.username}
+                    image={friend.image}
+                    onClick={() => handleSelectFriend(friend.username)}
+                    isSelected={selectedUsername === friend.username}
+                    showDelete={true}
+                    // X 버튼 동작
+                    onDelete={() => handleRemoveRecent(username)}
+                  />
+                );
+              })}
         </ul>
       )}
     </div>
