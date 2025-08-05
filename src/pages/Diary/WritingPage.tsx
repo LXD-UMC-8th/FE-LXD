@@ -38,8 +38,6 @@ const WritingPage = () => {
   );
   const _debounceEditorContent = useDebounce(_editorRawContent, 500);
 
-  //이 과정에서 local에 너무 많은 값이 입력되면 page rendering error가 발생함,,
-  ///나중에 뭐,,, 해결해보도록 하기..
   useEffect(() => {
     localStorage.setItem("content", _debounceEditorContent);
     console.log(localStorage.getItem("content"));
@@ -50,7 +48,6 @@ const WritingPage = () => {
   };
 
   const handleTitleValueChange = (value: string) => {
-    //제목 value변경하기
     localStorage.setItem("title", "");
     setTitleName("");
     localStorage.setItem("style", "");
@@ -61,7 +58,6 @@ const WritingPage = () => {
       setStyle(t.titleStyle_QUESTION);
       localStorage.setItem("style", t.titleStyle_QUESTION);
     }
-    console.log("localStorage style:", localStorage.getItem("style"));
 
     return value;
   };
