@@ -18,7 +18,7 @@ export type DiaryUploadResponseDTO = {
   result: DiaryUploadResult;
 };
 
-type DiaryUploadResult = {
+export type DiaryUploadResult = {
   diaryId: number;
   visibility: string;
   title: string;
@@ -31,7 +31,16 @@ type DiaryUploadResult = {
   likeCount: number;
   correctCount: number;
   content: string;
+  diffHtml?: string;
+  commentPermission?: string;
+  thumbnail?: string; 
 };
+
+export type DiaryGetRequestDTO = {
+  diaryId: number;
+}
+export type DiaryGetResponseDTO = APIResponse<DiaryUploadResult>
+
 export type DiaryRefreshRequestDTO = {
   language: string;
 };
