@@ -56,7 +56,7 @@ axiosInstance.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data?.errorCode === "AUTH_001" &&
+      error.response.data?.code === "AUTH4301" &&
       !originalRequest._retry
     ) {
       //여기 부분의 주소는 swagger문서에 따라 바뀔 예정임
