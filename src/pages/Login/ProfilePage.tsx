@@ -95,7 +95,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     setUserInfo((prev) => ({
       ...prev,
       nativeLanguage: lang,
-      studyLanguage: lang === "ko" ? "en" : "ko",
+      studyLanguage: lang === "KO" ? "ENG" : "KO",
     }));
   };
 
@@ -129,6 +129,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       }
     } catch (error) {
       console.error("회원가입 실패:", error);
+      console.log(userInfo)
       alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
     }
   };

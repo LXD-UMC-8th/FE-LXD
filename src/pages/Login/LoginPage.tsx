@@ -35,6 +35,7 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
     // 구글로그인 요청 API 나중에 작성 예정
     console.log("구글 로그인 요청");
+    navigate("/auth/google/login");
   };
   // 로그인 버튼 활성화 조건, 나중에 수정
   const isFormValid = email.trim() !== "" && password.trim() !== "";

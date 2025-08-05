@@ -42,7 +42,7 @@ export const postSignup = async (
     username: userInfo.id,
     nickname: userInfo.nickname,
     nativeLanguage: userInfo.nativeLanguage,
-    language: userInfo.studyLanguage,
+    studyLanguage: userInfo.studyLanguage,
     loginType: "LOCAL",
   };
   // JSON 데이터는 Blob으로 추가
