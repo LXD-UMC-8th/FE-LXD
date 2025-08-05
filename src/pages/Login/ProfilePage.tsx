@@ -10,7 +10,6 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
-import axios from "axios";
 import { getCheckDuplicatedID } from "../../apis/members";
 
 

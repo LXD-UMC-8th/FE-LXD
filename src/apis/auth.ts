@@ -12,6 +12,7 @@ export interface LoginResponse {
   message: string;
   result: {
     accessToken: string;
+    refreshToken: string;
     member: {
       memberId: number;
       email: string;
@@ -68,14 +69,34 @@ export interface EmailResponse {
   code: string;
   message: string;
   result: {
-    email: string
-  }
+    email: string;
+  };
 }
 
 // 이메일 인증 후 토큰 주인 반환 API
 export const getEmail = async (token: string) => {
   const response = await axiosInstance.get<EmailResponse>("auth/email", {
     params: { token },
+  });
+  return response.data;
+};
+
+interface ReissueResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+// 토큰 재발급 API
+export const postReissue = async (
+  refreshToken: string
+): Promise<ReissueResponse> => {
+  const response = await axiosInstance.post<ReissueResponse>("/auth/reissue", {
+    refreshToken,
   });
   return response.data;
 };

@@ -1,6 +1,7 @@
 // axios.ts
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
+import { postReissue } from "./auth";
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -42,7 +43,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor
@@ -73,23 +74,22 @@ axiosInstance.interceptors.response.use(
       if (!refreshPromise) {
         refreshPromise = (async () => {
           const refreshToken = getLocalStorageItem(
-            LOCAL_STORAGE_KEY.refreshToken,
+            LOCAL_STORAGE_KEY.refreshToken
           );
+          if (!refreshToken) throw new Error("No refresh token");
 
-          const { data } = await axiosInstance.post("/auth/reissue", {
-            refresh: refreshToken,
-          });
+          const reissueData = await postReissue(refreshToken);
 
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.accessToken,
-            data.data.accessToken,
+            reissueData.result.accessToken
           );
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.refreshToken,
-            data.data.refreshToken,
+            reissueData.result.refreshToken
           );
 
-          return data.data.accessToken;
+          return reissueData.result.accessToken;
         })()
           //refreshToken이 없을 경우 토큰을 모두 지워준 후에 다시 LoginPage로 redirect함.
           .catch(() => {
@@ -114,5 +114,5 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
