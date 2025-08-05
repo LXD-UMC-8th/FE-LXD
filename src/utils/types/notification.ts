@@ -15,7 +15,7 @@ type part = { type: string; value: string };
 
 export type getNotificationsResponseContent = {
   totalElements: number;
-  content: NotificationContentProps[];
+  contents: NotificationContentProps[];
   hasNext: boolean;
   page: number;
   totalPages: number;
