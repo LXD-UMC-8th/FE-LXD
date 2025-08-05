@@ -2,9 +2,9 @@
 import { axiosInstance } from "./axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import type {
-  readAllNotificationResponseDTO,
-  redirectNotificationRequestDTO,
-  redirectNotificationResponseDTO,
+  patchReadAllNotificationResponseDTO,
+  patchRedirectNotificationRequestDTO,
+  patchRedirectNotificationResponseDTO,
 } from "../utils/types/notification";
 
 const API = import.meta.env.VITE_API_BASE_URL;
@@ -36,11 +36,12 @@ export function getSubscribeToNotifications() {
   return es;
 }
 
-export async function patchReadAllNotifications(): Promise<readAllNotificationResponseDTO> {
+export async function patchReadAllNotifications(): Promise<patchReadAllNotificationResponseDTO> {
   try {
-    const { data } = await axiosInstance.patch<readAllNotificationResponseDTO>(
-      "notifications/read-all",
-    );
+    const { data } =
+      await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
+        "notifications/read-all",
+      );
 
     return data;
   } catch (error) {
@@ -50,8 +51,8 @@ export async function patchReadAllNotifications(): Promise<readAllNotificationRe
 }
 
 export async function patchRedirectNotification(
-  notificationId: redirectNotificationRequestDTO,
-): Promise<redirectNotificationResponseDTO> {
+  notificationId: patchRedirectNotificationRequestDTO,
+): Promise<patchRedirectNotificationResponseDTO> {
   try {
     const { data } = await axiosInstance.patch(
       `notifications/${notificationId}/read-redirect`,

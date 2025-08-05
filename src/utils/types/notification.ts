@@ -2,7 +2,7 @@ import type { APIResponse } from "./APIresponse";
 
 export type NotificationContentProps = {
   title?: string;
-  id?: number;
+  id: number;
   profileImg?: string;
   messageParts: part[];
   redirectUrl?: string;
@@ -25,13 +25,13 @@ type getNotificationsResponseContent = {
 export type getNotificationsResponseDTO =
   APIResponse<getNotificationsResponseContent>;
 
-export type redirectNotificationRequestDTO = {
+export type patchRedirectNotificationRequestDTO = {
   notificationId: number;
 };
 
-export type readAllNotificationResponseDTO = APIResponse<string>;
+export type patchReadAllNotificationResponseDTO = APIResponse<string>;
 
-export type redirectNotificationResponseDTO =
+export type patchRedirectNotificationResponseDTO =
   APIResponse<redirectNotificationResultDTO>;
 
 type redirectNotificationResultDTO = {

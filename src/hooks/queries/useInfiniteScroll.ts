@@ -4,19 +4,22 @@ import {
   useInfiniteQuery,
 } from "@tanstack/react-query";
 
-export const useInfiniteScroll = ({
+export const useInfiniteScroll = <TData, TPageParam>({
   queryKey,
   queryFn,
   getNextPageParam,
 }: {
   queryKey: QueryKey;
-  queryFn: (context: QueryFunctionContext) => Promise<any>;
-  getNextPageParam: (lastPage: any) => any; // Ensure type definition for getNextPageParam
+  queryFn: (context: QueryFunctionContext) => Promise<TData>;
+  getNextPageParam: (
+    lastPage: TData,
+    allPages: TData[],
+  ) => TPageParam | undefined; // Ensure type definition for getNextPageParam
 }) => {
   return useInfiniteQuery({
     queryKey,
     queryFn,
-    initialPageParam: 1, // Example initial page parameter
     getNextPageParam, // Use the passed getNextPageParam function directly
+    initialPageParam: 1 as TPageParam, // Ensure initialPageParam matches the type of TPageParam
   });
 };

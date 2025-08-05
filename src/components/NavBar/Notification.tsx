@@ -18,6 +18,9 @@ const Notification = () => {
   const { mutate: patchReadAllNotifications } = useNotificationReadAll();
 
   //infinite scroll
+  //그대로 복붙하고 getNotifications -> 다른 api로 변경, getNotificationsResponseDTO -> 다른 타입으로 변경
+  //queryKey 변경
+  //나머지는 형식 유사하게 하면 됨.
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
     queryKey: ["notifications"],
     queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number),
@@ -30,6 +33,7 @@ const Notification = () => {
   useEffect(() => {
     if (inView) {
       if (!isFetching && hasNextPage) fetchNextPage();
+      console.log("fetching data", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
