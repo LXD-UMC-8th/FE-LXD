@@ -17,7 +17,7 @@ export const postDiaryUpload = async (
 ): Promise<DiaryUploadResponseDTO> => {
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
-      "/diaries",
+      "diaries",
       body,
     );
     return data;
@@ -32,7 +32,7 @@ export const getDiaryRandomQuestion = async (
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
-      "/diaries/random-question",
+      "diaries/random-question",
       { params: body },
     );
     return data;
@@ -48,7 +48,7 @@ export const postDiaryImage = async (
   console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
-      "/diaries/image",
+      "diaries/image",
       body,
       { withCredentials: true },
     );
@@ -63,7 +63,7 @@ export const getDiaryStats = async (
   body: CalendarDiaryRequestDTO,
 ): Promise<CalendarDiaryResponseDTO | undefined> => {
   try {
-    const { data } = await axiosInstance.get("/diaries/stats", {
+    const { data } = await axiosInstance.get("diaries/stats", {
       params: body,
     });
     return data;
@@ -77,7 +77,7 @@ export const deleteDiary = async ({
   diaryId,
 }: DiaryDeleteRequestDTO): Promise<void> => {
   try {
-    await axiosInstance.delete(`/diaries/${diaryId}`);
+    await axiosInstance.delete(`diaries/${diaryId}`);
   } catch (error) {
     console.error("Error deleting diary:", error);
     throw error;
@@ -90,7 +90,7 @@ export const updateDiary = async (
   body: DiaryUpdateRequestDTO,
 ): Promise<any> => {
   try {
-    const { data } = await axiosInstance.put(`/diaries/${diaryId}`, body);
+    const { data } = await axiosInstance.put(`diaries/${diaryId}`, body);
     return data;
   } catch (error) {
     console.error("Error updating diary:", error);

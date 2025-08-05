@@ -1,3 +1,5 @@
+import type { APIResponse } from "./APIresponse";
+
 export type NotificationContentProps = {
   title?: string;
   id?: number;
@@ -10,3 +12,30 @@ export type NotificationContentProps = {
 };
 
 type part = { type: string; value: string };
+
+type getNotificationsResponseContent = {
+  totalElements: number;
+  content: NotificationContentProps[];
+  hasNext: boolean;
+  page: number;
+  totalPages: number;
+  size: number;
+};
+
+export type getNotificationsResponseDTO =
+  APIResponse<getNotificationsResponseContent>;
+
+export type redirectNotificationRequestDTO = {
+  notificationId: number;
+};
+
+export type readAllNotificationResponseDTO = APIResponse<string>;
+
+export type redirectNotificationResponseDTO =
+  APIResponse<redirectNotificationResultDTO>;
+
+type redirectNotificationResultDTO = {
+  notificationId: number;
+  redirectUrl: string;
+  read: boolean;
+};
