@@ -31,7 +31,16 @@ export type DiaryUploadResult = {
   likeCount: number;
   correctCount: number;
   content: string;
+  diffHtml?: string;
+  commentPermission?: string;
+  thumbnail?: string; 
 };
+
+export type DiaryGetRequestDTO = {
+  diaryId: number;
+}
+export type DiaryGetResponseDTO = APIResponse<DiaryUploadResult>
+
 export type DiaryRefreshRequestDTO = {
   language: string;
 };

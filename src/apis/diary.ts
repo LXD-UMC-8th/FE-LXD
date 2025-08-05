@@ -8,6 +8,7 @@ import {
   type ImageResponseDTO,
   type DiaryUpdateRequestDTO,
   type DiaryDeleteRequestDTO,
+  type DiaryGetResponseDTO,
 
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
@@ -103,9 +104,9 @@ export const updateDiary = async (
 
 export const getDiaryDetail = async (
   diaryId: number
-): Promise<any> => {
+): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
+    const { data } = await axiosInstance.get<DiaryGetResponseDTO>(`/diaries/${diaryId}`);
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);
