@@ -1,7 +1,9 @@
 import { useState } from "react";
-import useWritingSubmit from "../../../hooks/useWritingSubmit";
+// import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { useWritingSubmit } from "../../../hooks/mutations/useWritingSubmit";
+import LoadingModal from "../../Common/LoadingModal";
 interface EnrollModalProps {
   _onClose?: () => void;
   _titleName: string;
@@ -9,6 +11,8 @@ interface EnrollModalProps {
   _style: string;
 }
 
+//여기에 전달되는 _style값은 FREE || "자유글" or QUESTION || "질문글" 임
+//자유글 ->FREE로 바꾸고, 질문글 -> QUESTION으로 바꾸어 API를 요청하여야 한다.
 const EnrollModal = ({
   _titleName,
   _editorRawContent,
@@ -16,37 +20,53 @@ const EnrollModal = ({
 }: EnrollModalProps) => {
   const { language } = useLanguage();
   const t = translate[language];
-  const [visibility, setVisibility] = useState<"PUBLIC" | "FRIEND" | "PRIVATE">(
-    "PUBLIC",
-  );
-  const [commentPermission, setCommentPermission] = useState<
-    "PUBLIC" | "FRIEND" | "PRIVATE"
-  >("PUBLIC");
+  const [visibility, setVisibility] = useState<string>("PUBLIC");
+  const [commentPermission, setCommentPermission] = useState<string>("ALL");
 
-  const { submitWriting } = useWritingSubmit({
-    title: _titleName,
-    content: _editorRawContent,
-    style: _style,
-    visibility: visibility,
-    commentPermission: commentPermission,
-    language: "ko", // Example language, adjust as needed
-    thumbImg: "", // Example thumbnail image, adjust as needed
-  });
+  const { mutate: postDiaryUpload, isPending } = useWritingSubmit();
 
+  const normalizeStyle = (style: string) => {
+    switch (style) {
+      case "자유글":
+      case "FREE":
+        return "FREE";
+      case "질문글":
+      case "QUESTION":
+        return "RANDOM";
+      default:
+        return "NONE";
+    }
+  };
   const handleSubmit = () => {
-    //최종 API전송할 때 이용되는 함수임
-    //마지막으로 여기서 전송하는 게 나을 것 같긴 함.
-    // submitWriting();
-    console.log({ submitWriting });
+    const style = normalizeStyle(_style);
+    console.log(
+      JSON.stringify({
+        title: _titleName,
+        content: _editorRawContent,
+        style,
+        visibility,
+        commentPermission,
+        language: "KO",
+        thumbImg: "",
+      }),
+    );
 
-    //diary/{diaryId}로 navigate
+    //현재 QUESTION value제대로 저장하지 못 함.
+    postDiaryUpload({
+      title: _titleName,
+      content: JSON.stringify(_editorRawContent),
+      style,
+      visibility,
+      commentPermission,
+      language: "KO",
+      thumbImg: "",
+    });
   };
 
-  //isLoading설정 -> api구현된 이후에 작업하기
-  const [_isLoading, _setIsLoading] = useState(false);
-
+  //value값을 바꿈에 따라서 label설정이 안 됨,,
   return (
     <div className="w-90 p-6 bg-white rounded-xl shadow-lg">
+      {isPending && <LoadingModal />}
       {/* 공개 설정 */}
       <div className="mb-6">
         <h3 className="text-gray-500 font-semibold mb-3">공개 설정</h3>
@@ -57,9 +77,7 @@ const EnrollModal = ({
               name="visibility"
               value="PUBLIC"
               checked={visibility === "PUBLIC"}
-              onChange={(e) =>
-                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
-              }
+              onChange={() => setVisibility("PUBLIC")}
             />
             {t.visibility_PUBLIC}
           </label>
@@ -69,9 +87,9 @@ const EnrollModal = ({
               name="visibility"
               value="FRIEND"
               checked={visibility === "FRIEND"}
-              onChange={(e) =>
-                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
-              }
+              onChange={() => {
+                setVisibility("FRIEND");
+              }}
             />
             {t.visibility_FRIEND}
           </label>
@@ -81,9 +99,9 @@ const EnrollModal = ({
               name="visibility"
               value="PRIVATE"
               checked={visibility === "PRIVATE"}
-              onChange={(e) =>
-                setVisibility(e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE")
-              }
+              onChange={() => {
+                setVisibility("PRIVATE");
+              }}
             />
             {t.visibility_PRIVATE}
           </label>
@@ -97,42 +115,30 @@ const EnrollModal = ({
           <label className="flex items-center gap-1">
             <input
               type="radio"
-              name="comment"
+              name="commentPermission"
               value="PUBLIC"
-              checked={commentPermission === "PUBLIC"}
-              onChange={(e) =>
-                setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
-                )
-              }
+              checked={commentPermission === "ALL"}
+              onChange={() => setCommentPermission("ALL")}
             />
             {t.commentPermission_PUBLIC}
           </label>
           <label className="flex items-center gap-1">
             <input
               type="radio"
-              name="comment"
+              name="commentPermission"
               value="FRIEND"
               checked={commentPermission === "FRIEND"}
-              onChange={(e) =>
-                setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
-                )
-              }
+              onChange={() => setCommentPermission("FRIEND")}
             />
             {t.commentPermission_FRIEND}
           </label>
           <label className="flex items-center gap-1">
             <input
               type="radio"
-              name="comment"
+              name="commentPermission"
               value="PRIVATE"
-              checked={commentPermission === "PRIVATE"}
-              onChange={(e) =>
-                setCommentPermission(
-                  e.target.value as "PUBLIC" | "FRIEND" | "PRIVATE",
-                )
-              }
+              checked={commentPermission === "NONE"}
+              onChange={() => setCommentPermission("NONE")}
             />
             {t.commentPermission_PRIVATE}
           </label>

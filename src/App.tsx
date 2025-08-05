@@ -19,6 +19,8 @@ import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
 import ProvideCorrections from "./components/Diary/ProvideCorrections";
 import SignupFlow from "./pages/Login/SignupFlow";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -59,6 +61,10 @@ const protectedRoutes: RouteObject[] = [
         element: <DiaryPage />,
       },
       {
+        path: "/mydiary/edit/:diaryId",
+        element: <DiaryEditPage />,
+      },
+      {
         path: "/friendslist",
         element: <FriendsListPage />,
       },
@@ -81,14 +87,23 @@ const protectedRoutes: RouteObject[] = [
         path: "/settings",
         element: <SettingsPage />,
       },
+      {
+        path: "/error",
+        element: <NotFoundPage />,
+      },
     ],
   },
 ];
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <div className="p-0">
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </div>
   );
 }

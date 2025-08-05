@@ -20,6 +20,13 @@ export const translate: Record<
     titleInputPlaceholder: string;
     createNewDiary: string;
     alertImage: string;
+    receivedCorrections: string;
+    givenCorrections: string;
+    writingHeader: string;
+    notificationHeader: string;
+    allReadInNotification: string;
+    notificationButtonText1: string;
+    notificationButtonText2: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -40,6 +47,13 @@ export const translate: Record<
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
     alertImage: "Alert",
+    receivedCorrections: "Received",
+    givenCorrections: "Given",
+    writingHeader: "New Post",
+    notificationHeader: "Notifications",
+    allReadInNotification: "Mark all as read",
+    notificationButtonText1: "Accept",
+    notificationButtonText2: "Delete",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -59,5 +73,12 @@ export const translate: Record<
     titleInputPlaceholder: "제목을 입력하세요.",
     createNewDiary: "새 글 쓰기",
     alertImage: "알림",
+    receivedCorrections: "내가 받은 교정",
+    givenCorrections: "내가 제공한 교정",
+    writingHeader: "글쓰기",
+    notificationHeader: "알림",
+    allReadInNotification: "모두 읽음",
+    notificationButtonText1: "수락",
+    notificationButtonText2: "거절",
   },
 };

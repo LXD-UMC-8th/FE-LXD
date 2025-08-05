@@ -1,16 +1,44 @@
+import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
 
 interface DiaryContentProps {
-    title: string;
-    language: string;
-    visibility: string;
-    content: string;
-    stats: {label: string; icon: string; alt: string}[];
+  title: string;
+  language: string;
+  visibility: string;
+  content: string;
+  stats: { label: string; icon: string; alt: string }[];
 }
 
-const DiaryContent = ({ title, language, visibility, content, stats }: DiaryContentProps) => {
+const DiaryContent = ({
+  title,
+  language,
+  visibility,
+  content,
+  stats,
+}: DiaryContentProps) => {
+  const location = useLocation();
+
+  // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
+  const isMyDiaryTab = location.pathname.startsWith("/mydiary");
+  console.log("📍 pathname:", location.pathname);
+  console.log("📌 isMyDiaryTab:", isMyDiaryTab);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="">
+    <div className="relative">
       {/* 제목 & 상태 */}
       <div className="flex items-center gap-2 mb-3">
         <span className="text-xs font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded">
@@ -23,14 +51,39 @@ const DiaryContent = ({ title, language, visibility, content, stats }: DiaryCont
       {/* 작성자 + 우측 정보 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
         <ProfileComponent />
-        <div className="flex items-center gap-3 text-caption text-gray-700 pt-5">
+
+        <div
+          className="flex items-center gap-3 text-caption text-gray-700 pt-5 relative"
+          ref={menuRef}
+        >
           {stats.map((item, index) => (
             <div key={index} className="flex gap-1">
               <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-4 h-4" />
               <span>{item.label}</span>
             </div>
           ))}
-          <img src="/images/more_options.svg" className="w-5 h-5 cursor-pointer" />
+
+          {/* 더보기 아이콘 */}
+          <img
+            src="/images/more_options.svg"
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => {
+              console.log("🖱️ 더보기 버튼 클릭됨!");
+              setMenuOpen((prev) => !prev);
+            }}
+          />
+
+          {/* 드롭다운 메뉴: /mydiary일 때만, 열려있으면 표시 */}
+          {isMyDiaryTab && menuOpen && (
+            <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
+              <button className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left">
+                수정하기
+              </button>
+              <button className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left">
+                삭제하기
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -46,6 +99,7 @@ const DiaryContent = ({ title, language, visibility, content, stats }: DiaryCont
 
       <div className="border-t border-gray-200 my-5" />
 
+      {/* 하단 통계 */}
       <div className="flex items-center gap-3 text-caption text-gray-700">
         {stats.map((item, index) => (
           <div key={index} className="flex gap-1">
@@ -55,7 +109,7 @@ const DiaryContent = ({ title, language, visibility, content, stats }: DiaryCont
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default DiaryContent;

@@ -1,26 +1,30 @@
 import { X } from "lucide-react";
 import Avatar from "../Common/Avatar";
-import { useEffect, useState } from "react";
-import ProfileViewSkeleton from "./Skeleton/ProfileViewSkeleton";
-
+import { useNavigate } from "react-router-dom";
 
 interface ProfileViewProps {
-  user: { name: string; username: string; image?: string };
+  user: {
+    name: string;
+    username: string;
+    image?: string;
+    isFriend: boolean;
+  };
   onClose: () => void;
+  onUnfriendClick: () => void;
+  onAvatarClick: () => void;
+  isRequesting: boolean;
+  onSendRequestClick: () => void;
 }
 
-const ProfileView = ({ user, onClose }: ProfileViewProps) => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // API 호출 시뮬레이션 (1초 후 로딩 종료)
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (isLoading) {
-    return <ProfileViewSkeleton />;
-  }
+const ProfileView = ({
+  user,
+  onClose,
+  onUnfriendClick,
+  onAvatarClick,
+  isRequesting,
+  onSendRequestClick,
+}: ProfileViewProps) => {
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow">
@@ -31,24 +35,52 @@ const ProfileView = ({ user, onClose }: ProfileViewProps) => {
             src={user.image}
             alt={`${user.name} profile`}
             size="w-24 h-24"
-            className="border border-gray-200"
+            className="border border-gray-200 cursor-pointer"
+            onClick={onAvatarClick}
           />
           <div>
             <div className="text-2xl font-bold text-gray-900">{user.name}</div>
             <div className="text-base text-gray-500">@{user.username}</div>
           </div>
         </div>
-        <button className="text-gray-400 hover:text-gray-600" onClick={onClose}>
+        <button
+          className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          onClick={onClose}
+        >
           <X size={24} />
         </button>
       </div>
 
       {/* 버튼 영역 */}
       <div className="px-8 mb-6 flex gap-4">
-        <button className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700 cursor-pointer">
-          친구
-        </button>
-        <button className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100 cursor-pointer">
+        {user.isFriend ? (
+          <button
+            className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700 cursor-pointer"
+            onClick={onUnfriendClick}
+          >
+            친구
+          </button>
+        ) : isRequesting ? (
+          <button
+            disabled
+            className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+            요청중
+          </button>
+        ) : (
+          <button
+            onClick={onSendRequestClick}
+            className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700 cursor-pointer"
+          >
+            친구 요청하기
+          </button>
+        )}
+
+        <button
+          onClick={() => navigate("/feed/1", { state: { from: "profile" } })}
+          className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100 cursor-pointer"
+        >
           다이어리 보러가기
         </button>
       </div>
@@ -59,7 +91,6 @@ const ProfileView = ({ user, onClose }: ProfileViewProps) => {
       {/* 최근 일기 헤더 */}
       <div className="px-8 flex justify-between items-center mb-4">
         <div className="text-lg font-bold text-gray-900">최근 일기</div>
-        <button className="text-sm text-gray-500 hover:underline">더보기</button>
       </div>
 
       {/* 다이어리 목록 */}
@@ -70,7 +101,6 @@ const ProfileView = ({ user, onClose }: ProfileViewProps) => {
             className="flex justify-between items-start p-5 rounded-xl border border-gray-200 bg-white"
           >
             <div className="flex flex-col gap-2 flex-1">
-              {/* 전체 아이콘 + 제목 */}
               <div className="flex gap-3 items-center mb-2">
                 <img
                   src="/images/public_icon.svg"
@@ -81,14 +111,9 @@ const ProfileView = ({ user, onClose }: ProfileViewProps) => {
                   여름방학 일기 {3 - idx}일차
                 </p>
               </div>
-
               <p className="text-sm text-gray-700 leading-6 line-clamp-2">
-                요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중. 아직
-                완벽하진 않는데, 일찍 자려는 의식이 생긴 것만으로도 괜찮은 변화
-                같음. 아침에 일어나서 제일 먼저 물 한 잔 마시고 스트레칭...
+                요즘 10시쯤 자고 6시쯤 일어나는 루틴을 유지하려고 하는 중...
               </p>
-
-              {/* 댓글/하트/연필 아이콘 */}
               <div className="flex gap-6 text-sm text-gray-500 mt-3">
                 <div className="flex items-center gap-1">
                   <img

@@ -4,6 +4,7 @@ interface ValueSettingButtonProps {
   title1: string;
   title2: string;
   onClick?: (value: string) => string;
+  selectedValue?: string;
 }
 
 const ValueSettingButton = ({
@@ -11,7 +12,9 @@ const ValueSettingButton = ({
   title2,
   onClick,
 }: ValueSettingButtonProps) => {
-  const [selected, setSelected] = useState(title1);
+  const [selected, setSelected] = useState(
+    () => localStorage.getItem("style") || title1,
+  );
 
   const handleClick = (value: string) => {
     setSelected(value);
@@ -23,6 +26,7 @@ const ValueSettingButton = ({
   return (
     <div className="flex gap-2">
       <button
+        value={title1}
         onClick={() => handleClick(title1)}
         className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
@@ -35,6 +39,7 @@ const ValueSettingButton = ({
         {title1}
       </button>
       <button
+        value={title2}
         onClick={() => handleClick(title2)}
         className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${

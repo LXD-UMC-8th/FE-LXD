@@ -14,8 +14,8 @@ const DiaryPage = () => {
   ];
 
   return (
-    <div className="bg-gray-100 flex gap-10 justify-between mx-10">
-      <div className="flex-cols items-center ">
+    <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
+      <div>
         <DiaryHeader />
         {/*다이어리 밑 내용 추가 구분선*/}
         <ModalWithTabs tabvalue={tabvalue} />

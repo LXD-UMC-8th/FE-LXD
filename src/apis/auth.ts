@@ -27,10 +27,55 @@ export interface LoginResponse {
 export const postSignin = async (
   payload: LoginRequest
 ): Promise<LoginResponse> => {
-  const { data } = await axiosInstance.post<LoginResponse>("/auth/login", payload, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const { data } = await axiosInstance.post<LoginResponse>(
+    "auth/login",
+    payload,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   return data;
+};
+
+export interface EmailVerificationResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: string;
+}
+
+// 이메일 인증 링크 발송 API
+export const postEmailVerificationRequest = async (email: string) => {
+  const response = await axiosInstance.post<EmailVerificationResponse>(
+    "auth/emails/verification-requests",
+    { email }
+  );
+  return response.data;
+};
+
+// 이메일 인증 API
+export const getEmailVerification = async (token: string) => {
+  const response = await axiosInstance.get("auth/emails/verifications", {
+    params: { token },
+  });
+  return response.data;
+};
+
+export interface EmailResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    email: string
+  }
+}
+
+// 이메일 인증 후 토큰 주인 반환 API
+export const getEmail = async (token: string) => {
+  const response = await axiosInstance.get<EmailResponse>("auth/email", {
+    params: { token },
+  });
+  return response.data;
 };

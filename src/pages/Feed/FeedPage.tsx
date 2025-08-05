@@ -9,7 +9,7 @@ const FeedPage = () => {
   ];
 
   return (
-    <div className="bg-gray-100 flex flex-cols gap-10 justify-between mx-10 ">
+    <div className="bg-gray-100 flex flex-cols gap-10 justify-between mx-10">
       <div className="">
         <ModalWithTabs tabvalue={tabvalue} />
       </div>

@@ -2,7 +2,7 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 
 const DiaryLikesTab = () => {
   return (
-    <div className="w-260">
+    <div className="">
       <CommonComponentInDiaryNFeed />
     </div>
   );

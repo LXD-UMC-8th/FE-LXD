@@ -1,10 +1,13 @@
+import { useEffect } from "react";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
+import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 
 const DiaryTotalTab = () => {
-  //여기에서 map함수 돌려서 commoncomponentindiarynfeed를 돌려서 작성하기
+  useEffect(() => {});
   return (
-    <div className="w-300">
-      <CommonComponentInDiaryNFeed />
+    <div className="w-260">
+      <CommonComponentInDiaryNFeed diaryId={1} />
+      <CommonComponentSkeleton />
     </div>
   );
 };
