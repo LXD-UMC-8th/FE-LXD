@@ -5,10 +5,10 @@ import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
 import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useState, useEffect } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
-import { useThrottle } from "../../hooks/useThrottle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { getDiaryRandomQuestion } from "../../apis/diary";
+import useDebounce from "../../hooks/queries/useDebounce";
 
 const WritingPage = () => {
   const { language } = useLanguage();
@@ -28,19 +28,21 @@ const WritingPage = () => {
     () => localStorage.getItem("title") ?? "",
   );
 
-  const _ThrottledTitleName = useThrottle(_titleName, 500);
+  const _DebounceTitleName = useDebounce(_titleName, 500);
   useEffect(() => {
-    localStorage.setItem("title", _ThrottledTitleName);
-  }, [_ThrottledTitleName]);
+    localStorage.setItem("title", _DebounceTitleName);
+    console.log("localStorage title:", localStorage.getItem("title"));
+  }, [_DebounceTitleName]);
 
   const [_editorRawContent, setEditorRawContent] = useState<string>(
     () => localStorage.getItem("content") ?? "",
   );
-  const _throttledEditorContent = useThrottle(_editorRawContent, 1500);
+  const _debounceEditorContent = useDebounce(_editorRawContent, 500);
 
   useEffect(() => {
-    localStorage.setItem("content", _throttledEditorContent);
-  }, [_throttledEditorContent]);
+    localStorage.setItem("content", _debounceEditorContent);
+    console.log(localStorage.getItem("content"));
+  }, [_debounceEditorContent]);
 
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
