@@ -108,3 +108,18 @@ export const getDiaryDetail = async (diaryId: number): Promise<any> => {
     throw error;
   }
 };
+
+export const getMyDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("/diaries/my", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diaries:", error);
+    throw error;
+  }
+};

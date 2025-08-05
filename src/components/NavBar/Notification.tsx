@@ -3,11 +3,9 @@ import {
   getSubscribeToNotifications,
   getNotifications,
 } from "../../apis/notification";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import type { NotificationContentProps } from "../../utils/types/notification";
 import { useNotificationReadAll } from "../../hooks/mutations/useNotification";
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
@@ -15,9 +13,11 @@ import type { getNotificationsResponseDTO } from "../../utils/types/notification
 const Notification = () => {
   const { language } = useLanguage();
   const t = translate[language];
+  const [_isRender, setIsRender] = useState<boolean>(false);
 
   const { mutate: patchReadAllNotifications } = useNotificationReadAll();
 
+  //infinite scroll
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
     queryKey: ["notifications"],
     queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number),
@@ -66,6 +66,7 @@ const Notification = () => {
   const handleReadAll = () => {
     console.log("모두 읽음 클릭됨");
     patchReadAllNotifications();
+    setIsRender((prev) => !prev);
   };
 
   return (
