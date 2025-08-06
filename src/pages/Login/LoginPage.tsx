@@ -5,6 +5,7 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postSignin } from "../../apis/auth";
 import { useNavigate } from "react-router-dom";
+import { LOCAL_STORAGE_KEY } from "../../constants/key";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -19,8 +20,10 @@ const LoginPage = () => {
       const response = await postSignin({ email, password });
 
       if (response.isSuccess) {
-        const { accessToken, member } = response.result;
-        localStorage.setItem("accessToken", accessToken); // 토큰 저장
+        const { accessToken, refreshToken, member } = response.result;
+        localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
+        localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
+
         console.log("로그인 성공", member);
         navigate("/");
       } else {
@@ -35,6 +38,7 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
     // 구글로그인 요청 API 나중에 작성 예정
     console.log("구글 로그인 요청");
+    navigate("/auth/google/login");
   };
   // 로그인 버튼 활성화 조건, 나중에 수정
   const isFormValid = email.trim() !== "" && password.trim() !== "";

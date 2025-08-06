@@ -13,11 +13,7 @@ import {
 } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
-import {
-  getEmail,
-  getEmailVerification,
-  postEmailVerificationRequest,
-} from "../../apis/auth";
+import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -64,11 +60,6 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일에서 들어온 인증 링크 토큰 처리 함수
   const handleVerifyEmailToken = async (token: string) => {
     try {
-      const verifyRes = await getEmailVerification(token);
-      if (!verifyRes.isSuccess) {
-        console.error("이메일 인증 실패");
-      }
-
       const emailInfoRes = await getEmail(token);
       if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
         console.error("이메일 조회 실패");
@@ -78,12 +69,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
       setHasVerifiedByToken(true);
       setEmailVerified(true);
+      alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
     } catch (error) {
+      console.error("인증 실패:", error);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert("인증 처리 중 오류 발생");
-      console.error("인증 실패:", error);
+      alert("인증 처리 중 오류가 발생하였습니다.");
     }
   };
 

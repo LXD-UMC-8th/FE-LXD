@@ -21,7 +21,7 @@ const Avatar = ({
         (e.target as HTMLImageElement).src = "/images/profileimage.svg";
       }}
       onClick={onClick} // ✅ 클릭 핸들러 적용
-      className={`${size} rounded-full object-cover ${className} ${onClick ? "cursor-pointer" : ""}`}
+      className={` ${className} ${size} rounded-full object-cover ${onClick ? "cursor-pointer" : ""}`}
     />
   );
 };

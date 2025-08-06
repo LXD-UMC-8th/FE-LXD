@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
-import axios from "axios";
+import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
 
 interface ProfilePageProps {
@@ -22,6 +22,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [idChecked, setIdChecked] = useState(false);
   const [nicknameTouched, setNicknameTouched] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // // 모킹 함수 (나중에 삭제)
@@ -60,15 +61,26 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     }
   };
 
+  useEffect(() => {
+    if (userInfo.profileImg) {
+      const imageUrl = URL.createObjectURL(userInfo.profileImg);
+      setPreviewUrl(imageUrl);
+      return () => {
+        URL.revokeObjectURL(imageUrl); // 메모리 누수 방지
+      };
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [userInfo.profileImg]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageURL = URL.createObjectURL(file);
-      setUserInfo((prev) => ({ ...prev, profileImg: imageURL }));
+      setUserInfo((prev) => ({ ...prev, profileImg: file }));
     }
   };
   const handleRemoveImage = () => {
-    setUserInfo((prev) => ({ ...prev, profileImg: "" }));
+    setUserInfo((prev) => ({ ...prev, profileImg: null }));
   };
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
@@ -84,7 +96,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     setUserInfo((prev) => ({
       ...prev,
       nativeLanguage: lang,
-      studyLanguage: lang === "ko" ? "en" : "ko",
+      studyLanguage: lang === "KO" ? "ENG" : "KO",
     }));
   };
 
@@ -104,27 +116,23 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     return _isIdValid && _isNicknameValid && _isLangValid;
   };
 
+  // 회원가입 진행 함수
   const handleCompleteSignup = async () => {
-    const payload = {
-      email: userInfo.email,
-      password: userInfo.password,
-      username: userInfo.id,
-      nickname: userInfo.nickname,
-      profileImg: userInfo.profileImg,
-      nativeLanguage: userInfo.nativeLanguage,
-      studyLanguage: userInfo.studyLanguage,
-      isPrivacy: userInfo.isPrivacy,
-    };
-
     try {
-      const response = await axios.post("/members/join", payload);
-      console.log("회원가입 성공", response.data);
-      alert("회원가입 성공");
-    } catch (err) {
-      console.error("회원가입 실패:", err);
-      alert("회원가입 실패, 다시 시도해주세요");
+      const response = await postSignup(userInfo);
+
+      if (response.isSuccess) {
+        console.log("회원가입 성공", response.result.member);
+        alert("회원가입 완료!");
+        navigate("/home");
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      console.log(userInfo);
+      alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
     }
-    navigate("/home");
   };
 
   return (
@@ -148,9 +156,9 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
             border border-gray-400 bg-gray-300 text-body2 text-gray-600 
             underline underline-offset-2 rounded-full cursor-pointer"
             >
-              {userInfo.profileImg ? (
+              {previewUrl ? (
                 <img
-                  src={userInfo.profileImg}
+                  src={previewUrl} // 미리보기 렌더링
                   alt="profileImg"
                   className="w-full h-full object-cover rounded-full"
                 />
