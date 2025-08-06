@@ -33,6 +33,10 @@ export const translate: Record<
     Friends: string;
     Friend: string;
     CountFriend?: string;
+    ContentNotification: string;
+    LoadingNotification: string;
+    EditDiary: string;
+    DeleteDiary: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -66,6 +70,10 @@ export const translate: Record<
     Friends: "Friends",
     Friend: "Friend",
     CountFriend: "",
+    ContentNotification: "No new notifications.",
+    LoadingNotification: "Loading notifications...",
+    EditDiary: "Edit",
+    DeleteDiary: "Delete",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -98,5 +106,9 @@ export const translate: Record<
     Friends: "친구",
     Friend: "친구",
     CountFriend: "명",
+    ContentNotification: "새로운 알림이 없습니다",
+    LoadingNotification: "알림을 불러오는 중...",
+    EditDiary: "수정하기",
+    DeleteDiary: "삭제하기",
   },
 };

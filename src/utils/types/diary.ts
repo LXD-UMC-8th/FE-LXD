@@ -18,19 +18,23 @@ export type DiaryUploadResponseDTO = {
   result: DiaryUploadResult;
 };
 
-type DiaryUploadResult = {
-  diaryId: number;
-  visibility: string;
-  title: string;
-  language: string;
-  profileImg: string;
-  writerNickName: string;
-  writerUserName: string;
-  createdAt: string;
-  commentCount: number;
-  likeCount: number;
-  correctCount: number;
-  content: string;
+export type DiaryUploadResult = {
+  diaryId?: number;
+  visibility?: string;
+  title?: string;
+  language?: string;
+  profileImg?: string;
+  writerNickname?: string;
+  writerUsername?: string;
+  createdAt?: string;
+  commentCount?: number;
+  likeCount?: number;
+  correctCount?: number;
+  content?: string;
+  thumbnailUrl?: string;
+  contentPreview?: string;
+  idx?: number;
+  correctionCount?: number;
 };
 export type DiaryRefreshRequestDTO = {
   language: string;
@@ -101,3 +105,24 @@ export type DiarySummary = {
 };
 
 export type getDiarySummary = APIResponse<DiarySummary>;
+
+export type getMyDiariesResponseDTO = APIResponse<getMyDiariesResult>;
+
+export type diaries = {
+  diaryId: number;
+  createdAt: string;
+  title: string;
+  visibility: string;
+  thumbnailUrl: string;
+  likeCount: number;
+  commentCount: number;
+  correctionCount: number;
+  contentPreview: string;
+  language: string;
+};
+export type getMyDiariesResult = {
+  diaries: diaries[];
+  page: number;
+  size: number;
+  hasNext: boolean;
+};

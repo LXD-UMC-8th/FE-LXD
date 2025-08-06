@@ -15,7 +15,7 @@ const ExploreTab = () => {
       <ValueSettingButton title1="한국어" title2="English" />
       <div className="cursor-pointer">
         <div onClick={handleSkeletonClick}>
-          <CommonComponentInDiaryNFeed />
+          <CommonComponentInDiaryNFeed props={props} />
         </div>
         <div onClick={handleSkeletonClick}>
           <CommonComponentSkeleton />

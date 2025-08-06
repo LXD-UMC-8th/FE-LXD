@@ -118,6 +118,7 @@ export const getMyDiaries = async (page: number) => {
         size: 4,
       },
     });
+    console.log("getMyDiaries response data:", data);
     return data;
   } catch (error) {
     console.error("Error fetching my diaries:", error);

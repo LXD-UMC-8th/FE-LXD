@@ -43,7 +43,7 @@ const DiaryHeader = ({
           <div className="flex justify-end items-center gap-x-6 relative">
             <Link
               to="/mydiary/writing"
-              className="w-30 z-10 rounded-[8px] bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white p-3 flex flex-row gap-3 items-center justify-center"
+              className="w-auto inline-flex z-10 rounded-[8px] bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white p-3 flex flex-row gap-3 items-center justify-center"
             >
               <img src="/images/plusimg.svg" alt="+" /> {t.createNewDiary}
             </Link>
