@@ -59,7 +59,9 @@ const CommonComponentInDiaryNFeed = ({
     { label: "5", icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
 
+
   const deleteMutation = useDeleteDiaryMutation(diaryId as number);
+
 
   const handleEdit = () => {
     navigate(`/mydiary/edit/${diaryId}`);
@@ -67,7 +69,7 @@ const CommonComponentInDiaryNFeed = ({
 
   const handleDelete = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteMutation.mutate();
+      deleteMutation?.mutate();
     }
   };
 
