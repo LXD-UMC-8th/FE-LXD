@@ -76,8 +76,6 @@ export interface DiaryDeleteRequestDTO {
   diaryId: number;
 }
 
-
-
 export type styleType = "FREE" | "QUESTION";
 
 export type CalendarDiaryRequestDTO = {
@@ -92,3 +90,14 @@ export type CalendarDiary = {
 
 export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;
 
+export type DiarySummary = {
+  profileImg?: string;
+  username?: string;
+  nickname?: string;
+  diaryCount: number;
+  friendCount: number;
+  relation?: string;
+  status?: string;
+};
+
+export type getDiarySummary = APIResponse<DiarySummary>;

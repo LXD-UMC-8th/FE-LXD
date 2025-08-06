@@ -9,6 +9,7 @@ import {
   type DiaryDeleteRequestDTO,
   type CalendarDiaryRequestDTO,
   type CalendarDiaryResponseDTO,
+  type getDiarySummary,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -101,7 +102,7 @@ export const updateDiary = async (
 //Promise 타입 정의필요
 export const getDiaryDetail = async (diaryId: number): Promise<any> => {
   try {
-    const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
+    const { data } = await axiosInstance.get(`diaries/${diaryId}`);
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);
@@ -111,7 +112,7 @@ export const getDiaryDetail = async (diaryId: number): Promise<any> => {
 
 export const getMyDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("/diaries/my", {
+    const { data } = await axiosInstance.get("diaries/my", {
       params: {
         page,
         size: 4,
@@ -120,6 +121,16 @@ export const getMyDiaries = async (page: number) => {
     return data;
   } catch (error) {
     console.error("Error fetching my diaries:", error);
+    throw error;
+  }
+};
+
+export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
+  try {
+    const { data } = await axiosInstance.get("diaries/my/diary-summary");
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diary summary:", error);
     throw error;
   }
 };

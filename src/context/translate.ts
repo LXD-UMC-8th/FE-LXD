@@ -27,6 +27,12 @@ export const translate: Record<
     allReadInNotification: string;
     notificationButtonText1: string;
     notificationButtonText2: string;
+    Diaries: string;
+    Diary: string;
+    CountDiary?: string;
+    Friends: string;
+    Friend: string;
+    CountFriend?: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -54,6 +60,12 @@ export const translate: Record<
     allReadInNotification: "Mark all as read",
     notificationButtonText1: "Accept",
     notificationButtonText2: "Delete",
+    Diaries: "Entries",
+    Diary: "Entry",
+    CountDiary: "",
+    Friends: "Friends",
+    Friend: "Friend",
+    CountFriend: "",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -80,5 +92,11 @@ export const translate: Record<
     allReadInNotification: "모두 읽음",
     notificationButtonText1: "수락",
     notificationButtonText2: "거절",
+    Diaries: "다이어리",
+    Diary: "다이어리",
+    CountDiary: "개",
+    Friends: "친구",
+    Friend: "친구",
+    CountFriend: "명",
   },
 };
