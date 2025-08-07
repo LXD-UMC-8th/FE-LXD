@@ -23,17 +23,20 @@ export type DiaryUploadResult = {
   visibility: string;
   title: string;
   language: string;
-  profileImg: string;
-  writerNickName: string;
-  writerUserName: string;
-  createdAt: string;
-  commentCount: number;
+  profileImg?: string;
+  writerNickname?: string;
+  writerUsername?: string;
+  createdAt?: string;
+  commentCount?: number;
   likeCount: number;
-  correctCount: number;
-  content: string;
-  diffHtml?: string;
-  commentPermission?: string;
-  thumbnail?: string; 
+  correctCount?: number;
+  content?: string;
+  thumbnailUrl?: string;
+  contentPreview?: string;
+  idx?: number;
+  correctionCount?: number;
+  isLiked?: boolean;
+
 };
 
 export type DiaryGetRequestDTO = {
@@ -85,8 +88,6 @@ export interface DiaryDeleteRequestDTO {
   diaryId: number;
 }
 
-
-
 export type styleType = "FREE" | "QUESTION";
 
 export type CalendarDiaryRequestDTO = {
@@ -101,3 +102,36 @@ export type CalendarDiary = {
 
 export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;
 
+export type DiarySummary = {
+  profileImg?: string;
+  username?: string;
+  nickname?: string;
+  diaryCount: number;
+  friendCount: number;
+  relation?: string;
+  status?: string;
+};
+
+export type getDiarySummary = APIResponse<DiarySummary>;
+
+export type getMyDiariesResponseDTO = APIResponse<getMyDiariesResult>;
+
+export type diaries = {
+  diaryId: number;
+  createdAt: string;
+  title: string;
+  visibility: string;
+  thumbnailUrl: string;
+  likeCount: number;
+  commentCount: number;
+  correctionCount: number;
+  contentPreview: string;
+  language: string;
+  isLiked: boolean;
+};
+export type getMyDiariesResult = {
+  diaries: diaries[];
+  page: number;
+  size: number;
+  hasNext: boolean;
+};

@@ -95,7 +95,7 @@ const Notification = () => {
         <div className="flex flex-col gap-4 justify-center items-center ">
           {!data ? (
             <div className="flex items-center text-gray-500 justify-center flex-col h-full">
-              새로운 알림이 없습니다.
+              {t.ContentNotification}
             </div>
           ) : (
             data.pages.flatMap((page) =>
@@ -109,7 +109,7 @@ const Notification = () => {
         {!isFetching && hasNextPage && (
           <div className="flex items-center text-gray-500 justify-center flex-col h-40">
             <div className="w-10 h-10 mb-4 border-4 border-gray-200 border-t-gray-300 rounded-full animate-spin" />
-            Loading notifications...
+            {t.LoadingNotification}
           </div>
         )}
       </div>

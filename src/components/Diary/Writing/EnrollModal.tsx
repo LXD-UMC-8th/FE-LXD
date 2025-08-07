@@ -51,7 +51,6 @@ const EnrollModal = ({
       }),
     );
 
-    //현재 QUESTION value제대로 저장하지 못 함.
     postDiaryUpload({
       title: _titleName,
       content: JSON.stringify(_editorRawContent),
@@ -59,7 +58,7 @@ const EnrollModal = ({
       visibility,
       commentPermission,
       language: "KO",
-      thumbImg: "",
+      thumbImg: localStorage.getItem("thumbImg") || "",
     });
   };
 
@@ -85,10 +84,10 @@ const EnrollModal = ({
             <input
               type="radio"
               name="visibility"
-              value="FRIEND"
-              checked={visibility === "FRIEND"}
+              value="FRIENDS"
+              checked={visibility === "FRIENDS"}
               onChange={() => {
-                setVisibility("FRIEND");
+                setVisibility("FRIENDS");
               }}
             />
             {t.visibility_FRIEND}
@@ -126,9 +125,9 @@ const EnrollModal = ({
             <input
               type="radio"
               name="commentPermission"
-              value="FRIEND"
-              checked={commentPermission === "FRIEND"}
-              onChange={() => setCommentPermission("FRIEND")}
+              value="FRIENDS"
+              checked={commentPermission === "FRIENDS"}
+              onChange={() => setCommentPermission("FRIENDS")}
             />
             {t.commentPermission_FRIEND}
           </label>

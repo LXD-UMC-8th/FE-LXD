@@ -9,8 +9,8 @@ import {
   type DiaryDeleteRequestDTO,
   type CalendarDiaryRequestDTO,
   type CalendarDiaryResponseDTO,
+  type getDiarySummary,
   type DiaryGetResponseDTO,
-
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -68,6 +68,7 @@ export const getDiaryStats = async (
     const { data } = await axiosInstance.get("diaries/stats", {
       params: body,
     });
+    console.log("getDiaryStats response data:", data);
     return data;
   } catch (e) {
     console.log("Error fetching diary stats:", e);
@@ -106,6 +107,7 @@ export const getDiaryDetail = async (
 ): Promise<DiaryGetResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryGetResponseDTO>(`/diaries/${diaryId}`);
+
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);
@@ -115,7 +117,61 @@ export const getDiaryDetail = async (
 
 export const getMyDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("/diaries/my", {
+    const { data } = await axiosInstance.get("diaries/my", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    console.log("getMyDiaries response data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diaries:", error);
+    throw error;
+  }
+};
+
+export const getMyLikesDiary = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    console.log("getMyLikesDiary response data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching my liked diaries:", error);
+    throw error;
+  }
+};
+
+export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
+  try {
+    const { data } = await axiosInstance.get("diaries/my/diary-summary");
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diary summary:", error);
+    throw error;
+  }
+};
+
+export const getUserDiarySummary = async (memberId?: number) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `diaries/member/${memberId}/diary-summary`,
+    );
+    return data;
+  } catch (error) {
+    console.error("Error fetching user diary summary:", error);
+    throw error;
+  }
+};
+
+export const getUserDiaries = async (memberId: number, page: number) => {
+  try {
+    const { data } = await axiosInstance.get(`diaries/member/${memberId}`, {
       params: {
         page,
         size: 4,
@@ -123,7 +179,7 @@ export const getMyDiaries = async (page: number) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching my diaries:", error);
+    console.error("Error fetching user diaries:", error);
     throw error;
   }
 };
