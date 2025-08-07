@@ -21,6 +21,8 @@ import ProvideCorrections from "./components/Diary/ProvideCorrections";
 import SignupFlow from "./pages/Login/SignupFlow";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import React from "react";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -103,6 +105,7 @@ function App() {
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </div>
   );

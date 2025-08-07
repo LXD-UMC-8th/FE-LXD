@@ -6,13 +6,13 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
+import { queryClient } from "../../App";
 import type {
   DiaryUploadResult,
   getMyDiariesResult,
 } from "../../utils/types/diary";
 import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
-import { postLike } from "../../apis/likes";
 import Header from "./ComponentDiary/Header";
 
 const CommonComponentInDiaryNFeed = ({
@@ -28,12 +28,15 @@ const CommonComponentInDiaryNFeed = ({
   const t = translate[language];
   const location = useLocation();
   const navigate = useNavigate();
-  const [isLiked, setIsLiked] = useState<boolean>(props?.isLiked || false);
   console.log("props", props);
-  const [_countLiked, _setCountLiked] = useState<number>(props.likeCount);
 
-  const { mutate: likeMutate } = usePostLike();
-  const debouncedLike = useDebounce(isLiked, 500);
+  const isLiked = props.isLiked;
+  const likeCount = props.likeCount;
+
+  const { mutate: likeMutate } = usePostLike({
+    targetType: "diaries",
+    targetId: props.diaryId,
+  });
 
   const borderRadius = clsx({
     "rounded-t-2xl": pageResult.page === 1 && idx === 0,
@@ -64,7 +67,7 @@ const CommonComponentInDiaryNFeed = ({
       icon: "/images/CommonComponentIcon/CommentIcon.svg",
     },
     {
-      label: `${props.likeCount}`,
+      label: `${likeCount}`,
       icon: isLiked
         ? "/images/CommonComponentIcon/LikeFullIcon.svg"
         : "/images/CommonComponentIcon/LikeIcon.svg",
@@ -99,7 +102,6 @@ const CommonComponentInDiaryNFeed = ({
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
-        setIsLiked((prev) => !prev);
         likeMutate({
           targetType: "diaries",
           targetId: props.diaryId,

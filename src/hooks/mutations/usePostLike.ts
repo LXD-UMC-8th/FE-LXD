@@ -12,30 +12,49 @@ interface Params {
   targetId: number;
 }
 
-export const usePostLike = () => {
+export const usePostLike = ({ targetType, targetId }: Params) => {
   return useMutation<LikeResponseDto, Error, Params>({
-    mutationFn: (Targets) => postLike(Targets),
-    onMutate: async (Targets) => {
+    mutationKey: ["postLike", targetType, targetId],
+    mutationFn: ({ targetType, targetId }) => postLike(targetType, targetId),
+    onMutate: async ({ targetType, targetId }) => {
       await queryClient.cancelQueries({
-        queryKey: ["postLike", Targets],
+        queryKey: ["postLike", targetType, targetId],
       });
 
-      //여기 type지정까지 잘 해놨음 ㅇㅇ,,
-      const previousDiaryPost = queryClient.getQueryData(["postLike", Targets]);
-
-      queryClient.setQueryData(["postLike", Targets], (oldData) => [
-        ...oldData,
-        Targets,
+      const previousData = queryClient.getQueryData<getLikeResponseDTO>([
+        "postLike",
+        targetType,
+        targetId,
       ]);
 
-      return { previousDiaryPost };
+      console.log("previous data: ", previousData);
+
+      if (previousData) {
+        const nextResult = {
+          ...previousData.result,
+          liked: !previousData.result.liked,
+          likeCount: previousData.result.liked
+            ? previousData.result.likeCount - 1
+            : previousData.result.likeCount + 1,
+        };
+
+        const nextData = { ...previousData, result: nextResult };
+
+        queryClient.setQueryData(["postLike", targetType, targetId], nextData);
+      }
+
+      return { previousData };
     },
-    mutationKey: ["postLike"],
     onSuccess: (data) => {
       console.log("좋아요 완료", data);
     },
     onError: (err) => {
       console.error("좋아요 실패", err.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["postLike", targetType, targetId],
+      });
     },
   });
 };

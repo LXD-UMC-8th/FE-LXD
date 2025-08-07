@@ -67,6 +67,7 @@ export const getDiaryStats = async (
     const { data } = await axiosInstance.get("diaries/stats", {
       params: body,
     });
+    console.log("getDiaryStats response data:", data);
     return data;
   } catch (e) {
     console.log("Error fetching diary stats:", e);
