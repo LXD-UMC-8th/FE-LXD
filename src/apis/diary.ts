@@ -1,16 +1,16 @@
-import {
-  type ImageRequestDTO,
-  type DiaryRefreshRequestDTO,
-  type DiaryRefreshResponseDTO,
-  type DiaryUploadRequestDTO,
-  type DiaryUploadResponseDTO,
-  type ImageResponseDTO,
-  type DiaryUpdateRequestDTO,
-  type DiaryDeleteRequestDTO,
-  type CalendarDiaryRequestDTO,
-  type CalendarDiaryResponseDTO,
-  type getDiarySummary,
-  type DiaryGetResponseDTO,
+import type {
+  ImageRequestDTO,
+  DiaryRefreshRequestDTO,
+  DiaryRefreshResponseDTO,
+  DiaryUploadRequestDTO,
+  DiaryUploadResponseDTO,
+  ImageResponseDTO,
+  DiaryUpdateRequestDTO,
+  DiaryDeleteRequestDTO,
+  CalendarDiaryRequestDTO,
+  CalendarDiaryResponseDTO,
+  getDiarySummary,
+  DiaryGetResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -101,12 +101,13 @@ export const updateDiary = async (
   }
 };
 
-
 export const getDiaryDetail = async (
-  diaryId: number
+  diaryId: number,
 ): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.get<DiaryGetResponseDTO>(`/diaries/${diaryId}`);
+    const { data } = await axiosInstance.get<DiaryGetResponseDTO>(
+      `/diaries/${diaryId}`,
+    );
 
     return data;
   } catch (error) {
@@ -180,6 +181,52 @@ export const getUserDiaries = async (memberId: number, page: number) => {
     return data;
   } catch (error) {
     console.error("Error fetching user diaries:", error);
+    throw error;
+  }
+};
+
+export const getFriendsDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/friends", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching friends' diaries:", error);
+    throw error;
+  }
+};
+
+export const getExploreDiaries = async (page: number, lang: string) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/explore", {
+      params: {
+        page,
+        size: 4,
+        lang,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching explore diaries:", error);
+    throw error;
+  }
+};
+
+export const getLikedDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching liked diaries:", error);
     throw error;
   }
 };

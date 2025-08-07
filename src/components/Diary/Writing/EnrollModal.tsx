@@ -11,8 +11,6 @@ interface EnrollModalProps {
   _style: string;
 }
 
-//여기에 전달되는 _style값은 FREE || "자유글" or QUESTION || "질문글" 임
-//자유글 ->FREE로 바꾸고, 질문글 -> QUESTION으로 바꾸어 API를 요청하여야 한다.
 const EnrollModal = ({
   _titleName,
   _editorRawContent,
@@ -39,20 +37,13 @@ const EnrollModal = ({
   };
   const handleSubmit = () => {
     const style = normalizeStyle(_style);
-    console.log(
-      JSON.stringify({
-        title: _titleName,
-        content: _editorRawContent,
-        style,
-        visibility,
-        commentPermission,
-        language: "KO",
-        thumbImg: "",
-      }),
-    );
 
+    if (!_titleName) {
+      alert(t.titleRequired);
+      return;
+    }
     postDiaryUpload({
-      title: _titleName,
+      title: _titleName.trim(),
       content: JSON.stringify(_editorRawContent),
       style,
       visibility,
