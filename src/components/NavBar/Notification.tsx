@@ -93,7 +93,7 @@ const Notification = () => {
       </div>
       <div className="bg-gray-100 flex-1 overflow-y-auto rounded-b-lg p-4">
         <div className="flex flex-col gap-4 justify-center items-center ">
-          {!data ? (
+          {!data?.pages[0].result.totalElements ? (
             <div className="flex items-center text-gray-500 justify-center flex-col h-full">
               {t.ContentNotification}
             </div>

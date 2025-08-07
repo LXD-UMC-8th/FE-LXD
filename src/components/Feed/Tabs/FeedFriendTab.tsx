@@ -8,12 +8,6 @@ import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
 import { useEffect } from "react";
 
 const FeedFriendTab = () => {
-  const navigate = useNavigate();
-  const handleSkeletonClick = () => {
-    // 임시로 id = 1 로 보냄
-    navigate("/feed/1");
-  };
-
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
       queryKey: ["MyDiaryTotal"],
@@ -33,9 +27,10 @@ const FeedFriendTab = () => {
 
   return (
     <div className="w-260 mb-10">
-      <div onClick={handleSkeletonClick} className="cursor-pointer">
-        {data?.pages.flatMap((page) =>
-          page.result.diaries.map((data, idx) => (
+      {data?.pages.flatMap((page) =>
+        page.result.diaries
+          .filter((diary) => diary.visibility !== "PRIVATE")
+          .map((data, idx) => (
             <CommonComponentInDiaryNFeed
               key={data.diaryId}
               props={data}
@@ -43,8 +38,7 @@ const FeedFriendTab = () => {
               idx={idx}
             />
           )),
-        )}
-      </div>
+      )}
       {isFetching && (
         <div>
           <CommonComponentSkeleton />

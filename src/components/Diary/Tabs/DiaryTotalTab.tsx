@@ -22,7 +22,6 @@ const DiaryTotalTab = () => {
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
-  useEffect(() => {});
   return (
     <div className="w-260 mb-10">
       {data?.pages.flatMap((page) =>

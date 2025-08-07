@@ -199,3 +199,34 @@ export const getFriendsDiaries = async (page: number) => {
     throw error;
   }
 };
+
+export const getExploreDiaries = async (page: number, lang: string) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/explore", {
+      params: {
+        page,
+        size: 4,
+        lang,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching explore diaries:", error);
+    throw error;
+  }
+};
+
+export const getLikedDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching liked diaries:", error);
+    throw error;
+  }
+};
