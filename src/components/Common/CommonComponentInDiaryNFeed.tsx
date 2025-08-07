@@ -6,20 +6,39 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
-import type { DiaryUploadResult } from "../../utils/types/diary";
+import type {
+  DiaryUploadResult,
+  getMyDiariesResult,
+} from "../../utils/types/diary";
+import useDebounce from "../../hooks/queries/useDebounce";
+import { usePostLike } from "../../hooks/mutations/usePostLike";
+import { postLike } from "../../apis/likes";
+import Header from "./ComponentDiary/Header";
 
 const CommonComponentInDiaryNFeed = ({
   props,
+  pageResult,
+  idx,
 }: {
   props: DiaryUploadResult;
+  pageResult: getMyDiariesResult;
+  idx: number;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
   const location = useLocation();
   const navigate = useNavigate();
+  const [isLiked, setIsLiked] = useState<boolean>(props?.isLiked || false);
+  console.log("props", props);
+  const [_countLiked, _setCountLiked] = useState<number>(props.likeCount);
+
+  const { mutate: likeMutate } = usePostLike();
+  const debouncedLike = useDebounce(isLiked, 500);
 
   const borderRadius = clsx({
-    "rounded-t-2xl": props.idx === 0,
+    "rounded-t-2xl": pageResult.page === 1 && idx === 0,
+    "rounded-b-2xl":
+      idx === pageResult.diaries.length - 1 && !pageResult.hasNext,
   });
 
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
@@ -46,7 +65,9 @@ const CommonComponentInDiaryNFeed = ({
     },
     {
       label: `${props.likeCount}`,
-      icon: "/images/CommonComponentIcon/LikeIcon.svg",
+      icon: isLiked
+        ? "/images/CommonComponentIcon/LikeFullIcon.svg"
+        : "/images/CommonComponentIcon/LikeIcon.svg",
     },
     {
       label: `${props.correctionCount}`,
@@ -70,9 +91,31 @@ const CommonComponentInDiaryNFeed = ({
     navigate("/feed/{props.diaryId}");
   };
 
+  const handleIcons = (iconIndex: number) => {
+    switch (iconIndex) {
+      case 0:
+        // 댓글 아이콘 클릭 핸들러
+        navigate(`/feed/${props.diaryId}`);
+        break;
+      case 1:
+        //좋아요 아이콘 클릭 핸들러
+        setIsLiked((prev) => !prev);
+        likeMutate({
+          targetType: "diaries",
+          targetId: props.diaryId,
+        });
+        break;
+      case 2:
+        // 교정 아이콘 클릭 핸들러
+        break;
+      default:
+        // Handle default case
+        break;
+    }
+  };
   return (
     <div
-      className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4`}
+      className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4 cursor-pointer`}
       onClick={handleToDetail}
     >
       {/* 상단 정보 */}
@@ -81,7 +124,7 @@ const CommonComponentInDiaryNFeed = ({
           {isFeedTab ? (
             <div className="flex items-center gap-3">
               <Avatar
-                src={undefined}
+                src={props.profileImg}
                 alt={props.writerUsername}
                 size="w-9 h-9"
               />
@@ -149,18 +192,7 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex flex-rows">
         <div className="flex-1 space-y-2">
           {/* 제목 */}
-          <div className="flex gap-3 text-subhead3 text-black">
-            {props.visibility === "PUBLIC" && (
-              <img src="/images/public_icon.svg" alt="전체 공개 아이콘" />
-            )}
-            {props.visibility === "FRIENDS" && (
-              <img src="/images/friend_icon.svg" alt="친구 공개 아이콘" />
-            )}
-            {props.visibility === "PRIVATE" && (
-              <img src="/images/private_icon.svg" alt="비공개 아이콘" />
-            )}
-            <p className="font-bold text-lg">{props.title}</p>
-          </div>
+          <Header props={props} />
 
           {/* 본문 */}
           <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
@@ -178,11 +210,18 @@ const CommonComponentInDiaryNFeed = ({
       {/* 통계 */}
       <div className="flex gap-6 text-gray-600 text-sm">
         {stats.map((item, index) => (
-          <div key={index} className="flex gap-1 items-center">
+          <div
+            key={index}
+            className="flex gap-1 items-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleIcons(index);
+            }}
+          >
             <img
               src={item.icon}
               alt={`${item.label} 아이콘`}
-              className="w-6 h-6"
+              className="w-6 h-6 cursor-pointer"
             />
             <span>{item.label}</span>
           </div>

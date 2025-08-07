@@ -19,22 +19,23 @@ export type DiaryUploadResponseDTO = {
 };
 
 export type DiaryUploadResult = {
-  diaryId?: number;
-  visibility?: string;
-  title?: string;
-  language?: string;
+  diaryId: number;
+  visibility: string;
+  title: string;
+  language: string;
   profileImg?: string;
   writerNickname?: string;
   writerUsername?: string;
   createdAt?: string;
   commentCount?: number;
-  likeCount?: number;
+  likeCount: number;
   correctCount?: number;
   content?: string;
   thumbnailUrl?: string;
   contentPreview?: string;
   idx?: number;
   correctionCount?: number;
+  isLiked?: boolean;
 };
 export type DiaryRefreshRequestDTO = {
   language: string;

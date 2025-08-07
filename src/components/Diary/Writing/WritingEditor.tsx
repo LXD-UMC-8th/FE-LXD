@@ -2,7 +2,6 @@ import { useMemo, useRef, useCallback } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
-import { useState } from "react";
 
 const MAX_IMAGES = 5;
 
@@ -13,10 +12,7 @@ interface WritingEditorProps {
 
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
   const quillRef = useRef<ReactQuill>(null);
-  const [_thumbImg, setThumbImg] = useState<string | null>(
-    localStorage.getItem("thumbImg"),
-  );
-  //image삭제할 때도 반영할 수 있는 것을 만들어야 함,,,
+
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
     if (!editor) return;
@@ -74,12 +70,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
                 currentImageCount,
               );
               if (range.index === 1 && currentImageCount === 0) {
-                setThumbImg(url);
                 localStorage.setItem("thumbImg", url);
-                console.log(
-                  "localStorage.thumbImg:",
-                  localStorage.getItem("thumbImg"),
-                );
               }
             })
             .catch((err) => {
