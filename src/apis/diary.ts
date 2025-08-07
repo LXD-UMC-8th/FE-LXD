@@ -152,3 +152,15 @@ export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
     throw error;
   }
 };
+
+export const getUserDiarySummary = async (memberId: number) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `diaries/member/${memberId}/diary-summary`,
+    );
+    return data;
+  } catch (error) {
+    console.error("Error fetching user diary summary:", error);
+    throw error;
+  }
+};

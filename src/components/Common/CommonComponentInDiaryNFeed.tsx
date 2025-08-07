@@ -6,12 +6,12 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
-import { queryClient } from "../../App";
+// import { queryClient } from "../../App";
 import type {
   DiaryUploadResult,
   getMyDiariesResult,
 } from "../../utils/types/diary";
-import useDebounce from "../../hooks/queries/useDebounce";
+// import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "./ComponentDiary/Header";
 
@@ -40,9 +40,9 @@ const CommonComponentInDiaryNFeed = ({
 
   //css를 외부에서 적용할지 말지 고민을 조금 해봐야할듯.
   const borderRadius = clsx({
-    "rounded-t-2xl": pageResult.page === 1 && idx === 0,
-    "rounded-b-2xl":
-      idx === pageResult.diaries.length - 1 && !pageResult.hasNext,
+    // "rounded-t-2xl": pageResult.page === 1 && idx === 0,
+    // "rounded-b-2xl":
+    //   idx === pageResult.diaries.length - 1 && !pageResult.hasNext,
   });
 
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
