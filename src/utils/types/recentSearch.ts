@@ -9,11 +9,16 @@ export const getRecentSearches = (): string[] => {
 // 최근 검색 추가
 export const addRecentSearch = (username: string) => {
   let searches = getRecentSearches();
+
+  // 중복 제거 후 맨 앞에 추가
   searches = searches.filter((item) => item !== username);
   searches.unshift(username);
+
+  // 최대 10개까지만 저장
   if (searches.length > 10) {
     searches = searches.slice(0, 10);
   }
+
   localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(searches));
 };
 

@@ -4,6 +4,10 @@ export type FriendRequesterId = {
   requesterId: number;
 };
 
+export type FriendReceiverId = {
+  receiverId: number;
+};
+
 export type FriendAcceptResponseDTO = {
   message: string;
   isSuccess?: boolean;
@@ -26,31 +30,68 @@ export type FriendDeleteResponseDTO = APIResponse<{ message: string }>;
 
 // 친구 목록 조회 응답
 export type FriendListResponseDTO = APIResponse<{
-  totalFriends: number;
   totalRequests: number;
   friends: {
-    memberId: number;
-    username: string;
-    nickname: string;
-    profileImg: string;
-  }[];
+    totalElements: number;
+    contents: {
+      memberId: number;
+      username: string;
+      nickname: string;
+      profileImg: string;
+    }[];
+    page: number;
+    size: number;
+    hasNext: boolean;
+  };
 }>;
 
-// 친구 요청 목록 조회 응답
+// 친구 요청 목록 조회 응답 (Swagger에 맞춰 수정)
 export type FriendRequestListResponseDTO = APIResponse<{
-  sentRequestsCount: number;
-  receivedRequestsCount: number;
   totalFriends: number;
   sentRequests: {
-    memberId: number;
-    username: string;
-    nickname: string;
-    profileImg: string;
-  }[];
+    totalElements: number;
+    contents: {
+      memberId: number;
+      username: string;
+      nickname: string;
+      profileImg: string;
+    }[];
+    page: number;
+    size: number;
+    hasNext: boolean;
+  };
   receivedRequests: {
-    memberId: number;
-    username: string;
-    nickname: string;
-    profileImg: string;
-  }[];
+    totalElements: number;
+    contents: {
+      memberId: number;
+      username: string;
+      nickname: string;
+      profileImg: string;
+    }[];
+    page: number;
+    size: number;
+    hasNext: boolean;
+  };
 }>;
+
+// 친구 검색 응답 DTO
+export type FriendSearchResponseDTO = {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    query: string;
+    members: {
+      totalElements: number;
+      contents: {
+        memberId: number;
+        username: string;
+        nickname: string;
+        profileImageUrl: string;
+      }[];
+      page: number;
+      size: number;
+      hasNext: boolean;
+    };
+  };
+};

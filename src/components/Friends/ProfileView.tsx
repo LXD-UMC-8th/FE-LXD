@@ -3,6 +3,7 @@ import { X } from "lucide-react";
 import Avatar from "../Common/Avatar";
 import { useNavigate } from "react-router-dom";
 import { addRecentSearch } from "../../utils/types/recentSearch";
+import { postFriendRequest } from "../../apis/friend";
 
 interface ProfileViewProps {
   user: {
@@ -10,6 +11,7 @@ interface ProfileViewProps {
     username: string;
     image?: string;
     isFriend: boolean;
+    id: number;
   };
   onClose: () => void;
   onUnfriendClick: () => void;
@@ -28,16 +30,25 @@ const ProfileView = ({
 }: ProfileViewProps) => {
   const navigate = useNavigate();
 
-  // 🔹 마운트 시 최근 검색 추가
   useEffect(() => {
     if (user?.username) {
       addRecentSearch(user.username);
     }
   }, [user?.username]);
 
+  const handleSendRequest = async () => {
+    try {
+      console.log("✅ 친구 요청 API 호출", user.id);
+      await postFriendRequest({ receiverId: user.id });
+      onSendRequestClick(); // 상태 업데이트 요청
+    } catch (err) {
+      console.error("❌ 친구 요청 실패:", err);
+      alert("친구 요청에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow">
-      {/* 상단 프로필 영역 */}
       <div className="p-8 pb-6 flex justify-between items-start">
         <div className="flex items-center gap-6">
           <Avatar
@@ -60,8 +71,8 @@ const ProfileView = ({
         </button>
       </div>
 
-      {/* 버튼 영역 */}
       <div className="px-8 mb-6 flex gap-4">
+        {/* 친구 or 요청 상태 버튼 */}
         {user.isFriend ? (
           <button
             className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700 cursor-pointer"
@@ -74,12 +85,16 @@ const ProfileView = ({
             disabled
             className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+            <img
+              src="/images/requestingIcon.svg"
+              alt="요청중"
+              className="w-5 h-5"
+            />
             요청중
           </button>
         ) : (
           <button
-            onClick={onSendRequestClick}
+            onClick={handleSendRequest}
             className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700 cursor-pointer"
           >
             친구 요청하기
@@ -94,15 +109,13 @@ const ProfileView = ({
         </button>
       </div>
 
-      {/* 구분선 */}
       <div className="h-px bg-gray-200 w-full mb-5" />
 
-      {/* 최근 일기 헤더 */}
       <div className="px-8 flex justify-between items-center mb-4">
         <div className="text-lg font-bold text-gray-900">최근 일기</div>
       </div>
 
-      {/* 다이어리 목록 */}
+      {/* 최근 일기 더미 */}
       <div className="px-8 pb-8 flex flex-col gap-5">
         {[1, 2].map((_, idx) => (
           <div

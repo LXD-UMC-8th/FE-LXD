@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import FriendItem from "./FriendItem";
 import FriendListSkeleton from "./Skeleton/FriendListSkeleton";
@@ -8,66 +8,112 @@ import {
   removeRecentSearch,
   clearRecentSearches,
 } from "../../utils/types/recentSearch";
+import useDebounce from "../../hooks/queries/useDebounce";
+import { searchFriends } from "../../apis/friend";
 
-interface Friend {
+export interface Friend {
+  id: number;
   name: string;
   username: string;
   image?: string;
+  isFriend: boolean;
+}
+
+export interface FriendSearchItem {
+  memberId: number;
+  username: string;
+  nickname: string;
+  profileImageUrl: string;
 }
 
 interface FriendListPanelProps {
-  onSelect: (username: string | null) => void;
+  onSelect: (user: Friend | null) => void;
   selectedUsername: string | null;
 }
 
-const FriendListPanel = ({
-  onSelect,
-  selectedUsername,
-}: FriendListPanelProps) => {
+const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) => {
   const [search, setSearch] = useState("");
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [friends, setFriends] = useState<FriendSearchItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
-  // 친구 목록 로드
-  useEffect(() => {
-    setTimeout(() => {
-      const mockData: Friend[] = [
-        { name: "김태현", username: "kimtaehyun", image: "" },
-        { name: "홍길동", username: "honggildong", image: "" },
-        { name: "이지은", username: "jieun", image: "" },
-      ];
-      setFriends(mockData);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+  const debouncedSearch = useDebounce(search, 300);
 
-  // 최근 검색 로드
+  useEffect(() => {
+    if (!debouncedSearch.trim()) {
+      setFriends([]);
+      return;
+    }
+
+    const fetch = async () => {
+      setIsLoading(true);
+      try {
+        const data = await searchFriends(debouncedSearch);
+        setFriends(data.result.members.contents);
+      } catch (err) {
+        console.error("❌ 친구 검색 실패:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetch();
+  }, [debouncedSearch]);
+
   useEffect(() => {
     setRecentSearches(getRecentSearches());
   }, []);
 
-  // 검색어 필터링
-  const filteredFriends = search
-    ? friends.filter((f) =>
-        f.username.toLowerCase().includes(search.toLowerCase())
-      )
-    : [];
-
-  // 최근 검색 클릭 시
-  const handleSelectFriend = (username: string) => {
+  // ✅ username만 있는 경우도 서버에서 정보 조회
+  const handleSelectFriend = async (username: string, userInfo?: FriendSearchItem) => {
     addRecentSearch(username);
     setRecentSearches(getRecentSearches());
-    onSelect(username);
+
+    // 검색 결과에서 온 경우
+    if (userInfo) {
+      const friend: Friend = {
+        id: userInfo.memberId,
+        name: userInfo.nickname,
+        username: userInfo.username,
+        image: userInfo.profileImageUrl,
+        isFriend: false,
+      };
+      onSelect(friend);
+      return;
+    }
+
+    // 최근 검색에서 온 경우 → 서버 재조회
+    try {
+      const data = await searchFriends(username);
+      const found = data.result.members.contents.find(
+        (member) => member.username === username
+      );
+
+      if (!found) {
+        alert("해당 사용자를 찾을 수 없습니다.");
+        return;
+      }
+
+      const friend: Friend = {
+        id: found.memberId,
+        name: found.nickname,
+        username: found.username,
+        image: found.profileImageUrl,
+        isFriend: false,
+      };
+
+      onSelect(friend);
+    } catch (err) {
+      console.error("❌ 사용자 재조회 실패:", err);
+      alert("사용자 정보를 불러오는 데 실패했습니다.");
+    }
   };
 
-  // 최근 검색 삭제
   const handleRemoveRecent = (username: string) => {
     removeRecentSearch(username);
     setRecentSearches(getRecentSearches());
   };
 
-  // 최근 검색 전체 삭제
   const handleClearRecent = () => {
     clearRecentSearches();
     setRecentSearches([]);
@@ -75,11 +121,9 @@ const FriendListPanel = ({
 
   return (
     <div className="h-full flex flex-col p-5 gap-5">
-      {/* 검색창 */}
       <SearchBar value={search} onChange={setSearch} />
 
-      {/* 최근 검색 헤더 */}
-      {!search && (
+      {!debouncedSearch && (
         <div className="flex justify-between text-sm font-semibold text-gray-700">
           <span>최근 검색항목</span>
           <button
@@ -91,42 +135,34 @@ const FriendListPanel = ({
         </div>
       )}
 
-      {/* 목록 */}
       {isLoading ? (
         <FriendListSkeleton count={6} />
       ) : (
         <ul className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1">
-          {/* 검색 시 → 필터링된 목록 표시 */}
-          {search
-            ? filteredFriends.map((friend) => (
+          {debouncedSearch
+            ? friends.map((friend) => (
                 <FriendItem
                   key={friend.username}
-                  name={friend.name}
+                  name={friend.nickname}
                   username={friend.username}
-                  image={friend.image}
-                  onClick={() => handleSelectFriend(friend.username)}
+                  image={friend.profileImageUrl}
+                  onClick={() => handleSelectFriend(friend.username, friend)}
                   isSelected={selectedUsername === friend.username}
                   showDelete={false}
                 />
               ))
-            : // 검색 없을 때 → 최근 검색 표시
-              recentSearches.map((username) => {
-                const friend = friends.find((f) => f.username === username);
-                if (!friend) return null;
-                return (
-                  <FriendItem
-                    key={username}
-                    name={friend.name}
-                    username={friend.username}
-                    image={friend.image}
-                    onClick={() => handleSelectFriend(friend.username)}
-                    isSelected={selectedUsername === friend.username}
-                    showDelete={true}
-                    // X 버튼 동작
-                    onDelete={() => handleRemoveRecent(username)}
-                  />
-                );
-              })}
+            : recentSearches.map((username) => (
+                <FriendItem
+                  key={username}
+                  name={username}
+                  username={username}
+                  image={""}
+                  onClick={() => handleSelectFriend(username)} // ✅ 재조회 트리거
+                  isSelected={selectedUsername === username}
+                  showDelete
+                  onDelete={() => handleRemoveRecent(username)}
+                />
+              ))}
         </ul>
       )}
     </div>
@@ -134,3 +170,4 @@ const FriendListPanel = ({
 };
 
 export default FriendListPanel;
+

@@ -10,6 +10,7 @@ interface ProfileModalProps {
   onClose: () => void;
   onUnfriendClick: () => void;
   onSendRequestClick: () => void;
+  isRequesting: boolean;
 }
 
 const ProfileModal = ({
@@ -17,11 +18,12 @@ const ProfileModal = ({
   onClose,
   onUnfriendClick,
   onSendRequestClick,
+  isRequesting,
 }: ProfileModalProps) => {
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-2xl w-96 p-6">
-        {/* 프로필 상단 */}
+        {/* 상단 */}
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-4">
             <Avatar
@@ -49,14 +51,26 @@ const ProfileModal = ({
           {user.isFriend ? (
             <button
               onClick={onUnfriendClick}
-              className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 cursor-pointer"
+              className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
               친구
+            </button>
+          ) : isRequesting ? (
+            <button
+              disabled
+              className="min-w-[144px] py-2 rounded-lg bg-[#EDF3FE] text-[#618BFD] text-sm font-medium cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              <img
+                src="/images/requestingIcon.svg"
+                alt="요청중"
+                className="w-5 h-5"
+              />
+              요청중
             </button>
           ) : (
             <button
               onClick={onSendRequestClick}
-              className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 cursor-pointer"
+              className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
               친구 요청하기
             </button>
