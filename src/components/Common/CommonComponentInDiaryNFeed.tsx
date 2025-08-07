@@ -82,13 +82,15 @@ const CommonComponentInDiaryNFeed = ({
 
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
 
+
+
   const handleEdit = () => {
     navigate(`/mydiary/edit/${props.diaryId}`);
   };
 
   const handleDelete = () => {
     if (window.confirm("정말 삭제하시겠습니까?")) {
-      deleteMutation.mutate();
+      deleteMutation?.mutate();
     }
   };
 

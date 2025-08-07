@@ -10,6 +10,7 @@ import {
   type CalendarDiaryRequestDTO,
   type CalendarDiaryResponseDTO,
   type getDiarySummary,
+  type DiaryGetResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -100,10 +101,13 @@ export const updateDiary = async (
   }
 };
 
-//Promise 타입 정의필요
-export const getDiaryDetail = async (diaryId: number): Promise<any> => {
+
+export const getDiaryDetail = async (
+  diaryId: number
+): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.get(`diaries/${diaryId}`);
+    const { data } = await axiosInstance.get<DiaryGetResponseDTO>(`/diaries/${diaryId}`);
+
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);

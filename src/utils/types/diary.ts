@@ -36,7 +36,14 @@ export type DiaryUploadResult = {
   idx?: number;
   correctionCount?: number;
   isLiked?: boolean;
+
 };
+
+export type DiaryGetRequestDTO = {
+  diaryId: number;
+}
+export type DiaryGetResponseDTO = APIResponse<DiaryUploadResult>
+
 export type DiaryRefreshRequestDTO = {
   language: string;
 };
