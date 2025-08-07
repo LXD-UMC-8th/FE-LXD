@@ -127,9 +127,9 @@ export type diaries = {
   contentPreview: string;
   language: string;
   isLiked: boolean;
-  writerUsername?: "string";
-  writerNickname?: "string";
-  writerProfileImg?: "string";
+  writerUsername?: string;
+  writerNickname?: string;
+  writerProfileImg?: string;
 };
 export type getMyDiariesResult = {
   diaries: diaries[];
