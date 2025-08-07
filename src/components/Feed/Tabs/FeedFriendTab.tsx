@@ -10,7 +10,7 @@ import { useEffect } from "react";
 const FeedFriendTab = () => {
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["MyDiaryTotal"],
+      queryKey: ["FriendsDiaries"],
       queryFn: ({ pageParam = 1 }) => getFriendsDiaries(pageParam as number),
       getNextPageParam: (last: getMyDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,
