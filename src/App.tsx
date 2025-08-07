@@ -22,7 +22,7 @@ import SignupFlow from "./pages/Login/SignupFlow";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import React from "react";
+import UserDetailPage from "./pages/Feed/UserDetailPage";
 
 const publicRoutes: RouteObject[] = [
   {
