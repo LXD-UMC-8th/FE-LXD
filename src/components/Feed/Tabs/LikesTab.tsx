@@ -14,7 +14,7 @@ const LikesTab = () => {
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["ExploreTab"],
+      queryKey: ["LikesTab"],
       queryFn: ({ pageParam = 1 }) => {
         return getLikedDiaries(pageParam as number);
       },
