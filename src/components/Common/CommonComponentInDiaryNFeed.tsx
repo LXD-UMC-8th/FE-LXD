@@ -38,6 +38,7 @@ const CommonComponentInDiaryNFeed = ({
     targetId: props.diaryId,
   });
 
+  //css를 외부에서 적용할지 말지 고민을 조금 해봐야할듯.
   const borderRadius = clsx({
     "rounded-t-2xl": pageResult.page === 1 && idx === 0,
     "rounded-b-2xl":

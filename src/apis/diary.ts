@@ -127,6 +127,22 @@ export const getMyDiaries = async (page: number) => {
   }
 };
 
+export const getMyLikesDiary = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    console.log("getMyLikesDiray response data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching my liked diaries:", error);
+    throw error;
+  }
+};
+
 export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
   try {
     const { data } = await axiosInstance.get("diaries/my/diary-summary");

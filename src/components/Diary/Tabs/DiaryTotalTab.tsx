@@ -7,18 +7,18 @@ import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 
 const DiaryTotalTab = () => {
-  const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
-    queryKey: ["MyDiaryTotal"],
-    queryFn: ({ pageParam = 1 }) => getMyDiaries(pageParam as number),
-    getNextPageParam: (last: getMyDiariesResponseDTO) =>
-      last.result.hasNext ? last.result.page + 1 : undefined,
-  });
+  const { data, isFetching, fetchNextPage, hasNextPage, isError } =
+    useInfiniteScroll({
+      queryKey: ["MyDiaryTotal"],
+      queryFn: ({ pageParam = 1 }) => getMyDiaries(pageParam as number),
+      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+        last.result.hasNext ? last.result.page + 1 : undefined,
+    });
   const { ref, inView } = useInView();
 
   useEffect(() => {
     if (inView) {
       if (!isFetching && hasNextPage) fetchNextPage();
-      console.log("fetching data", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
@@ -39,6 +39,11 @@ const DiaryTotalTab = () => {
         <div>
           <CommonComponentSkeleton />
           <CommonComponentSkeleton />
+        </div>
+      )}
+      {isError && (
+        <div className="text-grey-500 text-center mt-4">
+          목록을 불러올 수 없습니다.
         </div>
       )}
       <div ref={ref}></div>

@@ -120,6 +120,7 @@ export type diaries = {
   correctionCount: number;
   contentPreview: string;
   language: string;
+  isLiked: boolean;
 };
 export type getMyDiariesResult = {
   diaries: diaries[];
