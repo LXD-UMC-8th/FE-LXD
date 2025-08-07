@@ -1,6 +1,11 @@
 import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
 import { useNavigate } from "react-router-dom";
+import { getFriendsDiaries } from "../../../apis/diary";
+import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
+import { useInView } from "react-intersection-observer";
+import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
+import { useEffect } from "react";
 
 const FeedFriendTab = () => {
   const navigate = useNavigate();
@@ -8,20 +13,50 @@ const FeedFriendTab = () => {
     // 임시로 id = 1 로 보냄
     navigate("/feed/1");
   };
+
+  const { data, isFetching, fetchNextPage, hasNextPage, isError } =
+    useInfiniteScroll({
+      queryKey: ["MyDiaryTotal"],
+      queryFn: ({ pageParam = 1 }) => getFriendsDiaries(pageParam as number),
+      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+        last.result.hasNext ? last.result.page + 1 : undefined,
+    });
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      if (!isFetching && hasNextPage) fetchNextPage();
+      console.log("Fetching next page of friends' diaries:", data);
+    }
+  }, [inView, isFetching, hasNextPage, fetchNextPage]);
+
   return (
-    <div className="cursor-pointer">
-      <div onClick={handleSkeletonClick}>
-        <CommonComponentInDiaryNFeed />
+    <div className="w-260 mb-10">
+      <div onClick={handleSkeletonClick} className="cursor-pointer">
+        {data?.pages.flatMap((page) =>
+          page.result.diaries.map((data, idx) => (
+            <CommonComponentInDiaryNFeed
+              key={data.diaryId}
+              props={data}
+              pageResult={page.result}
+              idx={idx}
+            />
+          )),
+        )}
       </div>
-      <div onClick={handleSkeletonClick}>
-        <CommonComponentSkeleton />
-      </div>
-      <div onClick={handleSkeletonClick}>
-        <CommonComponentSkeleton />
-      </div>
-      <div onClick={handleSkeletonClick}>
-        <CommonComponentSkeleton />
-      </div>
+      {isFetching && (
+        <div>
+          <CommonComponentSkeleton />
+          <CommonComponentSkeleton />
+        </div>
+      )}
+      {isError && (
+        <div className="text-grey-500 text-center mt-4">
+          목록을 불러올 수 없습니다.
+        </div>
+      )}
+      <div ref={ref}></div>
     </div>
   );
 };

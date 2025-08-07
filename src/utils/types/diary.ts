@@ -36,13 +36,12 @@ export type DiaryUploadResult = {
   idx?: number;
   correctionCount?: number;
   isLiked?: boolean;
-
 };
 
 export type DiaryGetRequestDTO = {
   diaryId: number;
-}
-export type DiaryGetResponseDTO = APIResponse<DiaryUploadResult>
+};
+export type DiaryGetResponseDTO = APIResponse<DiaryUploadResult>;
 
 export type DiaryRefreshRequestDTO = {
   language: string;
@@ -128,6 +127,9 @@ export type diaries = {
   contentPreview: string;
   language: string;
   isLiked: boolean;
+  writerUsername?: "string";
+  writerNickname?: "string";
+  writerProfileImg?: "string";
 };
 export type getMyDiariesResult = {
   diaries: diaries[];
