@@ -38,6 +38,7 @@ export const translate: Record<
     EditDiary: string;
     DeleteDiary: string;
     CannotLoadList: string;
+    titleRequired: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -76,6 +77,7 @@ export const translate: Record<
     EditDiary: "Edit",
     DeleteDiary: "Delete",
     CannotLoadList: "Unable to load list.",
+    titleRequired: "Please enter a title.",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -113,5 +115,6 @@ export const translate: Record<
     EditDiary: "수정하기",
     DeleteDiary: "삭제하기",
     CannotLoadList: "목록을 불러올 수 없습니다.",
+    titleRequired: "제목을 작성하세요.",
   },
 };

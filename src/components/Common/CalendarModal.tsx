@@ -48,29 +48,6 @@ const CalendarModal = () => {
       });
   }, [_datesToRequest]);
 
-  // useEffect(() => {
-  //   const current = new Date(activeStartDate);
-  //   const prev = new Date(current);
-  //   const next = new Date(current);
-
-  //   prev.setMonth(current.getMonth() - 1);
-  //   next.setMonth(current.getMonth() + 1);
-
-  //   const datesToRequest = [
-  //     { year: prev.getFullYear(), month: prev.getMonth() + 1 },
-  //     { year: current.getFullYear(), month: current.getMonth() + 1 },
-  //   ];
-
-  //   Promise.all(datesToRequest.map(getDiaryStats))
-  //     .then((responses) => {
-  //       const merged: value[] = responses.flatMap((r) => r?.result || []);
-  //       setValues(merged);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error fetching diary stats:", err);
-  //     });
-  // }, [activeStartDate]);
-
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(
       (acc: Record<string, number>, { date, count }: value) => {
@@ -84,7 +61,8 @@ const CalendarModal = () => {
   // Return heat class
   const _getHeatClass = (count: number | undefined) => {
     if (!count) return "";
-    return `heat-${count}`;
+    const capCount = Math.min(count, 3);
+    return `heat-${capCount}`;
   };
 
   return (
