@@ -70,7 +70,7 @@ const ExploreTab = () => {
       )}
       {isError && (
         <div className="text-grey-500 text-center mt-4">
-          목록을 불러올 수 없습니다.
+          {t.CannotLoadList}
         </div>
       )}
       <div ref={ref}></div>
