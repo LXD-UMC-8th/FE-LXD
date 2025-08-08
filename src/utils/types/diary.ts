@@ -27,13 +27,12 @@ export type DiaryUploadResult = {
   writerNickname?: string;
   writerUsername?: string;
   createdAt?: string;
-  commentCount?: number;
+  commentCount: number;
   likeCount: number;
-  correctCount?: number;
+  correctCount: number;
   content?: string;
   thumbnailUrl?: string;
   contentPreview?: string;
-  idx?: number;
   correctionCount?: number;
   isLiked?: boolean;
 };
@@ -58,10 +57,6 @@ export type DiaryRefreshResponseDTO = {
   code: string;
   message: string;
   result: DiaryRefreshResult;
-};
-
-export type ImageRequestDTO = {
-  formData: FormData;
 };
 
 export type ImageResponseDTO = {
@@ -113,7 +108,7 @@ export type DiarySummary = {
 
 export type getDiarySummary = APIResponse<DiarySummary>;
 
-export type getMyDiariesResponseDTO = APIResponse<getMyDiariesResult>;
+export type getDiariesResponseDTO = APIResponse<getDiariesResult>;
 
 export type diaries = {
   diaryId: number;
@@ -130,8 +125,10 @@ export type diaries = {
   writerUsername?: string;
   writerNickname?: string;
   writerProfileImg?: string;
+  profileImg?: string;
 };
-export type getMyDiariesResult = {
+
+export type getDiariesResult = {
   diaries: diaries[];
   page: number;
   size: number;

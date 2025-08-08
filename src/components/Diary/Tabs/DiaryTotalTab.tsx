@@ -3,7 +3,10 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getMyDiaries } from "../../../apis/diary";
-import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
+import type {
+  diaries,
+  getDiariesResponseDTO,
+} from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 
 const DiaryTotalTab = () => {
@@ -11,7 +14,7 @@ const DiaryTotalTab = () => {
     useInfiniteScroll({
       queryKey: ["MyDiaryTotal"],
       queryFn: ({ pageParam = 1 }) => getMyDiaries(pageParam as number),
-      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+      getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,
     });
   const { ref, inView } = useInView();
@@ -25,7 +28,7 @@ const DiaryTotalTab = () => {
   return (
     <div className="w-260 mb-10">
       {data?.pages.flatMap((page) =>
-        page.result.diaries.map((data, idx) => (
+        page.result.diaries.map((data: diaries, idx: number) => (
           <CommonComponentInDiaryNFeed
             key={data.diaryId}
             props={data}

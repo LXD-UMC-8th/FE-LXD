@@ -1,9 +1,11 @@
-import CorrectionComponent from "../CorrectionComponent"
+// import CorrectionComponent from "../CorrectionComponent";
 
 const ProvidedCorrectionTab = () => {
   return (
-    <CorrectionComponent />
-  )
-}
+    <div>
+      <p>교정받은 탭 </p>
+    </div>
+  );
+};
 
-export default ProvidedCorrectionTab
+export default ProvidedCorrectionTab;

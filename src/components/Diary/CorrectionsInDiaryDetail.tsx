@@ -1,14 +1,10 @@
 import { useState } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
-import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import type { ContentsDTO } from "../../utils/types/correction";
 // import { usePostLike } from "../../hooks/mutations/usePostLike";
 
-interface Props {
-  correction: CorrectionsDetailDTO;
-}
-
-const CorrectionsInDiaryDetail = ({ correction }: Props) => {
-  const [openCorrectoinReply, setOpenCorrectionReply] = useState(false);
+const CorrectionsInDiaryDetail = ({ props }: { props: ContentsDTO }) => {
+  const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
   const [commentText, setCommentText] = useState("");
   // const { mutate: likeCorrection, isPending } = usePostLike();
 
@@ -25,10 +21,7 @@ const CorrectionsInDiaryDetail = ({ correction }: Props) => {
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       {/* 프로필 */}
-      <ProfileComponent 
-        member={correction.member}
-        createdAt={correction.createdAt}
-      />
+      <ProfileComponent member={props.member} createdAt={props.createdAt} />
 
       {/* 구분선 */}
       <div className="border-t border-gray-200 my-4" />
@@ -36,16 +29,16 @@ const CorrectionsInDiaryDetail = ({ correction }: Props) => {
       {/* 교정 내용 */}
       <div className="flex flex-col gap-2 text-body2">
         {/* 원문 */}
-        <p className="font-medium">{correction.original}</p>
+        <p className="font-medium">{props.original}</p>
 
         {/* 수정 문장 */}
         <div className="flex gap-2 items-center">
           <div className="w-1 h-5 bg-[#4170FE]" />
-          <p className="text-[#4170FE] font-medium">{correction.corrected}</p>
+          <p className="text-[#4170FE] font-medium">{props.corrected}</p>
         </div>
 
         {/* 교정 설명 */}
-        <p>{correction.commentText}</p>
+        <p>{props.commentText}</p>
       </div>
 
       {/* 댓글 & 좋아요 */}
@@ -54,36 +47,38 @@ const CorrectionsInDiaryDetail = ({ correction }: Props) => {
         <button
           onClick={_toggleCorrectionReply}
           className={`flex items-center gap-1 cursor-pointer p-1 ${
-            openCorrectoinReply ? "bg-gray-300 text-black rounded-[5px]" : ""
+            openCorrectionReply ? "bg-gray-300 text-black rounded-[5px]" : ""
           }`}
         >
           <img
             src={
-              openCorrectoinReply
+              openCorrectionReply
                 ? "/images/commentIcon.svg"
                 : "/images/CommonComponentIcon/CommentIcon.svg"
             }
             className="w-4 h-4"
+            alt="댓글"
           />
-          <p>{correction.commentCount}</p>
+          <p>{props.commentCount}</p>
         </button>
 
         {/* 좋아요 버튼 */}
         <button
-          // onClick={() => likeCorrection({ targetType: "corrections", targetId: correction.correctionId })}
+          // onClick={() => likeCorrection({ targetType: "corrections", targetId: props.correctionId })}
           // disabled={isPending}
           className="flex items-center gap-1"
         >
           <img
             src="/images/CommonComponentIcon/LikeIcon.svg"
             className="w-4 h-4"
+            alt="좋아요 수"
           />
-          <p>{correction.likeCount}</p>
+          <p>{props.likeCount}</p>
         </button>
       </div>
 
       {/* 댓글 입력창 */}
-      {openCorrectoinReply && (
+      {openCorrectionReply && (
         <div>
           <div className="border-t border-gray-200 my-3" />
           <div className="flex gap-2">

@@ -4,10 +4,17 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import { useEffect, useState } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getExploreDiaries } from "../../../apis/diary";
-import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
+import type {
+  diaries,
+  getDiariesResponseDTO,
+} from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const ExploreTab = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const [lang, setLang] = useState<string>("KO");
   const handleLangChange = (value: string) => {
     if (value === "한국어") {
@@ -25,7 +32,7 @@ const ExploreTab = () => {
         const [_, lang] = queryKey as [string, string];
         return getExploreDiaries(pageParam as number, lang);
       },
-      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+      getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,
     });
 
@@ -50,16 +57,11 @@ const ExploreTab = () => {
       {data?.pages.flatMap((page) =>
         page.result.diaries
           .filter(
-            (diary) =>
+            (diary: diaries) =>
               diary.language === lang && diary.visibility !== "PRIVATE",
           )
-          .map((data, idx) => (
-            <CommonComponentInDiaryNFeed
-              key={data.diaryId}
-              props={data}
-              pageResult={page.result}
-              idx={idx}
-            />
+          .map((data: diaries) => (
+            <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
           )),
       )}
       {isFetching && (
@@ -69,9 +71,7 @@ const ExploreTab = () => {
         </div>
       )}
       {isError && (
-        <div className="text-grey-500 text-center mt-4">
-          {t.CannotLoadList}
-        </div>
+        <div className="text-grey-500 text-center mt-4">{t.CannotLoadList}</div>
       )}
       <div ref={ref}></div>
     </div>

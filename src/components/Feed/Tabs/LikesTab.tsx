@@ -3,7 +3,7 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import { useEffect } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getLikedDiaries } from "../../../apis/diary";
-import type { getMyDiariesResponseDTO } from "../../../utils/types/diary";
+import type { getDiariesResponseDTO } from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
@@ -18,7 +18,7 @@ const LikesTab = () => {
       queryFn: ({ pageParam = 1 }) => {
         return getLikedDiaries(pageParam as number);
       },
-      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+      getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,
     });
 
@@ -36,12 +36,12 @@ const LikesTab = () => {
       {data?.pages.flatMap((page) =>
         page.result.diaries
           .filter((diary) => diary.visibility !== "PRIVATE")
-          .map((data, idx) => (
+          .map((data, _idx) => (
             <CommonComponentInDiaryNFeed
               key={data.diaryId}
               props={data}
-              pageResult={page.result}
-              idx={idx}
+              // pageResult={page.result}
+              // idx={idx}
             />
           )),
       )}
