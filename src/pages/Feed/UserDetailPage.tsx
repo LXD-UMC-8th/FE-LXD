@@ -3,19 +3,19 @@ import CalendarModal from "../../components/Common/CalendarModal";
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import { useEffect, useState } from "react";
-import { getDiaryMySummary, getUserDiarySummary } from "../../apis/diary";
+import { getUserDiarySummary } from "../../apis/diary";
 import type { DiarySummary } from "../../utils/types/diary";
 import CommonComponentInDiaryNFeed from "../../components/Common/CommonComponentInDiaryNFeed";
 import { useInView } from "react-intersection-observer";
 import CommonComponentSkeleton from "../../components/Common/CommonComponentSkeleton";
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { getUserDiaries } from "../../apis/diary";
-import type { getMyDiariesResponseDTO } from "../../utils/types/diary";
+import type { getDiariesResponseDTO } from "../../utils/types/diary";
 import { useParams } from "react-router-dom";
 
 const UserDetailPage = () => {
-  // const { language } = useLanguage();
-  // const t = translate[language];
+  const { language } = useLanguage();
+  const t = translate[language];
   const { memberId } = useParams<{ memberId: string }>();
   const memberIdNumber = memberId ? parseInt(memberId, 10) : undefined;
 
@@ -43,7 +43,7 @@ const UserDetailPage = () => {
         const [_, memberId] = queryKey as [string, number];
         return getUserDiaries(memberId, pageParam as number);
       },
-      getNextPageParam: (last: getMyDiariesResponseDTO) =>
+      getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,
     });
 
@@ -59,12 +59,12 @@ const UserDetailPage = () => {
         <DiaryHeader DiaryHeaderProps={_isDiarySummary} />
         {/* <CommonComponentInDiaryNFeed/> */}
         {data?.pages.flatMap((page) =>
-          page.result.diaries.map((data, idx) => (
+          page.result.diaries.map((data, _idx) => (
             <CommonComponentInDiaryNFeed
               key={data.diaryId}
               props={data}
-              pageResult={page.result}
-              idx={idx}
+              // pageResult={page.result}
+              // idx={idx}
             />
           )),
         )}
@@ -76,7 +76,7 @@ const UserDetailPage = () => {
         )}
         {isError && (
           <div className="text-grey-500 text-center mt-4">
-            목록을 불러올 수 없습니다.
+            {t.CannotLoadList}
           </div>
         )}
         <div ref={ref}></div>

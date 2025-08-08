@@ -8,8 +8,8 @@ import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 // import { queryClient } from "../../App";
 import type {
-  DiaryUploadResult,
-  getMyDiariesResult,
+  diaries,
+  // getMyDiariesResult,
 } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
@@ -17,12 +17,10 @@ import Header from "./ComponentDiary/Header";
 
 const CommonComponentInDiaryNFeed = ({
   props,
-  pageResult,
-  idx,
 }: {
-  props: DiaryUploadResult;
-  pageResult: getMyDiariesResult;
-  idx: number;
+  props: diaries;
+  // pageResult: getMyDiariesResult;
+  // idx: number;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -81,8 +79,6 @@ const CommonComponentInDiaryNFeed = ({
   ];
 
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
-
-
 
   const handleEdit = () => {
     navigate(`/mydiary/edit/${props.diaryId}`);

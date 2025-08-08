@@ -1,6 +1,5 @@
 import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
-import { useNavigate } from "react-router-dom";
 import { getFriendsDiaries } from "../../../apis/diary";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";

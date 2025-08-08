@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useGetCorrections } from "../../../hooks/mutations/useGetCorrections";
-import CorrectionComponent from "../CorrectionComponent";
+// import CorrectionComponent from "../CorrectionComponent";
 import LoadingModal from "../../Common/LoadingModal";
-import type { CorrectionsDetailDTO } from "../../../utils/types/correction";
+// import type { CorrectionsDetailDTO } from "../../../utils/types/correction";
 
 const ReceivedCorrectionTab = () => {
   const {
     mutate: fetchCorrections,
-    data: correctionData,
+    // data: correctionData,
     isPending, // React Query v5에서는 isPending, v4에서는 isLoading
   } = useGetCorrections();
 
@@ -21,13 +21,15 @@ const ReceivedCorrectionTab = () => {
   return (
     <div className="flex flex-col gap-4">
       {isPending && <LoadingModal />}
-      {correctionData?.result.corrections?.contents?.map(
+      {/*//08.07 22:46  : 여기에 무엇을 추가하려는 의도인지 잘 모르겠음,,*/}
+      {/* {correctionData?.result.corrections?.corrected?.map(
         (correction: CorrectionsDetailDTO) => (
-        <CorrectionComponent
-          key={correction.correctionId}
-          correction={correction}
-        />
-      ))}
+          <CorrectionComponent
+            key={correction.correctionId}
+            correction={correction}
+          />
+        ),
+      )} */}
     </div>
   );
 };

@@ -29,4 +29,4 @@ export type CorrectionsMemberDTO = {
   userId: string;
   nickname: string;
   profileImageUrl: string;
-}
+};

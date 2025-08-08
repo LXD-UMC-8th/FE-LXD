@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+import {
+  // useEffect,
+  useState,
+} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
@@ -7,30 +10,34 @@ import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { getDiaryDetail, updateDiary } from "../../apis/diary";
+import {
+  // getDiaryDetail,
+  updateDiary,
+} from "../../apis/diary";
 
 const DiaryEditPage = () => {
   const { diaryId } = useParams();
   const { language } = useLanguage();
   const t = translate[language];
+
   const navigate = useNavigate();
 
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
 
-  const [_style, setStyle] = useState<string>("");
+  const [_style, _setStyle] = useState<string>("");
   const [_titleName, setTitleName] = useState<string>("");
   const [_editorRawContent, setEditorRawContent] = useState<string>("");
 
-  useEffect(() => {
-    if (!diaryId) return;
-    getDiaryDetail(Number(diaryId)).then((res) => {
-      const d = res.result;
-      setTitleName(d.title);
-      setEditorRawContent(d.content);
-      setStyle(d.style); // "QUESTION" or "FREE"
-    });
-  }, [diaryId]);
+  // useEffect(() => {
+  //   if (!diaryId) return;
+  //   getDiaryDetail(Number(diaryId)).then((res) => {
+  //     const d = res.result;
+  //     setTitleName(d.title);
+  //     setEditorRawContent(d.content);
+  //     _setStyle(d.style); // "QUESTION" or "FREE"
+  //   });
+  // }, [diaryId]);
 
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
