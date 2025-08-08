@@ -29,7 +29,7 @@ export const postSignin = async (
   payload: LoginRequest,
 ): Promise<LoginResponse> => {
   const { data } = await axiosInstance.post<LoginResponse>(
-    "auth/login",
+    "/auth/login",
     payload,
     {
       headers: {
@@ -50,7 +50,7 @@ export interface EmailVerificationResponse {
 // 이메일 인증 링크 발송 API
 export const postEmailVerificationRequest = async (email: string) => {
   const response = await axiosInstance.post<EmailVerificationResponse>(
-    "auth/emails/verification-requests",
+    "/auth/emails/verification-requests",
     { email },
   );
   return response.data;
@@ -60,7 +60,7 @@ export const postEmailVerificationRequest = async (email: string) => {
 export const getEmailVerification = async (token: string) => {
   const apiURL =
     import.meta.env.VITE_API_BASE_URL +
-    `auth/emails/verifications?token=${token}`;
+    `/auth/emails/verifications?token=${token}`;
   window.location.href = apiURL;
 };
 
@@ -75,7 +75,7 @@ export interface EmailResponse {
 
 // 이메일 인증 후 토큰 주인 반환 API
 export const getEmail = async (token: string) => {
-  const response = await axiosInstance.get<EmailResponse>("auth/email", {
+  const response = await axiosInstance.get<EmailResponse>("/auth/email", {
     params: { token },
   });
   return response.data;
@@ -95,7 +95,7 @@ interface ReissueResponse {
 export const postReissue = async (
   refreshToken: string,
 ): Promise<ReissueResponse> => {
-  const response = await axiosInstance.post<ReissueResponse>("/auth/reissue", {
+  const response = await axiosInstance.post<ReissueResponse>("//auth/reissue", {
     refreshToken,
   });
   return response.data;

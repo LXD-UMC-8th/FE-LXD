@@ -28,7 +28,7 @@ export const postFriendAccept = async (
   body: FriendRequesterId
 ): Promise<FriendAcceptResponseDTO> => {
   const { data } = await axiosInstance.post<FriendAcceptResponseDTO>(
-    "friends/accept",
+    "/friends/accept",
     body
   );
   return data;
@@ -39,7 +39,7 @@ export const postFriendRefuse = async (
   body: FriendRequesterId
 ): Promise<FriendRefuseResponseDTO> => {
   const { data } = await axiosInstance.post<FriendRefuseResponseDTO>(
-    "friends/refuse",
+    "/friends/refuse",
     body
   );
   return data;
@@ -50,7 +50,7 @@ export const patchFriendCancel = async (
   body: FriendReceiverId
 ): Promise<FriendCancelResponseDTO> => {
   const { data } = await axiosInstance.patch<FriendCancelResponseDTO>(
-    "friends/cancel",
+    "/friends/cancel",
     body
   );
   return data;
@@ -68,7 +68,7 @@ export const getFriends = async (page = 1, size = 10): Promise<FriendListRespons
 // 친구 요청 목록 조회
 export const getFriendRequests = async (): Promise<FriendRequestListResponseDTO> => {
   const { data } = await axiosInstance.get<FriendRequestListResponseDTO>(
-    "friends/requests"
+    "/friends/requests"
   );
   return data;
 };
@@ -78,7 +78,7 @@ export const deleteFriend = async (
   friendId: number
 ): Promise<FriendDeleteResponseDTO> => {
   const { data } = await axiosInstance.delete<FriendDeleteResponseDTO>(
-    `friends/${friendId}`
+    `/friends/${friendId}`
   );
   return data;
 };

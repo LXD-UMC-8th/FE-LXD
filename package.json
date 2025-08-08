@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@netlify/functions": "^4.2.1",
     "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-devtools": "^5.84.1",
@@ -45,6 +46,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.2.0",
+    "netlify-cli": "^23.1.2",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.11",
     "typescript": "~5.8.3",

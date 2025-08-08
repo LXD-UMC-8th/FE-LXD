@@ -18,7 +18,7 @@ export const postDiaryUpload = async (
 ): Promise<DiaryUploadResponseDTO> => {
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
-      "diaries",
+      "/diaries",
       body,
     );
     return data;
@@ -33,7 +33,7 @@ export const getDiaryRandomQuestion = async (
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
-      "diaries/random-question",
+      "/diaries/random-question",
       { params: body },
     );
     return data;
@@ -49,7 +49,7 @@ export const postDiaryImage = async (
   console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
-      "diaries/image",
+      "/diaries/image",
       body,
       { withCredentials: true },
     );
@@ -64,7 +64,7 @@ export const getDiaryStats = async (
   body: CalendarDiaryRequestDTO,
 ): Promise<CalendarDiaryResponseDTO | undefined> => {
   try {
-    const { data } = await axiosInstance.get("diaries/stats", {
+    const { data } = await axiosInstance.get("/diaries/stats", {
       params: body,
     });
     console.log("getDiaryStats response data:", data);
@@ -79,7 +79,7 @@ export const deleteDiary = async ({
   diaryId,
 }: DiaryDeleteRequestDTO): Promise<void> => {
   try {
-    await axiosInstance.delete(`diaries/${diaryId}`);
+    await axiosInstance.delete(`/diaries/${diaryId}`);
   } catch (error) {
     console.error("Error deleting diary:", error);
     throw error;
@@ -90,9 +90,9 @@ export const deleteDiary = async ({
 export const updateDiary = async (
   diaryId: number,
   body: DiaryUpdateRequestDTO,
-): Promise<any> => {
+): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.put(`diaries/${diaryId}`, body);
+    const { data } = await axiosInstance.patch(`/diaries/${diaryId}`, body);
     return data;
   } catch (error) {
     console.error("Error updating diary:", error);
@@ -117,7 +117,7 @@ export const getDiaryDetail = async (
 
 export const getMyDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("diaries/my", {
+    const { data } = await axiosInstance.get("/diaries/my", {
       params: {
         page,
         size: 4,
@@ -126,14 +126,14 @@ export const getMyDiaries = async (page: number) => {
     console.log("getMyDiaries response data:", data);
     return data;
   } catch (error) {
-    console.error("Error fetching my diaries:", error);
+    console.error("Error fetching my /diaries:", error);
     throw error;
   }
 };
 
 export const getMyLikesDiary = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("diaries/liked", {
+    const { data } = await axiosInstance.get("/diaries/liked", {
       params: {
         page,
         size: 4,
@@ -142,14 +142,14 @@ export const getMyLikesDiary = async (page: number) => {
     console.log("getMyLikesDiary response data:", data);
     return data;
   } catch (error) {
-    console.error("Error fetching my liked diaries:", error);
+    console.error("Error fetching my liked /diaries:", error);
     throw error;
   }
 };
 
 export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
   try {
-    const { data } = await axiosInstance.get("diaries/my/diary-summary");
+    const { data } = await axiosInstance.get("/diaries/my/diary-summary");
     return data;
   } catch (error) {
     console.error("Error fetching my diary summary:", error);
@@ -160,7 +160,7 @@ export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
 export const getUserDiarySummary = async (memberId?: number) => {
   try {
     const { data } = await axiosInstance.get(
-      `diaries/member/${memberId}/diary-summary`,
+      `/diaries/member/${memberId}/diary-summary`,
     );
     return data;
   } catch (error) {
@@ -171,7 +171,7 @@ export const getUserDiarySummary = async (memberId?: number) => {
 
 export const getUserDiaries = async (memberId: number, page: number) => {
   try {
-    const { data } = await axiosInstance.get(`diaries/member/${memberId}`, {
+    const { data } = await axiosInstance.get(`/diaries/member/${memberId}`, {
       params: {
         page,
         size: 4,
@@ -179,14 +179,14 @@ export const getUserDiaries = async (memberId: number, page: number) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching user diaries:", error);
+    console.error("Error fetching user /diaries:", error);
     throw error;
   }
 };
 
 export const getFriendsDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("diaries/friends", {
+    const { data } = await axiosInstance.get("/diaries/friends", {
       params: {
         page,
         size: 4,
@@ -194,14 +194,14 @@ export const getFriendsDiaries = async (page: number) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching friends' diaries:", error);
+    console.error("Error fetching friends' /diaries:", error);
     throw error;
   }
 };
 
 export const getExploreDiaries = async (page: number, lang: string) => {
   try {
-    const { data } = await axiosInstance.get("diaries/explore", {
+    const { data } = await axiosInstance.get("/diaries/explore", {
       params: {
         page,
         size: 4,
@@ -210,14 +210,14 @@ export const getExploreDiaries = async (page: number, lang: string) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching explore diaries:", error);
+    console.error("Error fetching explore /diaries:", error);
     throw error;
   }
 };
 
 export const getLikedDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("diaries/liked", {
+    const { data } = await axiosInstance.get("/diaries/liked", {
       params: {
         page,
         size: 4,
@@ -225,7 +225,7 @@ export const getLikedDiaries = async (page: number) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching liked diaries:", error);
+    console.error("Error fetching liked /diaries:", error);
     throw error;
   }
 };
