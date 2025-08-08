@@ -1,5 +1,4 @@
 import type { APIResponse } from "./APIresponse";
-import type { CorrectionsMemberDTO } from "./member";
 
 // 교정 등록
 export type CorrectionsUploadRequestDTO = {
@@ -9,17 +8,11 @@ export type CorrectionsUploadRequestDTO = {
   commentText: string;
 };
 
-export type CorrectionsDetailDTO = {
-  correctionId: number;
-  diaryId: number;
-  createdAt: string;
-  member: CorrectionsMemberDTO;
-  original: string;
-  corrected: string;
-  commentText: string;
-  likeCount: number;
-  commentCount: number;
-  likedByMe: boolean;
+export type CorrectionsMemberDTO = {
+  memberId: number;
+  username: string;
+  nickname: string;
+  profileImageUrl: string;
 };
 
 export type CorrectionsUploadResponseDTO = APIResponse<CorrectionsDetailDTO>;
@@ -32,16 +25,32 @@ export type CorrectionsGetRequestDTO = {
   lang?: string;
 };
 export type CorrectionsGetDetailDTO = {
-  diaryId: number;
-  totalCount: number;
-  hasNext: boolean;
-  corrections: CorrectionsDetailDTO[];
+  diaryId: string;
+  corrections: CorrectionsDetailDTO;
 };
-export type CorrectionsGetResponseDTO = APIResponse<CorrectionsGetDetailDTO>;
+export type CorrectionsDetailDTO = {
+  totalElements: number;
+  contents: ContentsDTO[];
+  page: number;
+  size: number;
+  hasNext: boolean;
+};
+export type ContentsDTO = {
+  correctionId: number;
+  diaryId: number;
+  createdAt: string;
+  member: member;
+  original: string;
+  corrected: string;
+  commentText: string;
+  likeCount: number;
+  commentCount: number;
+  likedByMe: boolean;
+};
 
-type member = {
+export type member = {
   memberId: number;
-  userId: string;
+  username: string;
   nickname: string;
   profileImageUrl: string;
 };
@@ -70,3 +79,5 @@ type CorrectionGetListResponse = {
 
 export type CorrectionGetListResponseDTO =
   APIResponse<CorrectionGetListResponse>;
+
+export type CorrectionsGetResponseDTO = APIResponse<CorrectionsGetDetailDTO>;

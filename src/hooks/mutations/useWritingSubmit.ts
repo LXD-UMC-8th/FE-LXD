@@ -18,6 +18,7 @@ export function useWritingSubmit() {
       localStorage.removeItem("style");
       localStorage.removeItem("title");
       localStorage.removeItem("content");
+      localStorage.removeItem("thumbImg");
       console.log("writing submit successful");
       console.log(data);
       navigate(`/feed/${data.result.diaryId}`);

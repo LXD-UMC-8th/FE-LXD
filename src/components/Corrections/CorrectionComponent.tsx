@@ -1,10 +1,15 @@
 import { useState } from "react";
 import ProfileInCorrections from "./ProfileInCorrections";
+import type { ContentsDTO } from "../../utils/types/correction";
 
-const CorrectionComponent = () => {
+interface Props {
+  correction: ContentsDTO;
+}
+
+const CorrectionComponent = ({ correction }: Props) => {
   const [liked, setLiked] = useState(false);
-  const [openCorrectoinReply, setOpenCorrectionReply] = useState(false);
-  const [comments, _setcomments] = useState([`댓글 내용1`, `댓글 내용2`]);
+  const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
+  const [comments, _setComments] = useState([`댓글 내용1`, `댓글 내용2`]);
 
   const _handleLikeToggle = () => {
     setLiked((prev) => !prev);
@@ -17,30 +22,29 @@ const CorrectionComponent = () => {
   return (
     <div
       className={`w-300 bg-white rounded-[10px] border border-gray-300 ${
-        openCorrectoinReply ? "h-[570px]" : "h-[380px]"
+        openCorrectionReply ? "h-[570px]" : "h-[380px]"
       }`}
     >
       <div className="flex flex-col">
         <div className="px-5 pt-5">
-          <ProfileInCorrections />
+          <ProfileInCorrections
+            member={correction.member}
+            createdAt={correction.createdAt}
+          />
         </div>
 
         {/* 본문 */}
         <div className="flex flex-col gap-3 px-8 pt-2">
           <div className="flex flex-col gap-2">
-            <p className="text-body1 font-semibold">오늘는 피자데이입니다</p>
+            <p className="text-body1 font-semibold">{correction.original}</p>
             <div className="flex gap-2">
               <div className="w-1 h-6 bg-primary-500" />
               <p className="text-body1 font-semibold text-primary-500">
-                오늘은 피자데이입니다
+                {correction.corrected}
               </p>
             </div>
           </div>
-          <p className="text-body2">
-            ‘오늘’ 뒤의 보조사로는 ‘는’ 보다는 ‘은’이 더 적합합니다. 오늘에
-            종성이 있기 때문인데요. 앞말에 종성이 있다면 그 뒤에는 은이
-            와야합니다. 어쩌고 저쩌고 교정을{" "}
-          </p>
+          <p className="text-body2">{correction.commentText}</p>
         </div>
 
         {/* 메모 + 좋아요 */}
@@ -49,18 +53,19 @@ const CorrectionComponent = () => {
           <button
             onClick={_toggleCorrectionReply}
             className={`flex gap-1 p-1 cursor-pointer ${
-              openCorrectoinReply ? "bg-gray-300 text-black rounded-[5px]" : ""
+              openCorrectionReply ? "bg-gray-300 text-black rounded-[5px]" : ""
             }`}
           >
             <img
               src={
-                openCorrectoinReply
+                openCorrectionReply
                   ? "/images/commentIcon.svg"
                   : "/images/CommonComponentIcon/CommentIcon.svg"
               }
               className="w-5 h-5"
+              alt="댓글 아이콘"
             />
-            <p>메모 수</p>
+            <p>{correction.commentCount}</p>
           </button>
           {/* 좋아요 */}
           <button className="flex gap-1 p-1">
@@ -72,18 +77,18 @@ const CorrectionComponent = () => {
               className="w-5 h-5 cursor-pointer"
               onClick={_handleLikeToggle}
             />
-            <p>좋아요 수</p>
+            <p>{correction.likeCount}</p>
           </button>
         </div>
 
         {/* 댓글 */}
-        {openCorrectoinReply && (
+        {openCorrectionReply && (
           <div className="px-10 text-body1">
             {comments.map((comment, index) => (
               <div key={index} className="flex flex-col gap-2">
                 <div className="border-t border-gray-300 mt-5" />
                 <div className="flex flex-col">
-                  <ProfileInCorrections />
+                  {/* <ProfileInCorrections /> */}
                   <div>{comment}</div>
                 </div>
               </div>

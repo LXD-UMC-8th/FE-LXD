@@ -3,7 +3,7 @@ import { useState } from "react";
 interface ValueSettingButtonProps {
   title1: string;
   title2: string;
-  onClick?: (value: string) => string;
+  onClick?: (value: string) => void;
   selectedValue?: string;
 }
 

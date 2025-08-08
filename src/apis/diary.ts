@@ -1,14 +1,15 @@
-import {
-  type ImageRequestDTO,
-  type DiaryRefreshRequestDTO,
-  type DiaryRefreshResponseDTO,
-  type DiaryUploadRequestDTO,
-  type DiaryUploadResponseDTO,
-  type ImageResponseDTO,
-  type DiaryUpdateRequestDTO,
-  type DiaryDeleteRequestDTO,
-  type CalendarDiaryRequestDTO,
-  type CalendarDiaryResponseDTO,
+import type {
+  DiaryRefreshRequestDTO,
+  DiaryRefreshResponseDTO,
+  DiaryUploadRequestDTO,
+  DiaryUploadResponseDTO,
+  ImageResponseDTO,
+  DiaryUpdateRequestDTO,
+  DiaryDeleteRequestDTO,
+  CalendarDiaryRequestDTO,
+  CalendarDiaryResponseDTO,
+  getDiarySummary,
+  DiaryGetResponseDTO,
 } from "../utils/types/diary";
 import { axiosInstance } from "./axios";
 
@@ -43,7 +44,7 @@ export const getDiaryRandomQuestion = async (
 };
 
 export const postDiaryImage = async (
-  body: ImageRequestDTO,
+  body: FormData,
 ): Promise<ImageResponseDTO> => {
   console.log("postDiaryImage called with body:", body);
   try {
@@ -66,6 +67,7 @@ export const getDiaryStats = async (
     const { data } = await axiosInstance.get("diaries/stats", {
       params: body,
     });
+    console.log("getDiaryStats response data:", data);
     return data;
   } catch (e) {
     console.log("Error fetching diary stats:", e);
@@ -98,10 +100,14 @@ export const updateDiary = async (
   }
 };
 
-//Promise 타입 정의필요
-export const getDiaryDetail = async (diaryId: number): Promise<any> => {
+export const getDiaryDetail = async (
+  diaryId: number,
+): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.get(`/diaries/${diaryId}`);
+    const { data } = await axiosInstance.get<DiaryGetResponseDTO>(
+      `/diaries/${diaryId}`,
+    );
+
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);
@@ -111,7 +117,61 @@ export const getDiaryDetail = async (diaryId: number): Promise<any> => {
 
 export const getMyDiaries = async (page: number) => {
   try {
-    const { data } = await axiosInstance.get("/diaries/my", {
+    const { data } = await axiosInstance.get("diaries/my", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    console.log("getMyDiaries response data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diaries:", error);
+    throw error;
+  }
+};
+
+export const getMyLikesDiary = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    console.log("getMyLikesDiary response data:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching my liked diaries:", error);
+    throw error;
+  }
+};
+
+export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
+  try {
+    const { data } = await axiosInstance.get("diaries/my/diary-summary");
+    return data;
+  } catch (error) {
+    console.error("Error fetching my diary summary:", error);
+    throw error;
+  }
+};
+
+export const getUserDiarySummary = async (memberId?: number) => {
+  try {
+    const { data } = await axiosInstance.get(
+      `diaries/member/${memberId}/diary-summary`,
+    );
+    return data;
+  } catch (error) {
+    console.error("Error fetching user diary summary:", error);
+    throw error;
+  }
+};
+
+export const getUserDiaries = async (memberId: number, page: number) => {
+  try {
+    const { data } = await axiosInstance.get(`diaries/member/${memberId}`, {
       params: {
         page,
         size: 4,
@@ -119,7 +179,53 @@ export const getMyDiaries = async (page: number) => {
     });
     return data;
   } catch (error) {
-    console.error("Error fetching my diaries:", error);
+    console.error("Error fetching user diaries:", error);
+    throw error;
+  }
+};
+
+export const getFriendsDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/friends", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching friends' diaries:", error);
+    throw error;
+  }
+};
+
+export const getExploreDiaries = async (page: number, lang: string) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/explore", {
+      params: {
+        page,
+        size: 4,
+        lang,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching explore diaries:", error);
+    throw error;
+  }
+};
+
+export const getLikedDiaries = async (page: number) => {
+  try {
+    const { data } = await axiosInstance.get("diaries/liked", {
+      params: {
+        page,
+        size: 4,
+      },
+    });
+    return data;
+  } catch (error) {
+    console.error("Error fetching liked diaries:", error);
     throw error;
   }
 };

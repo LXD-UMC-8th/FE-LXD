@@ -271,7 +271,7 @@ body {
   pointer-events: none;
 }
 
-.react-calendar__tile--now {
+.react-calendar__tile.react-calendar__tile--now {
   background: #212429 !important;
   color: #fff !important;
   border-radius: 8px !important;
