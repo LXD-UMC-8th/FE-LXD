@@ -43,7 +43,6 @@ const protectedRoutes: RouteObject[] = [
     errorElement: <NotFoundPage />,
     children: [
       {
-        index: true,
         element: <Navigate to="/feed" replace />,
       },
       {
