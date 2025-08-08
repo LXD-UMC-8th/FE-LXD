@@ -90,9 +90,9 @@ export const deleteDiary = async ({
 export const updateDiary = async (
   diaryId: number,
   body: DiaryUpdateRequestDTO,
-): Promise<any> => {
+): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.put(`/diaries/${diaryId}`, body);
+    const { data } = await axiosInstance.patch(`/diaries/${diaryId}`, body);
     return data;
   } catch (error) {
     console.error("Error updating diary:", error);

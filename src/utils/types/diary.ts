@@ -35,6 +35,7 @@ export type DiaryUploadResult = {
   contentPreview?: string;
   correctionCount?: number;
   isLiked?: boolean;
+  diffHtml?: string;
 };
 
 export type DiaryGetRequestDTO = {
