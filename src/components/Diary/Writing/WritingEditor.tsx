@@ -53,6 +53,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
           };
           reader.readAsDataURL(file);
 
+          //2개 이상 한 번에 업데이트 하면 등록되지 않음 << 이거 에러 해결해주기
           const fd = new FormData();
           fd.append("image", file);
           postDiaryImage(fd)

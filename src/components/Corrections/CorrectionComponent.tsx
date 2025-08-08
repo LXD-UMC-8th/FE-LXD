@@ -1,16 +1,15 @@
 import { useState } from "react";
 import ProfileInCorrections from "./ProfileInCorrections";
-import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import type { ContentsDTO } from "../../utils/types/correction";
 
 interface Props {
-  correction: CorrectionsDetailDTO;
+  correction: ContentsDTO;
 }
 
 const CorrectionComponent = ({ correction }: Props) => {
   const [liked, setLiked] = useState(false);
-  const [openCorrectoinReply, setOpenCorrectionReply] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [comments, _setcomments] = useState([`댓글 내용1`, `댓글 내용2`]);
+  const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
+  const [comments, _setComments] = useState([`댓글 내용1`, `댓글 내용2`]);
 
   const _handleLikeToggle = () => {
     setLiked((prev) => !prev);
@@ -23,12 +22,12 @@ const CorrectionComponent = ({ correction }: Props) => {
   return (
     <div
       className={`w-300 bg-white rounded-[10px] border border-gray-300 ${
-        openCorrectoinReply ? "h-[570px]" : "h-[380px]"
+        openCorrectionReply ? "h-[570px]" : "h-[380px]"
       }`}
     >
       <div className="flex flex-col">
         <div className="px-5 pt-5">
-          <ProfileInCorrections 
+          <ProfileInCorrections
             member={correction.member}
             createdAt={correction.createdAt}
           />
@@ -45,9 +44,7 @@ const CorrectionComponent = ({ correction }: Props) => {
               </p>
             </div>
           </div>
-          <p className="text-body2">
-            {correction.commentText}
-          </p>
+          <p className="text-body2">{correction.commentText}</p>
         </div>
 
         {/* 메모 + 좋아요 */}
@@ -56,16 +53,17 @@ const CorrectionComponent = ({ correction }: Props) => {
           <button
             onClick={_toggleCorrectionReply}
             className={`flex gap-1 p-1 cursor-pointer ${
-              openCorrectoinReply ? "bg-gray-300 text-black rounded-[5px]" : ""
+              openCorrectionReply ? "bg-gray-300 text-black rounded-[5px]" : ""
             }`}
           >
             <img
               src={
-                openCorrectoinReply
+                openCorrectionReply
                   ? "/images/commentIcon.svg"
                   : "/images/CommonComponentIcon/CommentIcon.svg"
               }
               className="w-5 h-5"
+              alt="댓글 아이콘"
             />
             <p>{correction.commentCount}</p>
           </button>
@@ -84,7 +82,7 @@ const CorrectionComponent = ({ correction }: Props) => {
         </div>
 
         {/* 댓글 */}
-        {openCorrectoinReply && (
+        {openCorrectionReply && (
           <div className="px-10 text-body1">
             {comments.map((comment, index) => (
               <div key={index} className="flex flex-col gap-2">

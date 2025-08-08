@@ -1,5 +1,4 @@
 import type {
-  ImageRequestDTO,
   DiaryRefreshRequestDTO,
   DiaryRefreshResponseDTO,
   DiaryUploadRequestDTO,
@@ -45,7 +44,7 @@ export const getDiaryRandomQuestion = async (
 };
 
 export const postDiaryImage = async (
-  body: ImageRequestDTO,
+  body: FormData,
 ): Promise<ImageResponseDTO> => {
   console.log("postDiaryImage called with body:", body);
   try {

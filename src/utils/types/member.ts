@@ -26,7 +26,7 @@ export type JoinResponseDTO = {
 
 export type CorrectionsMemberDTO = {
   memberId: number;
-  userId: string;
+  username: string;
   nickname: string;
   profileImageUrl: string;
 };

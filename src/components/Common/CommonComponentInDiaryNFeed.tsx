@@ -7,10 +7,7 @@ import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 // import { queryClient } from "../../App";
-import type {
-  diaries,
-  // getMyDiariesResult,
-} from "../../utils/types/diary";
+import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "./ComponentDiary/Header";
@@ -19,8 +16,8 @@ const CommonComponentInDiaryNFeed = ({
   props,
 }: {
   props: diaries;
-  // pageResult: getMyDiariesResult;
-  // idx: number;
+  pageResult?: getDiariesResult;
+  idx?: number;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -163,6 +160,7 @@ const CommonComponentInDiaryNFeed = ({
                   e.stopPropagation();
                   setMenuOpen((prev) => !prev);
                 }}
+                alt="설정 아이콘"
               />
               {menuOpen && (
                 <div className="absolute top-8 right-0 bg-white border rounded-md shadow-lg w-28 z-50">
@@ -204,7 +202,7 @@ const CommonComponentInDiaryNFeed = ({
         {/* 썸네일 */}
         {props.thumbnailUrl && (
           <div>
-            <img className="w-40 h-40" src={props.thumbnailUrl} />
+            <img className="w-40 h-40" src={props.thumbnailUrl} alt="썸네일" />
           </div>
         )}
       </div>

@@ -10,7 +10,7 @@ interface ProfileModalProps {
   onClose: () => void;
   onUnfriendClick: () => void;
   onSendRequestClick: () => void;
-  isRequesting: boolean;
+  isRequesting?: boolean;
 }
 
 const ProfileModal = ({

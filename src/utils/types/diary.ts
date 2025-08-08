@@ -59,10 +59,6 @@ export type DiaryRefreshResponseDTO = {
   result: DiaryRefreshResult;
 };
 
-export type ImageRequestDTO = {
-  formData: FormData;
-};
-
 export type ImageResponseDTO = {
   isSuccess: boolean;
   code: string;

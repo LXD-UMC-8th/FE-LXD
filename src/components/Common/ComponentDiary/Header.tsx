@@ -1,6 +1,6 @@
-import type { DiaryUploadResult } from "../../../utils/types/diary";
+import type { diaries } from "../../../utils/types/diary";
 
-const Header = ({ props }: { props: DiaryUploadResult }) => {
+const Header = ({ props }: { props: diaries }) => {
   return (
     <div className="flex gap-3 text-subhead3 text-black">
       {props.visibility === "PUBLIC" && props.language === "KO" && (
