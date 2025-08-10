@@ -9,6 +9,6 @@ export const usePostCorrection = () =>
             console.log("교정 등록 성공", data);
         },
         onError: (error) => {
-            console.log("수정 등록 실패", error.message);
+            console.log("교정 등록 실패", error.message);
         },
     });
