@@ -12,7 +12,8 @@ type FriendshipState = "friend" | "pending" | "incoming" | "none";
 // 응답에서 배열 꺼내는 helper (undefined 안전)
 const pick = <T,>(arr: T[] | undefined | null) => (Array.isArray(arr) ? arr : []);
 
-const FRIEND_FETCH_SIZE = 100; // 첫 페이지만 크게 가져와도 충분하면 100 정도로
+// 첫 페이지만 크게 가져와도 충분하면 100 정도로
+const FRIEND_FETCH_SIZE = Number(process.env.REACT_APP_FRIEND_FETCH_SIZE) || 100;
 
 export default function useFriendship(targetMemberId: number) {
   // 1) 내 친구 목록
