@@ -25,7 +25,10 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   // 서버에서 받은 댓글 배열
   const comments = useMemo(
-    () => listData?.result?.contents ?? [],
+    () =>
+      listData?.result?.contents ??
+      listData?.result?.content ??
+      [],
     [listData]
   );
   // 총 댓글 수
@@ -125,7 +128,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           ) : (
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c /* : CorrectionCommentDTO */) => (
-                <li key={c.commentId} className="flex gap-2">
+                <li key={c.commentId} className="flex flex-col gap-2">
                   <ProfileComponent 
                     member={{
                       memberId: c.memberId,
