@@ -123,7 +123,7 @@ const ProfileView = ({
         )}
 
         <button
-          onClick={() => navigate("/feed/1", { state: { from: "profile" } })}
+          onClick={() => navigate(`/diaries/member/${user.id}`, { state: { from: "profile" } })}
           className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100"
         >
           다이어리 보러가기
