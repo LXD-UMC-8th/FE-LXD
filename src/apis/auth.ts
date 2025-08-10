@@ -47,10 +47,13 @@ export interface EmailVerificationResponse {
 }
 
 // 이메일 인증 링크 발송 API
-export const postEmailVerificationRequest = async (email: string) => {
+export const postEmailVerificationRequest = async (
+  email: string,
+  verificationType: "EMAIL"
+) => {
   const response = await axiosInstance.post<EmailVerificationResponse>(
     "auth/emails/verification-requests",
-    { email }
+    { email, verificationType }
   );
   return response.data;
 };
@@ -68,8 +71,8 @@ export interface EmailResponse {
   code: string;
   message: string;
   result: {
-    email: string
-  }
+    email: string;
+  };
 }
 
 // 이메일 인증 후 토큰 주인 반환 API
