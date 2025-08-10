@@ -112,7 +112,6 @@ const DiaryContent = ({
 
       {/* 본문 */}
       <div className="text-center mx-20">
-        <div className="w-full h-52 bg-gray-200 rounded-[10px] mb-4" />
         <p className="text-body2 leading-relaxed text-gray-800 whitespace-pre-line">
           {content}
         </p>
