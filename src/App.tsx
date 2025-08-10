@@ -93,7 +93,7 @@ const protectedRoutes: RouteObject[] = [
         element: <NotFoundPage />,
       },
       {
-        path: "/feed/:username/detail",
+        path: "/diaries/member/:memberId",
         element: <UserDetailPage />,
       },
     ],
