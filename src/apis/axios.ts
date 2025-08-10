@@ -1,13 +1,14 @@
 // axios.ts
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
+import { postReissue } from "./auth";
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
 }
 
 export const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, ""),
 });
 
 let refreshPromise: Promise<string | null> | null = null;
@@ -55,7 +56,7 @@ axiosInstance.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data?.errorCode === "AUTH_001" &&
+      error.response.data?.code === "AUTH4301" &&
       !originalRequest._retry
     ) {
       //여기 부분의 주소는 swagger문서에 따라 바뀔 예정임
@@ -75,21 +76,20 @@ axiosInstance.interceptors.response.use(
           const refreshToken = getLocalStorageItem(
             LOCAL_STORAGE_KEY.refreshToken,
           );
+          if (!refreshToken) throw new Error("No refresh token");
 
-          const { data } = await axiosInstance.post("/auth/reissue", {
-            refresh: refreshToken,
-          });
+          const reissueData = await postReissue(refreshToken);
 
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.accessToken,
-            data.data.accessToken,
+            reissueData.result.accessToken,
           );
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.refreshToken,
-            data.data.refreshToken,
+            reissueData.result.refreshToken,
           );
 
-          return data.data.accessToken;
+          return reissueData.result.accessToken;
         })()
           //refreshToken이 없을 경우 토큰을 모두 지워준 후에 다시 LoginPage로 redirect함.
           .catch(() => {

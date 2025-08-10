@@ -21,6 +21,8 @@ import ProvideCorrections from "./components/Diary/ProvideCorrections";
 import SignupFlow from "./pages/Login/SignupFlow";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import UserDetailPage from "./pages/Feed/UserDetailPage";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -41,7 +43,6 @@ const protectedRoutes: RouteObject[] = [
     errorElement: <NotFoundPage />,
     children: [
       {
-        index: true,
         element: <Navigate to="/feed" replace />,
       },
       {
@@ -91,18 +92,23 @@ const protectedRoutes: RouteObject[] = [
         path: "/error",
         element: <NotFoundPage />,
       },
+      {
+        path: "/feed/:username/detail",
+        element: <UserDetailPage />,
+      },
     ],
   },
 ];
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 function App() {
   return (
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </div>
   );

@@ -3,55 +3,84 @@ import FriendListPanel from "../FriendListPanel";
 import ProfileView from "../ProfileView";
 import AlertModal from "../../Common/AlertModal";
 import ProfileModal from "../ProfileModal";
+import { addRecentSearch } from "../../../utils/types/recentSearch";
+import { postFriendRequest } from "../../../apis/friend";
+
+interface Friend {
+  id: number;
+  name: string;
+  username: string;
+  image?: string;
+  isFriend: boolean;
+}
 
 const FindTab = () => {
-  const friendList = [
-    { id: "1", name: "김태현", username: "kimtaehyun", isFriend: true },
-    { id: "2", name: "홍길동", username: "honggildong", isFriend: true },
-    { id: "3", name: "이지은", username: "jieun", isFriend: false },
-  ];
-
-  const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<Friend | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-
   const [requestingUsernames, setRequestingUsernames] = useState<string[]>([]);
 
-  const selectedUser = friendList.find((f) => f.username === selectedUsername);
+  const isRequesting = (username: string) =>
+    requestingUsernames.includes(username);
 
-  const isRequesting = (username: string) => requestingUsernames.includes(username);
+  const handleSendRequest = async (username: string, memberId: number) => {
+    let successOrAlreadySent = false;
 
-  const handleSendRequest = (username: string) => {
-    if (!isRequesting(username)) {
-      setRequestingUsernames((prev) => [...prev, username]);
-      console.log("📨 친구 요청 전송:", username);
+    try {
+      await postFriendRequest({ receiverId: memberId });
+      successOrAlreadySent = true;
+    } catch (err: any) {
+      console.error("❌ 친구 요청 실패: ", err);
+      if (err?.response?.status === 409) {
+        // 이미 친구 요청 보낸 상태
+        successOrAlreadySent = true;
+      } else {
+        alert("친구 요청에 실패했습니다.");
+      }
     }
+
+    if (successOrAlreadySent) {
+      setRequestingUsernames((prev) => [...prev, username]);
+
+      // ✅ 리렌더링 유도
+      setSelectedUser((prev) => {
+        if (prev?.username === username) {
+          return { ...prev };
+        }
+        return prev;
+      });
+    }
+
     setShowProfileModal(false);
   };
 
-  const onClearSelection = () => setSelectedUsername(null);
-
-  const onUnfriendClick = () => {
-    setShowConfirmModal(true);
+  const handleSelectUser = (user: Friend | null) => {
+    setSelectedUser(user);
+    if (user) {
+      addRecentSearch(user.username);
+    }
   };
 
+  const onClearSelection = () => setSelectedUser(null);
+
+  const onUnfriendClick = () => setShowConfirmModal(true);
+
   const onConfirmDelete = () => {
-    console.log("❌ 친구 취소 완료:", selectedUser);
     setShowConfirmModal(false);
-    setSelectedUsername(null);
+    setSelectedUser(null);
   };
 
   return (
     <div className="flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
-      {/* 친구 목록 패널 */}
+      {/* 왼쪽 친구 검색 패널 */}
       <div className="hidden lg:block w-[420px] border-r border-gray-200 bg-white">
         <FriendListPanel
-          onSelect={setSelectedUsername}
-          selectedUsername={selectedUsername}
+          onSelect={handleSelectUser}
+          selectedUsername={selectedUser?.username ?? null}
         />
       </div>
 
-      {/* 본문 영역 */}
+      {/* 오른쪽 상세 프로필 */}
       <div className="flex-1 flex items-start justify-center px-4 sm:px-6 md:px-10 max-w-full md:max-w-[700px] mx-auto pt-8">
         {selectedUser ? (
           <ProfileView
@@ -60,14 +89,16 @@ const FindTab = () => {
             onUnfriendClick={onUnfriendClick}
             onAvatarClick={() => setShowProfileModal(true)}
             isRequesting={isRequesting(selectedUser.username)}
-            onSendRequestClick={() => handleSendRequest(selectedUser.username)}
+            onSendRequestClick={() =>
+              handleSendRequest(selectedUser.username, selectedUser.id)
+            }
           />
         ) : (
           <div className="flex flex-col items-start bg-[#F5F7FE] w-full rounded-xl px-8 py-10 text-left">
             <img
               src="/images/findtabpic.svg"
               alt="find friends"
-              className="w-[25000px] max-w-full mb-6 rounded-xl"
+              className="w-[250000px] max-w-full mb-6 rounded-xl"
             />
             <p className="text-xl font-semibold text-black">
               전 세계에서 친구를 찾아보세요
@@ -76,13 +107,13 @@ const FindTab = () => {
               검색창에 아이디를 입력해서 친구를 찾아보세요.
             </p>
             <p className="text-sm text-gray-500 leading-relaxed">
-              다른 사람들과 친구를 맺고, 다이어리를 구경해보세요.
+              다른 사람과 친구를 맺고, 다이어리를 구경해보세요.
             </p>
           </div>
         )}
       </div>
 
-      {/* 친구 취소 모달 */}
+      {/* 친구 취소 확인 모달 */}
       {showConfirmModal && selectedUser && (
         <AlertModal
           onClose={() => setShowConfirmModal(false)}
@@ -102,7 +133,10 @@ const FindTab = () => {
             setShowProfileModal(false);
             setShowConfirmModal(true);
           }}
-          onSendRequestClick={() => handleSendRequest(selectedUser.username)}
+          isRequesting={isRequesting(selectedUser.username)}
+          onSendRequestClick={() =>
+            handleSendRequest(selectedUser.username, selectedUser.id)
+          }
         />
       )}
     </div>

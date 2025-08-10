@@ -10,6 +10,8 @@ export const DiaryItems = {
 };
 
 export const QUERY_KEY = {
-  diary: "diary",
+  diaries: "diaries",
   diaryUpload: "diaryUpload",
+  userId: "userId",
+  diaryId: "diaryId",
 };

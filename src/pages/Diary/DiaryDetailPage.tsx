@@ -4,9 +4,9 @@ import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDe
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import DiaryContent from "../../components/Diary/DiaryContent";
 import LoadingModal from "../../components/Common/LoadingModal";
-import type { CorrectionsDetailDTO } from "../../utils/types/correction";
+import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
-import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail"; // ✅ 일기 상세 조회 훅
+import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import type { DiaryUploadResult } from "../../utils/types/diary";
 
 const DiaryDetailPage = () => {
@@ -80,8 +80,8 @@ const DiaryDetailPage = () => {
               visibility={diary.visibility}
               content={diary.content}
               profileImg={diary.profileImg}
-              writerUserName={diary.writerUserName}
-              writerNickName={diary.writerNickName}
+              writerUsername={diary.writerUsername}
+              writerNickname={diary.writerNickname}
               stats={[
                 {
                   label: diary.commentCount.toString(),
@@ -129,7 +129,10 @@ const DiaryDetailPage = () => {
 
             {/* 댓글 리스트 예시 */}
             {[1, 2].map((_, idx) => (
-              <div key={idx} className="border border-gray-200 rounded-lg p-5 mb-6">
+              <div
+                key={idx}
+                className="border border-gray-200 rounded-lg p-5 mb-6"
+              >
                 <div className="flex items-center gap-3 mb-2">
                   <div className="w-9 h-9 rounded-full bg-gray-300" />
                   <div className="flex items-center gap-2">
@@ -145,7 +148,9 @@ const DiaryDetailPage = () => {
                 <div className="flex items-center gap-4 text-xs text-gray-500 mb-2">
                   <div
                     className={`flex items-center gap-1 cursor-pointer p-1 ${
-                      openReplyIndex === idx ? "bg-gray-200 rounded-[5px] text-black" : ""
+                      openReplyIndex === idx
+                        ? "bg-gray-200 rounded-[5px] text-black"
+                        : ""
                     }`}
                     onClick={() => _toggleReplyInput(idx)}
                   >
@@ -193,14 +198,13 @@ const DiaryDetailPage = () => {
         {isCorrectionsPending && <LoadingModal />}
 
         {correctionData?.result.corrections?.contents?.map(
-          (correction: CorrectionsDetailDTO) => (
+          (correction: ContentsDTO) => (
             <CorrectionsInFeedDetail
               key={correction.correctionId}
-              correction={correction}
+              props={correction}
             />
-          )
+          ),
         )}
-
       </div>
     </div>
   );

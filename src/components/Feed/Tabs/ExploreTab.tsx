@@ -1,32 +1,79 @@
 import ValueSettingButton from "../../Common/ValueSettingButton";
 import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
+import { getExploreDiaries } from "../../../apis/diary";
+import type {
+  diaries,
+  getDiariesResponseDTO,
+} from "../../../utils/types/diary";
+import { useInView } from "react-intersection-observer";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const ExploreTab = () => {
-  const navigate = useNavigate();
-  const handleSkeletonClick = () => {
-    // 임시로 id = 1 로 보냄
-    navigate("/feed/1");
+  const { language } = useLanguage();
+  const t = translate[language];
+  const [lang, setLang] = useState<string>("KO");
+  const handleLangChange = (value: string) => {
+    if (value === "한국어") {
+      setLang("KO");
+    } else if (value === "English") {
+      setLang("ENG");
+    }
   };
+  useEffect(() => {}, [lang]);
 
+  const { data, isFetching, fetchNextPage, hasNextPage, isError } =
+    useInfiniteScroll({
+      queryKey: ["ExploreTab", lang],
+      queryFn: ({ pageParam = 1, queryKey }) => {
+        const [_, lang] = queryKey as [string, string];
+        return getExploreDiaries(pageParam as number, lang);
+      },
+      getNextPageParam: (last: getDiariesResponseDTO) =>
+        last.result.hasNext ? last.result.page + 1 : undefined,
+    });
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      if (!isFetching && hasNextPage) fetchNextPage();
+      console.log("Fetching next page of friends' diaries:", data);
+    }
+  }, [inView, isFetching, hasNextPage, fetchNextPage]);
   return (
-    <div className="flex flex-col gap-5 pt-3 pb-4">
-      <ValueSettingButton title1="한국어" title2="English" />
-      <div className="cursor-pointer">
-        <div onClick={handleSkeletonClick}>
-          <CommonComponentInDiaryNFeed />
-        </div>
-        <div onClick={handleSkeletonClick}>
-          <CommonComponentSkeleton />
-        </div>
-        <div onClick={handleSkeletonClick}>
-          <CommonComponentSkeleton />
-        </div>
-        <div onClick={handleSkeletonClick}>
-          <CommonComponentSkeleton />
-        </div>
+    <div className="flex flex-col w-260 mb-10">
+      <div className="mb-5">
+        <ValueSettingButton
+          title1="한국어"
+          title2="English"
+          selectedValue={lang}
+          onClick={handleLangChange}
+        />
       </div>
+      {data?.pages.flatMap((page) =>
+        page.result.diaries
+          .filter(
+            (diary: diaries) =>
+              diary.language === lang && diary.visibility !== "PRIVATE",
+          )
+          .map((data: diaries) => (
+            <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
+          )),
+      )}
+      {isFetching && (
+        <div>
+          <CommonComponentSkeleton />
+          <CommonComponentSkeleton />
+        </div>
+      )}
+      {isError && (
+        <div className="text-grey-500 text-center mt-4">{t.CannotLoadList}</div>
+      )}
+      <div ref={ref}></div>
     </div>
   );
 };
