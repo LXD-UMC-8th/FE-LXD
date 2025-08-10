@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Avatar from "../Common/Avatar"; // 경로 맞게 수정
+import { useCleanHtml } from "../../hooks/useCleanHtml";
 
 interface DiaryContentProps {
   title: string;
@@ -40,6 +41,8 @@ const DiaryContent = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const safeContent = useCleanHtml(content);
 
   return (
     <div className="relative">
@@ -112,9 +115,7 @@ const DiaryContent = ({
 
       {/* 본문 */}
       <div className="text-center mx-20">
-        <p className="text-body2 leading-relaxed text-gray-800 whitespace-pre-line">
-          {content}
-        </p>
+          {safeContent}
       </div>
 
       <div className="border-t border-gray-200 my-5" />

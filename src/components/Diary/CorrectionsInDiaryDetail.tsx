@@ -25,7 +25,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   // 서버에서 받은 댓글 배열
   const comments = useMemo(
-    () => listData?.result?.content ?? [],
+    () => listData?.result?.contents ?? [],
     [listData]
   );
   // 총 댓글 수
@@ -122,8 +122,6 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           {/* 목록 */}
           {listLoading ? (
             <LoadingModal />
-          ) : comments.length === 0 ? (
-            <div className="text-caption text-gray-500 py-2">첫 댓글을 남겨보세요!</div>
           ) : (
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c /* : CorrectionCommentDTO */) => (
@@ -138,7 +136,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                     createdAt={c.createdAt}
                   />
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitesapce-pre-wrap">{c.content}</p>
+                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
                   </div>
                 </li>
               ))}

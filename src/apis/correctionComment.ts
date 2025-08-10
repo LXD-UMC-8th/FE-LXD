@@ -15,7 +15,7 @@ export const postCorrectionComments = async (
 export const getCorrectionComments = async (
     body: CorrectionCommentGetRequestDTO,
 ): Promise<CorrectionCommentGetResponseDTO> => {
-    const { correctionId, page, size } = body;
+    const { correctionId, page = 1, size = 10 } = body;
 
     const { data } = await axiosInstance.get<CorrectionCommentGetResponseDTO>(
         `/corrections/${correctionId}/comments`,
