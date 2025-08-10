@@ -37,21 +37,26 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
             ? previousData.result.likeCount - 1
             : previousData.result.likeCount + 1,
         };
-
         const nextData = { ...previousData, result: nextResult };
 
         queryClient.setQueryData(["postLike", targetType, targetId], nextData);
       }
 
-      return { previousData };
+      return { previousData, targetType, targetId };
     },
     onSuccess: (data) => {
       console.log("좋아요 완료", data);
     },
-    onError: (err) => {
-      console.error("좋아요 실패", err.message);
+    onError: (_err: Error, targetId: number, targetType: string, ctx) => {
+      console.error("좋아요 실패", _err.message);
+      if (ctx?.previousData) {
+        queryClient.setQueryData(
+          ["postLike", targetType, targetId],
+          ctx.previousData
+        );
+      }
     },
-    onSettled: () => {
+    onSettled: (_data, targetId, targetType) => {
       queryClient.invalidateQueries({
         queryKey: ["postLike", targetType, targetId],
       });
