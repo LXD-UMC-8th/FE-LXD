@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
@@ -107,14 +107,50 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     }));
   };
 
-  const isAllValid = () => {
+  const isAllValid = useCallback(() => {
     const { nativeLanguage, studyLanguage } = userInfo;
     const _isIdValid = isIdValid(userInfo.id) && isIdAvailable === true;
     const _isNicknameValid = isNicknameValid(userInfo.nickname);
     const _isLangValid = nativeLanguage !== "" && studyLanguage !== "";
 
     return _isIdValid && _isNicknameValid && _isLangValid;
+  }, [isIdAvailable, userInfo]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAllValid()) return;
+    handleCompleteSignup();
   };
+
+  // 전역 Enter/Space
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (e.isComposing || e.repeat) return;
+
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      const isFormField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        tag === "button";
+
+      const isEnter = e.key === "Enter";
+      const isSpace = e.code === "Space";
+
+      if ((isEnter || isSpace) && !isFormField) {
+        if (!isAllValid()) return;
+        e.preventDefault();
+        const form = document.getElementById(
+          "profile-form"
+        ) as HTMLFormElement | null;
+        if (form?.requestSubmit) form.requestSubmit();
+        else form?.submit();
+      }
+    };
+
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [isAllValid]);
 
   // 회원가입 진행 함수
   const handleCompleteSignup = async () => {
@@ -187,7 +223,11 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           </div>
         </section>
 
-        <form className="w-full space-y-8">
+        <form
+          id="profile-form"
+          onSubmit={handleSubmit}
+          className="w-full space-y-8"
+        >
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
@@ -256,8 +296,9 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
         <section>
           <SignupButton
+            form="profile-form"
+            type="submit"
             name="가입완료"
-            onClick={handleCompleteSignup}
             disabled={!isAllValid()}
           />
         </section>

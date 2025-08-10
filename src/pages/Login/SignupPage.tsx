@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
@@ -118,7 +118,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     setIsToSOpen(false);
   };
 
-  const isAllValid = () => {
+  const isAllValid = useCallback(() => {
     const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
@@ -132,7 +132,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       _isPasswordChecked &&
       userInfo.isPrivacy
     );
-  };
+  }, [
+    userInfo.email,
+    userInfo.password,
+    userInfo.checkPassword,
+    userInfo.isPrivacy,
+    emailVerified,
+  ]);
 
   const handleNextPage = () => {
     if (!isAllValid()) return;
@@ -140,6 +146,43 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     navigate("profile");
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAllValid()) return;
+    handleNextPage();
+  };
+
+  // 전역 Enter/Space
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (isToSOpen) return; // 약관 모달 열렸을 땐 막기
+      if (e.isComposing || e.repeat) return; // 한글 조합/키 반복 방지
+
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      const isFormField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        tag === "button";
+
+      const isEnter = e.key === "Enter";
+      const isSpace = e.code === "Space";
+
+      if ((isEnter || isSpace) && !isFormField) {
+        if (!isAllValid()) return;
+        e.preventDefault();
+        const form = document.getElementById(
+          "signup-form"
+        ) as HTMLFormElement | null;
+        if (form?.requestSubmit) form.requestSubmit();
+        else form?.submit();
+      }
+    };
+
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [isAllValid, isToSOpen]);
+  
   return (
     <div
       className="flex flex-col min-h-screen
@@ -152,7 +195,11 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
           <TitleHeader title="계정 생성을 위해 정보를 입력해주세요" />
         </section>
 
-        <form className="w-full h-[390px] space-y-5">
+        <form
+          id="signup-form"
+          onSubmit={handleSubmit}
+          className="w-full h-[390px] space-y-5"
+        >
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
@@ -262,8 +309,9 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
           </div>
 
           <SignupButton
+            form="signup-form"
+            type="submit"
             name="다음으로"
-            onClick={handleNextPage}
             disabled={!isAllValid()}
           />
         </section>
