@@ -3,6 +3,48 @@
   to = "/.netlify/functions/proxy/:splat"
   status = 200
 
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 [functions]
   node_bundler = "esbuild"
 
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/proxy/:splat"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+[dev]
+command = "npm run dev"
+port = 5173
+targetPort = 5173
+publish = "dist"
+functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/proxy/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  directory = "netlify/functions"
+
+[dev]
+  command = "npm run dev"
+  # Netlify Dev exposes 8888 and proxies your Vite server on 5173
+  port = 8888
+  targetPort = 5173
+  publish = "dist"
+  functions = "netlify/functions"

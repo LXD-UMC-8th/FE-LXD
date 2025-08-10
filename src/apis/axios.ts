@@ -8,7 +8,7 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 }
 
 export const axiosInstance = axios.create({
-  baseURL: (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, ""),
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 let refreshPromise: Promise<string | null> | null = null;
@@ -43,7 +43,7 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 // Response interceptor
@@ -74,7 +74,7 @@ axiosInstance.interceptors.response.use(
       if (!refreshPromise) {
         refreshPromise = (async () => {
           const refreshToken = getLocalStorageItem(
-            LOCAL_STORAGE_KEY.refreshToken,
+            LOCAL_STORAGE_KEY.refreshToken
           );
           if (!refreshToken) throw new Error("No refresh token");
 
@@ -82,11 +82,11 @@ axiosInstance.interceptors.response.use(
 
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.accessToken,
-            reissueData.result.accessToken,
+            reissueData.result.accessToken
           );
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.refreshToken,
-            reissueData.result.refreshToken,
+            reissueData.result.refreshToken
           );
 
           return reissueData.result.accessToken;
@@ -114,5 +114,5 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
