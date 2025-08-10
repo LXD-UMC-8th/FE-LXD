@@ -72,11 +72,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
       setHasVerifiedByToken(true);
       setEmailVerified(true);
+
       // // 인증 성공한 경우에만 부모창에 메세지 전달 + 창 닫기
       // if (window.opener) {
       //   window.opener.postMessage({ emailVerified: true, email: verifiedEmail }, "*");
       //   window.close();
       // }
+
       alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
     } catch (error) {

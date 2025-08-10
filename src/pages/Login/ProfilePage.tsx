@@ -10,9 +10,7 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
-import axios from "axios";
 import { getCheckDuplicatedID } from "../../apis/members";
-
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -132,7 +130,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       }
     } catch (error) {
       console.error("회원가입 실패:", error);
-      console.log(userInfo)
+      console.log(userInfo);
       alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
     }
   };

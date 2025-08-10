@@ -2,7 +2,6 @@ import { useMemo, useRef, useCallback } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
-// import Quill from "quill";
 
 const MAX_IMAGES = 5;
 
@@ -14,7 +13,6 @@ interface WritingEditorProps {
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
   const quillRef = useRef<ReactQuill>(null);
 
-  //image삭제할 때도 반영할 수 있는 것을 만들어야 함,,,
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
     if (!editor) return;
@@ -55,15 +53,26 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
           };
           reader.readAsDataURL(file);
 
+          //2개 이상 한 번에 업데이트 하면 등록되지 않음 << 이거 에러 해결해주기
           const fd = new FormData();
           fd.append("image", file);
           postDiaryImage(fd)
             .then((res) => {
               const url = res.result.imageUrl;
+
               const range = editor.getSelection(true)!;
               editor.deleteText(range.index - 1, 1);
               editor.insertEmbed(range.index - 1, "image", url);
               editor.setSelection(range.index, 0);
+              console.log(
+                "range.index:",
+                range.index,
+                "currentImageCount:",
+                currentImageCount,
+              );
+              if (range.index === 1 && currentImageCount === 0) {
+                localStorage.setItem("thumbImg", url);
+              }
             })
             .catch((err) => {
               console.error("Upload failed", err.response || err);

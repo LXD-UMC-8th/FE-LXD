@@ -12,6 +12,7 @@ export interface LoginResponse {
   message: string;
   result: {
     accessToken: string;
+    refreshToken: string;
     member: {
       memberId: number;
       email: string;
@@ -25,16 +26,16 @@ export interface LoginResponse {
 
 // 로그인 요청 API
 export const postSignin = async (
-  payload: LoginRequest
+  payload: LoginRequest,
 ): Promise<LoginResponse> => {
   const { data } = await axiosInstance.post<LoginResponse>(
-    "auth/login",
+    "/auth/login",
     payload,
     {
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
   return data;
 };
@@ -54,16 +55,17 @@ export const postEmailVerificationRequest = async (
   const response = await axiosInstance.post<EmailVerificationResponse>(
     "auth/emails/verification-requests",
     { email, verificationType }
+
   );
   return response.data;
 };
 
 // 이메일 인증 API
 export const getEmailVerification = async (token: string) => {
-  const response = await axiosInstance.get("auth/emails/verifications", {
-    params: { token },
-  });
-  return response.data;
+  const apiURL =
+    import.meta.env.VITE_API_BASE_URL +
+    `/auth/emails/verifications?token=${token}`;
+  window.location.href = apiURL;
 };
 
 export interface EmailResponse {
@@ -77,8 +79,28 @@ export interface EmailResponse {
 
 // 이메일 인증 후 토큰 주인 반환 API
 export const getEmail = async (token: string) => {
-  const response = await axiosInstance.get<EmailResponse>("auth/email", {
+  const response = await axiosInstance.get<EmailResponse>("/auth/email", {
     params: { token },
+  });
+  return response.data;
+};
+
+interface ReissueResponse {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+// 토큰 재발급 API
+export const postReissue = async (
+  refreshToken: string,
+): Promise<ReissueResponse> => {
+  const response = await axiosInstance.post<ReissueResponse>("//auth/reissue", {
+    refreshToken,
   });
   return response.data;
 };

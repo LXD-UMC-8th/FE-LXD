@@ -2,7 +2,7 @@ import { useState } from "react";
 // import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import { useWritingSubmit } from "../../../hooks/queries/useWritingSubmit";
+import { useWritingSubmit } from "../../../hooks/mutations/useWritingSubmit";
 import LoadingModal from "../../Common/LoadingModal";
 interface EnrollModalProps {
   _onClose?: () => void;
@@ -11,8 +11,6 @@ interface EnrollModalProps {
   _style: string;
 }
 
-//여기에 전달되는 _style값은 FREE || "자유글" or QUESTION || "질문글" 임
-//자유글 ->FREE로 바꾸고, 질문글 -> QUESTION으로 바꾸어 API를 요청하여야 한다.
 const EnrollModal = ({
   _titleName,
   _editorRawContent,
@@ -39,27 +37,19 @@ const EnrollModal = ({
   };
   const handleSubmit = () => {
     const style = normalizeStyle(_style);
-    console.log(
-      JSON.stringify({
-        title: _titleName,
-        content: _editorRawContent,
-        style,
-        visibility,
-        commentPermission,
-        language: "KO",
-        thumbImg: "",
-      }),
-    );
 
-    //현재 QUESTION value제대로 저장하지 못 함.
+    if (!_titleName) {
+      alert(t.titleRequired);
+      return;
+    }
     postDiaryUpload({
-      title: _titleName,
+      title: _titleName.trim(),
       content: JSON.stringify(_editorRawContent),
       style,
       visibility,
       commentPermission,
       language: "KO",
-      thumbImg: "",
+      thumbImg: localStorage.getItem("thumbImg") || "",
     });
   };
 
@@ -85,10 +75,10 @@ const EnrollModal = ({
             <input
               type="radio"
               name="visibility"
-              value="FRIEND"
-              checked={visibility === "FRIEND"}
+              value="FRIENDS"
+              checked={visibility === "FRIENDS"}
               onChange={() => {
-                setVisibility("FRIEND");
+                setVisibility("FRIENDS");
               }}
             />
             {t.visibility_FRIEND}
@@ -126,9 +116,9 @@ const EnrollModal = ({
             <input
               type="radio"
               name="commentPermission"
-              value="FRIEND"
-              checked={commentPermission === "FRIEND"}
-              onChange={() => setCommentPermission("FRIEND")}
+              value="FRIENDS"
+              checked={commentPermission === "FRIENDS"}
+              onChange={() => setCommentPermission("FRIENDS")}
             />
             {t.commentPermission_FRIEND}
           </label>
