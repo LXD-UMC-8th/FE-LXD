@@ -3,7 +3,14 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    email: string;
     emailPlaceholder: string;
+    password: string;
+    passwordPlaceholder: string;
+    login: string;
+    googleLogin: string;
+    signup: string;
+    changePassword: string;
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
     titleStyle_FREE: string;
@@ -42,7 +49,14 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
-    emailPlaceholder: "Please enter your email",
+    email: "Email",
+    emailPlaceholder: "Enter your email",
+    password: "Password",
+    passwordPlaceholder: "Enter your password",
+    login: "Login",
+    googleLogin: "Start with Google",
+    signup: "Sign-up",
+    changePassword: "Forgot password?",
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -80,7 +94,14 @@ export const translate: Record<
     titleRequired: "Please enter a title.",
   },
   [Language.KOREAN]: {
+    email: "이메일",
     emailPlaceholder: "이메일을 입력해주세요",
+    password: "비밀번호",
+    passwordPlaceholder: "비밀번호를 입력해주세요",
+    login: "로그인",
+    googleLogin: "Google 로 시작하기",
+    signup: "회원가입",
+    changePassword: "비밀번호 변경",
     modaltabtitle_total: "모두",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",

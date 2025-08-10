@@ -30,7 +30,7 @@ const TopLangOptionsButton = () => {
               rounded-md focus:outline-none focus:ring-1"
         >
           <span className="block truncate text-gray-900">
-            {/* {language === "ko" ? "한국어" : "English"} */}
+            {language === "KO" ? "한국어" : "English"}
           </span>
 
           {/* Arrow Icon */}

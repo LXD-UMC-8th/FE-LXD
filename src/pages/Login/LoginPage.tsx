@@ -87,7 +87,7 @@ const LoginPage = () => {
       <TopLangOptionsButton />
       <header className="flex flex-col items-center space-y-8">
         <img src="images/LXD_logo.svg" />
-        <img src="images/language_x_diary.svg" />
+        <img src="images/Language_Xchange_Diary.svg" />
       </header>
 
       <div className="flex flex-col w-[430px] p-4 space-y-10">
@@ -97,15 +97,15 @@ const LoginPage = () => {
           className="flex flex-col space-y-5"
         >
           <FormInput
-            name="이메일"
+            name={t.email}
             placeholder={t.emailPlaceholder}
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <FormInput
-            name="비밀번호"
-            placeholder="비밀번호를 입력해주세요"
+            name={t.password}
+            placeholder={t.passwordPlaceholder}
             input={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -121,7 +121,7 @@ const LoginPage = () => {
       bg-[#4170FE] hover:bg-blue-600 cursor-pointer transition 
       disabled:bg-gray-300"
           >
-            <span className="text-subhead3 text-white">로그인</span>
+            <span className="text-subhead3 text-white">{t.login}</span>
           </button>
           <button
             type="button"
@@ -131,7 +131,7 @@ const LoginPage = () => {
           >
             <img src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
-              Google 로 시작하기
+              {t.googleLogin}
             </span>
           </button>
 
@@ -139,8 +139,8 @@ const LoginPage = () => {
             className="flex w-full justify-between text-body3 text-gray-700 py-3 
         underline underline-offset-2 cursor-pointer"
           >
-            <a href="/home/signup">회원가입</a>
-            <a href="/home/signup/change-pw">비밀번호 변경</a>
+            <a href="/home/signup">{t.signup}</a>
+            <a href="/home/signup/change-pw">{t.changePassword}</a>
           </div>
         </section>
       </div>
