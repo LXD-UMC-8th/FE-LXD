@@ -35,12 +35,18 @@ const LoginPage = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 새로고침 방지
+    if (!isFormValid) return; // 유효성 통과 시에만 실행
+    handleLogin();
+  };
+
   const handleGoogleLogin = () => {
     // 구글로그인 요청 API 나중에 작성 예정
     console.log("구글 로그인 요청");
     navigate("/auth/google/login");
   };
-  // 로그인 버튼 활성화 조건, 나중에 수정
+
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
   return (
@@ -55,7 +61,11 @@ const LoginPage = () => {
       </header>
 
       <div className="flex flex-col w-[430px] p-4 space-y-10">
-        <form className="flex flex-col space-y-5">
+        <form
+          id="1"
+          onSubmit={handleSubmit}
+          className="flex flex-col space-y-5"
+        >
           <FormInput
             name="이메일"
             placeholder={t.emailPlaceholder}
@@ -74,6 +84,7 @@ const LoginPage = () => {
 
         <section className="flex flex-col space-y-3">
           <button
+            form="1"
             type="submit"
             onClick={handleLogin}
             disabled={!isFormValid}
@@ -84,7 +95,7 @@ const LoginPage = () => {
             <span className="text-subhead3 text-white">로그인</span>
           </button>
           <button
-            type="submit"
+            type="button"
             onClick={handleGoogleLogin}
             className="flex gap-3 w-full h-[55px] justify-center border border-gray-400 
             py-3 rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer transition"
