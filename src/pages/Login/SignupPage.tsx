@@ -13,11 +13,7 @@ import {
 } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
-import {
-  getEmail,
-  getEmailVerification,
-  postEmailVerificationRequest,
-} from "../../apis/auth";
+import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -38,7 +34,10 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     try {
-      const response = await postEmailVerificationRequest(userInfo.email);
+      const response = await postEmailVerificationRequest(
+        userInfo.email,
+        "EMAIL"
+      );
 
       if (response.isSuccess) {
         alert(
@@ -64,11 +63,6 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일에서 들어온 인증 링크 토큰 처리 함수
   const handleVerifyEmailToken = async (token: string) => {
     try {
-      const verifyRes = await getEmailVerification(token);
-      if (!verifyRes.isSuccess) {
-        console.error("이메일 인증 실패");
-      }
-
       const emailInfoRes = await getEmail(token);
       if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
         console.error("이메일 조회 실패");
@@ -78,14 +72,34 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
       setHasVerifiedByToken(true);
       setEmailVerified(true);
+      // // 인증 성공한 경우에만 부모창에 메세지 전달 + 창 닫기
+      // if (window.opener) {
+      //   window.opener.postMessage({ emailVerified: true, email: verifiedEmail }, "*");
+      //   window.close();
+      // }
+      alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
     } catch (error) {
+      console.error("인증 실패:", error);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert("인증 처리 중 오류 발생");
-      console.error("인증 실패:", error);
+      alert("인증 처리 중 오류가 발생하였습니다.");
     }
   };
+  // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.emailVerified && event.data.email) {
+        setUserInfo((prev) => ({ ...prev, email: event.data.email }));
+        setEmailVerified(true);
+        setHasVerifiedByToken(true);
+        alert("이메일 인증이 완료되었습니다!");
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
     setUserInfo((prev) => ({ ...prev, [key]: value }));
