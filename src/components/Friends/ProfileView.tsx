@@ -6,7 +6,6 @@ import { addRecentSearch } from "../../utils/types/recentSearch";
 import { postFriendRequest } from "../../apis/friend";
 import useFriendship from "../../hooks/queries/useFriendship";
 
-
 interface ProfileViewProps {
   user: {
     name: string;
@@ -35,17 +34,19 @@ const ProfileView = ({
   // 친구관계 상태(friend | pending | incoming | none)
   const { state, isLoading, refetchAll } = useFriendship(user.id);
 
-  const mergedState =
-    isLoading
-      ? "loading"
-      : state === "friend" || state === "pending" || state === "incoming" || state === "none"
-      ? state
-      : user.isFriend
-      ? "friend"
-      : isRequesting
-      ? "pending"
-      : "none";
-
+  // 훅 결과 우선, 프롭은 폴백
+  const mergedState = isLoading
+    ? "loading"
+    : state === "friend" ||
+      state === "pending" ||
+      state === "incoming" ||
+      state === "none"
+    ? state
+    : user.isFriend
+    ? "friend"
+    : isRequesting
+    ? "pending"
+    : "none";
 
   useEffect(() => {
     if (user?.username) addRecentSearch(user.username);
@@ -135,9 +136,7 @@ const ProfileView = ({
         )}
 
         {/* ✅ 다이어리 보러가기: memberId로 이동 */}
-        <button
-          className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100"
-        >
+        <button className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100">
           다이어리 보러가기
         </button>
       </div>
