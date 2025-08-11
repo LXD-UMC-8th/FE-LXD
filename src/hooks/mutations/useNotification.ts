@@ -12,15 +12,64 @@ export function useNotificationReadAll() {
   return useMutation<patchReadAllNotificationResponseDTO, void, number>({
     mutationKey: ["notificationReadAll"],
     mutationFn: async (totalElements) => {
-      console.log("patchReadAllNotifications called", totalElements);
       const res = await patchReadAllNotifications(totalElements);
       return res;
     },
-    onSuccess: (data) => {
-      console.log("All notifications marked as read:", data);
+    onMutate: async () => {
+      await queryClient.cancelQueries({
+        queryKey: ["notifications"],
+        exact: false,
+      });
+
+      const previousList = queryClient.getQueryData<
+        InfiniteData<getNotificationsResponseDTO>
+      >(["notifications"]);
+
+      // Optimistic: mark everything read + zero counters immediately
+      if (previousList?.pages) {
+        const next: InfiniteData<getNotificationsResponseDTO> = {
+          ...previousList,
+          pages: previousList.pages.map((page) => ({
+            ...page,
+            result: {
+              ...page.result,
+              contents: page.result.contents.map((n) => ({
+                ...n,
+                read: true,
+              })),
+            },
+          })),
+        };
+        queryClient.setQueryData(["notifications"], next);
+      }
+
+      queryClient.setQueryData(["notifications", "badge"], 0);
+
+      return { previousList };
     },
-    onError: (error) => {
-      console.log("error during patchReadAllNotifications", error);
+
+    onError: (_err, _vars, ctx: unknown) => {
+      const context = ctx as
+        | { previousList?: InfiniteData<getNotificationsResponseDTO> }
+        | undefined;
+      if (context?.previousList) {
+        queryClient.setQueryData(["notifications"], context.previousList);
+      }
+    },
+
+    onSuccess: (data) => {
+      // Reconcile with server (will also be 0 / read: true)
+      queryClient.setQueryData(
+        ["notifications", "badge"],
+        data.result.totalElements ?? 0
+      );
+    },
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["notifications", "badge"],
+      });
     },
   });
 }
