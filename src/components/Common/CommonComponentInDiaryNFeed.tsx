@@ -6,11 +6,12 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
-// import { queryClient } from "../../App";
+import { queryClient } from "../../App";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "./ComponentDiary/Header";
+import type { getLikeResponseDTO } from "../../utils/types/likes";
 
 const CommonComponentInDiaryNFeed = ({
   props,
@@ -25,7 +26,7 @@ const CommonComponentInDiaryNFeed = ({
   const navigate = useNavigate();
   console.log("props", props);
 
-  const [isLiked, _setLiked] = useState<boolean>(props.isLiked);
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount);
 
   const { mutate: likeMutate } = usePostLike({
@@ -99,14 +100,11 @@ const CommonComponentInDiaryNFeed = ({
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
-        _setLiked((prev) => !prev);
+        likeMutate();
         isLiked
-          ? setLikeCount((prev) => prev - 1)
+          ? setLikeCount((prev) => Math.max(0, prev - 1))
           : setLikeCount((prev) => prev + 1);
-        likeMutate({
-          targetType: "diaries",
-          targetId: props.diaryId,
-        });
+        setIsLiked((prev) => !prev);
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러
