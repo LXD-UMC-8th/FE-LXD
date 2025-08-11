@@ -3,28 +3,32 @@ import type { NotificationContentProps } from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postFriendAccept, postFriendRefuse } from "../../apis/friend";
-import { patchRedirectNotification } from "../../apis/notification";
 
 const NotificationContent = ({
   notifications,
 }: {
   notifications: NotificationContentProps;
+  onClick?: () => void;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
 
   const handleAcceptFriend = () => {
-    postFriendAccept({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendAccept(Number(requesterId));
+    }
   };
   const handleRefuseFriend = () => {
-    postFriendRefuse({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendRefuse(Number(requesterId));
+    }
   };
 
-  const handleNotificationContentClick = () => {
-    patchRedirectNotification({ notificationId: notifications.id });
-  };
+  const handleNotificationContentClick = () => {};
 
   return (
     <div
