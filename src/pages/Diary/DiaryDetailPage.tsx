@@ -13,8 +13,9 @@ import { axiosInstance } from "../../apis/axios";
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { diaryId } = useParams<{ diaryId: string }>(); // URL 파라미터로 받기
-  const parsedDiaryId = Number(diaryId || 1);
+  const { diaryId } = useParams<{ diaryId?: string }>(); // URL 파라미터로 받기
+  const parsedDiaryId = Number(diaryId);
+  const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
 
   const backURL = location.state?.from === "profile" ? -1 : "/feed";
 
@@ -43,11 +44,28 @@ const DiaryDetailPage = () => {
   } = useGetDiaryDetail();
 
   useEffect(() => {
-    if (parsedDiaryId) {
-      fetchDiaryDetail({ diaryId: parsedDiaryId });
-      fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
-    }
-  }, [parsedDiaryId, fetchCorrections, fetchDiaryDetail]);
+    if (!hasValidId) return;
+    console.log("diaryId from URL:", diaryId, "->parsed", parsedDiaryId);
+
+    fetchDiaryDetail({ diaryId: parsedDiaryId });
+    fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasValidId, parsedDiaryId]);
+
+  // 잘못된 접근 처리
+  if (!hasValidId) {
+    return (
+      <div>
+        <div>
+          잘못된 접근입니다.
+          <button>
+            피드로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   /** 로딩 처리 */
   if (isDiaryPending) return <LoadingModal />;
@@ -111,7 +129,7 @@ const DiaryDetailPage = () => {
                 alt="댓글 아이콘"
                 className="w-[24px] h-[24px]"
               />
-              <span>댓글 ({diary?.commentCount || 0})</span>
+              <span>댓글 ({diary?.commentCount ?? 0})</span>
             </div>
 
             {/* 댓글 입력창 */}
@@ -201,7 +219,7 @@ const DiaryDetailPage = () => {
 
         {isCorrectionsPending && <LoadingModal />}
 
-        {correctionData?.result.corrections?.contents?.map(
+        {correctionData?.result?.corrections?.contents?.map(
           (correction: ContentsDTO) => (
             <CorrectionsInFeedDetail
               key={correction.correctionId}
