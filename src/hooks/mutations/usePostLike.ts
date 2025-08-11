@@ -47,12 +47,13 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
     onSuccess: (data) => {
       console.log("좋아요 완료", data);
     },
-    onError: (_err: Error, targetId: number, targetType: string, ctx) => {
+    onError: (_err: Error, variables, data) => {
       console.error("좋아요 실패", _err.message);
-      if (ctx?.previousData) {
+      const context = data as { previousData?: getLikeResponseDTO };
+      if (context.previousData) {
         queryClient.setQueryData(
-          ["postLike", targetType, targetId],
-          ctx.previousData
+          ["postLike", variables.targetType, variables.targetId],
+          context.previousData
         );
       }
     },

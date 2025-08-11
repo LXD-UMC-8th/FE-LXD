@@ -44,6 +44,7 @@ const protectedRoutes: RouteObject[] = [
     children: [
       {
         element: <Navigate to="/feed" replace />,
+        index: true,
       },
       {
         path: "/feed",

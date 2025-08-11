@@ -3,28 +3,26 @@ import type { NotificationContentProps } from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postFriendAccept, postFriendRefuse } from "../../apis/friend";
-import { patchRedirectNotification } from "../../apis/notification";
 
 const NotificationContent = ({
   notifications,
 }: {
   notifications: NotificationContentProps;
+  onClick?: () => void;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
 
   const handleAcceptFriend = () => {
-    postFriendAccept({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    postFriendAccept(notifications.redirectUrl || "");
   };
   const handleRefuseFriend = () => {
-    postFriendRefuse({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    if (notifications.redirectUrl) {
+      postFriendRefuse(notifications.redirectUrl);
+    }
   };
 
-  const handleNotificationContentClick = () => {
-    patchRedirectNotification({ notificationId: notifications.id });
-  };
+  const handleNotificationContentClick = () => {};
 
   return (
     <div

@@ -37,12 +37,12 @@ export function getSubscribeToNotifications() {
 }
 
 export async function patchReadAllNotifications(
-  totalElements: number,
+  totalElements: number
 ): Promise<patchReadAllNotificationResponseDTO> {
   try {
     console.log(
       "patchReadAllNotifications called with totalElements:",
-      totalElements,
+      totalElements
     );
     const { data } =
       await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
@@ -52,7 +52,7 @@ export async function patchReadAllNotifications(
             page: 1,
             size: totalElements,
           },
-        },
+        }
       );
 
     return data;
@@ -64,10 +64,12 @@ export async function patchReadAllNotifications(
 
 export async function patchRedirectNotification({
   notificationId,
-}: patchRedirectNotificationRequestDTO): Promise<patchRedirectNotificationResponseDTO> {
+}: {
+  notificationId: number;
+}): Promise<patchRedirectNotificationResponseDTO> {
   try {
     const { data } = await axiosInstance.patch(
-      `/notifications/${notificationId}/read-redirect`,
+      `/notifications/${notificationId}/read-redirect`
     );
 
     return data;

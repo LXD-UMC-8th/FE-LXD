@@ -8,8 +8,12 @@ import type {
   getDiariesResponseDTO,
 } from "../../../utils/types/diary";
 import { useEffect } from "react";
+import { translate } from "../../../context/translate";
+import { useLanguage } from "../../../context/LanguageProvider";
 
 const FeedFriendTab = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
       queryKey: ["FriendsDiaries"],
@@ -34,8 +38,12 @@ const FeedFriendTab = () => {
           .filter((diary: diaries) => diary.visibility !== "PRIVATE")
           .map((data: diaries) => (
             <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
-          )),
+          ))
       )}
+      {data?.pages[0].result.diaries.length === 0 &&
+        !data.pages[0].result.hasNext && (
+          <div className="text-grey-500 text-center mt-4">{t.FriendFeedX}</div>
+        )}
       {isFetching && (
         <div>
           <CommonComponentSkeleton />
