@@ -34,7 +34,7 @@ export type patchReadAllNotificationResponseDTO = APIResponse<string>;
 export type patchRedirectNotificationResponseDTO =
   APIResponse<redirectNotificationResultDTO>;
 
-type redirectNotificationResultDTO = {
+export type redirectNotificationResultDTO = {
   notificationId: number;
   redirectUrl: string;
   read: boolean;

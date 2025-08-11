@@ -47,10 +47,14 @@ const LangOptionsButton = ({
           >
             {isOpen ? (
               // ▲ 모양
-              <img src="/images/toggleUp.svg" className="w-3 h-3" />
+              <img alt="image" src="/images/toggleUp.svg" className="w-3 h-3" />
             ) : (
               // ▼ 모양
-              <img src="/images/toggleDown.svg" className="w-3 h-3" />
+              <img
+                alt="image "
+                src="/images/toggleDown.svg"
+                className="w-3 h-3"
+              />
             )}
           </span>
         </button>

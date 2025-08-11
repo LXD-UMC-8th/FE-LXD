@@ -25,8 +25,8 @@ const CommonComponentInDiaryNFeed = ({
   const navigate = useNavigate();
   console.log("props", props);
 
-  const isLiked = props.isLiked;
-  const likeCount = props.likeCount;
+  const [isLiked, _setLiked] = useState<boolean>(props.isLiked);
+  const [likeCount, setLikeCount] = useState<number>(props.likeCount);
 
   const { mutate: likeMutate } = usePostLike({
     targetType: "diaries",
@@ -88,7 +88,7 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   const handleToDetail = () => {
-    navigate("/feed/{props.diaryId}");
+    navigate(`/feed/${props.diaryId}`);
   };
 
   const handleIcons = (iconIndex: number) => {
@@ -99,6 +99,10 @@ const CommonComponentInDiaryNFeed = ({
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
+        _setLiked((prev) => !prev);
+        isLiked
+          ? setLikeCount((prev) => prev - 1)
+          : setLikeCount((prev) => prev + 1);
         likeMutate({
           targetType: "diaries",
           targetId: props.diaryId,
