@@ -1,49 +1,52 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  getCorrectionComments,
-  type RawCorrectionComment,
-} from "../../apis/correctionsComments";
+import { getCorrectionComments } from "../../apis/correctionComment"; 
+import type {
+  CorrectionCommentDTO,
+  CorrectionCommentGetResponseDTO,
+  UICorrectionComment, 
+} from "../../utils/types/correctionComment";
 
-// 화면용으로 변환된 댓글 타입
-export type CommentItem = {
-  commentId: number;
-  content: string;
-  createdAt: string;
-  member: {
-    memberId: number;
-    username: string;
-    nickname: string;
-    profileImageUrl: string; // 내부에서 통일
-  };
-};
 
-const mapToItem = (r: RawCorrectionComment): CommentItem => ({
-  commentId: r.commentId,
-  content: r.content,
-  createdAt: r.createdAt,
+
+// 서버 DTO → UI 타입으로 매핑
+const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
+  commentId: c.commentId,
+  content: c.content,
+  createdAt: c.createdAt,
   member: {
-    memberId: r.memberId,
-    username: r.username,
-    nickname: r.nickname,
-    profileImageUrl: r.profileImage, // ← 필드명 매핑
+    memberId: c.memberId,
+    username: c.username,
+    nickname: c.nickname,
+    profileImageUrl: c.profileImage,
   },
 });
 
 export function useCorrectionComments(
   correctionId?: number,
-  enabled = true
+  enabled: boolean = true,
+  pageSize: number = 10
 ) {
-  return useInfiniteQuery({
-    queryKey: ["correctionComments", correctionId],
+  return useInfiniteQuery<
+    CorrectionCommentGetResponseDTO,        // 원본 API 응답
+    unknown,
+    UICorrectionComment[],                  
+    [string, number | undefined, number],
+    number
+  >({
+    queryKey: ["correctionComments", correctionId, pageSize],
     enabled: !!correctionId && enabled,
-    initialPageParam: 1,                     // 스웨거가 1 기반
+    initialPageParam: 1,
     queryFn: ({ pageParam }) =>
-      getCorrectionComments(correctionId as number, pageParam, 10),
-    getNextPageParam: (last) =>
-      last.result.hasNext ? last.result.page + 1 : undefined,
+      getCorrectionComments({
+        correctionId: correctionId as number,
+        page: pageParam,
+        size: pageSize,
+      }),
+    getNextPageParam: (last, allPages) => {
+      const count = last?.result?.content?.length ?? 0;
+      return count === pageSize ? allPages.length + 1 : undefined;
+    },
     select: (data) =>
-      data.pages.flatMap((p) =>
-        (p.result.contents ?? []).map(mapToItem)
-      ),
+      data.pages.flatMap((p) => (p.result.content ?? []).map(mapToUI)),
   });
 }

@@ -1,7 +1,7 @@
 import { axiosInstance } from "./axios";
 
 // ⬇️ 목록 조회
-export const getSavedCorrections = async (page = 0, size = 10) => {
+export const getSavedCorrections = async (page = 1, size = 10) => {
   const { data } = await axiosInstance.get("/corrections/saved", {
     params: { page, size },
   });
