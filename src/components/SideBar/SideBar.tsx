@@ -35,10 +35,10 @@ const Sidebar = () => {
         />
       </nav>
 
-      <div className="mt-auto flex items-center gap-[12px] w-[170px] h-[55px] rounded-[5px] px-[10px] py-[15px] text-gray-600 font-semibold cursor-pointer hover:scale-105 transition-transform duration-300">
+      <div className="mt-auto flex items-center py-[15px]">
         <SideBarNavLink
-          imgSrcOn=""
-          imgSrcOff="/images/SettingIcon.svg"
+          imgSrcOn="/images/SettingOnIcon.svg"
+          imgSrcOff="/images/SettingOffIcon.svg"
           toURL="/settings"
           label="시스템 설정"
           alt="설정 아이콘"

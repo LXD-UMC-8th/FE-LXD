@@ -35,16 +35,18 @@ const ProfileView = ({
   const { state, isLoading, refetchAll } = useFriendship(user.id);
 
   // 훅 결과 우선, 프롭은 폴백
-  const mergedState =
-    isLoading
-      ? "loading"
-      : state === "friend" || state === "pending" || state === "incoming" || state === "none"
-      ? state
-      : user.isFriend
-      ? "friend"
-      : isRequesting
-      ? "pending"
-      : "none";
+  const mergedState = isLoading
+    ? "loading"
+    : state === "friend" ||
+      state === "pending" ||
+      state === "incoming" ||
+      state === "none"
+    ? state
+    : user.isFriend
+    ? "friend"
+    : isRequesting
+    ? "pending"
+    : "none";
 
   useEffect(() => {
     if (user?.username) addRecentSearch(user.username);
@@ -90,7 +92,10 @@ const ProfileView = ({
       {/* 액션 버튼 */}
       <div className="px-8 mb-6 flex gap-4">
         {mergedState === "loading" ? (
-          <button className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400" disabled>
+          <button
+            className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400"
+            disabled
+          >
             로딩중…
           </button>
         ) : mergedState === "friend" ? (
@@ -105,7 +110,11 @@ const ProfileView = ({
             disabled
             className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+            <img
+              src="/images/requestingIcon.svg"
+              alt="요청중"
+              className="w-5 h-5"
+            />
             요청중
           </button>
         ) : mergedState === "incoming" ? (
@@ -127,10 +136,7 @@ const ProfileView = ({
         )}
 
         {/* ✅ 다이어리 보러가기: memberId로 이동 */}
-        <button
-
-          className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100"
-        >
+        <button className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100">
           다이어리 보러가기
         </button>
       </div>

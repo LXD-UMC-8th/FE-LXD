@@ -1,3 +1,4 @@
+import type { APIResponse } from "./APIresponse";
 //회원가입할 때 이용하는 type
 export type JoinRequestDTO = {
   email: string;
@@ -30,3 +31,11 @@ export type CorrectionsMemberDTO = {
   nickname: string;
   profileImageUrl: string;
 };
+
+export type MemberLanguageDTO = {
+  nativeLanguage: string;
+  studyLanguage: string;
+  systemLanguage: string;
+};
+
+export type MemberLanguageResponseDTO = APIResponse<MemberLanguageDTO>;
