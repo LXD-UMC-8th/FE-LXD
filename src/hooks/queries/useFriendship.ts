@@ -10,12 +10,16 @@ import type {
 type FriendshipState = "friend" | "pending" | "incoming" | "none";
 
 // 응답에서 배열 꺼내는 helper (undefined 안전)
-const pick = <T,>(arr: T[] | undefined | null) => (Array.isArray(arr) ? arr : []);
+const pick = <T>(arr: T[] | undefined | null) =>
+  Array.isArray(arr) ? arr : [];
 
 // 첫 페이지만 크게 가져와도 충분하면 100 정도로
-const FRIEND_FETCH_SIZE = Number(process.env.REACT_APP_FRIEND_FETCH_SIZE) || 100;
+const FRIEND_FETCH_SIZE = (() => {
+  const n = Number(import.meta.env.VITE_FRIEND_FETCH_SIZE);
+  return Number.isFinite(n) ? n : 100; // 기본값 100
+})();
 
-export default function useFriendship(targetMemberId: number) {
+export function useFriendship(targetMemberId: number) {
   // 1) 내 친구 목록
   const friendsQ = useQuery({
     queryKey: ["friends", 1, FRIEND_FETCH_SIZE],
@@ -50,7 +54,7 @@ export default function useFriendship(targetMemberId: number) {
     const received = requestsQ.data?.received ?? [];
 
     const isFriend = friends.some((f) => Number(f.memberId) === uid);
-    const isPendingSent = sent.some((s) => Number(s.memberId) === uid);        // 내가 보낸 요청 → "요청중"
+    const isPendingSent = sent.some((s) => Number(s.memberId) === uid); // 내가 보낸 요청 → "요청중"
     const isPendingReceived = received.some((r) => Number(r.memberId) === uid); // 내가 받은 요청 → "수락/거절 가능"
 
     let state: FriendshipState = "none";
@@ -67,10 +71,10 @@ export default function useFriendship(targetMemberId: number) {
   };
 
   return {
-    state,                 // "friend" | "pending" | "incoming" | "none"
+    state, // "friend" | "pending" | "incoming" | "none"
     isFriend,
-    isPendingSent,         // 내가 보낸 요청 여부
-    isPendingReceived,     // 내가 받은 요청 여부
+    isPendingSent, // 내가 보낸 요청 여부
+    isPendingReceived, // 내가 받은 요청 여부
     isLoading,
     refetchAll,
   };

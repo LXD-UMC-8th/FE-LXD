@@ -4,14 +4,14 @@ import Avatar from "../Common/Avatar";
 import { useNavigate } from "react-router-dom";
 import { addRecentSearch } from "../../utils/types/recentSearch";
 import { postFriendRequest } from "../../apis/friend";
-import useFriendship from "../../hooks/queries/useFriendship"; // ✅ 추가
+import { useFriendship } from "../../hooks/queries/useFriendship"; // ✅ 추가
 
 interface ProfileViewProps {
   user: {
     name: string;
     username: string;
     image?: string;
-    isFriend: boolean;   // (과거 호환용) 훅 결과가 우선
+    isFriend: boolean; // (과거 호환용) 훅 결과가 우선
     id: number;
   };
   onClose: () => void;
@@ -35,11 +35,18 @@ const ProfileView = ({
   const { state, isLoading, refetchAll } = useFriendship(user.id);
 
   // 과거 프롭과 병합(훅 우선, 프롭은 fallback)
-  const mergedState =
-    isLoading ? "loading"
-    : state === "friend" || state === "pending" || state === "incoming" || state === "none"
+  const mergedState = isLoading
+    ? "loading"
+    : state === "friend" ||
+      state === "pending" ||
+      state === "incoming" ||
+      state === "none"
     ? state
-    : (user.isFriend ? "friend" : (isRequesting ? "pending" : "none"));
+    : user.isFriend
+    ? "friend"
+    : isRequesting
+    ? "pending"
+    : "none";
 
   useEffect(() => {
     if (user?.username) addRecentSearch(user.username);
@@ -85,7 +92,10 @@ const ProfileView = ({
       <div className="px-8 mb-6 flex gap-4">
         {/* 버튼 상태 분기 */}
         {mergedState === "loading" ? (
-          <button className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400" disabled>
+          <button
+            className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400"
+            disabled
+          >
             로딩중…
           </button>
         ) : mergedState === "friend" ? (
@@ -100,7 +110,11 @@ const ProfileView = ({
             disabled
             className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+            <img
+              src="/images/requestingIcon.svg"
+              alt="요청중"
+              className="w-5 h-5"
+            />
             요청중
           </button>
         ) : mergedState === "incoming" ? (
@@ -123,7 +137,11 @@ const ProfileView = ({
         )}
 
         <button
-          onClick={() => navigate(`/diaries/member/${user.id}`, { state: { from: "profile" } })}
+          onClick={() =>
+            navigate(`/diaries/member/${user.id}`, {
+              state: { from: "profile" },
+            })
+          }
           className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100"
         >
           다이어리 보러가기
@@ -145,7 +163,11 @@ const ProfileView = ({
           >
             <div className="flex flex-col gap-2 flex-1">
               <div className="flex gap-3 items-center mb-2">
-                <img src="/images/public_icon.svg" alt="전체 아이콘" className="h-6 w-auto" />
+                <img
+                  src="/images/public_icon.svg"
+                  alt="전체 아이콘"
+                  className="h-6 w-auto"
+                />
                 <p className="font-bold text-lg text-gray-900">
                   여름방학 일기 {3 - idx}일차
                 </p>
@@ -155,15 +177,27 @@ const ProfileView = ({
               </p>
               <div className="flex gap-6 text-sm text-gray-500 mt-3">
                 <div className="flex items-center gap-1">
-                  <img src="/images/emptycommentIcon.svg" alt="댓글" className="w-5 h-5" />
+                  <img
+                    src="/images/emptycommentIcon.svg"
+                    alt="댓글"
+                    className="w-5 h-5"
+                  />
                   <span>180</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <img src="/images/EmptyHeartIcon.svg" alt="좋아요" className="w-5 h-5" />
+                  <img
+                    src="/images/EmptyHeartIcon.svg"
+                    alt="좋아요"
+                    className="w-5 h-5"
+                  />
                   <span>89</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <img src="/images/emptycorrectionIcon.svg" alt="공유" className="w-5 h-5" />
+                  <img
+                    src="/images/emptycorrectionIcon.svg"
+                    alt="공유"
+                    className="w-5 h-5"
+                  />
                   <span>5</span>
                 </div>
               </div>
