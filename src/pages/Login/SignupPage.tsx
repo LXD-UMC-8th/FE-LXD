@@ -34,7 +34,10 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     try {
-      const response = await postEmailVerificationRequest(userInfo.email);
+      const response = await postEmailVerificationRequest(
+        userInfo.email,
+        "EMAIL"
+      );
 
       if (response.isSuccess) {
         alert(
@@ -69,6 +72,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
       setHasVerifiedByToken(true);
       setEmailVerified(true);
+
+      // // 인증 성공한 경우에만 부모창에 메세지 전달 + 창 닫기
+      // if (window.opener) {
+      //   window.opener.postMessage({ emailVerified: true, email: verifiedEmail }, "*");
+      //   window.close();
+      // }
+
       alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
     } catch (error) {
@@ -78,6 +88,20 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       alert("인증 처리 중 오류가 발생하였습니다.");
     }
   };
+  // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.emailVerified && event.data.email) {
+        setUserInfo((prev) => ({ ...prev, email: event.data.email }));
+        setEmailVerified(true);
+        setHasVerifiedByToken(true);
+        alert("이메일 인증이 완료되었습니다!");
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
     setUserInfo((prev) => ({ ...prev, [key]: value }));

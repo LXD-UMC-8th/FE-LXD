@@ -128,7 +128,7 @@ const ProfileView = ({
 
         {/* ✅ 다이어리 보러가기: memberId로 이동 */}
         <button
-          onClick={() => navigate(`/diaries/member/${user.id}`)}
+
           className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100"
         >
           다이어리 보러가기

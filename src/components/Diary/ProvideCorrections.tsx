@@ -3,8 +3,15 @@ import PrevButton from "../Common/PrevButton";
 import TitleHeader from "../Common/TitleHeader";
 import DiaryContent from "./DiaryContent";
 import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
+import { useParams } from "react-router-dom";
+import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 
 const ProvideCorrections = () => {
+
+  const { diaryId } = useParams<{ diaryId?: string }>();
+  const parsedDiaryId = Number(diaryId);
+  const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
+
   const [selectedText, setSelectedText] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editedText, setEditedText] = useState("");
@@ -12,8 +19,21 @@ const ProvideCorrections = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
-
   const { mutate: postCorrection } = usePostCorrection();
+
+  // 일기 상세 조회
+  const {
+    mutate: fetchDiaryDetail,
+    data: diaryData, 
+  } = useGetDiaryDetail();
+
+  useEffect(() => {
+    if (hasValidId) {
+      fetchDiaryDetail({ diaryId: parsedDiaryId });
+    }
+  }, [hasValidId, parsedDiaryId, fetchDiaryDetail]);
+
+  const diary = diaryData?.result;
 
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
@@ -50,16 +70,18 @@ const ProvideCorrections = () => {
   }, []);
 
   const handleSubmit = () => {
-    if (!editedText.trim() || !description.trim()) return;
+    if (!editedText.trim() || !description.trim() || !selectedText.trim()) return;
 
     postCorrection({
-      diaryId: 1,
+      diaryId: parsedDiaryId,
       original: selectedText,
       corrected: editedText,
       commentText: description,
+    }, {
+      onSuccess: () => {
+        setShowModal(false);
+      },
     });
-
-    setShowModal(false);
   };
 
   const _stats = [
@@ -88,22 +110,17 @@ const ProvideCorrections = () => {
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 */}
         <div className="mb-4 flex items-center gap-3">
-          <PrevButton navigateURL="/feed/${id}" />
+          <PrevButton navigateURL={-1} />
           <TitleHeader title="교정하기" />
         </div>
 
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
           <DiaryContent
-            title="제목"
-            language="한국어"
-            visibility="전체공개"
-            content={`요즘는 하루가 정말 빨리 지나간다.
-              오늘도 눈 뜨고 정신 차려보니 벌써 저녁. 
-              오전엔 간단하게 집 정리하고, 밀린 설거지 해치웠다.
-              생각보다 시간이 오래 걸려서 커피 한 잔 마시고 나니 벌써 점심시간.
-              점심은 냉장고에 남아있던 재료들로 대충 볶음밥. 어제보다 낫다. 
-              오후엔 컴퓨터 앞에 앉아서 이것저것 정리했다.`}
+            title={diary?.title ?? ""}
+            language={diary?.language ?? ""}
+            visibility={diary?.visibility ?? ""}
+            content={diary?.content}
             stats={_stats}
           />
         </div>

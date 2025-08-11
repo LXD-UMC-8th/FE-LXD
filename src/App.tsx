@@ -44,17 +44,18 @@ const protectedRoutes: RouteObject[] = [
     children: [
       {
         element: <Navigate to="/feed" replace />,
+        index: true,
       },
       {
         path: "/feed",
         element: <FeedPage />,
       },
       {
-        path: "/feed/:id",
+        path: "/feed/:diaryId",
         element: <DiaryDetailPage />,
       },
       {
-        path: "/feed/:id/corrections",
+        path: "/feed/:diaryId/corrections",
         element: <ProvideCorrections />,
       },
       {
@@ -100,7 +101,7 @@ const protectedRoutes: RouteObject[] = [
   },
 ];
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
-
+// eslint-disable-next-line react-refresh/only-export-components
 export const queryClient = new QueryClient();
 
 function App() {

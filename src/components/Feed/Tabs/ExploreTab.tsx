@@ -3,7 +3,7 @@ import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
 import { useEffect, useState } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
-import { getExploreDiaries } from "../../../apis/diary";
+import { getDiaryDetail, getExploreDiaries } from "../../../apis/diary";
 import type {
   diaries,
   getDiariesResponseDTO,
@@ -11,8 +11,13 @@ import type {
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ExploreTab = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const { language } = useLanguage();
   const t = translate[language];
   const [lang, setLang] = useState<string>("KO");
@@ -44,6 +49,17 @@ const ExploreTab = () => {
       console.log("Fetching next page of friends' diaries:", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
+
+  const handleOpenDiary = async (diaryId: number) => {
+    await queryClient.prefetchQuery({
+      queryKey: ["diaryDetail", diaryId],
+      queryFn: () => getDiaryDetail(diaryId),
+      staleTime: 30_000,
+    });
+
+    navigate(`/feed/${diaryId}`)
+  }
+
   return (
     <div className="flex flex-col w-260 mb-10">
       <div className="mb-5">
@@ -60,8 +76,16 @@ const ExploreTab = () => {
             (diary: diaries) =>
               diary.language === lang && diary.visibility !== "PRIVATE",
           )
-          .map((data: diaries) => (
-            <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
+          .map((d: diaries) => (
+            <div
+              key={d.diaryId}
+              role="button"
+              tabIndex={0}
+              onClick={() => handleOpenDiary(d.diaryId)}
+              onKeyDown={(e) => e.key === "Enter" && handleOpenDiary(d.diaryId)}
+            >
+              <CommonComponentInDiaryNFeed props={d}/>
+            </div>
           )),
       )}
       {isFetching && (

@@ -8,12 +8,14 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import type { DiaryUploadResult } from "../../utils/types/diary";
+import { axiosInstance } from "../../apis/axios";
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { diaryId } = useParams<{ diaryId: string }>(); // URL 파라미터로 받기
-  const parsedDiaryId = Number(diaryId || 1);
+  const { diaryId } = useParams<{ diaryId?: string }>(); // URL 파라미터로 받기
+  const parsedDiaryId = Number(diaryId);
+  const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
 
   const backURL = location.state?.from === "profile" ? -1 : "/feed";
 
@@ -42,11 +44,28 @@ const DiaryDetailPage = () => {
   } = useGetDiaryDetail();
 
   useEffect(() => {
-    if (parsedDiaryId) {
-      fetchDiaryDetail({ diaryId: parsedDiaryId });
-      fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
-    }
-  }, [parsedDiaryId, fetchCorrections, fetchDiaryDetail]);
+    if (!hasValidId) return;
+    console.log("diaryId from URL:", diaryId, "->parsed", parsedDiaryId);
+
+    fetchDiaryDetail({ diaryId: parsedDiaryId });
+    fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasValidId, parsedDiaryId]);
+
+  // 잘못된 접근 처리
+  if (!hasValidId) {
+    return (
+      <div>
+        <div>
+          잘못된 접근입니다.
+          <button>
+            피드로 돌아가기
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   /** 로딩 처리 */
   if (isDiaryPending) return <LoadingModal />;
@@ -110,7 +129,7 @@ const DiaryDetailPage = () => {
                 alt="댓글 아이콘"
                 className="w-[24px] h-[24px]"
               />
-              <span>댓글 ({diary?.commentCount || 0})</span>
+              <span>댓글 ({diary?.commentCount ?? 0})</span>
             </div>
 
             {/* 댓글 입력창 */}
@@ -121,7 +140,10 @@ const DiaryDetailPage = () => {
                 rows={4}
               />
               <div className="flex justify-end mt-3">
-                <button className="bg-gray-900 text-white text-sm px-4 py-[6px] rounded-lg text-caption font-semibold hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer">
+                <button
+                  className="bg-gray-900 text-white text-sm px-4 py-[6px] rounded-lg text-caption font-semibold hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
+                  //임시로 만든 댓글 등록 핸들러
+                >
                   등록
                 </button>
               </div>
@@ -197,13 +219,13 @@ const DiaryDetailPage = () => {
 
         {isCorrectionsPending && <LoadingModal />}
 
-        {correctionData?.result.corrections?.contents?.map(
+        {correctionData?.result?.corrections?.contents?.map(
           (correction: ContentsDTO) => (
             <CorrectionsInFeedDetail
               key={correction.correctionId}
               props={correction}
             />
-          ),
+          )
         )}
       </div>
     </div>
