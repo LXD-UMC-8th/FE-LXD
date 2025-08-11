@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface LangOptionsButtonProps {
   name: string;
@@ -12,6 +14,8 @@ const LangOptionsButton = ({
   onSelect,
 }: LangOptionsButtonProps) => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
+  const { language } = useLanguage();
+    const t = translate[language];
 
   return (
     <div className="space-y-[10px]">
@@ -37,7 +41,7 @@ const LangOptionsButton = ({
               ? "한국어"
               : selected === "ENG"
               ? "English"
-              : "언어 선택"}
+              : t.langPlaceholder}
           </span>
 
           {/* Arrow Icon */}

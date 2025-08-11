@@ -17,14 +17,24 @@ export const translate: Record<
     comfirmPassword: string;
     TosAgreed: string;
     nextButton: string;
-
     emailVerifiedToast: string;
     emailErrorToast: string;
     pwConditionToast: string;
     pwValidToast: string;
     pwConfirmedToast: string;
     pwNotConfirmedToast: string;
-
+    profileHeader: string;
+    addPhoto: string;
+    id: string;
+    idPlaceholder: string;
+    idCheck: string;
+    nickname: string;
+    nicknamePlaceholder: string;
+    nicknameConditionToast: string;
+    primaryLang: string;
+    learningLang: string;
+    langPlaceholder: string;
+    signupButton: string;
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
     titleStyle_FREE: string;
@@ -79,10 +89,23 @@ export const translate: Record<
     nextButton: "Next",
     emailVerifiedToast: "Your email has verified",
     emailErrorToast: "Cannot send verification email to that address",
-    pwConditionToast: "At least 8 characters, including uppercase, lowercase, and a number.",
+    pwConditionToast:
+      "At least 8 characters, including uppercase, lowercase, and a number.",
     pwValidToast: "Passwords are valid",
     pwConfirmedToast: "Passwords match",
     pwNotConfirmedToast: "Passwords do not match",
+    profileHeader: "Enter the information to create your profile",
+    addPhoto: "Add Photo",
+    id: "ID",
+    idPlaceholder: "Enter your ID",
+    idCheck: "Check",
+    nickname: "Nickname",
+    nicknamePlaceholder: "Enter your nickname",
+    nicknameConditionToast: "Maximum 20 characters",
+    primaryLang: "Primary Language",
+    learningLang: "Learning Language",
+    langPlaceholder: "Select Language",
+    signupButton: "Sign Up",
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -140,6 +163,18 @@ export const translate: Record<
     pwValidToast: "유효한 비밀번호입니다",
     pwConfirmedToast: "비밀번호가 일치합니다",
     pwNotConfirmedToast: "비밀번호가 일치하지 않습니다",
+    profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
+    addPhoto: "사진 추가",
+    id: "아이디",
+    idPlaceholder: "아이디를 입력해주세요",
+    idCheck: "중복확인",
+    nickname: "닉네임",
+    nicknamePlaceholder: "닉네임을 입력해주세요",
+    nicknameConditionToast: "최대 20자",
+    primaryLang: "모국어 / 주사용 언어",
+    learningLang: "학습 언어",
+    langPlaceholder: "언어 선택",
+    signupButton: "가입완료",
     modaltabtitle_total: "모두",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",
