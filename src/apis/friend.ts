@@ -1,5 +1,4 @@
 import type {
-  FriendRequesterId,
   FriendReceiverId,
   FriendAcceptResponseDTO,
   FriendRefuseResponseDTO,
@@ -25,24 +24,16 @@ export const postFriendRequest = async (
 
 // 친구 요청 수락
 export const postFriendAccept = async (
-  body: string | number
+  requesterId: number
 ): Promise<FriendAcceptResponseDTO | undefined> => {
+  //requesterId가 없고 /member/{number}로 된 형태를 보완하기 위해 코드 조정
   try {
-    if (typeof body === "string" && body.includes("/members/")) {
-      const id = body.split("/members/")[1];
-      const { data } = await axiosInstance.post<FriendAcceptResponseDTO>(
-        "/friends/accept",
-        { requesterId: id }
-      );
-      return data;
-    } else if (typeof body === "number") {
-      const { data } = await axiosInstance.post<FriendAcceptResponseDTO>(
-        "/friends/accept",
-        { requesterId: body }
-      );
+    const { data } = await axiosInstance.post<FriendAcceptResponseDTO>(
+      "/friends/accept",
+      { requesterId: requesterId }
+    );
 
-      return data;
-    }
+    return data;
   } catch (error) {
     console.error("Error accepting friend request:", error);
   }
@@ -50,24 +41,15 @@ export const postFriendAccept = async (
 
 // 친구 요청 거절
 export const postFriendRefuse = async (
-  body: string | number
+  requesterId?: number
 ): Promise<FriendRefuseResponseDTO | undefined> => {
   try {
-    if (typeof body === "string" && body.includes("/members/")) {
-      const id = body.split("/members/")[1];
-      const { data } = await axiosInstance.post<FriendRefuseResponseDTO>(
-        "/friends/refuse",
-        { requesterId: id }
-      );
-      return data;
-    } else if (typeof body === "number") {
-      const { data } = await axiosInstance.post<FriendRefuseResponseDTO>(
-        "/friends/refuse",
-        { requesterId: body }
-      );
+    const { data } = await axiosInstance.post<FriendRefuseResponseDTO>(
+      "/friends/refuse",
+      { requesterId: requesterId }
+    );
 
-      return data;
-    }
+    return data;
   } catch (error) {
     console.error("Error refusing friend request:", error);
   }

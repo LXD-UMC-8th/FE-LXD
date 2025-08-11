@@ -11,14 +11,12 @@ import type { FriendRequestListResponseDTO } from "../../../utils/types/friend";
 
 const RequestTab = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [receivedRequests, setReceivedRequests] =
-    useState<
-      FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"]
-    >([]);
-  const [sentRequests, setSentRequests] =
-    useState<
-      FriendRequestListResponseDTO["result"]["sentRequests"]["contents"]
-    >([]);
+  const [receivedRequests, setReceivedRequests] = useState<
+    FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"]
+  >([]);
+  const [sentRequests, setSentRequests] = useState<
+    FriendRequestListResponseDTO["result"]["sentRequests"]["contents"]
+  >([]);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -49,7 +47,7 @@ const RequestTab = () => {
 
   const handleAccept = async (memberId: number) => {
     try {
-      await postFriendAccept({ requesterId: memberId });
+      await postFriendAccept(memberId);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
@@ -60,7 +58,7 @@ const RequestTab = () => {
 
   const handleRefuse = async (memberId: number) => {
     try {
-      await postFriendRefuse({ requesterId: memberId });
+      await postFriendRefuse(memberId);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );

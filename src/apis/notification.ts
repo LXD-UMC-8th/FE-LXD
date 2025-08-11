@@ -3,7 +3,6 @@ import { axiosInstance } from "./axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import type {
   patchReadAllNotificationResponseDTO,
-  patchRedirectNotificationRequestDTO,
   patchRedirectNotificationResponseDTO,
 } from "../utils/types/notification";
 

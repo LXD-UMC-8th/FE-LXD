@@ -14,11 +14,17 @@ const NotificationContent = ({
   const t = translate[language];
 
   const handleAcceptFriend = () => {
-    postFriendAccept(notifications.redirectUrl || "");
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendAccept(Number(requesterId));
+    }
   };
   const handleRefuseFriend = () => {
-    if (notifications.redirectUrl) {
-      postFriendRefuse(notifications.redirectUrl);
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendRefuse(Number(requesterId));
     }
   };
 

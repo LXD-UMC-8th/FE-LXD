@@ -61,7 +61,11 @@ export function useNotificationReadAll() {
       // Reconcile with server (will also be 0 / read: true)
       queryClient.setQueryData(
         ["notifications", "badge"],
-        data.result.totalElements ?? 0
+        typeof data.result === "object" &&
+          data.result !== null &&
+          "totalElements" in data.result
+          ? (data.result as { totalElements?: number }).totalElements ?? 0
+          : 0
       );
     },
 
