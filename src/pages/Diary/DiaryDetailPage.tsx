@@ -19,14 +19,10 @@ const DiaryDetailPage = () => {
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
 
-  // PrevButton이 number를 허용하지 않으면 -1 대신 문자열만 넘기자.
   const backURL = location.state?.from === "profile" ? -1 : "/feed";
 
-  // ✅ index 대신 commentId로 관리
   const [openReplyId, setOpenReplyId] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
-
-  // 답글 입력값을 댓글ID별로 관리
   const [replyTexts, setReplyTexts] = useState<Record<number, string>>({});
 
   const _toggleReplyInput = (id: number) => {
@@ -51,7 +47,7 @@ const DiaryDetailPage = () => {
     isPending: isDiaryPending,
   } = useGetDiaryDetail();
 
-  /**  일기 댓글 목록 조회 */
+  /** 일기 댓글 목록 조회 */
   const {
     mutate: fetchDiaryComments,
     data: commentData,
@@ -84,7 +80,7 @@ const DiaryDetailPage = () => {
     );
   }
 
-  /** 댓글 등록 (최상위) */
+  /** 댓글 등록 */
   const _handleSubmitComment = () => {
     const text = commentText.trim();
     if (!text) return;
@@ -96,8 +92,8 @@ const DiaryDetailPage = () => {
         commentText: text,
       },
       {
-        onSuccess: (data) => {
-          console.log("POST ok diaryId?", data.result.diaryId);
+        onSuccess: () => {
+          setCommentText("");
           fetchDiaryComments({ diaryId: parsedDiaryId, page: 0, size: 20 });
         },
       }
@@ -117,7 +113,7 @@ const DiaryDetailPage = () => {
     postDiaryComment(
       {
         diaryId: parsedDiaryId,
-        parentId: parentCommentId, // 부모 댓글의 commentId → 답글
+        parentId: parentCommentId, // 부모 댓글 ID → 답글
         commentText: text,
       },
       {
@@ -149,7 +145,6 @@ const DiaryDetailPage = () => {
 
   const diary: DiaryUploadResult | undefined = diaryData?.result;
 
-  /** ✅ 대댓글(재귀) 렌더링 */
   const renderReplies = (replies: any[] = [], depth = 1) =>
     replies.map((r) => {
       const hasChildren = Array.isArray(r.replies) && r.replies.length > 0;
@@ -163,7 +158,7 @@ const DiaryDetailPage = () => {
             <img
               src={r.profileImage ?? "/images/profileimages.svg"}
               alt="프로필"
-              className="w-8 h-8 rounded-full bg-gray-300"
+              className="w-8 h-8 rounded-full"
             />
             <div className="flex items-center gap-2">
               <span className="font-semibold text-sm">{r.nickname ?? "사용자"}</span>
@@ -179,8 +174,6 @@ const DiaryDetailPage = () => {
             {r.content ?? r.commentText}
           </p>
 
-          {/* 필요하면 여기에도 '답글 달기/삭제/좋아요' 버튼 추가 가능 */}
-
           {hasChildren ? renderReplies(r.replies, depth + 1) : null}
         </div>
       );
@@ -189,7 +182,7 @@ const DiaryDetailPage = () => {
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
       <div className="w-full max-w-[750px]">
-        {/* ← 뒤로가기 + 교정하기 */}
+        {/* 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
           <button
@@ -213,17 +206,8 @@ const DiaryDetailPage = () => {
               visibility={diary.visibility}
               content={diary.content}
               profileImg={diary.profileImg}
-              /* 👇 서버가 writerUserName, writerNickName 등으로 줄 수도 있으니 매핑 */
-              writerUsername={
-                (diary as any).writerUsername ??
-                (diary as any).writerUserName ??
-                (diary as any).username
-              }
-              writerNickname={
-                (diary as any).writerNickname ??
-                (diary as any).writerNickName ??
-                (diary as any).nickname
-              }
+              writerUsername={diary.writerUserName}
+              writerNickname={diary.writerNickName}
               stats={[
                 {
                   label: String(commentTotal ?? diary.commentCount ?? 0),
@@ -255,7 +239,7 @@ const DiaryDetailPage = () => {
               <span>댓글 ({commentTotal})</span>
             </div>
 
-            {/*  댓글 입력창 */}
+            {/* 최상위 댓글 입력창 */}
             <div className="mb-5">
               <textarea
                 placeholder="댓글을 입력하세요."
@@ -275,7 +259,7 @@ const DiaryDetailPage = () => {
                 <button
                   onClick={_handleSubmitComment}
                   disabled={isPostingComment || !commentText.trim()}
-                  className={`bg-gray-900 text-white text-sm px-4 py-[6px] rounded-lg text-caption font-semibold cursor-pointer ${
+                  className={`bg-gray-900 text-white text-sm px-4 py-[6px] rounded-[5px] text-caption font-semibold cursor-pointer ${
                     isPostingComment || !commentText.trim()
                       ? "opacity-50 cursor-not-allowed"
                       : "hover:bg-gray-800"
@@ -292,13 +276,15 @@ const DiaryDetailPage = () => {
             {/* 댓글 리스트 */}
             {comments.map((c: any) => {
               const hasReplies = Array.isArray(c.replies) && c.replies.length > 0;
+
               return (
                 <div key={c.commentId} className="border border-gray-200 rounded-lg p-5 mb-6">
+                  {/* 작성자 */}
                   <div className="flex items-center gap-3 mb-2">
                     <img
-                      src={c.profileImage ?? "/images/profileimages.svg"}
+                      src={c.profileImage ?? "/images/profileimage.svg"}
                       alt="프로필"
-                      className="w-9 h-9 rounded-full bg-gray-300"
+                      className="w-9 h-9 rounded-full"
                     />
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex items-center gap-2">
@@ -316,24 +302,31 @@ const DiaryDetailPage = () => {
                     </div>
                   </div>
 
+                  {/* 본문 */}
                   <p className="text-body2 text-black whitespace-pre-line leading-relaxed mb-4">
                     {c.content ?? c.commentText}
                   </p>
 
-                  {/* 대댓글 리스트 */}
-                  {hasReplies ? renderReplies(c.replies) : null}
-
+                  {/* 답글 토글 / 좋아요 / 삭제 */}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-2 mt-3">
-                    {/* 답글 토글 */}
-                    <div
+                    {/* 답글 토글 버튼 */}
+                    <button
                       className={`flex items-center gap-1 cursor-pointer p-1 ${
                         openReplyId === c.commentId ? "bg-gray-200 rounded-[5px] text-black" : ""
                       }`}
                       onClick={() => _toggleReplyInput(c.commentId)}
                     >
-                      <img src="/images/commentIcon.svg" alt="댓글 수" className="w-4 h-4" />
+                      <img
+                        src={
+                          openReplyId === c.commentId
+                            ? "/images/commentIcon.svg"
+                            : "/images/CommonComponentIcon/CommentIcon.svg"
+                        }
+                        alt="댓글 수"
+                        className="w-4 h-4"
+                      />
                       <span>{c.replyCount ?? (c.replies?.length ?? 0)}</span>
-                    </div>
+                    </button>
 
                     {/* 좋아요 */}
                     <div className="flex items-center gap-1">
@@ -345,7 +338,7 @@ const DiaryDetailPage = () => {
                       <span>{c.likeCount ?? 0}</span>
                     </div>
 
-                    {/* 삭제 버튼 */}
+                    {/* 삭제 */}
                     <button
                       onClick={() => _handleDeleteComment(c.commentId)}
                       disabled={isDeletingComment}
@@ -355,12 +348,19 @@ const DiaryDetailPage = () => {
                     </button>
                   </div>
 
-                  {/* 답글 입력 영역 */}
+                  {/* 답글 영역 */}
                   {openReplyId === c.commentId && (
                     <div className="mt-3">
+                      {hasReplies && (
+                        <div className="mb-3">
+                          {renderReplies(c.replies)}
+                        </div>
+                      )}
+
+                      {/* 답글 입력 */}
                       <textarea
                         placeholder="답글을 입력하세요."
-                        className="w-full bg-gray-50 text-sm text-gray-800 resize-none border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        className="w-full bg-gray-50 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-200"
                         rows={3}
                         value={replyTexts[c.commentId] ?? ""}
                         onChange={(e) => _handleReplyChange(c.commentId, e.target.value)}
