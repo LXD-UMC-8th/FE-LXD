@@ -2,7 +2,7 @@ import type { APIResponse } from "./APIresponse";
 
 // 일기 댓글 작성
 export type DiaryCommentRequestDTO = {
-    parentId: number;
+    parentId: number | null;
     commentText: string;
 }
 
@@ -12,9 +12,10 @@ export type DiaryCommentDTO = {
     username: string;
     nickname: string;
     diaryId: number;
-    parentId: number;
+    parentId: number | null;
     profileImage: string;
-    commenText?: string;
+    content?: string;
+    commentText?: string;
     replyCount: number;
     likeCount: number;
     createdAt: string;
