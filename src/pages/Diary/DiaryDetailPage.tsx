@@ -54,15 +54,6 @@ const DiaryDetailPage = () => {
 
   const diary: DiaryUploadResult | undefined = diaryData?.result;
 
-  const handlerSubmit = async () => {
-    try {
-      const res = await axiosInstance(`{/diaries/${parsedDiaryId}/comments}`);
-      return res.data;
-    } catch {
-      console.error("댓글 등록 실패");
-    }
-  };
-
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
       <div className="w-full max-w-[750px]">
@@ -134,7 +125,6 @@ const DiaryDetailPage = () => {
                 <button
                   className="bg-gray-900 text-white text-sm px-4 py-[6px] rounded-lg text-caption font-semibold hover:bg-gray-800 hover:scale-105 transition-all duration-300 cursor-pointer"
                   //임시로 만든 댓글 등록 핸들러
-                  onClick={handlerSubmit}
                 >
                   등록
                 </button>
