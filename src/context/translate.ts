@@ -40,6 +40,7 @@ export const translate: Record<
     CannotLoadList: string;
     titleRequired: string;
     FriendFeedX: string;
+    settingTitle: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -80,6 +81,7 @@ export const translate: Record<
     CannotLoadList: "Unable to load list.",
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
+    settingTitle: "Settings",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -119,5 +121,6 @@ export const translate: Record<
     CannotLoadList: "목록을 불러올 수 없습니다.",
     titleRequired: "제목을 작성하세요.",
     FriendFeedX: "친구의 일기가 없습니다.",
+    settingTitle: "서비스 설정",
   },
 };
