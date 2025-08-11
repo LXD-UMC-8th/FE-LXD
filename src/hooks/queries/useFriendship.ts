@@ -9,31 +9,37 @@ import type {
 
 type FriendshipState = "friend" | "pending" | "incoming" | "none";
 
-// 응답에서 배열 꺼내는 helper (undefined 안전)
+// undefined 안전 배열 헬퍼
 const pick = <T,>(arr: T[] | undefined | null) => (Array.isArray(arr) ? arr : []);
 
-// 첫 페이지만 크게 가져와도 충분하면 100 정도로
-const FRIEND_FETCH_SIZE = (() => {
-  const n = Number(import.meta.env.VITE_FRIEND_FETCH_SIZE);
-  return Number.isFinite(n) ? n : 100; // 기본값 100
-})();
+// 환경변수 안전하게 읽기 (CRA/Vite 모두 대응)
+const FRIEND_FETCH_SIZE: number = Number(
+  // Vite
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (typeof import.meta !== "undefined" && (import.meta as any)?.env?.VITE_FRIEND_FETCH_SIZE) ??
+  // CRA
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any)?.process?.env?.REACT_APP_FRIEND_FETCH_SIZE ??
+  100
+);
 
 export default function useFriendship(targetMemberId: number) {
   // 1) 내 친구 목록
   const friendsQ = useQuery({
-    queryKey: ["friends", 1, FRIEND_FETCH_SIZE],
+    queryKey: ["friends", 1, FRIEND_FETCH_SIZE] as const,
     queryFn: () => getFriends(1, FRIEND_FETCH_SIZE),
-    // 필요한 부분만 select 해서 컴포넌트 렌더 최소화
+    staleTime: 30_000,
     select: (res: FriendListResponseDTO) =>
       pick(res?.result?.friends?.contents).map((m) => ({
         memberId: m.memberId,
       })),
   });
 
-  // 2) 내 친구 요청 목록 (보낸/받은)
+  // 2) 보낸/받은 친구요청
   const requestsQ = useQuery({
-    queryKey: ["friendRequests"],
+    queryKey: ["friendRequests"] as const,
     queryFn: getFriendRequests,
+    staleTime: 30_000,
     select: (res: FriendRequestListResponseDTO) => ({
       sent: pick(res?.result?.sentRequests?.contents).map((m) => ({
         memberId: m.memberId,
@@ -53,28 +59,30 @@ export default function useFriendship(targetMemberId: number) {
     const received = requestsQ.data?.received ?? [];
 
     const isFriend = friends.some((f) => Number(f.memberId) === uid);
-    const isPendingSent = sent.some((s) => Number(s.memberId) === uid);        // 내가 보낸 요청 → "요청중"
-    const isPendingReceived = received.some((r) => Number(r.memberId) === uid); // 내가 받은 요청 → "수락/거절 가능"
+    const isPendingSent = sent.some((s) => Number(s.memberId) === uid);        // 내가 보낸 요청
+    const isPendingReceived = received.some((r) => Number(r.memberId) === uid); // 내가 받은 요청
 
     let state: FriendshipState = "none";
     if (isFriend) state = "friend";
     else if (isPendingSent) state = "pending";
-    else if (isPendingReceived) state = "incoming"; // 필요 없으면 이 분기 삭제해도 됨
+    else if (isPendingReceived) state = "incoming";
 
     return { state, isFriend, isPendingSent, isPendingReceived };
   }, [friendsQ.data, requestsQ.data, targetMemberId]);
 
-  const isLoading = friendsQ.isLoading || requestsQ.isLoading;
+  // ✅ v5 호환: isPending 사용
+  const isLoading = friendsQ.isPending || requestsQ.isPending;
+
   const refetchAll = async () => {
     await Promise.all([friendsQ.refetch(), requestsQ.refetch()]);
   };
 
   return {
-    state,                 // "friend" | "pending" | "incoming" | "none"
+    state,               // "friend" | "pending" | "incoming" | "none"
     isFriend,
-    isPendingSent,         // 내가 보낸 요청 여부
-    isPendingReceived,     // 내가 받은 요청 여부
-    isLoading,
+    isPendingSent,
+    isPendingReceived,
+    isLoading,           // 컴포넌트에선 그대로 사용 가능
     refetchAll,
   };
 }
