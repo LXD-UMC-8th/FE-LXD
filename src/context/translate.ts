@@ -11,6 +11,20 @@ export const translate: Record<
     googleLogin: string;
     signup: string;
     changePassword: string;
+    signupHeader: string;
+    beforeVerify: string;
+    afterVerify: string;
+    comfirmPassword: string;
+    TosAgreed: string;
+    nextButton: string;
+
+    emailVerifiedToast: string;
+    emailErrorToast: string;
+    pwConditionToast: string;
+    pwValidToast: string;
+    pwConfirmedToast: string;
+    pwNotConfirmedToast: string;
+
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
     titleStyle_FREE: string;
@@ -57,6 +71,18 @@ export const translate: Record<
     googleLogin: "Start with Google",
     signup: "Sign-up",
     changePassword: "Forgot password?",
+    signupHeader: "Enter your information to create an account",
+    beforeVerify: "Verify",
+    afterVerify: "Verified",
+    comfirmPassword: "Confirm Password",
+    TosAgreed: "I agree to the Terms of Service and Privacy Policy",
+    nextButton: "Next",
+    emailVerifiedToast: "Your email has verified",
+    emailErrorToast: "Cannot send verification email to that address",
+    pwConditionToast: "At least 8 characters, including uppercase, lowercase, and a number.",
+    pwValidToast: "Passwords are valid",
+    pwConfirmedToast: "Passwords match",
+    pwNotConfirmedToast: "Passwords do not match",
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -102,6 +128,18 @@ export const translate: Record<
     googleLogin: "Google 로 시작하기",
     signup: "회원가입",
     changePassword: "비밀번호 변경",
+    signupHeader: "계정 생성을 위해 정보를 입력해주세요",
+    beforeVerify: "인증하기",
+    afterVerify: "인증완료",
+    comfirmPassword: "비밀번호 확인",
+    TosAgreed: "이용약관 및 개인정보 처리 방침에 동의합니다",
+    nextButton: "다음으로",
+    emailVerifiedToast: "인증되었습니다",
+    emailErrorToast: "입력하신 이메일로 인증 메일을 보낼 수 없습니다",
+    pwConditionToast: "8자 이상, 대소문자, 숫자 포함",
+    pwValidToast: "유효한 비밀번호입니다",
+    pwConfirmedToast: "비밀번호가 일치합니다",
+    pwNotConfirmedToast: "비밀번호가 일치하지 않습니다",
     modaltabtitle_total: "모두",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",
