@@ -49,7 +49,7 @@ const LoginPage = () => {
         <form className="flex flex-col space-y-5">
           <FormInput
             name="이메일"
-            placeholder={t.emailPlaceholder}
+            placeholder="이메일을 입력하세요"
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
