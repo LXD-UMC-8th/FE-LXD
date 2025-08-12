@@ -51,6 +51,14 @@ export const translate: Record<
     SidebarCorrections: string;
     SidebarFriends: string;
     SidebarSettings: string;
+    User: string;
+    EditProfile: string;
+    SignOut: string;
+    WantToLogOut: string;
+    LogOutStatementFront: string;
+    LogOutStatementBack: string;
+    CompleteLogOut: string;
+    Close: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -92,16 +100,24 @@ export const translate: Record<
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
     settingTitle: "Settings",
-    SaveChange: "Save Change",
-    setLanguage: "Language Setting",
+    SaveChange: "Save Changes",
+    setLanguage: "Set Language",
     nativeLanguage: "Native Language",
     studyLanguage: "Study Language",
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
-    SidebarDiary: "My Diary",
-    SidebarCorrections: "My Correction",
+    SidebarDiary: "Diary",
+    SidebarCorrections: "Corrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
+    User: "",
+    EditProfile: "Edit Profile",
+    SignOut: "Log Out",
+    WantToLogOut: "Are you sure you want to log out?",
+    LogOutStatementFront: "Do you want to log out of the account",
+    LogOutStatementBack: "on LXD?",
+    CompleteLogOut: "Logout is complete.",
+    Close: "Close",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -142,7 +158,7 @@ export const translate: Record<
     titleRequired: "제목을 작성하세요.",
     FriendFeedX: "친구의 일기가 없습니다.",
     settingTitle: "서비스 설정",
-    SaveChange: "변경 내용 저장",
+    SaveChange: "변경사항 저장",
     setLanguage: "언어 설정",
     nativeLanguage: "모국어",
     studyLanguage: "학습 언어",
@@ -152,5 +168,13 @@ export const translate: Record<
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
     SidebarSettings: "설정",
+    User: "님",
+    EditProfile: "프로필 수정",
+    SignOut: "로그아웃",
+    WantToLogOut: "정말 로그아웃 하시겠습니까?",
+    LogOutStatementFront: "LXD에서 ",
+    LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
+    CompleteLogOut: "로그아웃이 완료되었습니다.",
+    Close: "닫기",
   },
 };

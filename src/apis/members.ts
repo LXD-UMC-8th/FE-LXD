@@ -1,6 +1,9 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
-import type { MemberLanguageResponseDTO } from "../utils/types/member";
+import type {
+  MemberLanguageResponseDTO,
+  MemberProfileResponseDTO,
+} from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -104,5 +107,19 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
     return response.data;
   } catch (err) {
     console.log("patchMemberLanguage error:", err);
+  }
+};
+
+export const getMemberProfile = async (): Promise<
+  MemberProfileResponseDTO | undefined
+> => {
+  try {
+    const response = await axiosInstance.get<MemberProfileResponseDTO>(
+      `/members/profile`
+    );
+
+    return response.data;
+  } catch (err) {
+    console.log("getMemberProfile error:", err);
   }
 };
