@@ -69,6 +69,14 @@ export const translate: Record<
     unfriendConfirmAction2: string;
     unfriendDoneToast2: string;
     friendsTotalLabel: string;
+    User: string;
+    EditProfile: string;
+    SignOut: string;
+    WantToLogOut: string;
+    LogOutStatementFront: string;
+    LogOutStatementBack: string;
+    CompleteLogOut: string;
+    Close: string;
   }
   
 > = {
@@ -118,7 +126,7 @@ export const translate: Record<
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
     SidebarDiary: "My Diary",
-    SidebarCorrections: "My Correction",
+    SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
     findFriendsHeadline: "Find friends around the world",
@@ -139,6 +147,14 @@ export const translate: Record<
     unfriendConfirmAction2: "Unfriend",
     unfriendDoneToast2: "Removed from friends.",
     friendsTotalLabel: "{count} friends in total",
+    User: "",
+    EditProfile: "Edit Profile",
+    SignOut: "Log Out",
+    WantToLogOut: "Are you sure you want to log out?",
+    LogOutStatementFront: "Do you want to log out of the account",
+    LogOutStatementBack: "on LXD?",
+    CompleteLogOut: "Logout is complete.",
+    Close: "Close",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -207,5 +223,13 @@ export const translate: Record<
     unfriendConfirmAction2: "친구 취소하기",
     unfriendDoneToast2: "친구",
     friendsTotalLabel: "총 {count}명",
+    User: "님",
+    EditProfile: "프로필 수정",
+    SignOut: "로그아웃",
+    WantToLogOut: "정말 로그아웃 하시겠습니까?",
+    LogOutStatementFront: "LXD에서 ",
+    LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
+    CompleteLogOut: "로그아웃이 완료되었습니다.",
+    Close: "닫기",
   },
 };

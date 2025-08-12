@@ -8,7 +8,7 @@ const ProtectedLayout = () => {
   if (!isLoggedIn) {
     return <Navigate to="/home" replace />;
   }
-  
+
   return (
     <div className="flex relative min-h-screen bg-gray-100 justify-center">
       <div className="fixed top-0 left-0 w-full z-50">
