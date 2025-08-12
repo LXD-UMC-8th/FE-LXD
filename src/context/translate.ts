@@ -51,7 +51,26 @@ export const translate: Record<
     SidebarCorrections: string;
     SidebarFriends: string;
     SidebarSettings: string;
+    findFriendsHeadline: string;
+    findFriendsDesc1: string;
+    findFriendsDesc2: string;
+    unfriendConfirmTitle: string;
+    unfriendConfirmAction: string;
+    unfriendDoneToast: string;
+    friendSearchPlaceholder: string;
+    recentSearchTitle: string;
+    clearAllRecent: string;
+    userNotFound: string;
+    fetchUserFailed: string;
+    tabFind: string;
+    tabFriends: string;
+    tabRequests: string;
+    unfriendConfirmTitle2: string;
+    unfriendConfirmAction2: string;
+    unfriendDoneToast2: string;
+    friendsTotalLabel: string;
   }
+  
 > = {
   [Language.ENGLISH]: {
     emailPlaceholder: "Please enter your email",
@@ -102,6 +121,24 @@ export const translate: Record<
     SidebarCorrections: "My Correction",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
+    findFriendsHeadline: "Find friends around the world",
+    findFriendsDesc1: "Search by ID to find friends.",
+    findFriendsDesc2: "Make friends and explore their diaries.",
+    unfriendConfirmTitle: "Unfriend {name}? You won't be friends anymore.",
+    unfriendConfirmAction: "Unfriend",
+    unfriendDoneToast: "Removed from friends.",
+    friendSearchPlaceholder: "Search ID",
+    recentSearchTitle: "Recent searches",
+    clearAllRecent: "Clear all",
+    userNotFound: "User not found.",
+    fetchUserFailed: "Failed to load user information.",
+    tabFind: "Finding-friends",
+    tabFriends: "Friends",
+    tabRequests: "Requests",
+    unfriendConfirmTitle2: "Unfriend {name}? You won't be friends anymore.",
+    unfriendConfirmAction2: "Unfriend",
+    unfriendDoneToast2: "Removed from friends.",
+    friendsTotalLabel: "{count} friends in total",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -152,5 +189,23 @@ export const translate: Record<
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
     SidebarSettings: "설정",
+    findFriendsHeadline: "전 세계에서 친구를 찾아보세요",
+    findFriendsDesc1: "검색창에 아이디를 입력해서 친구를 찾아보세요.",
+    findFriendsDesc2: "다른 사람과 친구를 맺고, 다이어리를 구경해보세요.",
+    unfriendConfirmTitle: "{name}님과 친구를 취소하시겠습니까?",
+    unfriendConfirmAction: "친구 취소하기",
+    unfriendDoneToast: "친구 취소가 완료되었습니다.",
+    friendSearchPlaceholder: "친구 목록에서 아이디를 검색하세요",
+    recentSearchTitle: "최근 검색항목",
+    clearAllRecent: "모두 지우기",
+    userNotFound: "해당 사용자를 찾을 수 없습니다.",
+    fetchUserFailed: "사용자 정보를 불러오는 데 실패했습니다.",
+    tabFind: "친구찾기",
+    tabFriends: "친구",
+    tabRequests: "요청",
+    unfriendConfirmTitle2: "{name}님과 친구를 취소하시겠습니까?",
+    unfriendConfirmAction2: "친구 취소하기",
+    unfriendDoneToast2: "친구",
+    friendsTotalLabel: "총 {count}명",
   },
 };
