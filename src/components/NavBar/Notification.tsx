@@ -10,6 +10,7 @@ import { useNotificationReadAll } from "../../hooks/mutations/useNotification";
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
 import type { getNotificationsResponseDTO } from "../../utils/types/notification";
+import { useNotifications } from "../../hooks/mutations/useNotification";
 
 const Notification = () => {
   const { language } = useLanguage();
@@ -28,6 +29,8 @@ const Notification = () => {
     getNextPageParam: (last: getNotificationsResponseDTO) =>
       last.result.hasNext ? last.result.page + 1 : undefined,
   });
+
+  const { mutate: patchRedirectNotification } = useNotifications();
 
   const { ref, inView } = useInView();
 
@@ -54,13 +57,10 @@ const Notification = () => {
 
     setupSSE();
 
-    const intervalId = setInterval(
-      () => {
-        console.log("🔁 Re-subscribing to SSE after 50 minutes...");
-        setupSSE();
-      },
-      50 * 60 * 1000,
-    );
+    const intervalId = setInterval(() => {
+      console.log("🔁 Re-subscribing to SSE after 50 minutes...");
+      setupSSE();
+    }, 50 * 60 * 1000);
 
     return () => {
       clearInterval(intervalId);
@@ -72,7 +72,7 @@ const Notification = () => {
     console.log("모두 읽음 클릭됨");
     console.log(
       "data?.pages[0].result.totalElements",
-      data?.pages[0].result.totalElements,
+      data?.pages[0].result.totalElements
     );
     patchReadAllNotifications(data?.pages[0].result.totalElements as number);
     setIsRender((prev) => !prev);
@@ -100,8 +100,18 @@ const Notification = () => {
           ) : (
             data.pages.flatMap((page) =>
               page.result.contents.map((note) => (
-                <NotificationContent key={note.id} notifications={note} />
-              )),
+                <div
+                  onClick={() => {
+                    patchRedirectNotification({ notificationId: note.id });
+                  }}
+                >
+                  <NotificationContent
+                    key={note.id}
+                    notifications={note}
+                    onClick={() => setIsRender((prev) => !prev)}
+                  />
+                </div>
+              ))
             )
           )}
         </div>

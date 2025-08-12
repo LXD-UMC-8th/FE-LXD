@@ -43,18 +43,19 @@ const protectedRoutes: RouteObject[] = [
     errorElement: <NotFoundPage />,
     children: [
       {
-        element: <Navigate to="/feed" replace />,
+        index: true,
+        element: <Navigate to="feed" replace />,
       },
       {
         path: "/feed",
         element: <FeedPage />,
       },
       {
-        path: "/feed/:id",
+        path: "/feed/:diaryId",
         element: <DiaryDetailPage />,
       },
       {
-        path: "/feed/:id/corrections",
+        path: "/feed/:diaryId/corrections",
         element: <ProvideCorrections />,
       },
       {
@@ -93,14 +94,14 @@ const protectedRoutes: RouteObject[] = [
         element: <NotFoundPage />,
       },
       {
-        path: "/feed/:username/detail",
+        path: "/diaries/member/:memberId",
         element: <UserDetailPage />,
       },
     ],
   },
 ];
 const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
-
+// eslint-disable-next-line react-refresh/only-export-components
 export const queryClient = new QueryClient();
 
 function App() {

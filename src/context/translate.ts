@@ -81,6 +81,18 @@ export const translate: Record<
     DeleteDiary: string;
     CannotLoadList: string;
     titleRequired: string;
+    FriendFeedX: string;
+    settingTitle: string;
+    SaveChange: string;
+    setLanguage: string;
+    nativeLanguage: string;
+    studyLanguage: string;
+    systemLanguage: string;
+    SidebarFeed: string;
+    SidebarDiary: string;
+    SidebarCorrections: string;
+    SidebarFriends: string;
+    SidebarSettings: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -165,6 +177,18 @@ export const translate: Record<
     DeleteDiary: "Delete",
     CannotLoadList: "Unable to load list.",
     titleRequired: "Please enter a title.",
+    FriendFeedX: "There is not friend's diary.",
+    settingTitle: "Settings",
+    SaveChange: "Save Change",
+    setLanguage: "Language Setting",
+    nativeLanguage: "Native Language",
+    studyLanguage: "Study Language",
+    systemLanguage: "System Language",
+    SidebarFeed: "Feed",
+    SidebarDiary: "My Diary",
+    SidebarCorrections: "My Correction",
+    SidebarFriends: "Friends",
+    SidebarSettings: "Settings",
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -246,5 +270,17 @@ export const translate: Record<
     DeleteDiary: "삭제하기",
     CannotLoadList: "목록을 불러올 수 없습니다.",
     titleRequired: "제목을 작성하세요.",
+    FriendFeedX: "친구의 일기가 없습니다.",
+    settingTitle: "서비스 설정",
+    SaveChange: "변경 내용 저장",
+    setLanguage: "언어 설정",
+    nativeLanguage: "모국어",
+    studyLanguage: "학습 언어",
+    systemLanguage: "시스템 언어",
+    SidebarFeed: "피드",
+    SidebarDiary: "나의 다이어리",
+    SidebarCorrections: "나의 교정",
+    SidebarFriends: "친구",
+    SidebarSettings: "설정",
   },
 };

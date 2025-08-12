@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
-import { postSignin } from "../../apis/auth";
+// import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
-import { LOCAL_STORAGE_KEY } from "../../constants/key";
+import { useSignin } from "../../hooks/mutations/useSignin";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
 
+  const { mutate: postSignin } = useSignin();
   // 로그인 요청 함수
   const handleLogin = async () => {
     try {
@@ -89,7 +89,7 @@ const LoginPage = () => {
         <img src="images/LXD_logo.svg" />
         <img src="images/Language_Xchange_Diary.svg" />
       </header>
-
+      
       <div className="flex flex-col w-[430px] p-4 space-y-10">
         <form
           id="login-form"
@@ -129,7 +129,7 @@ const LoginPage = () => {
             className="flex gap-3 w-full h-[55px] justify-center border border-gray-400 
             py-3 rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer transition"
           >
-            <img src="images/Google__G__logo.svg" />
+            <img alt="google logo" src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
               {t.googleLogin}
             </span>

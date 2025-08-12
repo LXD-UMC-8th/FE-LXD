@@ -15,7 +15,7 @@ export type CorrectionsMemberDTO = {
   profileImageUrl: string;
 };
 
-export type CorrectionsUploadResponseDTO = APIResponse<CorrectionsDetailDTO>;
+export type CorrectionsUploadResponseDTO = APIResponse<ContentsDTO>;
 
 // 일기 상세 내 교정 목록 조회
 export type CorrectionsGetRequestDTO = {
