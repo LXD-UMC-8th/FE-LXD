@@ -93,6 +93,11 @@ export const translate: Record<
     SidebarCorrections: string;
     SidebarFriends: string;
     SidebarSettings: string;
+    CommentSubmit: string;
+    Comment: string;
+    CorrectionsInDiary: string;
+    CorrectButton: string;
+    CommentPlaceholder: string;
     User: string;
     EditProfile: string;
     SignOut: string;
@@ -197,6 +202,11 @@ export const translate: Record<
     SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
+    CommentSubmit: "Post",
+    Comment: "Comments",
+    CorrectionsInDiary: "Provided Corrections",
+    CorrectButton: "Correct",
+    CommentPlaceholder: "Write a comment",
     User: "",
     EditProfile: "Edit Profile",
     SignOut: "Log Out",
@@ -298,6 +308,11 @@ export const translate: Record<
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
     SidebarSettings: "설정",
+    CommentSubmit: "등록",
+    Comment: "댓글",
+    CorrectionsInDiary: "작성된 교정",
+    CorrectButton: "교정하기",
+    CommentPlaceholder: "댓글을 입력해주세요",
     User: "님",
     EditProfile: "프로필 수정",
     SignOut: "로그아웃",

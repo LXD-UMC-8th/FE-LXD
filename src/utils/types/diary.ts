@@ -24,8 +24,8 @@ export type DiaryUploadResult = {
   title: string;
   language: string;
   profileImg?: string;
-  writerNickname?: string;
-  writerUsername?: string;
+  writerNickName?: string;
+  writerUserName?: string;
   createdAt?: string;
   commentCount: number;
   likeCount: number;
