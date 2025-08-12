@@ -13,6 +13,7 @@ import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "../Diary/Header";
 import type { getLikeResponseDTO } from "../../utils/types/likes";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import AlertModal from "./AlertModal";
 
 const CommonComponentInDiaryNFeed = ({
   props,
@@ -85,6 +86,12 @@ const CommonComponentInDiaryNFeed = ({
     navigate(`/feed/${props.diaryId}`);
   };
 
+  const [DeleteLikeModal, setDeleteLikeModal] = useState<boolean>(false);
+  const DeleteLikeModalRef = useRef<HTMLDivElement | null>(null);
+  useOutsideClick(DeleteLikeModalRef, () => setDeleteLikeModal(false));
+
+  const handlerDeleteLike = () => {};
+
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
@@ -93,11 +100,12 @@ const CommonComponentInDiaryNFeed = ({
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
-        likeMutate();
+
         isLiked
-          ? setLikeCount((prev) => Math.max(0, prev - 1))
-          : setLikeCount((prev) => prev + 1);
-        setIsLiked((prev) => !prev);
+          ? setDeleteLikeModal(true)
+          : (likeMutate(),
+            setLikeCount((prev) => prev + 1),
+            setIsLiked((prev) => !prev));
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러
@@ -223,6 +231,25 @@ const CommonComponentInDiaryNFeed = ({
           </div>
         ))}
       </div>
+      {/* 좋아요 삭제 모달 */}
+      {DeleteLikeModal && (
+        <AlertModal
+          title="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
+          confirmText="취소하기"
+          onConfirm={(e) => {
+            e.stopPropagation();
+            setDeleteLikeModal(false);
+            setLikeCount((prev) => Math.max(0, prev - 1));
+            setIsLiked((prev) => !prev);
+            likeMutate();
+          }}
+          onClose={(e) => {
+            e.stopPropagation();
+            setDeleteLikeModal(false);
+          }}
+          alertMessage="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
+        />
+      )}
     </div>
   );
 };
