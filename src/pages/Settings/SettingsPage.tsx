@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLanguage, type TLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useMemberLanguage } from "../../hooks/queries/useMember";
@@ -9,22 +9,26 @@ const SettingsPage = () => {
   const t = translate[language];
   const { data } = useMemberLanguage();
   console.log(data);
-  const [isLanguage, setIsLanguage] = useState<TLanguage>(language);
-  const [isButton, setIsButton] = useState<boolean>(false);
   const { mutate: patchLanguage } = usePatchLanguage();
+  const [isButton, setIsButton] = useState<boolean>(false);
+  const [isLanguage, setIsLanguage] = useState<TLanguage>(language);
+
+  // Sync both states when API data arrives
+  useEffect(() => {
+    if (data?.result?.systemLanguage) {
+      const serverLang = data.result.systemLanguage as TLanguage;
+      setIsLanguage(serverLang);
+    }
+  }, [data?.result?.systemLanguage]);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log("Selected system language:", e.target.value);
     setIsLanguage(e.target.value as TLanguage);
-    if (e.target.value !== data?.result.systemLanguage) {
-      setIsButton(true);
-    } else {
-      setIsButton(false);
-    }
+    setIsButton(true);
   };
+
   const handlerLanguageChange = () => {
-    console.log("Language changed to:", isLanguage);
     setLanguage(isLanguage as TLanguage);
+    setIsButton(false);
     patchLanguage(isLanguage);
   };
 
@@ -54,9 +58,8 @@ const SettingsPage = () => {
                     <select
                       className="border rounded-md px-3 py-2 bg-gray-100"
                       aria-label="select system language"
-                      onChange={(e) => {
-                        onChangeHandler(e);
-                      }}
+                      value={isLanguage}
+                      onChange={onChangeHandler}
                     >
                       <option value="KO">한국어</option>
                       <option value="ENG">English</option>
