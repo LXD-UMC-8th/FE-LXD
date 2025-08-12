@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
+// import { useQuery } from "@tanstack/react-query";
+// import type { MemberProfileDTO } from "../../utils/types/member";
+// import { getMemberProfile } from "../../apis/members";
+// import LoadingModal from "../../components/Common/LoadingModal";
 
 const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState({
@@ -19,13 +23,13 @@ const EditProfilePage = () => {
   const [_initialUserInfo, setInitialUserInfo] = useState(_userInfo); // 최초 상태 기억
   const [_objectURL, setObjectURL] = useState<string | null>(null);
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const _fetchUserInfo = async () => {
       try {
-        const _response = await fetch("/api/user-info"); // 여기에 API
+        const _response = await fetch("/members/profile"); // 여기에 API
         if (!_response.ok) {
           throw new Error("Failed to fetch user information");
         }
@@ -38,6 +42,32 @@ const EditProfilePage = () => {
     };
     _fetchUserInfo();
   }, []);
+
+  // // useQuery로 API 호출
+  // const { data, isLoading, isError, error } = useQuery<MemberProfileDTO>({
+  //   queryKey: ["memberProfile"],
+  //   queryFn: getMemberProfile,
+  // });
+  // // API 응답 데이터를 로컬 상태에 주입
+  // useEffect(() => {
+  //   if (data) {
+  //     const mappedData = {
+  //       id: data.username,
+  //       email: data.email,
+  //       password: "",
+  //       profileImage: {
+  //         preview: data.profileImg || null,
+  //         name: "",
+  //       },
+  //       nickName: data.nickname,
+  //     };
+  //     setUserInfo(mappedData);
+  //     setInitialUserInfo(mappedData);
+  //   }
+  // }, [data]);
+
+  // if (isLoading) return <LoadingModal />;
+  // if (isError) return <div>프로필 로드 실패: {(error as Error).message}</div>;
 
   const _handleChangePw = () => {
     // 비밀번호 변경하기 버튼 누르면 실행
@@ -140,7 +170,7 @@ const EditProfilePage = () => {
       </section>
 
       {showModal && (
-        <AlertModal 
+        <AlertModal
           onClose={() => setSHowModal(false)}
           title="정말 탈퇴 하시겠습니까?"
           description="LXD에서 sohnjiahn@gmail.com 계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다."

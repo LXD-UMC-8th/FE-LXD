@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
 import FormInput from "../../components/Login/FormInput";
@@ -30,7 +30,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   // 이메일 인증 모킹 함수 (나중에 삭제)
   async function fakeEmailVerify(
     _email: string,
-    mode: "available" | "taken" | "random" = "available",
+    mode: "available" | "taken" | "random" = "available"
   ): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -72,11 +72,47 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
-      userInfo.checkPassword,
+      userInfo.checkPassword
     );
 
     return _isEmailValid && _isPasswordValid && _isPasswordChecked;
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAllValid()) return;
+    handlePWChange();
+  };
+
+   // 전역 Enter/Space
+    useEffect(() => {
+      const onGlobalKey = (e: KeyboardEvent) => {
+        if (e.isComposing || e.repeat) return;
+  
+        const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+        const isFormField =
+          tag === "input" ||
+          tag === "textarea" ||
+          tag === "select" ||
+          tag === "button";
+  
+        const isEnter = e.key === "Enter";
+        const isSpace = e.code === "Space";
+  
+        if ((isEnter || isSpace) && !isFormField) {
+          if (!isAllValid()) return;
+          e.preventDefault();
+          const form = document.getElementById(
+            "profile-form"
+          ) as HTMLFormElement | null;
+          if (form?.requestSubmit) form.requestSubmit();
+          else form?.submit();
+        }
+      };
+  
+      window.addEventListener("keydown", onGlobalKey);
+      return () => window.removeEventListener("keydown", onGlobalKey);
+    }, [isAllValid]);
 
   const handlePWChange = async () => {
     const payload = {
@@ -85,7 +121,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
     try {
       const response = await axios.post(
         "비밀번호 변경 API (로그인 전)",
-        payload,
+        payload
       );
       console.log("비밀번호 변경 성공", response.data);
       alert("비밀번호가 정상적으로 변경되었습니다");
@@ -108,7 +144,9 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
           <TitleHeader title="비밀번호 변경" />
         </section>
 
-        <form className="w-full h-[390px] space-y-5">
+        <form id="changepw-form"
+        onSubmit={handleSubmit}
+        className="w-full h-[390px] space-y-5">
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
@@ -194,6 +232,8 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
 
         <section className="flex flex-col">
           <SignupButton
+            form="changepw-form"
+            type="submit"
             name="변경하기"
             onClick={handlePWChange}
             disabled={!isAllValid()}

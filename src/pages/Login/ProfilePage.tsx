@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import LangOptionsButton from "../../components/Login/LangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
@@ -11,6 +11,8 @@ import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -24,23 +26,8 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  // // 모킹 함수 (나중에 삭제)
-  // async function fakeIdCheck(
-  //   _id: string,
-  //   mode: "available" | "taken" | "random" = "available",
-  // ): Promise<{ ok: boolean }> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       if (mode === "random") {
-  //         const available = Math.random() > 0.5;
-  //         resolve({ ok: available });
-  //         return;
-  //       }
-  //       resolve({ ok: mode === "available" });
-  //     }, 500);
-  //   });
-  // }
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const handleIDCheck = async () => {
     setIdTouched(true);
@@ -107,14 +94,50 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     }));
   };
 
-  const isAllValid = () => {
+  const isAllValid = useCallback(() => {
     const { nativeLanguage, studyLanguage } = userInfo;
     const _isIdValid = isIdValid(userInfo.id) && isIdAvailable === true;
     const _isNicknameValid = isNicknameValid(userInfo.nickname);
     const _isLangValid = nativeLanguage !== "" && studyLanguage !== "";
 
     return _isIdValid && _isNicknameValid && _isLangValid;
+  }, [isIdAvailable, userInfo]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAllValid()) return;
+    handleCompleteSignup();
   };
+
+  // 전역 Enter/Space
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (e.isComposing || e.repeat) return;
+
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      const isFormField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        tag === "button";
+
+      const isEnter = e.key === "Enter";
+      const isSpace = e.code === "Space";
+
+      if ((isEnter || isSpace) && !isFormField) {
+        if (!isAllValid()) return;
+        e.preventDefault();
+        const form = document.getElementById(
+          "profile-form"
+        ) as HTMLFormElement | null;
+        if (form?.requestSubmit) form.requestSubmit();
+        else form?.submit();
+      }
+    };
+
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [isAllValid]);
 
   // 회원가입 진행 함수
   const handleCompleteSignup = async () => {
@@ -123,7 +146,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
       if (response.isSuccess) {
         console.log("회원가입 성공", response.result.member);
-        alert("회원가입 완료!");
+        alert(t.signupSuccessAlert);
         navigate("/home");
       } else {
         alert(response.message);
@@ -131,7 +154,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     } catch (error) {
       console.error("회원가입 실패:", error);
       console.log(userInfo);
-      alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
+      alert(t.signupErrorAlert);
     }
   };
 
@@ -144,7 +167,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home/signup" />
-          <TitleHeader title="프로필 생성에 필요한 정보를 입력해주세요" />
+          <TitleHeader title={t.profileHeader} />
         </section>
 
         <section className="w-full flex items-center justify-center">
@@ -163,7 +186,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <span>사진 추가</span>
+                <span>{t.addPhoto}</span>
               )}
             </label>
 
@@ -187,20 +210,24 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           </div>
         </section>
 
-        <form className="w-full space-y-8">
+        <form
+          id="profile-form"
+          onSubmit={handleSubmit}
+          className="w-full space-y-8"
+        >
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
                 <FormInput
-                  name="아이디"
-                  placeholder="아이디를 입력해주세요"
+                  name={t.id}
+                  placeholder={t.idPlaceholder}
                   input={userInfo.id}
                   onChange={(e) => handleInputChange("id", e.target.value)}
                   onBlur={() => setIdTouched(true)}
                 />
               </div>
               <IDButton
-                name="중복확인"
+                name={t.idCheck}
                 onClick={handleIDCheck}
                 disabled={!isIdValid(userInfo.id)}
               />
@@ -209,16 +236,15 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
               <>
                 {!isIdValid(userInfo.id) ? (
                   <span className="text-body2 text-red-500">
-                    영어 소문자와 특수기호(-._)만 사용가능 하며, 2자 이상
-                    입력해야 합니다
+                    {t.idConditionToast}
                   </span>
                 ) : idChecked && isIdAvailable === true ? (
                   <span className="text-body2 text-mint-500">
-                    사용가능한 아이디입니다
+                    {t.idAvaliableToast}
                   </span>
                 ) : idChecked && isIdAvailable === false ? (
                   <span className="text-body2 text-red-500">
-                    사용할 수 없는 아이디입니다
+                    {t.idNotAvaliableToast}
                   </span>
                 ) : null}
               </>
@@ -226,28 +252,34 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name="닉네임"
-              placeholder="닉네임을 입력해주세요"
+              name={t.nickname}
+              placeholder={t.nicknamePlaceholder}
               input={userInfo.nickname}
               onChange={(e) => handleInputChange("nickname", e.target.value)}
               onBlur={() => setNicknameTouched(true)}
             />
-            {nicknameTouched &&
-              userInfo.nickname.trim() !== "" &&
-              !isNicknameValid(userInfo.nickname) && (
-                <span className="text-body2 text-red-500">
-                  1자 이상 40자 이내의 영어 또는 한글로 작성해주세요
-                </span>
-              )}
+            {!nicknameTouched || userInfo.nickname.trim() === "" ? (
+              <span className="text-body2 text-gray-600">
+                {t.nicknameConditionToast}
+              </span>
+            ) : !isNicknameValid(userInfo.nickname) ? (
+              <span className="text-body2 text-red-500">
+                {t.nicknameConditionToast}
+              </span>
+            ) : (
+              <span className="text-body2 text-mint-500">
+                {t.nicknameConditionToast}
+              </span>
+            )}
           </div>
           <div className="flex justify-between">
             <LangOptionsButton
-              name="모국어 / 주사용 언어"
+              name={t.primaryLang}
               selected={userInfo.nativeLanguage}
               onSelect={handleNativeLanguageSelect}
             />
             <LangOptionsButton
-              name="학습언어"
+              name={t.learningLang}
               selected={userInfo.studyLanguage}
               onSelect={handleStudyLanguageSelect}
             />
@@ -256,8 +288,9 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
         <section>
           <SignupButton
-            name="가입완료"
-            onClick={handleCompleteSignup}
+            form="profile-form"
+            type="submit"
+            name={t.signupButton}
             disabled={!isAllValid()}
           />
         </section>
