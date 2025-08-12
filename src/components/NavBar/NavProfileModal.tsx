@@ -7,6 +7,7 @@ import type { MemberDTO } from "../../utils/types/member";
 import { useLanguage, Language } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
+import { removeLocalStorageItem } from "../../apis/axios";
 
 interface ProfileModalProps {
   onClose: () => void;
@@ -46,6 +47,16 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
       },
     },
   ];
+  const alertMessage = t.CompleteLogOut;
+  const handleSignout = () => {
+    if (alertMessage) {
+      alert(alertMessage);
+    }
+    removeLocalStorageItem("accessToken");
+    removeLocalStorageItem("refreshToken");
+    onClose();
+    navigate("/home");
+  };
 
   return (
     <div className="w-55 h-50 border-1 border-gray-300 bg-white rounded-[10px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.1)]">
@@ -110,6 +121,7 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
           }
           confirmText={t.SignOut}
           alertMessage={t.CompleteLogOut}
+          onConfirm={handleSignout}
         />
       )}
     </div>

@@ -11,6 +11,7 @@ interface AlertModalProps {
   description?: string;
   confirmText: string;
   alertMessage: string;
+  onConfirm?: () => void;
 }
 
 const AlertModal = ({
@@ -19,21 +20,12 @@ const AlertModal = ({
   description,
   confirmText,
   alertMessage,
+  onConfirm,
 }: AlertModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideClick(ref, onClose);
   const { language } = useLanguage();
   const t = translate[language];
-  const navigate = useNavigate();
-  const handleSignout = () => {
-    if (alertMessage) {
-      alert(alertMessage);
-    }
-    removeLocalStorageItem("accessToken");
-    removeLocalStorageItem("refreshToken");
-    onClose();
-    navigate("/home");
-  };
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -57,7 +49,7 @@ const AlertModal = ({
 
           <div className={`flex gap-3 px-16 ${description ? "pt-3" : "pt-6"}`}>
             <button
-              onClick={handleSignout}
+              onClick={onConfirm}
               className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
             >
               {confirmText}
