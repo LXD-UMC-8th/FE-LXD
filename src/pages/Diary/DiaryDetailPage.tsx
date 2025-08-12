@@ -12,8 +12,12 @@ import { usePostDiaryComments } from "../../hooks/mutations/DiaryComment/usePost
 import { useGetDiaryComments } from "../../hooks/mutations/DiaryComment/useGetDiaryComments";
 import { useDeleteDiaryComments } from "../../hooks/mutations/DiaryComment/useDeleteDiaryComments";
 import Avatar from "../../components/Common/Avatar";
+import { translate } from "../../context/translate";
+import { useLanguage } from "../../context/LanguageProvider";
 
 const DiaryDetailPage = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
@@ -199,7 +203,7 @@ const DiaryDetailPage = () => {
               alt="교정 아이콘"
               className="w-[20.7px] h-[21.06px]"
             />
-            교정하기
+            {t.CorrectButton}
           </button>
         </div>
 
@@ -241,13 +245,13 @@ const DiaryDetailPage = () => {
                 alt="댓글 아이콘"
                 className="w-[24px] h-[24px]"
               />
-              <span>댓글 ({commentTotal})</span>
+              <span>{t.Comment} ({commentTotal})</span>
             </div>
 
             {/* 최상위 댓글 입력창 */}
             <div className="mb-5 relative">
               <textarea
-                placeholder="댓글을 입력해주세요."
+                placeholder={t.CommentPlaceholder}
                 className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
                 rows={3}
                 value={commentText}
@@ -270,7 +274,7 @@ const DiaryDetailPage = () => {
                       : "hover:bg-gray-800"
                   }`}
                 >
-                  {isPostingComment ? "등록 중..." : "등록"}
+                  {t.CommentSubmit}
                 </button>
               </div>
             </div>
@@ -384,7 +388,7 @@ const DiaryDetailPage = () => {
                           className="bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold 
                                     hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isPostingComment ? "등록 중..." : "등록"}
+                          {t.CommentSubmit}
                         </button>
                       </div>
                     </div>
@@ -398,7 +402,13 @@ const DiaryDetailPage = () => {
 
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
-        <p className="text-subhead3 font-semibold py-3">작성된 교정</p>
+        <div className="flex items-center gap-2">
+          <img 
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
+          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+        </div>
 
         {isCorrectionsPending && <LoadingModal />}
 
