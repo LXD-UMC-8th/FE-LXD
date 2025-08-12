@@ -28,6 +28,9 @@ export const translate: Record<
     id: string;
     idPlaceholder: string;
     idCheck: string;
+    idConditionToast: string;
+    idAvaliableToast: string;
+    idNotAvaliableToast: string;
     nickname: string;
     nicknamePlaceholder: string;
     nicknameConditionToast: string;
@@ -35,6 +38,14 @@ export const translate: Record<
     learningLang: string;
     langPlaceholder: string;
     signupButton: string;
+    loginSuccessAlert: string;
+    loginErrorAlert: string;
+    emailLinkSuccessAlert: string;
+    emailLinkErrorAlert: string;
+    emailVerifySuccessAlert: string;
+    emailVerifyErrorAlert: string;
+    signupSuccessAlert: string;
+    signupErrorAlert: string;
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
     titleStyle_FREE: string;
@@ -99,6 +110,10 @@ export const translate: Record<
     id: "ID",
     idPlaceholder: "Enter your ID",
     idCheck: "Check",
+    idConditionToast:
+      "At least 2 characters, you can only use lowercase, numbers, and symbols(-._).",
+    idAvaliableToast: "ID is avaliable.",
+    idNotAvaliableToast: "ID is already in use.",
     nickname: "Nickname",
     nicknamePlaceholder: "Enter your nickname",
     nicknameConditionToast: "Maximum 20 characters",
@@ -106,6 +121,15 @@ export const translate: Record<
     learningLang: "Learning Language",
     langPlaceholder: "Select Language",
     signupButton: "Sign Up",
+    loginSuccessAlert: "Login Complete.",
+    loginErrorAlert: "Login Error. Please try it again.",
+    emailLinkSuccessAlert:
+      "An authentication link has been sent to the email you provided. Please click the link to complete the authentication.",
+    emailLinkErrorAlert: "Failed to send verification email. Please try it again.",
+    emailVerifySuccessAlert: "Verified.",
+    emailVerifyErrorAlert: "Verification Error. Please try it again.",
+    signupSuccessAlert: "Signup Complete! You can now log in to your account.",
+    signupErrorAlert: "Signup Error. Please try it again.",
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -168,6 +192,9 @@ export const translate: Record<
     id: "아이디",
     idPlaceholder: "아이디를 입력해주세요",
     idCheck: "중복확인",
+    idConditionToast: "2자 이상, 영어 소문자, 숫자, 특수기호(-._)만 사용가능",
+    idAvaliableToast: "사용가능한 아이디입니다.",
+    idNotAvaliableToast: "이미 사용중인 아이디입니다.",
     nickname: "닉네임",
     nicknamePlaceholder: "닉네임을 입력해주세요",
     nicknameConditionToast: "최대 20자",
@@ -175,6 +202,15 @@ export const translate: Record<
     learningLang: "학습 언어",
     langPlaceholder: "언어 선택",
     signupButton: "가입완료",
+    loginSuccessAlert: "로그인 되었습니다.",
+    loginErrorAlert: "로그인 중 오류가 발생하였습니다. 다시 시도해주세요.",
+    emailLinkSuccessAlert:
+      "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요.",
+    emailLinkErrorAlert: "인증 메일 발송 중 오류 발생. 다시 시도해주세요.",
+    emailVerifySuccessAlert: "인증되었습니다.",
+    emailVerifyErrorAlert: "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
+    signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
+    signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",

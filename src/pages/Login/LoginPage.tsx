@@ -24,15 +24,15 @@ const LoginPage = () => {
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
 
-        alert("로그인 되었습니다");
         console.log("로그인 성공", member);
+        alert(t.loginSuccessAlert);
         navigate("/");
       } else {
         alert(response.message);
       }
     } catch (error) {
       console.log("로그인 실패", error);
-      alert("로그인 중 오류가 발생했습니다.");
+      alert(t.loginErrorAlert);
     }
   };
   const isFormValid = email.trim() !== "" && password.trim() !== "";

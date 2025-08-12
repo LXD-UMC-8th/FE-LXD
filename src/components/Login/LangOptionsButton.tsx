@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 
@@ -14,20 +14,37 @@ const LangOptionsButton = ({
   onSelect,
 }: LangOptionsButtonProps) => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
+  const boxRef = useRef<HTMLDivElement | null>(null); // 드롭다운 영역 ref
   const { language } = useLanguage();
-    const t = translate[language];
+  const t = translate[language];
+
+  // 바깥 클릭 시 닫기
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      const el = boxRef.current;
+      if (el && !el.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [isOpen]);
 
   return (
     <div className="space-y-[10px]">
       <div className="text-subhead3 font-medium">{name}</div>
 
       {/* 언어선택버튼 */}
-      <div className="relative">
+      <div className="relative" ref={boxRef}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="w-[250px] h-[55px] px-[32px] py-[16px] border rounded-md 
-              border-gray-300 bg-gray-50 focus:outline-none"
+              border-gray-300 bg-gray-50 focus:outline-none cursor-pointer"
         >
           <span
             className={`block truncate text-left text-body1 

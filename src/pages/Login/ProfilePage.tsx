@@ -29,23 +29,6 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const { language } = useLanguage();
   const t = translate[language];
 
-  // // 모킹 함수 (나중에 삭제)
-  // async function fakeIdCheck(
-  //   _id: string,
-  //   mode: "available" | "taken" | "random" = "available",
-  // ): Promise<{ ok: boolean }> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       if (mode === "random") {
-  //         const available = Math.random() > 0.5;
-  //         resolve({ ok: available });
-  //         return;
-  //       }
-  //       resolve({ ok: mode === "available" });
-  //     }, 500);
-  //   });
-  // }
-
   const handleIDCheck = async () => {
     setIdTouched(true);
     setIdChecked(true);
@@ -163,7 +146,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
       if (response.isSuccess) {
         console.log("회원가입 성공", response.result.member);
-        alert("회원가입 완료!");
+        alert(t.signupSuccessAlert);
         navigate("/home");
       } else {
         alert(response.message);
@@ -171,7 +154,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     } catch (error) {
       console.error("회원가입 실패:", error);
       console.log(userInfo);
-      alert("회원가입 중 오류가 발생했습니다, 다시 시도해주세요");
+      alert(t.signupErrorAlert);
     }
   };
 
@@ -253,16 +236,15 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
               <>
                 {!isIdValid(userInfo.id) ? (
                   <span className="text-body2 text-red-500">
-                    영어 소문자와 특수기호(-._)만 사용가능 하며, 2자 이상
-                    입력해야 합니다
+                    {t.idConditionToast}
                   </span>
                 ) : idChecked && isIdAvailable === true ? (
                   <span className="text-body2 text-mint-500">
-                    사용가능한 아이디입니다
+                    {t.idAvaliableToast}
                   </span>
                 ) : idChecked && isIdAvailable === false ? (
                   <span className="text-body2 text-red-500">
-                    사용할 수 없는 아이디입니다
+                    {t.idNotAvaliableToast}
                   </span>
                 ) : null}
               </>

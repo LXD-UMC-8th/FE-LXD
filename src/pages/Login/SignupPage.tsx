@@ -45,13 +45,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
 
       if (response.isSuccess) {
         alert(
-          "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요."
+          t.emailLinkSuccessAlert
         );
         console.log("이메일 인증 링크 전송 성공");
         return;
       }
     } catch (error) {
-      alert("인증 메일 발송 중 오류 발생");
+      alert(t.emailLinkErrorAlert);
       console.error("발송 실패:", error);
     }
   };
@@ -83,13 +83,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       //   window.close();
       // }
 
-      alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
+      alert(t.emailVerifySuccessAlert);
     } catch (error) {
       console.error("인증 실패:", error);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert("인증 처리 중 오류가 발생하였습니다.");
+      alert(t.emailVerifyErrorAlert);
     }
   };
   // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
