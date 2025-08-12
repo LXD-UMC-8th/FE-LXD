@@ -10,8 +10,8 @@ import { LOCAL_STORAGE_KEY } from "../../constants/key";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
 
   const { mutate: postSignin } = useSignin();
@@ -87,10 +87,13 @@ const LoginPage = () => {
     >
       <TopLangOptionsButton />
       <header className="flex flex-col items-center space-y-8">
-        <img src="images/LXD_logo.svg" />
-        <img src="images/Language_Xchange_Diary.svg" />
+        <img alt="LXD logo" src="images/LXD_logo.svg" />
+        <img
+          alt="Language Xchange Diary"
+          src="images/Language_Xchange_Diary.svg"
+        />
       </header>
-      
+
       <div className="flex flex-col w-[430px] p-4 space-y-10">
         <form
           id="login-form"

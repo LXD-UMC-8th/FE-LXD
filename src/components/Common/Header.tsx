@@ -1,4 +1,4 @@
-import type { diaries } from "../../../utils/types/diary";
+import type { diaries } from "../../utils/types/diary";
 
 const Header = ({ props }: { props: diaries }) => {
   return (

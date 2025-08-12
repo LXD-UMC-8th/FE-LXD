@@ -20,15 +20,16 @@ const ExploreTab = () => {
 
   const { language } = useLanguage();
   const t = translate[language];
+  const titleKorean = "한국어";
+  const titleEnglish = "English";
   const [lang, setLang] = useState<string>("KO");
   const handleLangChange = (value: string) => {
-    if (value === "한국어") {
+    if (value === titleKorean) {
       setLang("KO");
-    } else if (value === "English") {
+    } else if (value === titleEnglish) {
       setLang("ENG");
     }
   };
-  useEffect(() => {}, [lang]);
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
@@ -57,16 +58,15 @@ const ExploreTab = () => {
       staleTime: 30_000,
     });
 
-    navigate(`/feed/${diaryId}`)
-  }
+    navigate(`/feed/${diaryId}`);
+  };
 
   return (
     <div className="flex flex-col w-260 mb-10">
       <div className="mb-5">
         <ValueSettingButton
-          title1="한국어"
-          title2="English"
-          selectedValue={lang}
+          title1={titleKorean}
+          title2={titleEnglish}
           onClick={handleLangChange}
         />
       </div>
@@ -74,7 +74,7 @@ const ExploreTab = () => {
         page.result.diaries
           .filter(
             (diary: diaries) =>
-              diary.language === lang && diary.visibility !== "PRIVATE",
+              diary.language === lang && diary.visibility !== "PRIVATE"
           )
           .map((d: diaries) => (
             <div
@@ -84,9 +84,9 @@ const ExploreTab = () => {
               onClick={() => handleOpenDiary(d.diaryId)}
               onKeyDown={(e) => e.key === "Enter" && handleOpenDiary(d.diaryId)}
             >
-              <CommonComponentInDiaryNFeed props={d}/>
+              <CommonComponentInDiaryNFeed props={d} />
             </div>
-          )),
+          ))
       )}
       {isFetching && (
         <div>

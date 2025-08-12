@@ -10,7 +10,7 @@ import { queryClient } from "../../App";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
-import Header from "./ComponentDiary/Header";
+import Header from "./Header";
 import type { getLikeResponseDTO } from "../../utils/types/likes";
 
 const CommonComponentInDiaryNFeed = ({

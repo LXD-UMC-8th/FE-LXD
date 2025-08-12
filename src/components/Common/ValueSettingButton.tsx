@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getLocalStorageItem } from "../../apis/axios";
 
 interface ValueSettingButtonProps {
   title1: string;
   title2: string;
   onClick?: (value: string) => void;
-  selectedValue?: string;
+  selected?: string;
+  selectedLang?: string;
 }
 
 const ValueSettingButton = ({
@@ -12,9 +14,7 @@ const ValueSettingButton = ({
   title2,
   onClick,
 }: ValueSettingButtonProps) => {
-  const [selected, setSelected] = useState(
-    () => localStorage.getItem("style") || title1,
-  );
+  const [selected, setSelected] = useState(title1);
 
   const handleClick = (value: string) => {
     setSelected(value);
@@ -23,36 +23,45 @@ const ValueSettingButton = ({
     }
   };
 
-  return (
-    <div className="flex gap-2">
-      <button
-        value={title1}
-        onClick={() => handleClick(title1)}
-        className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
+  useEffect(() => {
+    const currentLocation = window.location.href;
+    console.log("Current location:", currentLocation);
+    if (currentLocation.includes("writing")) {
+      setSelected(getLocalStorageItem("style") ?? title1);
+    }
+  }, []);
+
+  if (window.location)
+    return (
+      <div className="flex gap-2">
+        <button
+          value={title1}
+          onClick={() => handleClick(title1)}
+          className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title1
               ? "bg-gray-900 text-blue-50"
               : "bg-gray-300 text-gray-700"
           }
         `}
-      >
-        {title1}
-      </button>
-      <button
-        value={title2}
-        onClick={() => handleClick(title2)}
-        className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
+        >
+          {title1}
+        </button>
+        <button
+          value={title2}
+          onClick={() => handleClick(title2)}
+          className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title2
               ? "bg-gray-900 text-blue-50"
               : "bg-gray-300 text-gray-700"
           }
         `}
-      >
-        {title2}
-      </button>
-    </div>
-  );
+        >
+          {title2}
+        </button>
+      </div>
+    );
 };
 
 export default ValueSettingButton;

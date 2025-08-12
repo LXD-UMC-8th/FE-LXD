@@ -16,7 +16,7 @@ const WritingPage = () => {
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
   const [_style, setStyle] = useState<string>(
-    () => localStorage.getItem("style") ?? "FREE",
+    () => localStorage.getItem("style") ?? "FREE"
   );
 
   useEffect(() => {
@@ -25,24 +25,25 @@ const WritingPage = () => {
 
   console.log("style:", _style);
   const [_titleName, setTitleName] = useState<string>(
-    () => localStorage.getItem("title") ?? "",
+    () => localStorage.getItem("title") ?? ""
   );
 
   const _DebounceTitleName = useDebounce(_titleName, 500);
+
+  //Title name을 debounce를 이용하여 localStorage에 저장
   useEffect(() => {
     localStorage.setItem("title", _DebounceTitleName);
   }, [_DebounceTitleName]);
 
+  //Editor content을 debounce를 이용하여 localStorage에 저장
   const [_editorRawContent, setEditorRawContent] = useState<string>(
-    () => localStorage.getItem("content") ?? "",
+    () => localStorage.getItem("content") ?? ""
   );
   const _debounceEditorContent = useDebounce(_editorRawContent, 500);
-
   useEffect(() => {
     localStorage.setItem("content", _debounceEditorContent);
     console.log(localStorage.getItem("content"));
   }, [_debounceEditorContent]);
-
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
   };
@@ -70,6 +71,8 @@ const WritingPage = () => {
       localStorage.setItem("title", data.result.content);
     });
   };
+  if (_style === "QUESTION" || _style === "질문글") {
+  }
 
   return (
     <div className="py-2 bg-gray-100 mx-10">
@@ -89,7 +92,6 @@ const WritingPage = () => {
           <ValueSettingButton
             title1={_title_free}
             title2={_title_question}
-            selectedValue={_style}
             onClick={handleTitleValueChange}
           />
           {(_style === "FREE" || _style === "자유글") && (
