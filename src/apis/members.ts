@@ -95,3 +95,14 @@ export const getMemberLanguage = async () => {
     console.log("getMemberLanguage error:", err);
   }
 };
+
+export const patchMemberLanguage = async (systemLanguage: string) => {
+  try {
+    const response = await axiosInstance.patch("/members/system-language", {
+      systemLanguage,
+    });
+    return response.data;
+  } catch (err) {
+    console.log("patchMemberLanguage error:", err);
+  }
+};

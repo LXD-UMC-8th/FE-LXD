@@ -8,7 +8,7 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import type { DiaryUploadResult } from "../../utils/types/diary";
-import { axiosInstance } from "../../apis/axios";
+// import { axiosInstance } from "../../apis/axios";
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
@@ -59,12 +59,10 @@ const DiaryDetailPage = () => {
       <div>
         <div>
           잘못된 접근입니다.
-          <button>
-            피드로 돌아가기
-          </button>
+          <button>피드로 돌아가기</button>
         </div>
       </div>
-    )
+    );
   }
 
   /** 로딩 처리 */
