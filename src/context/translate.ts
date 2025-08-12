@@ -93,7 +93,6 @@ export const translate: Record<
     SidebarCorrections: string;
     SidebarFriends: string;
     SidebarSettings: string;
-<<<<<<< HEAD
     findFriendsHeadline: string;
     findFriendsDesc1: string;
     findFriendsDesc2: string;
@@ -112,7 +111,6 @@ export const translate: Record<
     unfriendConfirmAction2: string;
     unfriendDoneToast2: string;
     friendsTotalLabel: string;
-<<<<<<< HEAD
     receivedRequestsTitle: string;
     sentRequestsTitle: string;
     requestsCountLabel: string; 
@@ -126,15 +124,11 @@ export const translate: Record<
     viewDiaryButton: string;
     refuseButton: string;
     loadingLabel: string;
-  }    
-=======
-=======
     CommentSubmit: string;
     Comment: string;
     CorrectionsInDiary: string;
     CorrectButton: string;
     CommentPlaceholder: string;
->>>>>>> origin/develop
     User: string;
     EditProfile: string;
     SignOut: string;
@@ -144,8 +138,6 @@ export const translate: Record<
     CompleteLogOut: string;
     Close: string;
   }
->>>>>>> 62a84006a44623170123561b3b5109d298a964e7
-  
 > = {
   [Language.ENGLISH]: {
     email: "Email",
@@ -241,7 +233,6 @@ export const translate: Record<
     SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
-<<<<<<< HEAD
     findFriendsHeadline: "Find friends around the world",
     findFriendsDesc1: "Search by ID to find friends.",
     findFriendsDesc2: "Make friends and explore their diaries.",
@@ -260,7 +251,6 @@ export const translate: Record<
     unfriendConfirmAction2: "Unfriend",
     unfriendDoneToast2: "Removed from friends.",
     friendsTotalLabel: "{count} friends in total",
-<<<<<<< HEAD
     receivedRequestsTitle: "Received requests",
     sentRequestsTitle: "Sent requests",
     requestsCountLabel: "{count}",         // 배지: 12
@@ -274,14 +264,11 @@ export const translate: Record<
     viewDiaryButton: "View diary",
     refuseButton: "Decline",
     loadingLabel: "Loading…",
-=======
-=======
     CommentSubmit: "Post",
     Comment: "Comments",
     CorrectionsInDiary: "Provided Corrections",
     CorrectButton: "Correct",
     CommentPlaceholder: "Write a comment",
->>>>>>> origin/develop
     User: "",
     EditProfile: "Edit Profile",
     SignOut: "Log Out",
@@ -290,7 +277,6 @@ export const translate: Record<
     LogOutStatementBack: "on LXD?",
     CompleteLogOut: "Logout is complete.",
     Close: "Close",
->>>>>>> 62a84006a44623170123561b3b5109d298a964e7
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -383,7 +369,6 @@ export const translate: Record<
     SidebarDiary: "나의 다이어리",
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
-<<<<<<< HEAD
     SidebarSettings: "설정", 
     findFriendsHeadline: "전 세계에서 친구를 찾아보세요",
     findFriendsDesc1: "검색창에 아이디를 입력해서 친구를 찾아보세요.",
@@ -403,7 +388,6 @@ export const translate: Record<
     unfriendConfirmAction2: "친구 취소하기",
     unfriendDoneToast2: "친구",
     friendsTotalLabel: "총 {count}명",
-<<<<<<< HEAD
     receivedRequestsTitle: "내가 받은 요청",
     sentRequestsTitle: "내가 보낸 요청",
     requestsCountLabel: "{count}개", 
@@ -417,15 +401,12 @@ export const translate: Record<
     viewDiaryButton: "다이어리 보러가기",
     refuseButton: "거절",
     loadingLabel: "로딩중…",
-=======
-=======
     SidebarSettings: "설정",
     CommentSubmit: "등록",
     Comment: "댓글",
     CorrectionsInDiary: "작성된 교정",
     CorrectButton: "교정하기",
     CommentPlaceholder: "댓글을 입력해주세요",
->>>>>>> origin/develop
     User: "님",
     EditProfile: "프로필 수정",
     SignOut: "로그아웃",
@@ -434,6 +415,5 @@ export const translate: Record<
     LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
     CompleteLogOut: "로그아웃이 완료되었습니다.",
     Close: "닫기",
->>>>>>> 62a84006a44623170123561b3b5109d298a964e7
   },
 };
