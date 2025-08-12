@@ -51,11 +51,22 @@ export const translate: Record<
     SidebarCorrections: string;
     SidebarFriends: string;
     SidebarSettings: string;
+<<<<<<< HEAD
     CommentSubmit: string;
     Comment: string;
     CorrectionsInDiary: string;
     CorrectButton: string;
     CommentPlaceholder: string;
+=======
+    User: string;
+    EditProfile: string;
+    SignOut: string;
+    WantToLogOut: string;
+    LogOutStatementFront: string;
+    LogOutStatementBack: string;
+    CompleteLogOut: string;
+    Close: string;
+>>>>>>> 4d71235f78ec59d37f93012273de9aba32b7d73e
   }
 > = {
   [Language.ENGLISH]: {
@@ -104,14 +115,25 @@ export const translate: Record<
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
     SidebarDiary: "My Diary",
-    SidebarCorrections: "My Correction",
+    SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
+<<<<<<< HEAD
     CommentSubmit: "Post",
     Comment: "Comments",
     CorrectionsInDiary: "Provided Corrections",
     CorrectButton: "Correct",
     CommentPlaceholder: "Write a comment",
+=======
+    User: "",
+    EditProfile: "Edit Profile",
+    SignOut: "Log Out",
+    WantToLogOut: "Are you sure you want to log out?",
+    LogOutStatementFront: "Do you want to log out of the account",
+    LogOutStatementBack: "on LXD?",
+    CompleteLogOut: "Logout is complete.",
+    Close: "Close",
+>>>>>>> 4d71235f78ec59d37f93012273de9aba32b7d73e
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -162,10 +184,21 @@ export const translate: Record<
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
     SidebarSettings: "설정",
+<<<<<<< HEAD
     CommentSubmit: "등록",
     Comment: "댓글",
     CorrectionsInDiary: "작성된 교정",
     CorrectButton: "교정하기",
     CommentPlaceholder: "댓글을 입력해주세요",
+=======
+    User: "님",
+    EditProfile: "프로필 수정",
+    SignOut: "로그아웃",
+    WantToLogOut: "정말 로그아웃 하시겠습니까?",
+    LogOutStatementFront: "LXD에서 ",
+    LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
+    CompleteLogOut: "로그아웃이 완료되었습니다.",
+    Close: "닫기",
+>>>>>>> 4d71235f78ec59d37f93012273de9aba32b7d73e
   },
 };
