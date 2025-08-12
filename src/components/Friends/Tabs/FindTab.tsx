@@ -34,7 +34,7 @@ const FindTab = () => {
     } catch (err: any) {
       console.error("❌ 친구 요청 실패: ", err);
       if (err?.response?.status === 409) successOrAlreadySent = true;
-      else alert("친구 요청에 실패했습니다.");
+      else alert(t.friendRequestFailed);
     }
 
     if (successOrAlreadySent) {

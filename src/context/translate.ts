@@ -69,7 +69,20 @@ export const translate: Record<
     unfriendConfirmAction2: string;
     unfriendDoneToast2: string;
     friendsTotalLabel: string;
-  }
+    receivedRequestsTitle: string;
+    sentRequestsTitle: string;
+    requestsCountLabel: string; 
+    acceptButton: string; 
+    deleteButton: string; 
+    cancelButton: string; 
+    pendingLabel: string; 
+    friendRequestFailed: string;
+    profileImageAlt: string;
+    sendFriendRequestButton: string;
+    viewDiaryButton: string;
+    refuseButton: string;
+    loadingLabel: string;
+  }    
   
 > = {
   [Language.ENGLISH]: {
@@ -139,6 +152,19 @@ export const translate: Record<
     unfriendConfirmAction2: "Unfriend",
     unfriendDoneToast2: "Removed from friends.",
     friendsTotalLabel: "{count} friends in total",
+    receivedRequestsTitle: "Received requests",
+    sentRequestsTitle: "Sent requests",
+    requestsCountLabel: "{count}",         // 배지: 12
+    acceptButton: "Accept",
+    deleteButton: "Delete",
+    cancelButton: "Cancel",
+    pendingLabel: "Pending",
+    friendRequestFailed: "Failed to send friend request.",
+    profileImageAlt: "{name}'s profile image",
+    sendFriendRequestButton: "Send request",
+    viewDiaryButton: "View diary",
+    refuseButton: "Decline",
+    loadingLabel: "Loading…",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -188,7 +214,7 @@ export const translate: Record<
     SidebarDiary: "나의 다이어리",
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
-    SidebarSettings: "설정",
+    SidebarSettings: "설정", 
     findFriendsHeadline: "전 세계에서 친구를 찾아보세요",
     findFriendsDesc1: "검색창에 아이디를 입력해서 친구를 찾아보세요.",
     findFriendsDesc2: "다른 사람과 친구를 맺고, 다이어리를 구경해보세요.",
@@ -207,5 +233,18 @@ export const translate: Record<
     unfriendConfirmAction2: "친구 취소하기",
     unfriendDoneToast2: "친구",
     friendsTotalLabel: "총 {count}명",
+    receivedRequestsTitle: "내가 받은 요청",
+    sentRequestsTitle: "내가 보낸 요청",
+    requestsCountLabel: "{count}개", 
+    acceptButton: "수락",
+    deleteButton: "삭제",
+    cancelButton: "취소",
+    pendingLabel: "요청중",
+    friendRequestFailed: "친구 요청에 실패했습니다.",
+    profileImageAlt: "{name}의 프로필 이미지",
+    sendFriendRequestButton: "친구 요청하기",
+    viewDiaryButton: "다이어리 보러가기",
+    refuseButton: "거절",
+    loadingLabel: "로딩중…",
   },
 };
