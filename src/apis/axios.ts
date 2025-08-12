@@ -14,7 +14,7 @@ export const axiosInstance = axios.create({
 let refreshPromise: Promise<string | null> | null = null;
 
 // Utility functions to access localStorage directly
-const getLocalStorageItem = (key: string): string | null => {
+export const getLocalStorageItem = (key: string): string | null => {
   const raw = localStorage.getItem(key);
   //raw -> parse JSON string to object
   try {
@@ -24,11 +24,11 @@ const getLocalStorageItem = (key: string): string | null => {
   }
 };
 
-const setLocalStorageItem = (key: string, value: string) => {
+export const setLocalStorageItem = (key: string, value: string) => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-const removeLocalStorageItem = (key: string) => {
+export const removeLocalStorageItem = (key: string) => {
   localStorage.removeItem(key);
 };
 

@@ -69,6 +69,7 @@ export const translate: Record<
     unfriendConfirmAction2: string;
     unfriendDoneToast2: string;
     friendsTotalLabel: string;
+<<<<<<< HEAD
     receivedRequestsTitle: string;
     sentRequestsTitle: string;
     requestsCountLabel: string; 
@@ -83,6 +84,17 @@ export const translate: Record<
     refuseButton: string;
     loadingLabel: string;
   }    
+=======
+    User: string;
+    EditProfile: string;
+    SignOut: string;
+    WantToLogOut: string;
+    LogOutStatementFront: string;
+    LogOutStatementBack: string;
+    CompleteLogOut: string;
+    Close: string;
+  }
+>>>>>>> 62a84006a44623170123561b3b5109d298a964e7
   
 > = {
   [Language.ENGLISH]: {
@@ -131,7 +143,7 @@ export const translate: Record<
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
     SidebarDiary: "My Diary",
-    SidebarCorrections: "My Correction",
+    SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
     findFriendsHeadline: "Find friends around the world",
@@ -152,6 +164,7 @@ export const translate: Record<
     unfriendConfirmAction2: "Unfriend",
     unfriendDoneToast2: "Removed from friends.",
     friendsTotalLabel: "{count} friends in total",
+<<<<<<< HEAD
     receivedRequestsTitle: "Received requests",
     sentRequestsTitle: "Sent requests",
     requestsCountLabel: "{count}",         // 배지: 12
@@ -165,6 +178,16 @@ export const translate: Record<
     viewDiaryButton: "View diary",
     refuseButton: "Decline",
     loadingLabel: "Loading…",
+=======
+    User: "",
+    EditProfile: "Edit Profile",
+    SignOut: "Log Out",
+    WantToLogOut: "Are you sure you want to log out?",
+    LogOutStatementFront: "Do you want to log out of the account",
+    LogOutStatementBack: "on LXD?",
+    CompleteLogOut: "Logout is complete.",
+    Close: "Close",
+>>>>>>> 62a84006a44623170123561b3b5109d298a964e7
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -233,6 +256,7 @@ export const translate: Record<
     unfriendConfirmAction2: "친구 취소하기",
     unfriendDoneToast2: "친구",
     friendsTotalLabel: "총 {count}명",
+<<<<<<< HEAD
     receivedRequestsTitle: "내가 받은 요청",
     sentRequestsTitle: "내가 보낸 요청",
     requestsCountLabel: "{count}개", 
@@ -246,5 +270,15 @@ export const translate: Record<
     viewDiaryButton: "다이어리 보러가기",
     refuseButton: "거절",
     loadingLabel: "로딩중…",
+=======
+    User: "님",
+    EditProfile: "프로필 수정",
+    SignOut: "로그아웃",
+    WantToLogOut: "정말 로그아웃 하시겠습니까?",
+    LogOutStatementFront: "LXD에서 ",
+    LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
+    CompleteLogOut: "로그아웃이 완료되었습니다.",
+    Close: "닫기",
+>>>>>>> 62a84006a44623170123561b3b5109d298a964e7
   },
 };

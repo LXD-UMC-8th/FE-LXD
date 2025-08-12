@@ -39,3 +39,5 @@ export type MemberLanguageDTO = {
 };
 
 export type MemberLanguageResponseDTO = APIResponse<MemberLanguageDTO>;
+
+export type MemberProfileResponseDTO = APIResponse<MemberDTO>;
