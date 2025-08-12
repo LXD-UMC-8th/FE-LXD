@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface LangOptionsButtonProps {
   name: string;
@@ -14,32 +15,21 @@ const LangOptionsButton = ({
   onSelect,
 }: LangOptionsButtonProps) => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
-  const boxRef = useRef<HTMLDivElement | null>(null); // 드롭다운 영역 ref
+  const ref = useRef<HTMLDivElement | null>(null);
+  const onClose = useCallback(() => setIsOpen(false), []);
+  useOutsideClick(ref, onClose);
   const { language } = useLanguage();
   const t = translate[language];
+  
 
-  // 바깥 클릭 시 닫기
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handlePointerDown = (e: PointerEvent) => {
-      const el = boxRef.current;
-      if (el && !el.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("pointerdown", handlePointerDown);
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [isOpen]);
+  
 
   return (
     <div className="space-y-[10px]">
       <div className="text-subhead3 font-medium">{name}</div>
 
       {/* 언어선택버튼 */}
-      <div className="relative" ref={boxRef}>
+      <div className="relative" ref={ref}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}

@@ -1,6 +1,6 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
-import type { MemberLanguageResponseDTO } from "../utils/types/member";
+import type { CheckDuplicatedIDResponseDTO, MemberLanguageResponseDTO, MemberProfileResponseDTO } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -64,19 +64,9 @@ export const postSignup = async (
   return data;
 };
 
-export interface CheckDuplicatedIDResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    username: string;
-    duplicated: boolean;
-  };
-}
-
 // 아이디 중복 확인 api
 export const getCheckDuplicatedID = async (username: string) => {
-  const response = await axiosInstance.get<CheckDuplicatedIDResponse>(
+  const response = await axiosInstance.get<CheckDuplicatedIDResponseDTO>(
     "/members/check-username",
     {
       params: { username },
@@ -85,6 +75,7 @@ export const getCheckDuplicatedID = async (username: string) => {
   return response.data;
 };
 
+// 언어 조회 api
 export const getMemberLanguage = async () => {
   try {
     const response = await axiosInstance.get<MemberLanguageResponseDTO>(
@@ -96,6 +87,7 @@ export const getMemberLanguage = async () => {
   }
 };
 
+// 시스템 언어 변경 api
 export const patchMemberLanguage = async (systemLanguage: string) => {
   try {
     const response = await axiosInstance.patch("/members/system-language", {
@@ -104,5 +96,17 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
     return response.data;
   } catch (err) {
     console.log("patchMemberLanguage error:", err);
+  }
+};
+
+// 프로필 조회 api
+export const getMemberProfile = async () => {
+  try {
+    const response = await axiosInstance.get<MemberProfileResponseDTO>(
+      "/members/profile"
+    );
+    return response.data;
+  } catch (err) {
+    console.log("getMemberProfile error:", err);
   }
 };
