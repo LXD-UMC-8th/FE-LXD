@@ -11,6 +11,7 @@ import type { DiaryUploadResult } from "../../utils/types/diary";
 import { usePostDiaryComments } from "../../hooks/mutations/DiaryComment/usePostDiaryComments";
 import { useGetDiaryComments } from "../../hooks/mutations/DiaryComment/useGetDiaryComments";
 import { useDeleteDiaryComments } from "../../hooks/mutations/DiaryComment/useDeleteDiaryComments";
+import Avatar from "../../components/Common/Avatar";
 
 const DiaryDetailPage = () => {
   const navigate = useNavigate();
@@ -74,10 +75,12 @@ const DiaryDetailPage = () => {
       <div>
         <div>
           잘못된 접근입니다.
-          <button onClick={() => navigate("/feed")}>피드로 돌아가기</button>
+          <button>
+            피드로 돌아가기
+          </button>
         </div>
       </div>
-    );
+    )
   }
 
   /** 댓글 등록 */
@@ -151,23 +154,25 @@ const DiaryDetailPage = () => {
       return (
         <div
           key={r.commentId}
-          className="mt-3 border-l border-gray-200 pl-4"
+          className=""
           style={{ marginLeft: depth * 12 }}
         >
+          <div className="border-t border-gray-200 my-4" />
           <div className="flex items-center gap-3 mb-2">
-            <img
-              src={r.profileImage ?? "/images/profileimages.svg"}
-              alt="프로필"
-              className="w-8 h-8 rounded-full"
+            <Avatar 
+              src={r.profileImage}
+              alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
+              size="w-8 h-8"
+              // onClick={() => ()}
             />
             <div className="flex items-center gap-2">
               <span className="font-semibold text-sm">{r.nickname ?? "사용자"}</span>
               <div className="w-px h-4 bg-gray-500" />
               <span className="text-xs text-gray-600">@{r.username ?? "user"}</span>
-              <span className="text-[11px] text-gray-500 ml-2">
+            </div>
+            <span className="text-[11px] text-gray-500 ml-auto">
                 {r.createdAt ?? ""}
               </span>
-            </div>
           </div>
 
           <p className="text-sm text-black whitespace-pre-line leading-relaxed mb-2">
@@ -240,11 +245,11 @@ const DiaryDetailPage = () => {
             </div>
 
             {/* 최상위 댓글 입력창 */}
-            <div className="mb-5">
+            <div className="mb-5 relative">
               <textarea
-                placeholder="댓글을 입력하세요."
-                className="w-full text-sm text-gray-800 bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
-                rows={4}
+                placeholder="댓글을 입력해주세요."
+                className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
+                rows={3}
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
                 onKeyDown={(e) => {
@@ -259,7 +264,7 @@ const DiaryDetailPage = () => {
                 <button
                   onClick={_handleSubmitComment}
                   disabled={isPostingComment || !commentText.trim()}
-                  className={`bg-gray-900 text-white text-sm px-4 py-[6px] rounded-[5px] text-caption font-semibold cursor-pointer ${
+                  className={`absolute bottom-7 right-3 absolute bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
                     isPostingComment || !commentText.trim()
                       ? "opacity-50 cursor-not-allowed"
                       : "hover:bg-gray-800"
@@ -281,12 +286,12 @@ const DiaryDetailPage = () => {
                 <div key={c.commentId} className="border border-gray-200 rounded-lg p-5 mb-6">
                   {/* 작성자 */}
                   <div className="flex items-center gap-3 mb-2">
-                    <img
-                      src={c.profileImage ?? "/images/profileimage.svg"}
-                      alt="프로필"
-                      className="w-9 h-9 rounded-full"
+                    <Avatar 
+                      src={c.profileImage}
+                      alt={`${c.nickname ?? c.username ?? "profile"}의 프로필`}
+                      size="w-9 h-9"
+                      // onClick={() => ()}
                     />
-                    <div className="flex flex-col items-center gap-2">
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-body2">
                           {c.nickname ?? "사용자"}
@@ -296,10 +301,9 @@ const DiaryDetailPage = () => {
                           @{c.username ?? "user"}
                         </span>
                       </div>
-                      <p className="text-caption text-gray-500">
+                      <p className="text-caption text-gray-500 ml-auto">
                         {c.createdAt ?? ""}
                       </p>
-                    </div>
                   </div>
 
                   {/* 본문 */}
@@ -358,10 +362,12 @@ const DiaryDetailPage = () => {
                       )}
 
                       {/* 답글 입력 */}
-                      <textarea
+                      <div className="flex items-center gap-2">
+                        <textarea
                         placeholder="답글을 입력하세요."
-                        className="w-full bg-gray-50 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-200"
-                        rows={3}
+                        className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 
+                                  focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        rows={1}
                         value={replyTexts[c.commentId] ?? ""}
                         onChange={(e) => _handleReplyChange(c.commentId, e.target.value)}
                         onKeyDown={(e) => {
@@ -372,11 +378,11 @@ const DiaryDetailPage = () => {
                         }}
                         disabled={isPostingComment}
                       />
-                      <div className="flex justify-end mt-2">
                         <button
                           onClick={() => _handleSubmitReply(c.commentId)}
                           disabled={isPostingComment || !(replyTexts[c.commentId]?.trim())}
-                          className="bg-gray-900 text-white text-sm px-4 py-[6px] rounded-lg text-caption font-semibold hover:bg-gray-800 hover:cursor-pointer transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold 
+                                    hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isPostingComment ? "등록 중..." : "등록"}
                         </button>

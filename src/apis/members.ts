@@ -1,5 +1,6 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
+import type { MemberLanguageResponseDTO } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -82,4 +83,26 @@ export const getCheckDuplicatedID = async (username: string) => {
     }
   );
   return response.data;
+};
+
+export const getMemberLanguage = async () => {
+  try {
+    const response = await axiosInstance.get<MemberLanguageResponseDTO>(
+      "/members/language"
+    );
+    return response.data;
+  } catch (err) {
+    console.log("getMemberLanguage error:", err);
+  }
+};
+
+export const patchMemberLanguage = async (systemLanguage: string) => {
+  try {
+    const response = await axiosInstance.patch("/members/system-language", {
+      systemLanguage,
+    });
+    return response.data;
+  } catch (err) {
+    console.log("patchMemberLanguage error:", err);
+  }
 };

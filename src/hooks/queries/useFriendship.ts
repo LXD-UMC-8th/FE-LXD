@@ -10,17 +10,19 @@ import type {
 type FriendshipState = "friend" | "pending" | "incoming" | "none";
 
 // undefined 안전 배열 헬퍼
-const pick = <T,>(arr: T[] | undefined | null) => (Array.isArray(arr) ? arr : []);
+const pick = <T>(arr: T[] | undefined | null) =>
+  Array.isArray(arr) ? arr : [];
 
 // 환경변수 안전하게 읽기 (CRA/Vite 모두 대응)
 const FRIEND_FETCH_SIZE: number = Number(
   // Vite
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (typeof import.meta !== "undefined" && (import.meta as any)?.env?.VITE_FRIEND_FETCH_SIZE) ??
-  // CRA
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (globalThis as any)?.process?.env?.REACT_APP_FRIEND_FETCH_SIZE ??
-  100
+
+  (typeof import.meta !== "undefined" &&
+    (import.meta as any)?.env?.VITE_FRIEND_FETCH_SIZE) ??
+    // CRA
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any)?.process?.env?.REACT_APP_FRIEND_FETCH_SIZE ??
+    100
 );
 
 export default function useFriendship(targetMemberId: number) {
@@ -59,7 +61,7 @@ export default function useFriendship(targetMemberId: number) {
     const received = requestsQ.data?.received ?? [];
 
     const isFriend = friends.some((f) => Number(f.memberId) === uid);
-    const isPendingSent = sent.some((s) => Number(s.memberId) === uid);        // 내가 보낸 요청
+    const isPendingSent = sent.some((s) => Number(s.memberId) === uid); // 내가 보낸 요청
     const isPendingReceived = received.some((r) => Number(r.memberId) === uid); // 내가 받은 요청
 
     let state: FriendshipState = "none";
@@ -78,11 +80,11 @@ export default function useFriendship(targetMemberId: number) {
   };
 
   return {
-    state,               // "friend" | "pending" | "incoming" | "none"
+    state, // "friend" | "pending" | "incoming" | "none"
     isFriend,
     isPendingSent,
     isPendingReceived,
-    isLoading,           // 컴포넌트에선 그대로 사용 가능
+    isLoading, // 컴포넌트에선 그대로 사용 가능
     refetchAll,
   };
 }

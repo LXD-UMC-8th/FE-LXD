@@ -1,34 +1,25 @@
 import { useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
-import { postSignin } from "../../apis/auth";
+// import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
-import { LOCAL_STORAGE_KEY } from "../../constants/key";
+import { useSignin } from "../../hooks/mutations/useSignin";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
 
+  const { mutate: postSignin } = useSignin();
   // 로그인 요청 함수
   const handleLogin = async () => {
     try {
-      const response = await postSignin({ email, password });
-
-      if (response.isSuccess) {
-        const { accessToken, refreshToken, member } = response.result;
-        localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
-        localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
-
-        console.log("로그인 성공", member);
-        navigate("/");
-      } else {
-        alert(response.message);
-      }
+      postSignin({ email, password });
+      console.log("로그인 성공");
+      navigate("/");
     } catch (error) {
       console.log("로그인 실패", error);
       alert("로그인 중 오류가 발생했습니다.");
@@ -50,15 +41,15 @@ const LoginPage = () => {
     >
       <TopLangOptionsButton />
       <header className="flex flex-col items-center space-y-8">
-        <img src="images/LXD_logo.svg" />
-        <img src="images/language_x_diary.svg" />
+        <img alt="lxd logo" src="images/LXD_logo.svg" />
+        <img alt="language x diary" src="images/language_x_diary.svg" />
       </header>
 
       <div className="flex flex-col w-[430px] p-4 space-y-10">
         <form className="flex flex-col space-y-5">
           <FormInput
             name="이메일"
-            placeholder={t.emailPlaceholder}
+            placeholder="이메일을 입력하세요"
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -89,7 +80,7 @@ const LoginPage = () => {
             className="flex gap-3 w-full h-[55px] justify-center border border-gray-400 
             py-3 rounded-md bg-gray-50 hover:bg-gray-100 cursor-pointer transition"
           >
-            <img src="images/Google__G__logo.svg" />
+            <img alt="google logo" src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
               Google 로 시작하기
             </span>
