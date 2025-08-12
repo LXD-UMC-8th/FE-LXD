@@ -56,3 +56,4 @@ export type MemberProfileDTO = {
 };
 
 export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
+
