@@ -4,8 +4,12 @@ import ProfileModal from "../ProfileModal";
 import AlertModal from "../../Common/AlertModal";
 import { getFriends, deleteFriend } from "../../../apis/friend";
 import type { FriendListResponseDTO } from "../../../utils/types/friend";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const FriendTab = () => {
+  const { language } = useLanguage();           // ✅
+  const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<
     FriendListResponseDTO["result"]["friends"]["contents"]
@@ -107,9 +111,9 @@ const FriendTab = () => {
         <AlertModal
           onClose={onCloseConfirmModal}
           onConfirm={onConfirmDelete}
-          title={`${selectedUser.nickname}님과 친구를 취소하시겠습니까?`}
-          confirmText="친구 취소하기"
-          alertMessage={`${selectedUser.nickname}님과 친구 취소가 완료되었습니다.`}
+          title={t.unfriendConfirmTitle.replace("{name}", selectedUser.nickname)}
+          confirmText={t.unfriendConfirmAction2}
+          alertMessage={t.unfriendDoneToast2}
         />
       )}
     </div>

@@ -5,6 +5,8 @@ import Avatar from "../Common/Avatar";
 import { addRecentSearch } from "../../utils/types/recentSearch";
 import { postFriendRequest } from "../../apis/friend";
 import useFriendship from "../../hooks/queries/useFriendship";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface ProfileViewProps {
   user: {
@@ -29,6 +31,8 @@ const ProfileView = ({
   isRequesting,
   onSendRequestClick,
 }: ProfileViewProps) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   // const navigate = useNavigate();
 
   // 친구관계 상태(friend | pending | incoming | none)
@@ -63,7 +67,7 @@ const ProfileView = ({
         return;
       }
       console.error("❌ 친구 요청 실패:", err);
-      alert("친구 요청에 실패했습니다.");
+      alert(t.friendRequestFailed);
     }
   };
 
@@ -96,14 +100,14 @@ const ProfileView = ({
             className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400"
             disabled
           >
-            로딩중…
+            {t.loadingLabel}
           </button>
         ) : mergedState === "friend" ? (
           <button
             className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700"
             onClick={onUnfriendClick}
           >
-            친구
+            {t.Friend}
           </button>
         ) : mergedState === "pending" ? (
           <button
@@ -115,15 +119,15 @@ const ProfileView = ({
               alt="요청중"
               className="w-5 h-5"
             />
-            요청중
+            {t.pendingLabel}
           </button>
         ) : mergedState === "incoming" ? (
           <div className="flex-1 grid grid-cols-2 gap-3">
             <button className="py-3 rounded-xl bg-[#3461F4] text-white font-semibold">
-              수락
+              {t.acceptButton}
             </button>
             <button className="py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold">
-              거절
+              {t.refuseButton} 
             </button>
           </div>
         ) : (
@@ -131,13 +135,13 @@ const ProfileView = ({
             onClick={handleSendRequest}
             className="flex-1 py-3 rounded-xl bg-[#3461F4] text-white text-base font-semibold hover:bg-blue-700"
           >
-            친구 요청하기
+            {t.sendFriendRequestButton}
           </button>
         )}
 
         {/* ✅ 다이어리 보러가기: memberId로 이동 */}
         <button className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold hover:bg-blue-100">
-          다이어리 보러가기
+          {t.viewDiaryButton}
         </button>
       </div>
     </div>
