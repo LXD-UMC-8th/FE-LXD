@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
+// import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
 
   const { mutate: postSignin } = useSignin();

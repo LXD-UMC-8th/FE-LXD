@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import Avatar from "../Common/Avatar";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { addRecentSearch } from "../../utils/types/recentSearch";
 import { postFriendRequest } from "../../apis/friend";
 import useFriendship from "../../hooks/queries/useFriendship";
@@ -29,7 +29,7 @@ const ProfileView = ({
   isRequesting,
   onSendRequestClick,
 }: ProfileViewProps) => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // 친구관계 상태(friend | pending | incoming | none)
   const { state, isLoading, refetchAll } = useFriendship(user.id);
