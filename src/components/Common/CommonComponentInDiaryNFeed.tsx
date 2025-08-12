@@ -10,8 +10,9 @@ import { queryClient } from "../../App";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
-import Header from "./Header";
+import Header from "../Diary/Header";
 import type { getLikeResponseDTO } from "../../utils/types/likes";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const CommonComponentInDiaryNFeed = ({
   props,
@@ -47,16 +48,8 @@ const CommonComponentInDiaryNFeed = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  //공용 훅 만든 거 나중에 이용하기
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  //모달 바깥에 띄운 것 취소하는 핸들러
+  useOutsideClick(menuRef, () => setMenuOpen(false));
 
   const content = useCleanHtml(props.contentPreview);
   const stats = [
@@ -191,6 +184,7 @@ const CommonComponentInDiaryNFeed = ({
         </div>
       </div>
 
+      {/* 내용 시작 */}
       <div className="flex flex-rows">
         <div className="flex-1 space-y-2">
           {/* 제목 */}
