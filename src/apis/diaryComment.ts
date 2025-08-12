@@ -16,9 +16,8 @@ export const postDiaryComments = async (
 export const getDiaryComments = async (
   body: DiaryCommentGetRequestDTO,
 ): Promise<DiaryCommentGetResponseDTO> => {
-  const { diaryId, page = 0, size = 10 } = body;
+  const { diaryId, page = 1, size = 10 } = body;
 
-  // ✅ 요청/응답 강제 스냅샷 로그
   console.log("[REQ] GET", `/diaries/${diaryId}/comments?page=${page}&size=${size}`);
 
   const { data } = await axiosInstance.get<DiaryCommentGetResponseDTO>(
@@ -26,7 +25,7 @@ export const getDiaryComments = async (
     { params: { page, size } }
   );
 
-  const snap = JSON.parse(JSON.stringify(data)); // 지연평가 피하려고 스냅샷
+  const snap = JSON.parse(JSON.stringify(data));
   console.log("[RES] GET comments (snap):", snap);
   console.log("[RES] length:", snap?.result?.content?.length);
 
