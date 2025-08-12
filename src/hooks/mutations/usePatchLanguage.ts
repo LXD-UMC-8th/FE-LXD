@@ -11,7 +11,7 @@ export const usePatchLanguage = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
 
-      window.location.reload();
+      // window.location.reload();
     },
   });
 };

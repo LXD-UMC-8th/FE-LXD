@@ -46,6 +46,11 @@ export const translate: Record<
     nativeLanguage: string;
     studyLanguage: string;
     systemLanguage: string;
+    SidebarFeed: string;
+    SidebarDiary: string;
+    SidebarCorrections: string;
+    SidebarFriends: string;
+    SidebarSettings: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -92,6 +97,11 @@ export const translate: Record<
     nativeLanguage: "Native Language",
     studyLanguage: "Study Language",
     systemLanguage: "System Language",
+    SidebarFeed: "Feed",
+    SidebarDiary: "My Diary",
+    SidebarCorrections: "My Correction",
+    SidebarFriends: "Friends",
+    SidebarSettings: "Settings",
   },
   [Language.KOREAN]: {
     emailPlaceholder: "이메일을 입력해주세요",
@@ -137,5 +147,10 @@ export const translate: Record<
     nativeLanguage: "모국어",
     studyLanguage: "학습 언어",
     systemLanguage: "시스템 언어",
+    SidebarFeed: "피드",
+    SidebarDiary: "나의 다이어리",
+    SidebarCorrections: "나의 교정",
+    SidebarFriends: "친구",
+    SidebarSettings: "설정",
   },
 };

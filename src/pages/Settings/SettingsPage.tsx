@@ -1,21 +1,21 @@
 import { useState } from "react";
-import { useLanguage } from "../../context/LanguageProvider";
+import { useLanguage, type TLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useMemberLanguage } from "../../hooks/queries/useMember";
 import { usePatchLanguage } from "../../hooks/mutations/usePatchLanguage";
 
 const SettingsPage = () => {
-  const { language } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const t = translate[language];
   const { data } = useMemberLanguage();
   console.log(data);
-  const [isLanguage, setIsLanguage] = useState<string>("");
+  const [isLanguage, setIsLanguage] = useState<TLanguage>(language);
   const [isButton, setIsButton] = useState<boolean>(false);
   const { mutate: patchLanguage } = usePatchLanguage();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     console.log("Selected system language:", e.target.value);
-    setIsLanguage(e.target.value);
+    setIsLanguage(e.target.value as TLanguage);
     if (e.target.value !== data?.result.systemLanguage) {
       setIsButton(true);
     } else {
@@ -23,6 +23,8 @@ const SettingsPage = () => {
     }
   };
   const handlerLanguageChange = () => {
+    console.log("Language changed to:", isLanguage);
+    setLanguage(isLanguage as TLanguage);
     patchLanguage(isLanguage);
   };
 
@@ -40,12 +42,11 @@ const SettingsPage = () => {
               </div>
               <div className="grid grid-cols-[120px_minmax(0,1fr)] gap-x-8 items-start">
                 {/* Left column: labels */}
-                <ul className="space-y-5">
+                <ul className="space-y-5 w-50 mr-5">
                   <li className="font-bold">{t.nativeLanguage}</li>
                   <li className="font-bold">{t.studyLanguage}</li>
                   <li className="font-bold last:mt-10">{t.systemLanguage}</li>
                 </ul>
-
                 <ul className="space-y-5">
                   <li>{data?.result?.nativeLanguage}</li>
                   <li>{data?.result?.studyLanguage}</li>
@@ -56,7 +57,6 @@ const SettingsPage = () => {
                       onChange={(e) => {
                         onChangeHandler(e);
                       }}
-                      value={data?.result?.systemLanguage || ""}
                     >
                       <option value="KO">한국어</option>
                       <option value="ENG">English</option>
@@ -69,10 +69,13 @@ const SettingsPage = () => {
         </div>
         <div className="flex justify-end w-full mt-30">
           <button
+            disabled={!isButton}
             className={` ${
-              isButton ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-600"
+              isButton
+                ? "bg-blue-500 text-white  active:bg-blue-600 cursor-pointer "
+                : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }
-            px-5 py-3   rounded-md cursor-pointer active:bg-blue-600`}
+            px-5 py-3 rounded-md `}
             onClick={handlerLanguageChange}
           >
             {t.SaveChange}
