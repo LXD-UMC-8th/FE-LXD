@@ -40,7 +40,7 @@ const DiaryHeader = ({
                     {t.CountDiary}
                   </p>
                 </p>
-                /<p>&middot;</p>
+                <p>&middot;</p>
                 <p className="flex">
                   {DiaryHeaderProps?.friendCount > 1 ? t.Friends : t.Friend}
                   <p className="font-bold">

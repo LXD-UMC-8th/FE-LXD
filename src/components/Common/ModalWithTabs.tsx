@@ -3,7 +3,7 @@ import TabsMap from "./TabsMap";
 
 type Tabvalue = {
   value: string;
-  title?: string;
+  title: string;
   count?: number | undefined;
 };
 interface ModalWithTabsProps {

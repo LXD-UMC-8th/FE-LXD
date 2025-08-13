@@ -23,8 +23,8 @@ const NavBar = () => {
 
   useEffect(() => {
     getMemberProfile().then((data) => {
-      setProfileData(data);
-      console.log("Profile data:", data);
+      setProfileData(data?.result);
+      console.log("Profile data: ", data?.result);
     });
   }, []);
 

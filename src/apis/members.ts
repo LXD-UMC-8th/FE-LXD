@@ -111,10 +111,11 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
 //프로필 조회 API
 export const getMemberProfile = async () => {
   try {
-    const response = await axiosInstance.get<MemberProfileDTO>(
+    const { data } = await axiosInstance.get<MemberProfileResponseDTO>(
+
       "/members/profile"
     );
-    return response.data;
+    return data;
   } catch (err) {
     console.log("getMemberProfile error", err);
   }
