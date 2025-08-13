@@ -2,9 +2,10 @@ import type { APIResponse } from "./APIresponse";
 
 //diary upload
 export type DiaryUploadRequestDTO = {
+  diaryId?: number;
   title: string;
   content: string;
-  style: string;
+  style?: string;
   visibility: string;
   commentPermission: string;
   language: string;
@@ -22,6 +23,7 @@ export type DiaryUploadResult = {
   diaryId: number;
   visibility: string;
   title: string;
+  style?: string;
   language: string;
   profileImg?: string;
   writerNickName?: string;
@@ -32,10 +34,13 @@ export type DiaryUploadResult = {
   correctCount: number;
   content?: string;
   thumbnailUrl?: string;
+  thumbnail?: string;
+  thumbImg?: string;
   contentPreview?: string;
   correctionCount?: number;
   isLiked?: boolean;
   diffHtml?: string;
+  commentPermission?: string;
 };
 
 export type DiaryGetRequestDTO = {
@@ -69,16 +74,6 @@ export type ImageResponseDTO = {
   };
 };
 
-export interface DiaryUpdateRequestDTO {
-  title: string;
-  content: string;
-  visibility: string;
-  commentPermission: string;
-  language: string;
-  style: string;
-  thumbImg: string;
-}
-
 export interface DiaryDeleteRequestDTO {
   diaryId: number;
 }
@@ -105,6 +100,8 @@ export type DiarySummary = {
   friendCount: number;
   relation?: string;
   status?: string;
+  language: string;
+  nativeLanguage: string;
 };
 
 export type getDiarySummary = APIResponse<DiarySummary>;
@@ -127,6 +124,7 @@ export type diaries = {
   writerNickname?: string;
   writerProfileImg?: string;
   profileImg?: string;
+  writerId?: number;
 };
 
 export type getDiariesResult = {

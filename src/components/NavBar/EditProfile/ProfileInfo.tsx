@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;
@@ -19,6 +21,8 @@ const ProfileInfo = ({
   _onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     _onImageChange(e);
@@ -47,10 +51,14 @@ const ProfileInfo = ({
               <button
                 type="button"
                 onClick={_onRemoveImage}
+                title="프로필 이미지 삭제"
+                aria-label="프로필 이미지 삭제"
                 className="bg-[url('/images/x_icon.svg')]
                 bg-no-repeat bg-center bg-contain absolute top-1 right-1 w-5 h-5  
                  flex items-center justify-center cursor-pointer"
-              />
+              >
+                <span className="sr-only">프로필 이미지 삭제</span>
+              </button>
             )}
           </div>
 

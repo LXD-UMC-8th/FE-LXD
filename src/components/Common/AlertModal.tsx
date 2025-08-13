@@ -2,16 +2,14 @@ import { useRef } from "react";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
-import { removeLocalStorageItem } from "../../apis/axios";
-import { useNavigate } from "react-router-dom";
 
 interface AlertModalProps {
-  onClose: () => void;
+  onClose: (e?: any) => void;
   title: string;
   description?: string;
   confirmText: string;
   alertMessage: string;
-  onConfirm?: () => void;
+  onConfirm?: (e?: any) => void;
 }
 
 const AlertModal = ({
@@ -19,7 +17,6 @@ const AlertModal = ({
   title,
   description,
   confirmText,
-  alertMessage,
   onConfirm,
 }: AlertModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -31,8 +28,8 @@ const AlertModal = ({
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div
         ref={ref}
-        className={`relative bg-white w-120 rounded-xl text-center ${
-          description ? "h-65" : "h-45"
+        className={`relative bg-white w-130 rounded-xl text-center ${
+          description ? "h-70" : "h-60"
         }`}
       >
         <button
