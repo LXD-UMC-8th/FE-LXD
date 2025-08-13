@@ -29,7 +29,7 @@ const QuestionTitle = ({ _titleName, onClick }: QuestionTitleProps) => {
       </div>
       <div>
         <button
-          className="group w-25 mt-5 p-2 h-12 flex items-center gap-1  border border-gray-300 hover:border-gray-700 rounded-md text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition cursor-pointer
+          className="group w-30 mt-5 p-2 h-12 flex items-center gap-1  border border-gray-300 hover:border-gray-700 rounded-md text-gray-500 hover:bg-gray-200 hover:text-gray-900 transition cursor-pointer
           disabled:cursor-not-allowed disabled:hover:bg-white disabled:border-gray-300 disabled:active:outline-none
           active:outline-1 focus:outline-gray-500"
           onClick={handleClick}

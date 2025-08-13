@@ -61,7 +61,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           // 등록 성공 후 목록 새로고침
           fetchComments({
             correctionId: props.correctionId,
-            page: 0,
+            page: 1,
             size: 20,
           });
         },
@@ -155,6 +155,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               className="w-45 bg-gray-200 text-sm text-gray-800 resize-none rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-60"
               rows={1}
               disabled={posting}
+              onKeyDown={(e) => {
+                if(e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  _handleCommentSubmit();
+                }
+              }}
             />
             <button
               onClick={_handleCommentSubmit}

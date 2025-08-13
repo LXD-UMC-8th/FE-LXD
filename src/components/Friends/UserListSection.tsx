@@ -1,3 +1,5 @@
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
 import UserListSkeleton from "./Skeleton/UserListSkeleton";
 
@@ -10,11 +12,15 @@ interface Props {
 }
 
 const UserListSection = ({ users, isLoading, onUserCardClick, onFriendButtonClick }: Props) => {
+  const { language } = useLanguage();                 // ✅
+  const t = translate[language];
+  const count = isLoading ? 0 : users.length;                           // ✅
+  const totalLabel = t.friendsTotalLabel.replace("{count}", String(count));
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <div className="w-full flex flex-col items-center px-4">
         <div className="text-lg font-semibold text-black mb-4 self-start">
-          총 친구 수 {isLoading ? 0 : users.length}명
+          {totalLabel} 
         </div>
 
         {isLoading ? (
@@ -49,7 +55,7 @@ const UserListSection = ({ users, isLoading, onUserCardClick, onFriendButtonClic
                       onFriendButtonClick(user);
                     }}
                   >
-                    친구
+                    {t.Friend}
                   </button>
                 )}
               </div>

@@ -1,10 +1,16 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import NavProfileModal from "./NavProfileModal";
 import Notification from "./Notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import Avatar from "../Common/Avatar";
+import { getMemberProfile } from "../../apis/members";
+import type {
+  MemberDTO,
+  MemberProfileResponseDTO,
+} from "../../utils/types/member";
 
 type OpenModal = "notifications" | "profile" | false;
 const NavBar = () => {
@@ -12,12 +18,17 @@ const NavBar = () => {
   const t = translate[language];
   const [isModalOpen, setIsModalOpen] = useState<OpenModal>(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
+  const [profileData, setProfileData] = useState<MemberDTO | undefined>();
 
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
-  // Removed unnecessary useEffect block that logged isModalOpen state.
+  useEffect(() => {
+    getMemberProfile().then((data) => {
+      setProfileData(data?.result);
+      console.log("Profile data:", profileData);
+    });
+  }, []);
 
-  //해야될 것 modal은 한 번에 하나의 모달만 띄울 수 있게 설정하기
   return (
     <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
       {/* 로고 */}
@@ -31,7 +42,7 @@ const NavBar = () => {
         <div
           onClick={() =>
             setIsModalOpen(
-              isModalOpen === "notifications" ? false : "notifications",
+              isModalOpen === "notifications" ? false : "notifications"
             )
           }
         >
@@ -47,10 +58,12 @@ const NavBar = () => {
             setIsModalOpen(isModalOpen === "profile" ? false : "profile")
           }
         >
-          <div className="w-7 h-7 rounded-full bg-gray-300"></div>
+          <div className="cursor-pointer">
+            <Avatar src={profileData?.profileImg} size="w-8 h-8" />
+          </div>
 
           <div className="text-body2 font-semibold text-gray-800 cursor-pointer">
-            이용자 님
+            {profileData?.nickname}&nbsp;{t.User}
           </div>
         </div>
       </div>
@@ -65,7 +78,10 @@ const NavBar = () => {
       {/* 프로필 모달 */}
       {isModalOpen === "profile" && (
         <div ref={modalRef} className="absolute top-full right-6 z-10 mt-2">
-          <NavProfileModal onClose={() => setIsModalOpen(false)} />
+          <NavProfileModal
+            onClose={() => setIsModalOpen(false)}
+            profileData={profileData}
+          />
         </div>
       )}
     </div>

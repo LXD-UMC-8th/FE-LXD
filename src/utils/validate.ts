@@ -4,9 +4,9 @@ export function isEmailValid(email: string): boolean {
   return pattern.test(email);
 }
 
-// 비밀번호 유효성 검사 함수: 10자 이상, 영어 대소문자, 숫자, 특수문자포함
+// 비밀번호 유효성 검사 함수: 8자 이상, 영어 대소문자, 숫자, 특수문자포함
 export function isPasswordValid(password: string): boolean {
-  const lengthCheck = password.length >= 10;
+  const lengthCheck = password.length >= 8;
   const upperCheck = /[A-Z]/.test(password);
   const lowerCheck = /[a-z]/.test(password);
   const numberCheck = /[0-9]/.test(password);
@@ -30,8 +30,8 @@ export function isIdValid(id: string): boolean {
   return pattern.test(id) && !/\s/.test(id);
 }
 
-// 닉네임 유효성 검사 함수: 영어 또는 한글. 1~40자 이하
+// 닉네임 유효성 검사 함수: 영어 또는 한글. 최대 20자
 export function isNicknameValid(nickname: string) {
-  const pattern = /^[a-zA-Z가-힣]{1,40}$/;
+  const pattern = /^[a-zA-Z가-힣]{1,20}$/;
   return pattern.test(nickname);
 }
