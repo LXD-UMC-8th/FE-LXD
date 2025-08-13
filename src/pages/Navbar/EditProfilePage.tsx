@@ -1,27 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
-import { getMemberProfile } from "../../apis/members";
+import { getMemberProfile, patchMemberProfile } from "../../apis/members";
 import type { MemberProfileResponseDTO } from "../../utils/types/member";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "../../components/Common/LoadingModal";
 
+type EditProfileState = {
+  id: string;
+  email: string;
+  password: string;
+  nickname: string;
+  profileImgUrl: string;
+  profileImgFile: File | null;
+  profileImgPreview: string | null;
+};
+
 const EditProfilePage = () => {
-  const [_userInfo, setUserInfo] = useState({
+  const [_userInfo, setUserInfo] = useState<EditProfileState>({
     id: "",
     email: "",
     password: "",
     nickname: "",
-    profileImage: "",
+    profileImgUrl: "",
+    profileImgFile: null,
+    profileImgPreview: null,
   });
   const [_objectURL, setObjectURL] = useState<string | null>(null);
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
   const navigate = useNavigate();
+  const qc = useQueryClient();
 
-  // 최초 진입 시 프로필 가져오기
+  // 프로필 조회
   const { data, isLoading, isError, error } =
     useQuery<MemberProfileResponseDTO>({
       queryKey: ["member", "profile"],
@@ -33,25 +46,65 @@ const EditProfilePage = () => {
         return response;
       },
     });
+
+  // 저장 뮤테이션
+  const { mutate: _saveProfile, isPending: _isSaving } = useMutation({
+    mutationFn: () =>
+      patchMemberProfile({
+        nickname: _userInfo.nickname.trim(),
+        profileImg: _userInfo.profileImgFile ?? null,
+      }),
+    onSuccess: (res) => {
+      qc.invalidateQueries({ queryKey: ["member", "profile"] });
+      alert("프로필이 수정되었습니다.");
+
+      // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
+      if (_objectURL) {
+        URL.revokeObjectURL(_objectURL);
+        setObjectURL(null);
+      }
+      setUserInfo((prev) => ({
+        ...prev,
+        profileImgFile: null,
+        profileImgPreview: null,
+      }));
+    },
+    onError: (err: unknown) => {
+      console.error("patchMemberProfile error:", err);
+      alert("수정 중 오류가 발생했습니다.");
+    },
+  });
+
+  // 최초 로드시 프로필 상태 채우기
   useEffect(() => {
     if (!data) return;
     const m = data.result;
-    setUserInfo({
+    setUserInfo((prev) => ({
+      ...prev,
       id: m.username,
       email: m.email,
-      password: "",
       nickname: m.nickname,
-      profileImage: m.profileImg,
-    });
+      profileImgUrl: m.profileImg,
+    }));
   }, [data]);
+
+  // 미리보기 URL 정리
+  useEffect(() => {
+    return () => {
+      if (_objectURL) URL.revokeObjectURL(_objectURL);
+    };
+  }, [_objectURL]);
+
+  // 화면에 보여줄 이미지: 새 미리보기 > 서버 URL > 기본 플레이스홀더
+  const _displayImage = useMemo(
+    () => _userInfo.profileImgPreview ?? _userInfo.profileImgUrl ?? "",
+    [_userInfo.profileImgPreview, _userInfo.profileImgUrl]
+  );
+
   if (isLoading || !_userInfo) return <LoadingModal />;
   if (isError) {
     const msg = error instanceof Error ? error.message : "알 수 없는 오류";
-    return (
-      <div className="p-6">
-        프로필을 불러오지 못했습니다: {msg}
-      </div>
-    );
+    return <div className="p-6">프로필을 불러오지 못했습니다: {msg}</div>;
   }
 
   const _handleChangePw = () => {
@@ -61,43 +114,58 @@ const EditProfilePage = () => {
   };
 
   const _handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const _image = e.target.files?.[0];
-    if (_image) {
-      if (_objectURL) {
-        URL.revokeObjectURL(_objectURL);
-      }
-      const _imageURL = URL.createObjectURL(_image);
-      setObjectURL(_imageURL);
+    const _file = e.target.files?.[0] ?? null;
+
+    if (_objectURL) {
+      URL.revokeObjectURL(_objectURL);
+      setObjectURL(null);
+    }
+
+    if (_file) {
+      const url = URL.createObjectURL(_file);
+      setObjectURL(url);
       setUserInfo((prev) => ({
         ...prev,
-        profileImage: {
-          preview: _imageURL,
-          name: _image.name,
-        },
+        profileImgFile: _file,
+        profileImgPreview: url,
+      }));
+    } else {
+      setUserInfo((prev) => ({
+        ...prev,
+        profileImgFile: null,
+        profileImgPreview: null,
       }));
     }
   };
+
   const _handleRemoveImage = () => {
+    if (_objectURL) {
+      URL.revokeObjectURL(_objectURL);
+      setObjectURL(null);
+    }
     setUserInfo((prev) => ({
       ...prev,
-      profileImage: { preview: null, name: "" },
+      profileImgFile: null,
+      profileImgPreview: null,
     }));
   };
+
   const _handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo((prev) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const _isModified = _userInfo.nickname.length >= 1;
-  //   (_userInfo.password !== _initialUserInfo.password ||
-  //     _userInfo.profileImage.preview !==
-  //       _initialUserInfo.profileImage.preview ||
-  //     _userInfo.profileImage.name !== _initialUserInfo.profileImage.name ||
-  //     _userInfo.nickname !== _initialUserInfo.nickname);
+  const _isModified =
+    _userInfo.nickname.trim() !== (data?.result.nickname ?? "") ||
+    !!_userInfo.profileImgFile;
 
-  const _handleSaveChanges = () => {
-    // 변경 내용 저장 (비밀번호 or 프로필이미지 or 닉네임)
-    // 서버에 변경한 값만 인식하여 전달
-    console.log(_userInfo);
+  const _handleSaveChanges = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!_isModified) return;
+    if (_userInfo.nickname.trim().length === 0) {
+      alert("닉네임을 입력해주세요.");
+      return;
+    }
+    _saveProfile();
   };
 
   return (
@@ -121,8 +189,8 @@ const EditProfilePage = () => {
 
         <section className="flex w-[775px]">
           <ProfileInfo
-            _profilePreview={_userInfo.profileImage.preview}
-            _profileName={_userInfo.profileImage.name}
+            _profilePreview={_displayImage}
+            _profileName={_userInfo.profileImgFile?.name}
             _onImageChange={_handleImageChange}
             _onRemoveImage={_handleRemoveImage}
             _nickname={_userInfo.nickname}
@@ -141,15 +209,15 @@ const EditProfilePage = () => {
 
         <button
           onClick={_handleSaveChanges}
-          disabled={!_isModified}
+          disabled={!_isModified || _isSaving}
           className={`px-8 py-5 rounded-md text-subhead3 font-medium
             ${
-              _isModified
+              _isModified && !_isSaving
                 ? "bg-primary-500 text-white cursor-pointer"
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-          변경내용저장
+          {_isSaving ? "저장 중..." : "변경내용저장"}
         </button>
       </section>
 

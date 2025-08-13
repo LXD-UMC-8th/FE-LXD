@@ -2,6 +2,7 @@
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
 import type {
   MemberLanguageResponseDTO,
+  MemberProfileRequest,
   MemberProfileResponseDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
@@ -124,3 +125,29 @@ export const getMemberProfile = async () => {
   }
 };
 
+// 프로필 수정 API
+export const patchMemberProfile = async ({
+  nickname,
+  profileImg,
+}: MemberProfileRequest) => {
+  try {
+    const formData = new FormData();
+    formData.append(
+      "data",
+      new Blob([JSON.stringify({ nickname })], { type: "application/json" })
+    );
+
+    if (profileImg instanceof File) {
+      formData.append("profileImg", profileImg);
+    }
+
+    const response = await axiosInstance.patch<MemberProfileResponseDTO>(
+      "/members/profile",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+    return response.data;
+  } catch (err) {
+    console.log("patchMemberProfile error:", err);
+  }
+};

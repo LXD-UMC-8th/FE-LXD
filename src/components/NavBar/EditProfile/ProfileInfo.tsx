@@ -3,7 +3,7 @@ import FormInput from "../../Login/FormInput";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;
-  _profileName: string;
+  _profileName: string | undefined;
   _onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   _onRemoveImage: () => void;
   _nickname: string;
@@ -103,7 +103,7 @@ const ProfileInfo = ({
           onChange={_onNicknameChange}
         />
         <p className="text-gray-600 text-sm mb-3">
-          1자 이상 40자 이내로 입력해주세요(혹시 닉네임 바이트 수에 제한 있다면)
+          1자 이상 20자 이내로 입력해주세요.
         </p>
       </div>
     </div>
