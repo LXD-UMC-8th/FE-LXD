@@ -13,14 +13,8 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import CorrectionsInDiaryDetail from "./CorrectionsInDiaryDetail";
 
 type PassedState = {
-  stats?: {
-    commentCount?: number;
-    likeCount?: number;
-    correctCount?: number;
-  };
-  meta?: {
-    diaryId?: number;
-  };
+  stats?: { commentCount?: number; likeCount?: number; correctCount?: number };
+  meta?: { diaryId?: number };
 };
 
 const ProvideCorrections = () => {
@@ -40,13 +34,12 @@ const ProvideCorrections = () => {
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const contentAreaRef = useRef<HTMLDivElement>(null);
+
   const { mutate: postCorrection } = usePostCorrection();
 
   // 일기 상세 조회
-  const {
-    mutate: fetchDiaryDetail,
-    data: diaryData, 
-  } = useGetDiaryDetail();
+  const { mutate: fetchDiaryDetail, data: diaryData } = useGetDiaryDetail();
 
   useEffect(() => {
     if (hasValidId) {
@@ -71,31 +64,43 @@ const ProvideCorrections = () => {
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
       const selection = window.getSelection();
-      const text = selection?.toString().trim();
+      if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+        setShowModal(false);
+        return;
+      }
 
       const modalEl = document.getElementById("correction-modal");
       if (modalEl?.contains(e.target as Node)) return;
 
-      if (text && selection?.rangeCount) {
-        const range = selection.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
+      const range = selection.getRangeAt(0);
+      const text = selection.toString().trim();
 
-        const container = containerRef.current;
-        if (!container) return;
+      const allowed = contentAreaRef.current;
+      const isInsideContent =
+        !!allowed &&
+        (allowed.contains(range.commonAncestorContainer) ||
+          (selection.anchorNode && allowed.contains(selection.anchorNode)) ||
+          (selection.focusNode && allowed.contains(selection.focusNode)));
 
-        const containerRect = container.getBoundingClientRect();
-
-        // container 내부 기준으로 위치 계산
-        const top = rect.bottom - containerRect.top + 10;
-        const left = rect.left - containerRect.left;
-
-        setModalPosition({ top, left });
-        setSelectedText(text);
-        setEditedText("");
-        setShowModal(true);
-      } else {
+      // 본문 밖이거나, 빈 문자열/너무 짧은 선택은 무시
+      if (!isInsideContent || !text || text.length < 2) {
         setShowModal(false);
+        return;
       }
+
+      // 위치 계산 (containerRef 기준)
+      const rect = range.getBoundingClientRect();
+      const container = containerRef.current;
+      if (!container) return;
+      const containerRect = container.getBoundingClientRect();
+
+      const top = rect.bottom - containerRect.top + 10;
+      const left = rect.left - containerRect.left;
+
+      setModalPosition({ top, left });
+      setSelectedText(text);
+      setEditedText("");
+      setShowModal(true);
     };
 
     document.addEventListener("mouseup", handleMouseUp);
@@ -105,16 +110,17 @@ const ProvideCorrections = () => {
   const handleSubmit = () => {
     if (!editedText.trim() || !description.trim() || !selectedText.trim()) return;
 
-    postCorrection({
-      diaryId: parsedDiaryId,
-      original: selectedText,
-      corrected: editedText,
-      commentText: description,
-    }, {
-      onSuccess: () => {
-        setShowModal(false);
+    postCorrection(
+      {
+        diaryId: parsedDiaryId,
+        original: selectedText,
+        corrected: editedText,
+        commentText: description,
       },
-    });
+      {
+        onSuccess: () => setShowModal(false),
+      }
+    );
   };
 
   const commentCount = passed.stats?.commentCount ?? 0;
@@ -128,17 +134,17 @@ const ProvideCorrections = () => {
     >
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 */}
-        <div className="mb-4 flex items-center gap-3 justify-between">
+        <div className="mb-4 flex items-center gap-3 justify-between select-none">
           <PrevButton navigateURL={-1} />
           <TitleHeader title={t.CorrectButton} />
-          <button 
+          <button
             className="bg-primary-500 text-primary-50 font-medium rounded-[5px] h-[43px] w-[118px] px-1 cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             onClick={() => navigate(-1)}
           >
             {t.CompleteCorrect}
           </button>
         </div>
-        
+
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
           <DiaryContent
@@ -150,39 +156,32 @@ const ProvideCorrections = () => {
             writerUsername={diary?.writerUserName}
             stats={[
               { label: String(commentCount), icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
-              { label: String(likeCount),    icon: "/images/CommonComponentIcon/LikeIcon.svg",    alt: "좋아요" },
+              { label: String(likeCount), icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
               { label: String(correctCount), icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
             ]}
             diaryId={diary?.diaryId ?? 0}
             createdAt={diary?.createdAt ?? ""}
             {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
+            contentRootRef={contentAreaRef}
           />
         </div>
       </div>
 
-      {/* 모달 띄우기 */}
+      {/* 모달 */}
       {showModal && (
         <div
           id="correction-modal"
           className="absolute z-50 w-[450px] h-[330px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
-          style={{
-            top: modalPosition.top,
-            left: modalPosition.left,
-          }}
+          style={{ top: modalPosition.top, left: modalPosition.left }}
         >
           <button
             onClick={() => setShowModal(false)}
             className="absolute top-7 right-5 cursor-pointer"
           >
-            <img
-              src="/images/DeleteButton.svg"
-              className="w-3 h-3"
-              alt="닫기 버튼"
-            />
+            <img src="/images/DeleteButton.svg" className="w-3 h-3" alt="닫기 버튼" />
           </button>
 
           <h2 className="text-subhead3 font-semibold mb-4">{t.ProvideCorrect}</h2>
-
           <div className="border-t border-gray-300 my-4" />
 
           <div className="flex flex-col gap-3">
@@ -219,29 +218,18 @@ const ProvideCorrections = () => {
               onClick={handleSubmit}
               className="group absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
-              <img
-                src="/images/correctionpencil.svg"
-                alt="교정 아이콘"
-                className="w-5 h-5 group-hover:hidden"
-              />
-              <img
-                src="/images/CorrectHover.svg"
-                alt="교정 아이콘 hover"
-                className="w-5 h-5 hidden group-hover:block transition-300"
-              />
-                {t.CorrectEnroll}
+              <img src="/images/correctionpencil.svg" alt="교정 아이콘" className="w-5 h-5 group-hover:hidden" />
+              <img src="/images/CorrectHover.svg" alt="교정 아이콘 hover" className="w-5 h-5 hidden group-hover:block transition-300" />
+              {t.CorrectEnroll}
             </button>
           </div>
         </div>
       )}
 
       {/* 오른쪽 교정 영역 */}
-      <div className="flex flex-col px-5 gap-3">
+      <div className="flex flex-col px-5 gap-3 select-none">
         <div className="flex items-center gap-2">
-          <img 
-            src="/images/Correct.svg"
-            className="w-5 h-5"
-          />
+          <img src="/images/Correct.svg" className="w-5 h-5" />
           <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
         </div>
 

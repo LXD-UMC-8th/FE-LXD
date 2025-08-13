@@ -19,6 +19,7 @@ interface DiaryContentProps {
   diaryId: number;
   createdAt: string;
   thumbnail: string;
+  contentRootRef?: React.RefObject<HTMLDivElement>;
 }
 
 const DiaryContent = ({
@@ -33,6 +34,7 @@ const DiaryContent = ({
   diaryId,
   createdAt,
   thumbnail,
+  contentRootRef,
 }: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -147,17 +149,16 @@ const DiaryContent = ({
 
       {/* 본문 */}
       <div className="">
-          <div>
-            {thumbnail && (
-              <img 
-                className="rounded-[10px]"
-                src={thumbnail}
-                alt="이미지"
-              />
-            )
-            }
-          </div>
+        {thumbnail && (
+          <img 
+            className="rounded-[10px]"
+            src={thumbnail}
+            alt="이미지"
+          />
+        )}
+        <div ref={contentRootRef} data-role="diary-content">
           {safeContent}
+        </div>
       </div>
 
       <div className="border-t border-gray-200 my-5" />
