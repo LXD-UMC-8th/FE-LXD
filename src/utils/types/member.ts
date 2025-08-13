@@ -52,7 +52,14 @@ export type MemberProfileDTO = {
   username: string;
   email: string;
   nickname: string;
-  profileImg: string | null;
+  profileImg: string;
 };
 
 export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
+
+export type MemberProfileRequest = {
+  nickname: string;
+  profileImg?: File | null;
+  removeProfileImg?: boolean;
+};
+
