@@ -148,11 +148,14 @@ const DiaryContent = ({
       {/* 본문 */}
       <div className="">
           <div>
-            <img 
-              className="rounded-[10px]"
-              src={thumbnail}
-              alt="이미지"
-            />
+            {thumbnail && (
+              <img 
+                className="rounded-[10px]"
+                src={thumbnail}
+                alt="이미지"
+              />
+            )
+            }
           </div>
           {safeContent}
       </div>

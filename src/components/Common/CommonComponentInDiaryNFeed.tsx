@@ -125,23 +125,26 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex justify-between items-start">
         <div>
           {isFeedTab ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Avatar
                 src={props.profileImg}
                 alt={props.writerUsername}
                 size="w-9 h-9"
               />
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-black">
-                  {props.writerUsername}
-                </span>
-                <span className="text-xs text-gray-500">
-                  @{props.writerNickname}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-black">
+                    {props.writerUsername}
+                  </span>
+                  <div className="w-px h-4 bg-gray-500" />
+                  <span className="text-xs text-gray-500">
+                    @{props.writerNickname}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-400 mt-1">
+                  {props.createdAt}
                 </span>
               </div>
-              <span className="text-xs text-gray-400 ml-2 mt-0.5">
-                {props.createdAt}
-              </span>
             </div>
           ) : (
             isMyDiaryTab && (
