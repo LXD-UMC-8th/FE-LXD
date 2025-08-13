@@ -3,7 +3,7 @@ interface SignupButtonProps {
   type: "submit" | "reset" | "button" | undefined;
   name: string;
   onClick?: () => void;
-  disabled: boolean;
+  disabled?: boolean;
 }
 const SignupButton = ({
   form,

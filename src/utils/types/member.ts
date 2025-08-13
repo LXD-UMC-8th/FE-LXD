@@ -63,3 +63,10 @@ export type MemberProfileRequest = {
   removeProfileImg?: boolean;
 };
 
+export type ChangePasswordRequestDTO = {
+  email: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export type ChangePasswordResponseDTO = APIResponse<string>;

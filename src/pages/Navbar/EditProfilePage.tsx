@@ -27,7 +27,7 @@ const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState<EditProfileState>({
     id: "",
     email: "",
-    password: "",
+    password: "**********",
     nickname: "",
     profileImgUrl: "",
     profileImgFile: null,
@@ -137,9 +137,7 @@ const EditProfilePage = () => {
   }
 
   const _handleChangePw = () => {
-    // 비밀번호 변경하기 버튼 누르면 실행
-    // 변경하는 새로운 모달이 뜨나? 아직 모름
-    setUserInfo((prev) => ({ ...prev, password: "hihihihihi" }));
+    navigate("/home/signup/change-pw")
   };
 
   const _handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

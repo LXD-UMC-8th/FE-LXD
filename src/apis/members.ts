@@ -5,7 +5,8 @@ import type {
   MemberProfileRequest,
   MemberProfileResponseDTO,
   CheckDuplicatedIDResponseDTO,
-  MemberProfileDTO,
+  ChangePasswordRequestDTO,
+  ChangePasswordResponseDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
@@ -81,7 +82,6 @@ export const getCheckDuplicatedID = async (username: string) => {
   return response.data;
 };
 
-
 // 언어 조회 API
 export const getMemberLanguage = async () => {
   try {
@@ -93,7 +93,6 @@ export const getMemberLanguage = async () => {
     console.log("getMemberLanguage error:", err);
   }
 };
-
 
 // 시스템 언어 변경 API
 export const patchMemberLanguage = async (systemLanguage: string) => {
@@ -107,12 +106,10 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
   }
 };
 
-
 //프로필 조회 API
 export const getMemberProfile = async () => {
   try {
     const { data } = await axiosInstance.get<MemberProfileResponseDTO>(
-
       "/members/profile"
     );
     return data;
@@ -130,7 +127,10 @@ export const patchMemberProfile = async ({
   try {
     const formData = new FormData();
 
-     const jsonData = { nickname, ...(removeProfileImg ? { removeProfileImg: true } : {}) };
+    const jsonData = {
+      nickname,
+      ...(removeProfileImg ? { removeProfileImg: true } : {}),
+    };
     formData.append(
       "data",
       new Blob([JSON.stringify(jsonData)], { type: "application/json" })
@@ -149,4 +149,16 @@ export const patchMemberProfile = async ({
   } catch (err) {
     console.log("patchMemberProfile error:", err);
   }
+};
+
+// 비밀번호 변경 API
+export const patchMemberPassword = async (
+  payload: ChangePasswordRequestDTO
+): Promise<ChangePasswordResponseDTO> => {
+  const response = await axiosInstance.patch<ChangePasswordResponseDTO>(
+    "/members/password",
+    payload,
+    { headers: { "Content-Type": "application/json" } }
+  );
+  return response.data;
 };
