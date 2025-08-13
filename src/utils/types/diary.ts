@@ -31,7 +31,7 @@ export type DiaryUploadResult = {
   likeCount: number;
   correctCount: number;
   content?: string;
-  thumbnailUrl?: string;
+  thumbnail?: string;
   contentPreview?: string;
   correctionCount?: number;
   isLiked?: boolean;

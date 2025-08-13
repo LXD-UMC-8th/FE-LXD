@@ -4,6 +4,8 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -12,6 +14,8 @@ type CorrectionsInDiaryDetailProps = {
 const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const { language } = useLanguage();
+  const t = translate[language];
 
   // 댓글 목록
   const {
@@ -151,7 +155,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder="댓글을 입력하세요."
+              placeholder={t.CommentPlaceholder}
               className="w-45 bg-gray-200 text-sm text-gray-800 resize-none rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-60"
               rows={1}
               disabled={posting}

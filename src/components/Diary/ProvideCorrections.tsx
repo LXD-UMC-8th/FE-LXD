@@ -3,14 +3,31 @@ import PrevButton from "../Common/PrevButton";
 import TitleHeader from "../Common/TitleHeader";
 import DiaryContent from "./DiaryContent";
 import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
+
+type PassedState = {
+  stats?: {
+    commentCount?: number;
+    likeCount?: number;
+    correcCount?: number;
+  };
+  meta?: {
+    diaryId?: number;
+  };
+};
 
 const ProvideCorrections = () => {
-
+  const { language } = useLanguage();
+  const t = translate[language];
   const { diaryId } = useParams<{ diaryId?: string }>();
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const passed = (location.state ?? {}) as PassedState;
 
   const [selectedText, setSelectedText] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -84,23 +101,9 @@ const ProvideCorrections = () => {
     });
   };
 
-  const _stats = [
-    {
-      label: "180",
-      icon: "/images/CommonComponentIcon/CommentIcon.svg",
-      alt: "댓글",
-    },
-    {
-      label: "89",
-      icon: "/images/CommonComponentIcon/LikeIcon.svg",
-      alt: "좋아요",
-    },
-    {
-      label: "5",
-      icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-      alt: "교정",
-    },
-  ];
+  const commentCount = passed.stats?.commentCount ?? 0;
+  const likeCount = passed.stats?.commentCount ?? 0;
+  const correctCount = passed.stats?.correcCount ?? 0;
 
   return (
     <div
@@ -109,21 +112,33 @@ const ProvideCorrections = () => {
     >
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 */}
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-4 flex items-center gap-3 justify-between">
           <PrevButton navigateURL={-1} />
-          <TitleHeader title="교정하기" />
+          <TitleHeader title={t.CorrectButton} />
+          <button 
+            className="bg-primary-500 text-primary-50 font-medium rounded-[5px] h-[43px] w-[118px] px-1 cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
+            onClick={() => navigate(-1)}
+          >
+            {t.CompleteCorrect}
+          </button>
         </div>
-
+        
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
           <DiaryContent
             title={diary?.title ?? ""}
-            language={diary?.language ?? ""}
+            lang={diary?.language ?? ""}
             visibility={diary?.visibility ?? ""}
             content={diary?.content}
             writerNickname={diary?.writerNickName}
             writerUsername={diary?.writerUserName}
-            stats={_stats}
+            stats={[
+              { label: String(commentCount), icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
+              { label: String(likeCount),    icon: "/images/CommonComponentIcon/LikeIcon.svg",    alt: "좋아요" },
+              { label: String(correctCount), icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
+            ]}
+            diaryId={diary?.diaryId ?? 0}
+            createdAt={diary?.createdAt ?? ""}
           />
         </div>
       </div>
@@ -149,7 +164,7 @@ const ProvideCorrections = () => {
             />
           </button>
 
-          <h2 className="text-subhead3 font-semibold mb-4">교정 제공하기</h2>
+          <h2 className="text-subhead3 font-semibold mb-4">{t.ProvideCorrect}</h2>
 
           <div className="border-t border-gray-300 my-4" />
 
@@ -165,7 +180,7 @@ const ProvideCorrections = () => {
                   onChange={(e) => setEditedText(e.target.value)}
                   className="w-full px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-200 text-primary-500 font-medium bg-primary-50"
                   rows={1}
-                  placeholder="수정된 문장을 입력하세요."
+                  placeholder={t.CorrectSentence}
                 />
               </div>
             </div>
@@ -176,7 +191,7 @@ const ProvideCorrections = () => {
                 onChange={(e) => setDescription(e.target.value)}
                 className="w-full rounded-[10px] px-3 py-3 text-body2 h-15 resize-none focus:outline-none"
                 rows={2}
-                placeholder="수정 이유를 작성해주세요."
+                placeholder={t.CorrectExp}
               />
             </div>
           </div>
@@ -185,14 +200,19 @@ const ProvideCorrections = () => {
           <div className="flex justify-end mt-5">
             <button
               onClick={handleSubmit}
-              className="absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:scale-105 duration-300"
+              className="group absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
               <img
                 src="/images/correctionpencil.svg"
-                className="w-5 h-5"
                 alt="교정 아이콘"
+                className="w-5 h-5 group-hover:hidden"
               />
-              등록하기
+              <img
+                src="/images/CorrectHover.svg"
+                alt="교정 아이콘 hover"
+                className="w-5 h-5 hidden group-hover:block transition-300"
+              />
+                {t.CorrectEnroll}
             </button>
           </div>
         </div>

@@ -18,6 +18,7 @@ interface DiaryContentProps {
   stats: { label: string; icon: string; alt: string }[];
   diaryId: number;
   createdAt: string;
+  thumbnail: string;
 }
 
 const DiaryContent = ({
@@ -31,6 +32,7 @@ const DiaryContent = ({
   stats,
   diaryId,
   createdAt,
+  thumbnail,
 }: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -144,7 +146,14 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 본문 */}
-      <div className="text-center mx-20">
+      <div className="">
+          <div>
+            <img 
+              className="rounded-[10px]"
+              src={thumbnail}
+              alt="이미지"
+            />
+          </div>
           {safeContent}
       </div>
 

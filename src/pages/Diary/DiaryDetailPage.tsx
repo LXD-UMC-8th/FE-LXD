@@ -35,7 +35,26 @@ const DiaryDetailPage = () => {
   };
 
   const _handleCorrectionsClick = () => {
-    navigate(`/feed/${parsedDiaryId}/corrections`);
+    const commentCount =
+      (commentData?.result?.totalElements ?? commentData?.result?.content?.length)
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      diary?.commentCount ?? 0;
+
+      const likeCount = diary?.likeCount ?? 0;
+      const correctCount = diary?.correctCount ?? 0;
+
+    navigate(`/feed/${parsedDiaryId}/corrections`, {
+      state: {
+        stats: {
+          commentCount,
+          likeCount,
+          correctCount,
+        },
+        meta: {
+          diaryId: parsedDiaryId,
+        },
+      },
+    });
   };
 
   /** 교정 댓글 조회 */
@@ -79,7 +98,7 @@ const DiaryDetailPage = () => {
       <div>
         <div>
           잘못된 접근입니다.
-          <button>
+          <button onClick={() => navigate('/feed')}>
             피드로 돌아가기
           </button>
         </div>
@@ -242,6 +261,7 @@ const DiaryDetailPage = () => {
               ]}
               diaryId={diary.diaryId}
               createdAt={diary.createdAt ?? ""}
+              {...(diary.thumbnail ? { thumbnail: diary.thumbnail }: {})}
             />
           )}
 
@@ -376,7 +396,7 @@ const DiaryDetailPage = () => {
                       {/* 답글 입력 */}
                       <div className="flex items-center gap-2">
                         <textarea
-                        placeholder="답글을 입력하세요."
+                        placeholder={t.ReplyPlaceholder}
                         className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 
                                   focus:outline-none focus:ring-2 focus:ring-gray-200"
                         rows={1}

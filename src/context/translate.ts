@@ -98,6 +98,7 @@ export const translate: Record<
     CorrectionsInDiary: string;
     CorrectButton: string;
     CommentPlaceholder: string;
+    ReplyPlaceholder: string;
     User: string;
     EditProfile: string;
     SignOut: string;
@@ -106,6 +107,11 @@ export const translate: Record<
     LogOutStatementBack: string;
     CompleteLogOut: string;
     Close: string;
+    ProvideCorrect: string;
+    CorrectSentence: string;
+    CorrectExp: string;
+    CorrectEnroll: string;
+    CompleteCorrect: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -207,6 +213,7 @@ export const translate: Record<
     CorrectionsInDiary: "Provided Corrections",
     CorrectButton: "Correct",
     CommentPlaceholder: "Write a comment",
+    ReplyPlaceholder: "Write a Reply",
     User: "",
     EditProfile: "Edit Profile",
     SignOut: "Log Out",
@@ -215,6 +222,11 @@ export const translate: Record<
     LogOutStatementBack: "on LXD?",
     CompleteLogOut: "Logout is complete.",
     Close: "Close",
+    ProvideCorrect: "Provide Corrections",
+    CorrectSentence: "Please add an corrections",
+    CorrectExp: "Please add an explanation",
+    CorrectEnroll: "Post",
+    CompleteCorrect: "Complete",
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -313,6 +325,7 @@ export const translate: Record<
     CorrectionsInDiary: "작성된 교정",
     CorrectButton: "교정하기",
     CommentPlaceholder: "댓글을 입력해주세요",
+    ReplyPlaceholder: "답글을 입력해주세요",
     User: "님",
     EditProfile: "프로필 수정",
     SignOut: "로그아웃",
@@ -321,5 +334,10 @@ export const translate: Record<
     LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
     CompleteLogOut: "로그아웃이 완료되었습니다.",
     Close: "닫기",
+    ProvideCorrect: "교정 제공하기",
+    CorrectSentence: "교정된 문장을 입력하세요.",
+    CorrectExp: "교정 이유를 작성해주세요.",
+    CorrectEnroll: "등록하기",
+    CompleteCorrect: "교정완료",
   },
 };
