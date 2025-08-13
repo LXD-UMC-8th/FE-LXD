@@ -129,7 +129,7 @@ const ProvideCorrections = () => {
 
   return (
     <div
-      className="flex justify-center items-start mx-auto px-6 pt-6 relative"
+      className="flex justify-center items-start mx-auto px-6 sm:px-40 pt-6 relative"
       ref={containerRef}
     >
       <div className="w-full max-w-[750px]">
