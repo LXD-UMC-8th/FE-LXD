@@ -2,26 +2,36 @@ import { useState } from "react";
 // import useWritingSubmit from "../../../hooks/queries/useWritingSubmit";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import { useWritingSubmit } from "../../../hooks/mutations/useWritingSubmit";
+import {
+  useUpdateDiary,
+  useWritingSubmit,
+} from "../../../hooks/mutations/useWritingSubmit";
 import LoadingModal from "../../Common/LoadingModal";
+import { useParams } from "react-router";
 interface EnrollModalProps {
   _onClose?: () => void;
   _titleName: string;
   _editorRawContent: string;
-  _style: string;
+  _style?: string;
+  thumbImg?: string;
 }
 
 const EnrollModal = ({
   _titleName,
   _editorRawContent,
   _style,
+  thumbImg,
 }: EnrollModalProps) => {
+  const { diaryId } = useParams<{ diaryId: string }>();
+  console.log("EnrollModal diaryId & diaryType:", diaryId, typeof diaryId);
+
   const { language } = useLanguage();
   const t = translate[language];
   const [visibility, setVisibility] = useState<string>("PUBLIC");
   const [commentPermission, setCommentPermission] = useState<string>("ALL");
 
   const { mutate: postDiaryUpload, isPending } = useWritingSubmit();
+  const { mutate: updateDiary } = useUpdateDiary();
 
   const normalizeStyle = (style: string) => {
     switch (style) {
@@ -36,21 +46,34 @@ const EnrollModal = ({
     }
   };
   const handleSubmit = () => {
-    const style = normalizeStyle(_style);
+    const style = normalizeStyle(_style || "FREE");
 
     if (!_titleName) {
       alert(t.titleRequired);
       return;
     }
-    postDiaryUpload({
-      title: _titleName.trim(),
-      content: JSON.stringify(_editorRawContent),
-      style,
-      visibility,
-      commentPermission,
-      language: "KO",
-      thumbImg: localStorage.getItem("thumbImg") || "",
-    });
+
+    if (window.location.href.includes("writing")) {
+      postDiaryUpload({
+        title: _titleName.trim(),
+        content: JSON.stringify(_editorRawContent),
+        style,
+        visibility,
+        commentPermission,
+        language: language,
+        thumbImg: localStorage.getItem("thumbImg") || "",
+      });
+    } else if (window.location.href.includes("edit")) {
+      updateDiary({
+        diaryId: Number(diaryId),
+        title: _titleName.trim(),
+        content: JSON.stringify(_editorRawContent),
+        visibility,
+        commentPermission,
+        language,
+        thumbImg: thumbImg ?? "",
+      });
+    }
   };
 
   //value값을 바꿈에 따라서 label설정이 안 됨,,

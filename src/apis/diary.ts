@@ -4,7 +4,6 @@ import type {
   DiaryUploadRequestDTO,
   DiaryUploadResponseDTO,
   ImageResponseDTO,
-  DiaryUpdateRequestDTO,
   DiaryDeleteRequestDTO,
   CalendarDiaryRequestDTO,
   CalendarDiaryResponseDTO,
@@ -14,12 +13,12 @@ import type {
 import { axiosInstance } from "./axios";
 
 export const postDiaryUpload = async (
-  body: DiaryUploadRequestDTO,
+  body: DiaryUploadRequestDTO
 ): Promise<DiaryUploadResponseDTO> => {
   try {
     const { data } = await axiosInstance.post<DiaryUploadResponseDTO>(
       "/diaries",
-      body,
+      body
     );
     return data;
   } catch (error) {
@@ -29,12 +28,12 @@ export const postDiaryUpload = async (
 };
 
 export const getDiaryRandomQuestion = async (
-  body: DiaryRefreshRequestDTO,
+  body: DiaryRefreshRequestDTO
 ): Promise<DiaryRefreshResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryRefreshResponseDTO>(
       "/diaries/random-question",
-      { params: body },
+      { params: body }
     );
     return data;
   } catch (e) {
@@ -44,14 +43,14 @@ export const getDiaryRandomQuestion = async (
 };
 
 export const postDiaryImage = async (
-  body: FormData,
+  body: FormData
 ): Promise<ImageResponseDTO> => {
   console.log("postDiaryImage called with body:", body);
   try {
     const { data } = await axiosInstance.post<ImageResponseDTO>(
       "/diaries/image",
       body,
-      { withCredentials: true },
+      { withCredentials: true }
     );
     return data;
   } catch (error) {
@@ -61,7 +60,7 @@ export const postDiaryImage = async (
 };
 
 export const getDiaryStats = async (
-  body: CalendarDiaryRequestDTO,
+  body: CalendarDiaryRequestDTO
 ): Promise<CalendarDiaryResponseDTO | undefined> => {
   try {
     const { data } = await axiosInstance.get("/diaries/stats", {
@@ -86,13 +85,21 @@ export const deleteDiary = async ({
   }
 };
 
-//Promise 타입 정의필요
 export const updateDiary = async (
-  diaryId: number,
-  body: DiaryUpdateRequestDTO,
+  body: DiaryUploadRequestDTO
 ): Promise<DiaryGetResponseDTO> => {
   try {
-    const { data } = await axiosInstance.patch(`/diaries/${diaryId}`, body);
+    const { data } = await axiosInstance.patch(
+      `/diaries/${body.diaryId}`,
+      {
+        title: body.title,
+        content: body.content,
+        visibility: body.visibility,
+        commentPermission: body.commentPermission,
+        language: body.language,
+        thumbImg: body.thumbImg,
+      } // Ensure to include all necessary fields
+    );
     return data;
   } catch (error) {
     console.error("Error updating diary:", error);
@@ -101,13 +108,12 @@ export const updateDiary = async (
 };
 
 export const getDiaryDetail = async (
-  diaryId: number,
+  diaryId: number
 ): Promise<DiaryGetResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryGetResponseDTO>(
-      `/diaries/${diaryId}`,
+      `/diaries/${diaryId}`
     );
-
     return data;
   } catch (error) {
     console.error("Error fetching diary detail:", error);
@@ -160,7 +166,7 @@ export const getDiaryMySummary = async (): Promise<getDiarySummary> => {
 export const getUserDiarySummary = async (memberId?: number) => {
   try {
     const { data } = await axiosInstance.get(
-      `/diaries/member/${memberId}/diary-summary`,
+      `/diaries/member/${memberId}/diary-summary`
     );
     return data;
   } catch (error) {

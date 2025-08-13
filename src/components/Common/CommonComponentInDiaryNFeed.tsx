@@ -6,12 +6,10 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
-import { queryClient } from "../../App";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "../Diary/Header";
-import type { getLikeResponseDTO } from "../../utils/types/likes";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import AlertModal from "./AlertModal";
 
