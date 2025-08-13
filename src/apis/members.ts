@@ -1,8 +1,10 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
 import type {
-  CheckDuplicatedIDResponseDTO,
   MemberLanguageResponseDTO,
+  MemberProfileRequest,
+  MemberProfileResponseDTO,
+  CheckDuplicatedIDResponseDTO,
   MemberProfileDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
@@ -79,7 +81,8 @@ export const getCheckDuplicatedID = async (username: string) => {
   return response.data;
 };
 
-// 언어 조회 api
+
+// 언어 조회 API
 export const getMemberLanguage = async () => {
   try {
     const response = await axiosInstance.get<MemberLanguageResponseDTO>(
@@ -91,7 +94,8 @@ export const getMemberLanguage = async () => {
   }
 };
 
-// 시스템 언어 변경 api
+
+// 시스템 언어 변경 API
 export const patchMemberLanguage = async (systemLanguage: string) => {
   try {
     const response = await axiosInstance.patch("/members/system-language", {
@@ -103,14 +107,45 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
   }
 };
 
-// 프로필 조회 api
+
+//프로필 조회 API
 export const getMemberProfile = async () => {
   try {
-    const { data } = await axiosInstance.get<MemberProfileDTO>(
+    const response = await axiosInstance.get<MemberProfileDTO>(
       "/members/profile"
     );
-    return data;
-  } catch {
-    alert("error during getting member profile");
+    return response.data;
+  } catch (err) {
+    console.log("getMemberProfile error", err);
+  }
+};
+
+// 프로필 수정 API
+export const patchMemberProfile = async ({
+  nickname,
+  profileImg,
+  removeProfileImg,
+}: MemberProfileRequest) => {
+  try {
+    const formData = new FormData();
+
+     const jsonData = { nickname, ...(removeProfileImg ? { removeProfileImg: true } : {}) };
+    formData.append(
+      "data",
+      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+    );
+
+    if (!removeProfileImg && profileImg instanceof File) {
+      formData.append("profileImg", profileImg);
+    }
+
+    const response = await axiosInstance.patch<MemberProfileResponseDTO>(
+      "/members/profile",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+    return response.data;
+  } catch (err) {
+    console.log("patchMemberProfile error:", err);
   }
 };
