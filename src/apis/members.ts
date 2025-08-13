@@ -5,6 +5,7 @@ import type {
   MemberProfileRequest,
   MemberProfileResponseDTO,
   CheckDuplicatedIDResponseDTO,
+  MemberProfileDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
@@ -110,7 +111,7 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
 //프로필 조회 API
 export const getMemberProfile = async () => {
   try {
-    const { data } = await axiosInstance.get<MemberProfileDTO>(
+    const response = await axiosInstance.get<MemberProfileDTO>(
       "/members/profile"
     );
     return response.data;
