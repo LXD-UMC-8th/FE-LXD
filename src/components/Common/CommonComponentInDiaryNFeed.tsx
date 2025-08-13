@@ -6,12 +6,10 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
-import { queryClient } from "../../App";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 // import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "./ComponentDiary/Header";
-import type { getLikeResponseDTO } from "../../utils/types/likes";
 
 const CommonComponentInDiaryNFeed = ({
   props,
@@ -88,15 +86,19 @@ const CommonComponentInDiaryNFeed = ({
     }
   };
 
-  const handleToDetail = () => {
-    navigate(`/feed/${props.diaryId}`);
+  const goToDetail = () => {
+    navigate(`/feed/${props.diaryId}`, {
+      state: isMyDiaryTab ? {from: "mydiary" } : undefined,
+    });
   };
 
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
         // 댓글 아이콘 클릭 핸들러
-        navigate(`/feed/${props.diaryId}`);
+        navigate(`/feed/${props.diaryId}`, {
+          state: isMyDiaryTab ? { from: "mydiary" } : undefined,
+        });
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
@@ -117,7 +119,7 @@ const CommonComponentInDiaryNFeed = ({
   return (
     <div
       className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4 cursor-pointer`}
-      onClick={handleToDetail}
+      onClick={goToDetail}
     >
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
@@ -165,7 +167,7 @@ const CommonComponentInDiaryNFeed = ({
                 alt="설정 아이콘"
               />
               {menuOpen && (
-                <div className="absolute top-8 right-0 bg-white border rounded-md shadow-lg w-28 z-50">
+                <div className="absolute top-8 right-0 bg-white border border-gray-400 rounded-md shadow-lg w-28 z-50">
                   <button
                     className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
                     onClick={(e) => {

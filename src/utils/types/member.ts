@@ -1,3 +1,4 @@
+import type { APIResponse } from "./APIresponse";
 //회원가입할 때 이용하는 type
 export type JoinRequestDTO = {
   email: string;
@@ -24,9 +25,35 @@ export type JoinResponseDTO = {
   member: MemberDTO;
 };
 
+export type CheckDuplicatedIDDTO = {
+  username: string;
+  duplicated: boolean;
+};
+
+export type CheckDuplicatedIDResponseDTO = APIResponse<CheckDuplicatedIDDTO>;
+
 export type CorrectionsMemberDTO = {
   memberId: number;
   username: string;
   nickname: string;
   profileImageUrl: string;
 };
+
+export type MemberLanguageDTO = {
+  nativeLanguage: string;
+  studyLanguage: string;
+  systemLanguage: string;
+};
+
+export type MemberLanguageResponseDTO = APIResponse<MemberLanguageDTO>;
+
+export type MemberProfileDTO = {
+  memberId: number;
+  username: string;
+  email: string;
+  nickname: string;
+  profileImg: string | null;
+};
+
+export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
+

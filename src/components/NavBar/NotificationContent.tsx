@@ -28,16 +28,12 @@ const NotificationContent = ({
     }
   };
 
-  const handleNotificationContentClick = () => {};
-
   return (
     <div
       className={`${
         notifications.read ? "bg-gray-200" : "bg-white"
       } w-full h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
-      //redirectUrl이 없다면 활성화되면 안 되는 건데 이 거는 어떻게 처리?
       role="link"
-      onClick={handleNotificationContentClick}
     >
       <div className="pl-4 w-22">
         <Avatar src={notifications.profileImg} />

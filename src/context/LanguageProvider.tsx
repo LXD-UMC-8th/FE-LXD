@@ -1,8 +1,9 @@
-import { useContext, useState, createContext } from "react";
+import { useContext, useState, createContext, useEffect } from "react";
 import type { PropsWithChildren } from "react";
+import { getMemberLanguage } from "../apis/members";
 
 export enum Language {
-  ENGLISH = "EN",
+  ENGLISH = "ENG",
   KOREAN = "KO",
 }
 
@@ -14,15 +15,29 @@ interface ILanguageContext {
 }
 
 export const LanguageContext = createContext<ILanguageContext | undefined>(
-  undefined,
+  undefined
 );
 
 export const LanguageProvider = ({ children }: PropsWithChildren) => {
   const [language, setLanguage] = useState<TLanguage>(Language.KOREAN);
-
+  console.log("Current language:", language);
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      try {
+        const response = await getMemberLanguage();
+        setLanguage(response?.result.systemLanguage as TLanguage);
+      } catch (error) {
+        console.error("Error fetching language:", error);
+      }
+    };
+    fetchLanguage();
+  }, []);
   return (
     <LanguageContext.Provider
-      value={{ language, setLanguage: (lang: TLanguage) => setLanguage(lang) }}
+      value={{
+        language,
+        setLanguage: (lang: TLanguage) => setLanguage(lang),
+      }}
     >
       {children}
     </LanguageContext.Provider>

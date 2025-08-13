@@ -18,7 +18,7 @@ const TopLangOptionsButton = () => {
     console.log("Selected language:", language);
   }, [language]);
   return (
-    <div className="absolute top-10 right-30 flex items-center space-x-4">
+    <div className="absolute top-10 right-10 md:right-30 flex items-center space-x-4">
       <span className="text-body2 text-gray-700 font-medium">language</span>
       {/* 언어선택버튼 */}
       <div className="relative inline-block text-left">
@@ -30,7 +30,7 @@ const TopLangOptionsButton = () => {
               rounded-md focus:outline-none focus:ring-1"
         >
           <span className="block truncate text-gray-900">
-            {/* {language === "ko" ? "한국어" : "English"} */}
+            {language === "KO" ? "한국어" : "English"}
           </span>
 
           {/* Arrow Icon */}

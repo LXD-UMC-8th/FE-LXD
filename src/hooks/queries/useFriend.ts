@@ -1,8 +1,8 @@
 // import { useMutation } from "@tanstack/react-query";
 // import { postFriendAccept, postFriendRefuse } from "../../apis/friend.ts";
-// import { queryClient } from "../../App.tsx";
+// import { queryClient } from "../App.tsx";g
 // import type { FriendRequesterId } from "../../utils/types/friend.ts";
-// import { patchRedirectNotification } from "../../apis/notification.ts";
+// import { patchRedirectNotification } from "../apis/notification.ts";
 
 // export const useAcceptFriend = ({ requesterId }: { requesterId: patchRedirectNotificationRequestDTO }) => {
 //   return useMutation({

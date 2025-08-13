@@ -77,6 +77,9 @@ body {
   .text-primary-50 {
     color: #f1f5fd;
   }
+  .text-primary-400 {
+    color: #618BFD;
+  }
   .text-primary-500 {
     color: #4170fe;
   }
@@ -140,6 +143,12 @@ body {
   }
   .bg-primary-50 {
     background-color: #f1f5fd;
+  }
+  .bg-primary-70 {
+    background-color: #EDF3FE;
+  }
+  .bg-primary-100 {
+    background-color: #CFDFFF;
   }
   .bg-primary-500 {
     background-color: #4170fe;

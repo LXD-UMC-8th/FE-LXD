@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
@@ -14,6 +14,8 @@ import {
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
 import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -30,6 +32,8 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [isToSOpen, setIsToSOpen] = useState<boolean>(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { language } = useLanguage();
+  const t = translate[language];
 
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
@@ -41,13 +45,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
 
       if (response.isSuccess) {
         alert(
-          "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요."
+          t.emailLinkSuccessAlert
         );
         console.log("이메일 인증 링크 전송 성공");
         return;
       }
     } catch (error) {
-      alert("인증 메일 발송 중 오류 발생");
+      alert(t.emailLinkErrorAlert);
       console.error("발송 실패:", error);
     }
   };
@@ -79,13 +83,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       //   window.close();
       // }
 
-      alert("인증되었습니다");
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
+      alert(t.emailVerifySuccessAlert);
     } catch (error) {
       console.error("인증 실패:", error);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert("인증 처리 중 오류가 발생하였습니다.");
+      alert(t.emailVerifyErrorAlert);
     }
   };
   // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
@@ -118,7 +122,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
     setIsToSOpen(false);
   };
 
-  const isAllValid = () => {
+  const isAllValid = useCallback(() => {
     const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
@@ -132,13 +136,56 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       _isPasswordChecked &&
       userInfo.isPrivacy
     );
-  };
+  }, [
+    userInfo.email,
+    userInfo.password,
+    userInfo.checkPassword,
+    userInfo.isPrivacy,
+    emailVerified,
+  ]);
 
   const handleNextPage = () => {
     if (!isAllValid()) return;
     console.log(userInfo.email, userInfo.password);
     navigate("profile");
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isAllValid()) return;
+    handleNextPage();
+  };
+
+  // 전역 Enter/Space
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (isToSOpen) return; // 약관 모달 열렸을 땐 막기
+      if (e.isComposing || e.repeat) return; // 한글 조합/키 반복 방지
+
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      const isFormField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        tag === "button";
+
+      const isEnter = e.key === "Enter";
+      const isSpace = e.code === "Space";
+
+      if ((isEnter || isSpace) && !isFormField) {
+        if (!isAllValid()) return;
+        e.preventDefault();
+        const form = document.getElementById(
+          "signup-form"
+        ) as HTMLFormElement | null;
+        if (form?.requestSubmit) form.requestSubmit();
+        else form?.submit();
+      }
+    };
+
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [isAllValid, isToSOpen]);
 
   return (
     <div
@@ -149,16 +196,20 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />
-          <TitleHeader title="계정 생성을 위해 정보를 입력해주세요" />
+          <TitleHeader title={t.signupHeader} />
         </section>
 
-        <form className="w-full h-[390px] space-y-5">
+        <form
+          id="signup-form"
+          onSubmit={handleSubmit}
+          className="w-full h-[390px] space-y-5"
+        >
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
                 <FormInput
-                  name="이메일"
-                  placeholder="이메일을 입력해주세요"
+                  name={t.email}
+                  placeholder={t.emailPlaceholder}
                   input={userInfo.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => setEmailTouched(true)}
@@ -166,29 +217,22 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                 />
               </div>
               <IDButton
-                name={emailVerified ? "인증완료" : "인증하기"}
+                name={emailVerified ? t.afterVerify : t.beforeVerify}
                 onClick={handleEmailCheck}
                 disabled={!isEmailValid(userInfo.email) || emailVerified}
               />
             </div>
-            {emailTouched &&
-              userInfo.email.trim() !== "" &&
-              !isEmailValid(userInfo.email) && (
-                <span className="text-body2 text-red-500">
-                  유효하지 않은 형식입니다
-                </span>
-              )}
             {emailTouched &&
               isEmailValid(userInfo.email) &&
               hasVerifiedByToken && (
                 <>
                   {emailVerified ? (
                     <span className="text-body2 text-mint-500">
-                      인증되었습니다
+                      {t.emailVerifiedToast}
                     </span>
                   ) : (
                     <span className="text-body2 text-red-500">
-                      사용할 수 없는 이메일입니다
+                      {t.emailErrorToast}
                     </span>
                   )}
                 </>
@@ -196,26 +240,29 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name="비밀번호"
-              placeholder="비밀번호를 입력해주세요"
+              name={t.password}
+              placeholder={t.passwordPlaceholder}
               input={userInfo.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
               onBlur={() => setPasswordTouched(true)}
               type="password"
             />
-            {passwordTouched &&
-              userInfo.password.trim() !== "" &&
-              !isPasswordValid(userInfo.password) && (
-                <span className="text-body2 text-red-500">
-                  비밀번호는 10자 이상, 영문 대소문자/숫자/특수문자를 포함해야
-                  합니다
-                </span>
-              )}
+            {!passwordTouched || userInfo.password.trim() === "" ? (
+              <span className="text-body2 text-gray-600">
+                {t.pwConditionToast}
+              </span>
+            ) : !isPasswordValid(userInfo.password) ? (
+              <span className="text-body2 text-red-500">
+                {t.pwConditionToast}
+              </span>
+            ) : (
+              <span className="text-body2 text-mint-500">{t.pwValidToast}</span>
+            )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name="비밀번호 확인"
-              placeholder="비밀번호를 입력해주세요"
+              name={t.comfirmPassword}
+              placeholder={t.passwordPlaceholder}
               input={userInfo.checkPassword}
               onChange={(e) =>
                 handleInputChange("checkPassword", e.target.value)
@@ -228,11 +275,11 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
               isPasswordValid(userInfo.password) &&
               (isPasswordMatch(userInfo.password, userInfo.checkPassword) ? (
                 <span className="text-body2 text-mint-500">
-                  비밀번호가 일치합니다
+                  {t.pwConfirmedToast}
                 </span>
               ) : (
                 <span className="text-body2 text-red-500">
-                  비밀번호가 일치하지 않습니다
+                  {t.pwNotConfirmedToast}
                 </span>
               ))}
           </div>
@@ -251,19 +298,18 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
             <div className="flex">
               <span
                 onClick={handleOpenTosModal}
-                className="text-body1 hover:underline hover:underline-offset-3 
-            hover:cursor-pointer active:text-blue-600"
+                className="text-body1 hover:underline underline-offset-3 cursor-pointer"
               >
-                개인정보 처리 방침 및 이용약관
+                {t.TosAgreed}
               </span>
-              <span className="text-body1">에 동의합니다</span>
             </div>
             {isToSOpen && <ToSModal onClose={handleCloseTosModal} />}
           </div>
 
           <SignupButton
-            name="다음으로"
-            onClick={handleNextPage}
+            form="signup-form"
+            type="submit"
+            name={t.nextButton}
             disabled={!isAllValid()}
           />
         </section>
