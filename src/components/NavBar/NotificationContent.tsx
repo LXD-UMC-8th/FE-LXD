@@ -32,7 +32,7 @@ const NotificationContent = ({
     <div
       className={`${
         notifications.read ? "bg-gray-200" : "bg-white"
-      } w-full h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
+      } w-115 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
       role="link"
     >
       <div className="pl-4 w-22">

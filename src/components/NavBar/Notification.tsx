@@ -19,10 +19,6 @@ const Notification = () => {
 
   const { mutate: patchReadAllNotifications } = useNotificationReadAll();
 
-  //infinite scroll
-  //그대로 복붙하고 getNotifications -> 다른 api로 변경, getNotificationsResponseDTO -> 다른 타입으로 변경
-  //queryKey 변경
-  //나머지는 형식 유사하게 하면 됨.
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
     queryKey: ["notifications"],
     queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number),
@@ -33,14 +29,13 @@ const Notification = () => {
   const { mutate: patchRedirectNotification } = useNotifications();
 
   const { ref, inView } = useInView();
-
   useEffect(() => {
     if (inView) {
       if (!isFetching && hasNextPage) fetchNextPage();
-      console.log("fetching data", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
+  //알람 구독을 위한 event처리
   useEffect(() => {
     let es: EventSource | null = null;
     const setupSSE = () => {
@@ -48,11 +43,6 @@ const Notification = () => {
         es.close();
       }
       es = getSubscribeToNotifications();
-
-      es.onopen = (data) => {
-        console.log("📡 onopen: connection established.", data);
-      };
-      es.onerror = (err) => console.error("❗onerror:", err);
     };
 
     setupSSE();
@@ -69,11 +59,6 @@ const Notification = () => {
   }, []);
 
   const handleReadAll = () => {
-    console.log("모두 읽음 클릭됨");
-    console.log(
-      "data?.pages[0].result.totalElements",
-      data?.pages[0].result.totalElements
-    );
     patchReadAllNotifications(data?.pages[0].result.totalElements as number);
     setIsRender((prev) => !prev);
   };
