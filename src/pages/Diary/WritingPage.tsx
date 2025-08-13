@@ -3,7 +3,7 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import ValueSettingButton from "../../components/Common/ValueSettingButton";
 import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
 import WritingEditor from "../../components/Diary/Writing/WritingEditor";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -19,11 +19,6 @@ const WritingPage = () => {
     () => localStorage.getItem("style") ?? "FREE"
   );
 
-  useEffect(() => {
-    console.log("WritingPage _style:", _style);
-  });
-
-  console.log("style:", _style);
   const [_titleName, setTitleName] = useState<string>(
     () => localStorage.getItem("title") ?? ""
   );

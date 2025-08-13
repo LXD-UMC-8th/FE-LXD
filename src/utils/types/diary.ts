@@ -105,6 +105,8 @@ export type DiarySummary = {
   friendCount: number;
   relation?: string;
   status?: string;
+  language: string;
+  nativeLanguage: string;
 };
 
 export type getDiarySummary = APIResponse<DiarySummary>;
@@ -127,6 +129,7 @@ export type diaries = {
   writerNickname?: string;
   writerProfileImg?: string;
   profileImg?: string;
+  writerId?: number;
 };
 
 export type getDiariesResult = {

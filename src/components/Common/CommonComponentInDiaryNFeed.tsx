@@ -43,6 +43,9 @@ const CommonComponentInDiaryNFeed = ({
     //   idx === pageResult.diaries.length - 1 && !pageResult.hasNext,
   });
 
+  const isDiaryTab =
+    location.pathname.startsWith("/mydiary") ||
+    location.pathname.startsWith("/diaries");
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
   const isFeedTab = location.pathname.startsWith("/feed");
 
@@ -90,8 +93,6 @@ const CommonComponentInDiaryNFeed = ({
   const DeleteLikeModalRef = useRef<HTMLDivElement | null>(null);
   useOutsideClick(DeleteLikeModalRef, () => setDeleteLikeModal(false));
 
-  const handlerDeleteLike = () => {};
-
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
@@ -115,6 +116,12 @@ const CommonComponentInDiaryNFeed = ({
         break;
     }
   };
+
+  const handleNavigateUserDetail = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    navigate(`/diaries/member/${props.writerId}`);
+  };
+
   return (
     <div
       className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4 cursor-pointer`}
@@ -124,7 +131,10 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex justify-between items-start">
         <div>
           {isFeedTab ? (
-            <div className="flex items-center gap-3">
+            <div
+              className="flex items-center gap-3"
+              onClick={handleNavigateUserDetail}
+            >
               <Avatar
                 src={props.profileImg}
                 alt={props.writerUsername}
@@ -143,7 +153,7 @@ const CommonComponentInDiaryNFeed = ({
               </span>
             </div>
           ) : (
-            isMyDiaryTab && (
+            isDiaryTab && (
               <div className="text-sm text-gray-500 font-medium">
                 #{props.diaryId} · {props.createdAt?.slice(0, 10)}
               </div>

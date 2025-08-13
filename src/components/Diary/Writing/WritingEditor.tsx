@@ -26,7 +26,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
-    input.setAttribute("multiple", "true"); // Allow multiple file selection
+    input.setAttribute("multiple", "false"); // Allow multiple file selection
     input.click();
 
     input.onchange = () => {
@@ -34,7 +34,9 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
       if (files) {
         if (files.length + currentImageCount > MAX_IMAGES) {
           alert(
-            `한 번에 ${MAX_IMAGES - currentImageCount}개까지만 추가할 수 있습니다.`,
+            `한 번에 ${
+              MAX_IMAGES - currentImageCount
+            }개까지만 추가할 수 있습니다.`
           );
           return;
         }
@@ -68,7 +70,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
                 "range.index:",
                 range.index,
                 "currentImageCount:",
-                currentImageCount,
+                currentImageCount
               );
               if (range.index === 1 && currentImageCount === 0) {
                 localStorage.setItem("thumbImg", url);
@@ -102,7 +104,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         // imageDrop: true, // Enable image drop support
       },
     }),
-    [imageHandler],
+    [imageHandler]
   );
 
   const handleWrapperClick = () => {

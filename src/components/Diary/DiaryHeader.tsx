@@ -13,6 +13,11 @@ const DiaryHeader = ({
   const { language } = useLanguage();
   const t = translate[language];
 
+  const Native_Study_LangMap = {
+    KO: { KO: "한국어", ENG: "영어" },
+    ENG: { KO: "KOREAN", ENG: "ENGLISH" },
+  };
+
   return (
     <div>
       <div className="h-37 mt-8 rounded-t-[12px] rounded-b-none">
@@ -43,22 +48,36 @@ const DiaryHeader = ({
                 </p>
               </span>
             </div>
-            <div className="flex text-base gap-3">
-              <div className="flex gap-1 bg-blue-200 rounded-xl p-1">
+            <div className="flex text-base gap-3 px-4">
+              <div className="flex gap-1 bg-blue-200 rounded-xl p-2">
                 <img
-                  className="w-5"
+                  className="w-4"
                   src="/images/NativeIcon.svg"
                   alt="Native Icon"
-                />{" "}
-                <p className="text-blue-500">모국어 | </p>
+                />
+                <p className="text-blue-500">
+                  모국어&nbsp;|&nbsp;
+                  {
+                    Native_Study_LangMap[language][
+                      DiaryHeaderProps.nativeLanguage as "KO" | "ENG"
+                    ]
+                  }
+                </p>
               </div>
-              <div className="flex gap-1 bg-blue-200 rounded-xl p-1">
+              <div className="flex gap-1 bg-blue-200 rounded-xl p-2">
                 <img
-                  className="w-5"
+                  className="w-4"
                   src="/images/StudyIcon.svg"
                   alt="Study Icon"
                 />
-                <p className="text-blue-500">학습언어 | </p>
+                <p className="text-blue-500">
+                  학습언어&nbsp;|&nbsp;
+                  {
+                    Native_Study_LangMap[language][
+                      DiaryHeaderProps.language as "KO" | "ENG"
+                    ]
+                  }
+                </p>
               </div>
             </div>
           </div>
