@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import { useLanguage } from "../../context/LanguageProvider";

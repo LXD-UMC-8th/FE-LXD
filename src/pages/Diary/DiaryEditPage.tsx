@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
 import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
 import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { getDiaryDetail, updateDiary } from "../../apis/diary";
+import { getDiaryDetail } from "../../apis/diary";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 
 const DiaryEditPage = () => {
@@ -38,7 +38,7 @@ const DiaryEditPage = () => {
     <div className="py-2 bg-gray-100 mx-10">
       <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
-        <TitleHeader title="일기 수정" />
+        <TitleHeader title={t.EditDiary} />
         <div className="ml-auto mr-6">
           <EnrollWrapper
             _titleName={_titleName}

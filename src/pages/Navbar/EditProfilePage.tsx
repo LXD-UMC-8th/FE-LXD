@@ -5,7 +5,6 @@ import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
 import { useQuery } from "@tanstack/react-query";
-import type { MemberProfileDTO } from "../../utils/types/member";
 import { getMemberProfile } from "../../apis/members";
 import LoadingModal from "../../components/Common/LoadingModal";
 
@@ -44,7 +43,7 @@ const EditProfilePage = () => {
   // }, []);
 
   // useQuery로 API 호출
-  const { data, isLoading, isError, error } = useQuery<MemberProfileDTO>({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["memberProfile"],
     queryFn: getMemberProfile,
   });

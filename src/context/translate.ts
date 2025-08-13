@@ -150,7 +150,8 @@ export const translate: Record<
     loginErrorAlert: "Login Error. Please try it again.",
     emailLinkSuccessAlert:
       "An authentication link has been sent to the email you provided. Please click the link to complete the authentication.",
-    emailLinkErrorAlert: "Failed to send verification email. Please try it again.",
+    emailLinkErrorAlert:
+      "Failed to send verification email. Please try it again.",
     emailVerifySuccessAlert: "Verified.",
     emailVerifyErrorAlert: "Verification Error. Please try it again.",
     signupSuccessAlert: "Signup Complete! You can now log in to your account.",
@@ -258,7 +259,8 @@ export const translate: Record<
       "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요.",
     emailLinkErrorAlert: "인증 메일 발송 중 오류 발생. 다시 시도해주세요.",
     emailVerifySuccessAlert: "인증되었습니다.",
-    emailVerifyErrorAlert: "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
+    emailVerifyErrorAlert:
+      "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
     signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
     signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",

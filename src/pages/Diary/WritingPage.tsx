@@ -3,7 +3,7 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import ValueSettingButton from "../../components/Common/ValueSettingButton";
 import EnrollWrapper from "../../components/Diary/Writing/EnrollWrapper";
 import WritingEditor from "../../components/Diary/Writing/WritingEditor";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";

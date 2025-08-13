@@ -2,7 +2,6 @@
 import type { SignupFlowProps } from "../pages/Login/SignupFlow";
 import type {
   CheckDuplicatedIDResponseDTO,
-  MemberDTO,
   MemberLanguageResponseDTO,
   MemberProfileDTO,
 } from "../utils/types/member";
@@ -110,9 +109,8 @@ export const getMemberProfile = async () => {
     const { data } = await axiosInstance.get<MemberProfileDTO>(
       "/members/profile"
     );
-    console.log("getMemberProfile data:", data);
     return data;
-  } catch (err) {
-    console.log("getMemberProfile error:", err);
+  } catch {
+    alert("error during getting member profile");
   }
 };

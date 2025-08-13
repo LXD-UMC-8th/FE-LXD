@@ -9,15 +9,9 @@ import type { DiarySummary } from "../../utils/types/diary";
 const DiaryPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
-  const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary>({
-    profileImg: "",
-    username: "",
-    nickname: "",
-    diaryCount: 0,
-    friendCount: 0,
-    relation: "",
-    status: "",
-  });
+  const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary | null>(
+    null
+  );
   useEffect(() => {
     getDiaryMySummary().then((response) => {
       setIsDiarySummary(response.result);
@@ -31,7 +25,7 @@ const DiaryPage = () => {
   return (
     <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
       <div>
-        <DiaryHeader DiaryHeaderProps={_isDiarySummary} />
+        {_isDiarySummary && <DiaryHeader DiaryHeaderProps={_isDiarySummary} />}
         {/*다이어리 밑 내용 추가 구분선*/}
         <ModalWithTabs tabvalue={tabvalue} />
       </div>
