@@ -17,7 +17,7 @@ export type MemberDTO = {
   username: string;
   nickname: string;
   profileImg: string;
-  language: string;
+  language?: string;
 };
 
 //로그인 했을 때 받는 type
@@ -52,8 +52,14 @@ export type MemberProfileDTO = {
   username: string;
   email: string;
   nickname: string;
-  profileImg: string | null;
+  profileImg: string;
 };
 
 export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
+
+export type MemberProfileRequest = {
+  nickname: string;
+  profileImg?: File | null;
+  removeProfileImg?: boolean;
+};
 

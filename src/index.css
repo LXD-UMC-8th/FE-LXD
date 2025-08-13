@@ -286,6 +286,13 @@ body {
   height: 60% !important;
 }
 
+.react-calendar__tile.react-calendar__tile--now {
+  background: #212429 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+  font-weight: bold;
+}
+
 .react-calendar__tile.heat-1 {
   background-color: #cfdfff !important;
   color: #618bfd;
@@ -308,11 +315,4 @@ body {
 
 .no-holiday-colors .react-calendar__month-view__days__day--weekend {
   color: inherit;
-}
-
-.react-calendar__tile.react-calendar__tile--now {
-  background: #212429 !important;
-  color: #fff !important;
-  border-radius: 8px !important;
-  font-weight: bold;
 }

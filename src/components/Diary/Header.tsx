@@ -1,7 +1,7 @@
-import { useLanguage } from "../../../context/LanguageProvider";
-import type { diaries } from "../../../utils/types/diary";
+import { useLanguage } from "../../context/LanguageProvider";
+import type { diaries } from "../../utils/types/diary";
 
-const Header = ({ props }: { props: diaries, visibility?: string }) => {
+const Header = ({ props }: { props: diaries }) => {
   const { language } = useLanguage();
 
   return (

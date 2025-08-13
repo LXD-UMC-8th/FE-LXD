@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
+//import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
@@ -10,8 +10,8 @@ import { LOCAL_STORAGE_KEY } from "../../constants/key";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
 
   const { mutate: postSignin } = useSignin();
@@ -26,14 +26,14 @@ const LoginPage = () => {
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
 
         console.log("로그인 성공", member);
-        alert(t.loginSuccessAlert);
+        alert("로그인 되었습니다.");
         navigate("/");
       } else {
         alert(response.message);
       }
     } catch (error) {
       console.log("로그인 실패", error);
-      alert(t.loginErrorAlert);
+      alert("로그인 중 오류가 발생하였습니다.");
     }
   };
   const isFormValid = email.trim() !== "" && password.trim() !== "";
@@ -87,8 +87,11 @@ const LoginPage = () => {
     >
       <TopLangOptionsButton />
       <header className="flex flex-col items-center space-y-8">
-        <img src="images/LXD_logo.svg" />
-        <img src="images/Language_Xchange_Diary.svg" />
+        <img alt="LXD logo" src="images/LXD_logo.svg" />
+        <img
+          alt="Language Xchange Diary"
+          src="images/Language_Xchange_Diary.svg"
+        />
       </header>
       
       <div className="flex flex-col w-[430px] p-4 space-y-10">
@@ -98,8 +101,8 @@ const LoginPage = () => {
           className="flex flex-col space-y-5"
         >
           <FormInput
-            name={t.email}
-            placeholder={t.emailPlaceholder}
+            name="이메일"
+            placeholder="이메일을 입력하세요"
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />

@@ -4,8 +4,9 @@ import Avatar from "../Common/Avatar"; // 경로 맞게 수정
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import Header from "../Common/ComponentDiary/Header";
+
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
+import Header from "./Header";
 
 interface DiaryContentProps {
   title: string;

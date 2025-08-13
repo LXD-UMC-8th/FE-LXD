@@ -7,13 +7,13 @@ const CorrectionsPage = () => {
   const t = translate[language];
 
   const tabvalue = [
-      { value: "receivedCorrections", title: t.receivedCorrections },
-      { value: "providedCorrections", title: t.givenCorrections },
-    ]
+    { value: "receivedCorrections", title: t.receivedCorrections },
+    { value: "providedCorrections", title: t.givenCorrections },
+  ];
 
   return (
     <div className="w-300 min-h-screen bg-gray-100">
-      <ModalWithTabs tabvalue={tabvalue} />
+      <ModalWithTabs key={language} tabvalue={tabvalue} />
     </div>
   );
 };

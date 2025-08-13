@@ -7,10 +7,7 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
 import { getMemberProfile } from "../../apis/members";
-import type {
-  MemberDTO,
-  MemberProfileResponseDTO,
-} from "../../utils/types/member";
+import type { MemberProfileDTO } from "../../utils/types/member";
 
 type OpenModal = "notifications" | "profile" | false;
 const NavBar = () => {
@@ -18,14 +15,16 @@ const NavBar = () => {
   const t = translate[language];
   const [isModalOpen, setIsModalOpen] = useState<OpenModal>(false);
   const modalRef = useRef<HTMLDivElement | null>(null);
-  const [profileData, setProfileData] = useState<MemberDTO | undefined>();
+  const [profileData, setProfileData] = useState<
+    MemberProfileDTO | undefined
+  >();
 
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   useEffect(() => {
     getMemberProfile().then((data) => {
       setProfileData(data?.result);
-      console.log("Profile data:", profileData);
+      console.log("Profile data: ", data?.result);
     });
   }, []);
 
@@ -59,7 +58,7 @@ const NavBar = () => {
           }
         >
           <div className="cursor-pointer">
-            <Avatar src={profileData?.profileImg} size="w-8 h-8" />
+            <Avatar src={profileData?.profileImg ?? undefined} size="w-8 h-8" />
           </div>
 
           <div className="text-body2 font-semibold text-gray-800 cursor-pointer">
@@ -80,7 +79,7 @@ const NavBar = () => {
         <div ref={modalRef} className="absolute top-full right-6 z-10 mt-2">
           <NavProfileModal
             onClose={() => setIsModalOpen(false)}
-            profileData={profileData}
+            profileData={profileData ?? undefined}
           />
         </div>
       )}

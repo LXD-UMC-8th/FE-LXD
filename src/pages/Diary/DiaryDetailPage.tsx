@@ -103,7 +103,7 @@ const DiaryDetailPage = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   /** 댓글 등록 */
