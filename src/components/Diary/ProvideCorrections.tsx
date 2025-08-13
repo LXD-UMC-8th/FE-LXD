@@ -7,12 +7,16 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import LoadingModal from "../Common/LoadingModal";
+import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
+import type { ContentsDTO } from "../../utils/types/correction";
+import CorrectionsInDiaryDetail from "./CorrectionsInDiaryDetail";
 
 type PassedState = {
   stats?: {
     commentCount?: number;
     likeCount?: number;
-    correcCount?: number;
+    correctCount?: number;
   };
   meta?: {
     diaryId?: number;
@@ -51,6 +55,18 @@ const ProvideCorrections = () => {
   }, [hasValidId, parsedDiaryId, fetchDiaryDetail]);
 
   const diary = diaryData?.result;
+
+  /** 교정 댓글 조회 */
+  const {
+    mutate: fetchCorrections,
+    data: correctionData,
+    isPending: isCorrectionsPending,
+  } = useGetCorrections();
+
+  useEffect(() => {
+    if (!hasValidId) return;
+    fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+  }, [hasValidId, parsedDiaryId, fetchCorrections]);
 
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent) => {
@@ -102,8 +118,8 @@ const ProvideCorrections = () => {
   };
 
   const commentCount = passed.stats?.commentCount ?? 0;
-  const likeCount = passed.stats?.commentCount ?? 0;
-  const correctCount = passed.stats?.correcCount ?? 0;
+  const likeCount = passed.stats?.likeCount ?? 0;
+  const correctCount = passed.stats?.correctCount ?? 0;
 
   return (
     <div
@@ -139,7 +155,7 @@ const ProvideCorrections = () => {
             ]}
             diaryId={diary?.diaryId ?? 0}
             createdAt={diary?.createdAt ?? ""}
-            thumbnail=""
+            {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
           />
         </div>
       </div>
@@ -218,6 +234,25 @@ const ProvideCorrections = () => {
           </div>
         </div>
       )}
+
+      {/* 오른쪽 교정 영역 */}
+      <div className="flex flex-col px-5 gap-3">
+        <div className="flex items-center gap-2">
+          <img 
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
+          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+        </div>
+
+        {isCorrectionsPending && <LoadingModal />}
+
+        {(correctionData?.result?.corrections?.contents ?? []).map(
+          (correction: ContentsDTO) => (
+            <CorrectionsInDiaryDetail key={correction.correctionId} props={correction} />
+          )
+        )}
+      </div>
     </div>
   );
 };
