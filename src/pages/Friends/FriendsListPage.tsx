@@ -3,7 +3,7 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 
 const FriendsListPage = () => {
-  const { language } = useLanguage();                         
+  const { language } = useLanguage();
   const t = translate[language];
   const tabvalue = [
     { value: "findINfriend", title: t.tabFind },
@@ -14,7 +14,7 @@ const FriendsListPage = () => {
   return (
     <div className="bg-gray-100 mx-10">
       {/* 탭 메뉴 */}
-      <ModalWithTabs tabvalue={tabvalue} />
+      <ModalWithTabs key={language} tabvalue={tabvalue} />
     </div>
   );
 };

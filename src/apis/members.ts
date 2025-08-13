@@ -3,7 +3,7 @@ import type { SignupFlowProps } from "../pages/Login/SignupFlow";
 import type {
   CheckDuplicatedIDResponseDTO,
   MemberLanguageResponseDTO,
-  MemberProfileDTO,
+  MemberProfileResponseDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
@@ -106,7 +106,7 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
 // 프로필 조회 api
 export const getMemberProfile = async () => {
   try {
-    const { data } = await axiosInstance.get<MemberProfileDTO>(
+    const { data } = await axiosInstance.get<MemberProfileResponseDTO>(
       "/members/profile"
     );
     return data;

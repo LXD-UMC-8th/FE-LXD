@@ -3,9 +3,11 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    explore: string;
     email: string;
     emailPlaceholder: string;
     password: string;
+    Likes: string;
     passwordPlaceholder: string;
     login: string;
     googleLogin: string;
@@ -113,11 +115,11 @@ export const translate: Record<
     friendsTotalLabel: string;
     receivedRequestsTitle: string;
     sentRequestsTitle: string;
-    requestsCountLabel: string; 
-    acceptButton: string; 
-    deleteButton: string; 
-    cancelButton: string; 
-    pendingLabel: string; 
+    requestsCountLabel: string;
+    acceptButton: string;
+    deleteButton: string;
+    cancelButton: string;
+    pendingLabel: string;
     friendRequestFailed: string;
     profileImageAlt: string;
     sendFriendRequestButton: string;
@@ -140,6 +142,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    Likes: "Likes",
     email: "Email",
     emailPlaceholder: "Enter your email",
     password: "Password",
@@ -254,7 +257,7 @@ export const translate: Record<
     friendsTotalLabel: "{count} friends in total",
     receivedRequestsTitle: "Received requests",
     sentRequestsTitle: "Sent requests",
-    requestsCountLabel: "{count}",         // 배지: 12
+    requestsCountLabel: "{count}", // 배지: 12
     acceptButton: "Accept",
     deleteButton: "Delete",
     cancelButton: "Cancel",
@@ -278,6 +281,7 @@ export const translate: Record<
     LogOutStatementBack: "on LXD?",
     CompleteLogOut: "Logout is complete.",
     Close: "Close",
+    explore: "Explore",
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -371,7 +375,7 @@ export const translate: Record<
     SidebarDiary: "나의 다이어리",
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
-    SidebarSettings: "설정", 
+    SidebarSettings: "설정",
     findFriendsHeadline: "전 세계에서 친구를 찾아보세요",
     findFriendsDesc1: "검색창에 아이디를 입력해서 친구를 찾아보세요.",
     findFriendsDesc2: "다른 사람과 친구를 맺고, 다이어리를 구경해보세요.",
@@ -392,7 +396,7 @@ export const translate: Record<
     friendsTotalLabel: "총 {count}명",
     receivedRequestsTitle: "내가 받은 요청",
     sentRequestsTitle: "내가 보낸 요청",
-    requestsCountLabel: "{count}개", 
+    requestsCountLabel: "{count}개",
     acceptButton: "수락",
     deleteButton: "삭제",
     cancelButton: "취소",
@@ -403,7 +407,6 @@ export const translate: Record<
     viewDiaryButton: "다이어리 보러가기",
     refuseButton: "거절",
     loadingLabel: "로딩중…",
-    SidebarSettings: "설정",
     CommentSubmit: "등록",
     Comment: "댓글",
     CorrectionsInDiary: "작성된 교정",
@@ -417,5 +420,7 @@ export const translate: Record<
     LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
     CompleteLogOut: "로그아웃이 완료되었습니다.",
     Close: "닫기",
+    explore: "탐색",
+    Likes: "좋아요",
   },
 };
