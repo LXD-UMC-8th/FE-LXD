@@ -8,6 +8,9 @@ import { getMemberProfile, patchMemberProfile } from "../../apis/members";
 import type { MemberProfileResponseDTO } from "../../utils/types/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "../../components/Common/LoadingModal";
+import { extractFilenameFromUrl } from "../../utils/profileFile";
+
+type ProfileImgAction = "keep" | "upload" | "remove";
 
 type EditProfileState = {
   id: string;
@@ -17,6 +20,7 @@ type EditProfileState = {
   profileImgUrl: string;
   profileImgFile: File | null;
   profileImgPreview: string | null;
+  profileImgAction: ProfileImgAction;
 };
 
 const EditProfilePage = () => {
@@ -28,6 +32,7 @@ const EditProfilePage = () => {
     profileImgUrl: "",
     profileImgFile: null,
     profileImgPreview: null,
+    profileImgAction: "keep",
   });
   const [_objectURL, setObjectURL] = useState<string | null>(null);
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
@@ -52,7 +57,11 @@ const EditProfilePage = () => {
     mutationFn: () =>
       patchMemberProfile({
         nickname: _userInfo.nickname.trim(),
-        profileImg: _userInfo.profileImgFile ?? null,
+        profileImg:
+          _userInfo.profileImgAction === "upload"
+            ? _userInfo.profileImgFile
+            : null,
+        removeProfileImg: _userInfo.profileImgAction === "remove",
       }),
     onSuccess: (res) => {
       qc.invalidateQueries({ queryKey: ["member", "profile"] });
@@ -85,6 +94,7 @@ const EditProfilePage = () => {
       email: m.email,
       nickname: m.nickname,
       profileImgUrl: m.profileImg,
+      profileImgAction: "keep",
     }));
   }, [data]);
 
@@ -96,10 +106,29 @@ const EditProfilePage = () => {
   }, [_objectURL]);
 
   // 화면에 보여줄 이미지: 새 미리보기 > 서버 URL > 기본 플레이스홀더
-  const _displayImage = useMemo(
-    () => _userInfo.profileImgPreview ?? _userInfo.profileImgUrl ?? "",
-    [_userInfo.profileImgPreview, _userInfo.profileImgUrl]
+  const _displayImage = useMemo(() => {
+    if (_userInfo.profileImgAction === "upload") {
+      return _userInfo.profileImgPreview ?? "";
+    }
+    if (_userInfo.profileImgAction === "remove") {
+      return "";
+    }
+    return _userInfo.profileImgUrl ?? "";
+  }, [
+    _userInfo.profileImgAction,
+    _userInfo.profileImgPreview,
+    _userInfo.profileImgUrl,
+  ]);
+
+  // 파일명: 업로드 중이면 파일명, 아니면 서버에서 추출
+  const _serverFilename = useMemo(
+    () => extractFilenameFromUrl(_userInfo.profileImgUrl),
+    [_userInfo.profileImgUrl]
   );
+  const _profileName =
+    _userInfo.profileImgAction === "upload"
+      ? _userInfo.profileImgFile?.name ?? ""
+      : _serverFilename;
 
   if (isLoading || !_userInfo) return <LoadingModal />;
   if (isError) {
@@ -128,6 +157,7 @@ const EditProfilePage = () => {
         ...prev,
         profileImgFile: _file,
         profileImgPreview: url,
+        profileImgAction: "upload",
       }));
     } else {
       setUserInfo((prev) => ({
@@ -147,6 +177,7 @@ const EditProfilePage = () => {
       ...prev,
       profileImgFile: null,
       profileImgPreview: null,
+      profileImgAction: "remove",
     }));
   };
 
@@ -154,9 +185,15 @@ const EditProfilePage = () => {
     setUserInfo((prev) => ({ ...prev, nickname: e.target.value }));
   };
 
+  const hadServerImg = Boolean(data?.result.profileImg);
+
+  const profileChanged =
+    _userInfo.profileImgAction === "upload" ||
+    (_userInfo.profileImgAction === "remove" && hadServerImg);
+
   const _isModified =
     _userInfo.nickname.trim() !== (data?.result.nickname ?? "") ||
-    !!_userInfo.profileImgFile;
+    profileChanged;
 
   const _handleSaveChanges = (e: React.FormEvent) => {
     e.preventDefault();
@@ -190,7 +227,7 @@ const EditProfilePage = () => {
         <section className="flex w-[775px]">
           <ProfileInfo
             _profilePreview={_displayImage}
-            _profileName={_userInfo.profileImgFile?.name}
+            _profileName={_profileName}
             _onImageChange={_handleImageChange}
             _onRemoveImage={_handleRemoveImage}
             _nickname={_userInfo.nickname}

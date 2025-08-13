@@ -129,15 +129,18 @@ export const getMemberProfile = async () => {
 export const patchMemberProfile = async ({
   nickname,
   profileImg,
+  removeProfileImg,
 }: MemberProfileRequest) => {
   try {
     const formData = new FormData();
+
+     const jsonData = { nickname, ...(removeProfileImg ? { removeProfileImg: true } : {}) };
     formData.append(
       "data",
-      new Blob([JSON.stringify({ nickname })], { type: "application/json" })
+      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
 
-    if (profileImg instanceof File) {
+    if (!removeProfileImg && profileImg instanceof File) {
       formData.append("profileImg", profileImg);
     }
 
