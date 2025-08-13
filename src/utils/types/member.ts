@@ -39,3 +39,13 @@ export type MemberLanguageDTO = {
 };
 
 export type MemberLanguageResponseDTO = APIResponse<MemberLanguageDTO>;
+
+export type MemberProfileDTO = {
+  memberId: number;
+  username: string;
+  email: string;
+  nickname: string;
+  profileImg: string;
+};
+
+export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;

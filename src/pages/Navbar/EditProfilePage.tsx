@@ -1,43 +1,58 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
+import { getMemberProfile } from "../../apis/members";
+import type { MemberProfileResponseDTO } from "../../utils/types/member";
+import { useQuery } from "@tanstack/react-query";
+import LoadingModal from "../../components/Common/LoadingModal";
 
 const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState({
     id: "",
     email: "",
     password: "",
-    profileImage: {
-      preview: null as string | null,
-      name: "",
-    },
-    nickName: "",
+    nickname: "",
+    profileImage: "",
   });
-  const [_initialUserInfo, setInitialUserInfo] = useState(_userInfo); // 최초 상태 기억
   const [_objectURL, setObjectURL] = useState<string | null>(null);
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
-  
   const navigate = useNavigate();
 
+  // 최초 진입 시 프로필 가져오기
+  const { data, isLoading, isError, error } =
+    useQuery<MemberProfileResponseDTO>({
+      queryKey: ["member", "profile"],
+      queryFn: async () => {
+        const response = await getMemberProfile();
+        if (!response) throw new Error("프로필 응답이 없습니다.");
+        if (!response.isSuccess)
+          throw new Error(response.message || "프로필 조회 실패");
+        return response;
+      },
+    });
   useEffect(() => {
-    const _fetchUserInfo = async () => {
-      try {
-        const _response = await fetch("/api/user-info"); // 여기에 API
-        if (!_response.ok) {
-          throw new Error("Failed to fetch user information");
-        }
-        const _data = await _response.json();
-        setUserInfo(_data);
-        setInitialUserInfo(_data);
-      } catch (error) {
-        console.error("Error fetching user information:", error);
-      }
-    };
-    _fetchUserInfo();
-  }, []);
+    if (!data) return;
+    const m = data.result;
+    setUserInfo({
+      id: m.username,
+      email: m.email,
+      password: "",
+      nickname: m.nickname,
+      profileImage: m.profileImg,
+    });
+  }, [data]);
+  if (isLoading || !_userInfo) return <LoadingModal />;
+  if (isError) {
+    const msg = error instanceof Error ? error.message : "알 수 없는 오류";
+    return (
+      <div className="p-6">
+        프로필을 불러오지 못했습니다: {msg}
+      </div>
+    );
+  }
 
   const _handleChangePw = () => {
     // 비밀번호 변경하기 버튼 누르면 실행
@@ -69,16 +84,15 @@ const EditProfilePage = () => {
     }));
   };
   const _handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserInfo((prev) => ({ ...prev, nickName: e.target.value }));
+    setUserInfo((prev) => ({ ...prev, nickname: e.target.value }));
   };
 
-  const _isModified =
-    _userInfo.nickName.length >= 1 &&
-    (_userInfo.password !== _initialUserInfo.password ||
-      _userInfo.profileImage.preview !==
-        _initialUserInfo.profileImage.preview ||
-      _userInfo.profileImage.name !== _initialUserInfo.profileImage.name ||
-      _userInfo.nickName !== _initialUserInfo.nickName);
+  const _isModified = _userInfo.nickname.length >= 1;
+  //   (_userInfo.password !== _initialUserInfo.password ||
+  //     _userInfo.profileImage.preview !==
+  //       _initialUserInfo.profileImage.preview ||
+  //     _userInfo.profileImage.name !== _initialUserInfo.profileImage.name ||
+  //     _userInfo.nickname !== _initialUserInfo.nickname);
 
   const _handleSaveChanges = () => {
     // 변경 내용 저장 (비밀번호 or 프로필이미지 or 닉네임)
@@ -111,7 +125,7 @@ const EditProfilePage = () => {
             _profileName={_userInfo.profileImage.name}
             _onImageChange={_handleImageChange}
             _onRemoveImage={_handleRemoveImage}
-            _nickname={_userInfo.nickName}
+            _nickname={_userInfo.nickname}
             _onNicknameChange={_handleNicknameChange}
           />
         </section>
@@ -128,19 +142,19 @@ const EditProfilePage = () => {
         <button
           onClick={_handleSaveChanges}
           disabled={!_isModified}
-          className={`px-8 py-5 rounded-md text-subhead3 font-semibold
+          className={`px-8 py-5 rounded-md text-subhead3 font-medium
             ${
               _isModified
-                ? "bg-black text-white cursor-pointer"
+                ? "bg-primary-500 text-white cursor-pointer"
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-          변경 내용 저장
+          변경내용저장
         </button>
       </section>
 
       {showModal && (
-        <AlertModal 
+        <AlertModal
           onClose={() => setSHowModal(false)}
           title="정말 탈퇴 하시겠습니까?"
           description="LXD에서 sohnjiahn@gmail.com 계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다."

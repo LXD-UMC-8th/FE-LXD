@@ -25,23 +25,6 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // // 모킹 함수 (나중에 삭제)
-  // async function fakeIdCheck(
-  //   _id: string,
-  //   mode: "available" | "taken" | "random" = "available",
-  // ): Promise<{ ok: boolean }> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       if (mode === "random") {
-  //         const available = Math.random() > 0.5;
-  //         resolve({ ok: available });
-  //         return;
-  //       }
-  //       resolve({ ok: mode === "available" });
-  //     }, 500);
-  //   });
-  // }
-
   const handleIDCheck = async () => {
     setIdTouched(true);
     setIdChecked(true);
