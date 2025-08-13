@@ -172,7 +172,7 @@ const CommonComponentInDiaryNFeed = ({
               {menuOpen && (
                 <div className="absolute top-8 right-0 bg-white border border-gray-400 rounded-md shadow-lg w-28 z-50">
                   <button
-                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEdit();
@@ -181,7 +181,7 @@ const CommonComponentInDiaryNFeed = ({
                     {t.EditDiary}
                   </button>
                   <button
-                    className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete();

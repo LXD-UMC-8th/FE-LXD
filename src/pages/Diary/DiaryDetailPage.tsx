@@ -315,7 +315,8 @@ const DiaryDetailPage = () => {
               const hasReplies = Array.isArray(c.replies) && c.replies.length > 0;
 
               return (
-                <div key={c.commentId} className="border border-gray-200 rounded-lg p-5 mb-6">
+                <div key={c.commentId} className="p-4">
+                  <div className="border-t border-gray-200 mb-6" />
                   {/* 작성자 */}
                   <div className="flex items-center gap-3 mb-2">
                     <Avatar 
@@ -337,6 +338,7 @@ const DiaryDetailPage = () => {
                         {c.createdAt ?? ""}
                       </p>
                   </div>
+
 
                   {/* 본문 */}
                   <p className="text-body2 text-black whitespace-pre-line leading-relaxed mb-4">

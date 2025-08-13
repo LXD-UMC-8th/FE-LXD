@@ -139,6 +139,7 @@ const ProvideCorrections = () => {
             ]}
             diaryId={diary?.diaryId ?? 0}
             createdAt={diary?.createdAt ?? ""}
+            thumbnail=""
           />
         </div>
       </div>
