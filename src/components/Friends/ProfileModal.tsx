@@ -1,3 +1,5 @@
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
 
 interface ProfileModalProps {
@@ -20,6 +22,8 @@ const ProfileModal = ({
   onSendRequestClick,
   isRequesting,
 }: ProfileModalProps) => {
+  const { language } = useLanguage();                              // ✅
+  const t = translate[language];  
   return (
     <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
       <div className="bg-white rounded-xl shadow-2xl w-96 p-6">
@@ -53,7 +57,7 @@ const ProfileModal = ({
               onClick={onUnfriendClick}
               className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
-              친구
+              {t.Friend}
             </button>
           ) : isRequesting ? (
             <button
@@ -65,19 +69,19 @@ const ProfileModal = ({
                 alt="요청중"
                 className="w-5 h-5"
               />
-              요청중
+              {t.pendingLabel}
             </button>
           ) : (
             <button
               onClick={onSendRequestClick}
               className="min-w-[144px] py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700"
             >
-              친구 요청하기
+              {t.sendFriendRequestButton}    
             </button>
           )}
 
           <button className="min-w-[144px] py-2 rounded-lg bg-gray-100 text-sm text-gray-700 font-medium hover:bg-gray-200">
-            다이어리 보러가기
+            {t.viewDiaryButton} 
           </button>
         </div>
       </div>

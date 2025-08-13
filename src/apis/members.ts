@@ -5,6 +5,8 @@ import type {
   MemberProfileRequest,
   MemberProfileResponseDTO,
 } from "../utils/types/member";
+import type { CheckDuplicatedIDResponseDTO, MemberLanguageResponseDTO, MemberProfileResponseDTO } from "../utils/types/member";
+
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -68,19 +70,9 @@ export const postSignup = async (
   return data;
 };
 
-export interface CheckDuplicatedIDResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    username: string;
-    duplicated: boolean;
-  };
-}
-
 // 아이디 중복 확인 api
 export const getCheckDuplicatedID = async (username: string) => {
-  const response = await axiosInstance.get<CheckDuplicatedIDResponse>(
+  const response = await axiosInstance.get<CheckDuplicatedIDResponseDTO>(
     "/members/check-username",
     {
       params: { username },
@@ -88,6 +80,7 @@ export const getCheckDuplicatedID = async (username: string) => {
   );
   return response.data;
 };
+
 
 // 언어 조회 API
 export const getMemberLanguage = async () => {
@@ -101,6 +94,7 @@ export const getMemberLanguage = async () => {
   }
 };
 
+
 // 시스템 언어 변경 API
 export const patchMemberLanguage = async (systemLanguage: string) => {
   try {
@@ -112,6 +106,7 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
     console.log("patchMemberLanguage error:", err);
   }
 };
+
 
 //프로필 조회 API
 export const getMemberProfile = async () => {

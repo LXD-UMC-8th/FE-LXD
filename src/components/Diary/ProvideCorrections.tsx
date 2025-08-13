@@ -121,6 +121,8 @@ const ProvideCorrections = () => {
             language={diary?.language ?? ""}
             visibility={diary?.visibility ?? ""}
             content={diary?.content}
+            writerNickname={diary?.writerNickName}
+            writerUsername={diary?.writerUserName}
             stats={_stats}
           />
         </div>

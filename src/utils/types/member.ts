@@ -25,6 +25,13 @@ export type JoinResponseDTO = {
   member: MemberDTO;
 };
 
+export type CheckDuplicatedIDDTO = {
+  username: string;
+  duplicated: boolean;
+};
+
+export type CheckDuplicatedIDResponseDTO = APIResponse<CheckDuplicatedIDDTO>;
+
 export type CorrectionsMemberDTO = {
   memberId: number;
   username: string;
