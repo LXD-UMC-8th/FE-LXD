@@ -7,6 +7,7 @@ import AlertModal from "../../components/Common/AlertModal";
 import { useQuery } from "@tanstack/react-query";
 import { getMemberProfile } from "../../apis/members";
 import LoadingModal from "../../components/Common/LoadingModal";
+// import type { MemberProfileDTO } from "../../utils/types/member";
 
 const EditProfilePage = () => {
   const [_userInfo, setUserInfo] = useState({
@@ -48,25 +49,49 @@ const EditProfilePage = () => {
     queryFn: getMemberProfile,
   });
   // API 응답 데이터를 로컬 상태에 주입
-  useEffect(() => {
-    if (data) {
-      const mappedData = {
-        id: data.username,
-        email: data.email,
-        password: "",
-        profileImage: {
-          preview: data.profileImg || null,
-          name: "",
-        },
-        nickName: data.nickname,
-      };
-      setUserInfo(mappedData);
-      setInitialUserInfo(mappedData);
-    }
-  }, [data]);
 
-  if (isLoading) return <LoadingModal />;
-  if (isError) return <div>프로필 로드 실패: {(error as Error).message}</div>;
+  useEffect(() => {
+    const _fetchUserInfo = async () => {
+      try {
+        const _response = await fetch("/members/profile"); // 여기에 API
+        if (!_response.ok) {
+          throw new Error("Failed to fetch user information");
+        }
+        const _data = await _response.json();
+        setUserInfo(_data);
+        setInitialUserInfo(_data);
+      } catch (error) {
+        console.error("Error fetching user information:", error);
+      }
+    };
+    _fetchUserInfo();
+  }, []);
+
+  // // useQuery로 API 호출
+  // const { data, isLoading, isError, error } = useQuery<MemberProfileDTO>({
+  //   queryKey: ["memberProfile"],
+  //   queryFn: getMemberProfile,
+  // });
+  // // API 응답 데이터를 로컬 상태에 주입
+  // useEffect(() => {
+  //   if (data) {
+  //     const mappedData = {
+  //       id: data.username,
+  //       email: data.email,
+  //       password: "",
+  //       profileImage: {
+  //         preview: data.profileImg || null,
+  //         name: "",
+  //       },
+  //       nickName: data.nickname,
+  //     };
+  //     setUserInfo(mappedData);
+  //     setInitialUserInfo(mappedData);
+  //   }
+  // }, [data]);
+
+  // if (isLoading) return <LoadingModal />;
+  // if (isError) return <div>프로필 로드 실패: {(error as Error).message}</div>;
 
   const _handleChangePw = () => {
     // 비밀번호 변경하기 버튼 누르면 실행
