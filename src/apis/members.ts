@@ -4,9 +4,8 @@ import type {
   MemberLanguageResponseDTO,
   MemberProfileRequest,
   MemberProfileResponseDTO,
+  CheckDuplicatedIDResponseDTO,
 } from "../utils/types/member";
-import type { CheckDuplicatedIDResponseDTO, MemberLanguageResponseDTO, MemberProfileResponseDTO } from "../utils/types/member";
-
 import { axiosInstance } from "./axios";
 
 export interface SignupRequest {
@@ -111,7 +110,7 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
 //프로필 조회 API
 export const getMemberProfile = async () => {
   try {
-    const response = await axiosInstance.get<MemberProfileResponseDTO>(
+    const { data } = await axiosInstance.get<MemberProfileDTO>(
       "/members/profile"
     );
     return response.data;

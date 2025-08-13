@@ -87,10 +87,13 @@ const LoginPage = () => {
     >
       <TopLangOptionsButton />
       <header className="flex flex-col items-center space-y-8">
-        <img src="images/LXD_logo.svg" />
-        <img src="images/Language_Xchange_Diary.svg" />
+        <img alt="LXD logo" src="images/LXD_logo.svg" />
+        <img
+          alt="Language Xchange Diary"
+          src="images/Language_Xchange_Diary.svg"
+        />
       </header>
-      
+
       <div className="flex flex-col w-[430px] p-4 space-y-10">
         <form
           id="login-form"

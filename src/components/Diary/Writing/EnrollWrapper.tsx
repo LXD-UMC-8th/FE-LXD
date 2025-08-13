@@ -6,14 +6,15 @@ import useOutsideClick from "../../../hooks/useOutsideClick";
 interface EnrollWrapperProps {
   _titleName: string;
   _editorRawContent: string;
-  _style: string;
-  onSubmit?: () => void;
+  _style?: string;
+  thumbImg?: string;
 }
 
 const EnrollWrapper = ({
   _titleName,
   _editorRawContent,
   _style,
+  thumbImg,
 }: EnrollWrapperProps) => {
   const [openModal, setOpenModal] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,7 @@ const EnrollWrapper = ({
             _titleName={_titleName}
             _style={_style}
             _editorRawContent={_editorRawContent}
+            thumbImg={thumbImg}
           />
         </div>
       )}

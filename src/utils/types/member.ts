@@ -17,7 +17,7 @@ export type MemberDTO = {
   username: string;
   nickname: string;
   profileImg: string;
-  language: string;
+  language?: string;
 };
 
 //로그인 했을 때 받는 type

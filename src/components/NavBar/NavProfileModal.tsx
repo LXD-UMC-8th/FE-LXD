@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import LogoutModal from "./LogoutModal";
 import AlertModal from "../Common/AlertModal";
-import { useEffect } from "react";
-import type { MemberDTO } from "../../utils/types/member";
+import type { MemberProfileDTO } from "../../utils/types/member";
 import { useLanguage, Language } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
@@ -11,7 +10,7 @@ import { removeLocalStorageItem } from "../../apis/axios";
 
 interface ProfileModalProps {
   onClose: () => void;
-  profileData?: MemberDTO;
+  profileData?: MemberProfileDTO;
 }
 
 const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
@@ -71,7 +70,7 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
       {/* 프로필 */}
       <div className="flex px-4 gap-3">
         <div className="px-1">
-          <Avatar src={profileData?.profileImg} />
+          <Avatar src={profileData?.profileImg ?? undefined} />
         </div>
         <div className="flex flex-col">
           <div className="text-body1 font-bold">
