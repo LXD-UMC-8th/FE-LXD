@@ -48,7 +48,7 @@ const DiaryHeader = ({
                 </p>
               </span>
             </div>
-            <div className="flex text-base gap-3 px-4">
+            <div className="flex text-base gap-3">
               <div className="flex gap-1 bg-blue-200 rounded-xl p-2">
                 <img
                   className="w-4"

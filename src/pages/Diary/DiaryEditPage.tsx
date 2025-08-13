@@ -1,7 +1,4 @@
-import {
-  // useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
@@ -22,9 +19,6 @@ const DiaryEditPage = () => {
 
   const navigate = useNavigate();
 
-  const _title_free = t.titleStyle_FREE;
-  const _title_question = t.titleStyle_QUESTION;
-
   const [_style, _setStyle] = useState<string>("");
   const [_titleName, setTitleName] = useState<string>("");
   const [_editorRawContent, setEditorRawContent] = useState<string>("");
@@ -38,6 +32,8 @@ const DiaryEditPage = () => {
   //     _setStyle(d.style); // "QUESTION" or "FREE"
   //   });
   // }, [diaryId]);
+
+  useEffect(() => {}, []);
 
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
@@ -67,10 +63,6 @@ const DiaryEditPage = () => {
       });
   };
 
-  const getStyleDisplayText = () => {
-    return _style === "QUESTION" ? _title_question : _title_free;
-  };
-
   return (
     <div className="py-2 bg-gray-100 mx-10">
       <div className="flex items-center gap-x-6">
@@ -87,27 +79,14 @@ const DiaryEditPage = () => {
       </div>
 
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
-        <div className="bg-white rounded-[12px] shadow mt-5 w-full p-5 gap-3">
+        <div className="bg-white rounded-[12px] shadow w-full p-5 gap-3">
           <input
+            onChange={(e) => setTitleName(e.target.value)}
             type="text"
-            value={getStyleDisplayText()}
-            readOnly
-            className="w-full bg-gray-200 rounded-md p-3 text-gray-600"
+            className="w-full bg-gray-200 rounded-md p-3 "
+            placeholder={t.titleInputPlaceholder}
+            value={_titleName}
           />
-
-          {getStyleDisplayText() === _title_free && (
-            <input
-              onChange={(e) => setTitleName(e.target.value)}
-              type="text"
-              className="w-full bg-gray-200 rounded-md p-3 mt-5"
-              placeholder={t.titleInputPlaceholder}
-              value={_titleName}
-            />
-          )}
-
-          {getStyleDisplayText() === _title_question && (
-            <QuestionTitle _titleName={_titleName} onClick={() => {}} />
-          )}
         </div>
 
         <div className="w-full h-full mt-5">

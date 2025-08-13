@@ -26,20 +26,100 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
-    input.setAttribute("multiple", "false"); // Allow multiple file selection
+    input.setAttribute("multiple", "true"); // Allow multiple file selection
     input.click();
 
     input.onchange = () => {
       const files = input.files;
+
       if (files) {
-        if (files.length + currentImageCount > MAX_IMAGES) {
-          alert(
-            `한 번에 ${
-              MAX_IMAGES - currentImageCount
-            }개까지만 추가할 수 있습니다.`
-          );
+        const fileList = Array.from(files);
+        if (files.length > 1) {
+          alert(`이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.`);
           return;
         }
+        if (fileList.length + currentImageCount > MAX_IMAGES) {
+          alert(`이미지는 최대 ${MAX_IMAGES}개까지만 추가할 수 있습니다.`);
+          return;
+        }
+        // const editorRange = editor.getSelection(true);
+        // const baseIndex = editorRange?.index ?? editor.getLength();
+
+        // type Placeholder = { file: File; src: string; index: number };
+        // const placeholder: Placeholder[] = [];
+        // let nextIndex = baseIndex;
+        // const insertPreview = (file: File) =>
+        //   new Promise<Placeholder>((resolve) => {
+        //     const reader = new FileReader();
+        //     reader.onload = () => {
+        //       const src = reader.result as string; //data URL
+        //       editor.insertEmbed(nextIndex, "image", src);
+        //       editor.setSelection(nextIndex + 1, 0);
+        //       const ph: Placeholder = { file, src, index: nextIndex };
+        //       placeholder.push(ph);
+        //       nextIndex++;
+        //       resolve(ph);
+        //     };
+        //     reader.readAsDataURL(file);
+        //   });
+
+        // const previousPromise = fileList.map((f) => insertPreview(f));
+
+        // Promise.all(previousPromise)
+        //   .then((inserted) => {
+        //     const uploadOne = (ph: Placeholder) => {
+        //       const fd = new FormData();
+        //       fd.append("image", ph.file);
+        //       return postDiaryImage(fd)
+        //         .then((res) => {
+        //           return { ok: true as const, ph, url: res.result.imageUrl };
+        //         })
+        //         .catch((err) => {
+        //           console.error("Upload failed", err.response || err);
+        //           alert("Upload failed—check console for details.");
+        //           return { ok: false as const, ph };
+        //         });
+        //     };
+        //     return Promise.allSettled(inserted.map(uploadOne));
+        //   })
+        //   .then((result) => {
+        //     result.forEach((r) => {
+        //       if (r.status !== "fulfilled") return;
+        //       const outcome = r.value;
+        //       const { ph } = outcome;
+
+        //       let replaceIndex = ph.index;
+        //       const img = editor.root.querySelector(
+        //         `img[src="${ph.src}"]`
+        //       ) as HTMLImageElement | null;
+
+        //       if (img) {
+        //         const blotIndex = editor.getIndex ? editor.getIndex(img) : null;
+        //         if (typeof blotIndex === "number") {
+        //           replaceIndex = blotIndex;
+        //         }
+        //       }
+
+        //       if (outcome.ok) {
+        //         editor.deleteText(replaceIndex, 1);
+        //         editor.insertEmbed(replaceIndex, "image", outcome.url);
+        //         editor.setSelection(replaceIndex + 1, 0);
+        //       } else {
+        //         console.error("Image upload failed");
+        //         editor.deleteText(replaceIndex, 1);
+        //       }
+        //     });
+        //     if (baseIndex === 1 && currentImageCount === 0 && placeholder[0]) {
+        //       const firstOk = result.find(
+        //         (r) => r.status === "fulfilled" && r.value.ok
+        //       ) as
+        //         | { status: "fulfilled"; value: { ok: true; url: string } }
+        //         | undefined;
+        //       if (firstOk) {
+        //         localStorage.setItem("thumbImg", firstOk.value.url);
+        //       }
+        //     }
+        //   });
 
         Array.from(files).forEach((file) => {
           const reader = new FileReader();
