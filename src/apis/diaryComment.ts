@@ -14,11 +14,8 @@ export const postDiaryComments = async (
 }
 
 export const getDiaryComments = async (
-  body: DiaryCommentGetRequestDTO,
-  pageParam: number
+  { diaryId, page = 1, size = 10 }: DiaryCommentGetRequestDTO
 ): Promise<DiaryCommentGetResponseDTO> => {
-  const { diaryId, page = pageParam, size = 10 } = body;
-
   console.log("[REQ] GET", `/diaries/${diaryId}/comments?page=${page}&size=${size}`);
 
   const { data } = await axiosInstance.get<DiaryCommentGetResponseDTO>(

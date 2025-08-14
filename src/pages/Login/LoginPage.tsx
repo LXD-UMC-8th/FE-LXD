@@ -6,13 +6,10 @@ import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
-<<<<<<< HEAD
-import { setLocalStorageItem } from "../../apis/axios";
-=======
 import { useGoogleLogin } from "@react-oauth/google";
 import type { GoogleLoginRequestDTO } from "../../utils/types/auth";
 import { postGoogleLogin } from "../../apis/auth";
->>>>>>> 1f319d9395cb5ac03c54b5f05dcd68914469a7a4
+import { setLocalStorageItem } from "../../apis/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -31,7 +28,7 @@ const LoginPage = () => {
         const { accessToken, refreshToken, member } = response.result;
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
-        setLocalStorageItem("userId", member.memberId);
+        setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
         alert("로그인 되었습니다.");

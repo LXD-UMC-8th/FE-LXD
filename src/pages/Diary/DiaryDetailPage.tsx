@@ -36,7 +36,7 @@ const DiaryDetailPage = () => {
   const [page, setPage] = useState(0);
   const [commentsState, setCommentState] = useState<any[]>([]);
   const [totalElements, setTotalElements] = useState(0);
-  const [hasNext, setHasNext] = useState(true);
+  const [, setHasNext] = useState(true);
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const menuWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -102,7 +102,7 @@ const DiaryDetailPage = () => {
     usePostDiaryComments();
 
   /** 일기 댓글 삭제 */
-  const { mutate: deleteDiaryComment, isPending: isDeletingComment } =
+  const { mutate: deleteDiaryComment } =
     useDeleteDiaryComments();
 
   const loadCommentsPage = (p: number) => {
@@ -364,7 +364,7 @@ const DiaryDetailPage = () => {
               createdAt={diary.createdAt ?? ""}
               {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
               thumbnail={diary.thumbnail}
-              memberId={diary.memberId}
+              writerId={diary.writerId}
             />
           )}
 
@@ -428,7 +428,7 @@ const DiaryDetailPage = () => {
                   {/* 작성자 줄 */}
                   <div 
                     className="flex items-center gap-3 mb-2 cursor-pointer"
-                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
+                    // onClick={() => navigate(`/diaries/member/${memberId}`)}
                   >
                     <Avatar
                       src={c.profileImage}

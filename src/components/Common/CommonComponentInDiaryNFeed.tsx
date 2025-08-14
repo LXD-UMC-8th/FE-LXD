@@ -85,8 +85,9 @@ const CommonComponentInDiaryNFeed = ({
 
   const goToDetail = () => {
     navigate(`/feed/${props.diaryId}`, {
-      state: isMyDiaryTab ? { from: "mydiary" } : undefined,
-      commentCountFromList: props.commentCount
+      state: isMyDiaryTab
+        ? { from: "mydiary", commentCountFromList: props.commentCount }
+        : { commentCountFromList: props.commentCount },
     });
   };
 

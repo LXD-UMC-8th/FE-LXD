@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Avatar from "../Common/Avatar"; // 경로 맞게 수정
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -22,7 +22,7 @@ interface DiaryContentProps {
   createdAt: string;
   thumbnail?: string;
   contentRootRef?: React.RefObject<HTMLDivElement>;
-  memberId?: number;
+  writerId?: number;
 }
 
 const DiaryContent = ({
@@ -38,7 +38,7 @@ const DiaryContent = ({
   createdAt,
   thumbnail,
   contentRootRef,
-  memberId,
+  writerId,
 }: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -133,7 +133,7 @@ const DiaryContent = ({
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
         <div 
           className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${memberId}`)}  
+          onClick={() => navigate(`/diaries/member/${writerId}`)}  
         >
           <Avatar
             src={profileImg}
