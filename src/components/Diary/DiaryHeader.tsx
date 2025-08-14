@@ -30,7 +30,7 @@ const DiaryHeader = ({
               title={`${DiaryHeaderProps?.username} 님의 다이어리`}
             />
             <div className=" flex text-gray-600">
-              <span className="text-[16px] flex gap-3 font-normal">
+              <p className="text-[16px] flex gap-3 font-normal">
                 <p className="font-bold">@{DiaryHeaderProps?.nickname} </p>
                 <p>&middot;</p>
                 <p className="flex">
@@ -48,7 +48,7 @@ const DiaryHeader = ({
                     {t.CountFriend}
                   </p>
                 </p>
-              </span>
+              </p>
             </div>
             <div className="flex text-base gap-3">
               <div className="flex gap-1 bg-blue-200 rounded-xl p-2">

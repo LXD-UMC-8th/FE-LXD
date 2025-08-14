@@ -9,6 +9,7 @@ import { LOCAL_STORAGE_KEY } from "../../constants/key";
 import { useGoogleLogin } from "@react-oauth/google";
 import type { GoogleLoginRequestDTO } from "../../utils/types/auth";
 import { postGoogleLogin } from "../../apis/auth";
+import { setLocalStorageItem } from "../../apis/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ const LoginPage = () => {
         const { accessToken, refreshToken, member } = response.result;
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
+        setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
         alert("로그인 되었습니다.");
