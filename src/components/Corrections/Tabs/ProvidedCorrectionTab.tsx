@@ -32,7 +32,6 @@ const ProvidedCorrectionTab = () => {
     );
   }
   const list = data ?? [];
-  console.log("ProvidedCorrectionTab data: ", data);
 
   return (
     <div className="flex flex-col gap-4">

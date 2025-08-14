@@ -75,6 +75,7 @@ export interface SavedCorrectionItem {
     title?: string;
     userProfileImg?: string;
     username?: string;
+    diaryTitle?: string;
   };
 
   // 작성자
