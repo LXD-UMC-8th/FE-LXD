@@ -108,7 +108,7 @@ const LoginPage = () => {
           />
 
           <FormInput
-            name={password}
+            name="비밀번호"
             placeholder="passwordPlaceholder"
             input={password}
             onChange={(e) => setPassword(e.target.value)}

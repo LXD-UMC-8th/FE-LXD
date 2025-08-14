@@ -38,15 +38,13 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     try {
-      const response = await postEmailVerificationRequest(
-        userInfo.email,
-        "EMAIL"
-      );
+      const response = await postEmailVerificationRequest({
+        email: userInfo.email,
+        verificationType: "EMAIL",
+      });
 
       if (response.isSuccess) {
-        alert(
-          t.emailLinkSuccessAlert
-        );
+        alert(t.emailLinkSuccessAlert);
         console.log("이메일 인증 링크 전송 성공");
         return;
       }

@@ -19,18 +19,25 @@ export type postLoginResponse = {
 };
 export type postLoginResponseDTO = APIResponse<postLoginResponse>;
 
-//이메일 인증 요청 DTO
-export type getEmailVerificationRequestDTO = {
+//이메일 인증 링크 발송 DTO
+export type postEmailVerificationRequestDTO = {
   email: string;
   verificationType: "EMAIL";
 };
-export type getEmailVerificationResponseDTO = APIResponse<string>;
+export type postEmailVerificationinPWRequestDTO = {
+  email: string;
+  verificationType: "PASSWORD";
+};
+export type postEmailVerificationResponseDTO = APIResponse<string>;
 
 //이메일 인증 후 토큰 반환 DTO
-export type getEmailRequestDTO = {
-  token: string;
+// export type getEmailRequestDTO = {
+//   token: string;
+// };
+export type getEmailResponse = {
+  email: string;
 };
-export type getEmailResponseDTO = APIResponse<string>;
+export type getEmailResponseDTO = APIResponse<getEmailResponse>;
 
 //reissue DTO
 export type postReissueRequestDTO = {
@@ -40,3 +47,4 @@ export type postReissueResponseDTO = APIResponse<{
   accessToken: string;
   refreshToken: string;
 }>;
+
