@@ -1,6 +1,7 @@
 import type { APIResponse } from "./APIresponse";
 
 export type FriendRequesterId = {
+  replace(arg0: string, arg1: string): unknown;
   requesterId: number;
 };
 

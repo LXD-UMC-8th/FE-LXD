@@ -3,18 +3,17 @@ import { axiosInstance } from "./axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import type {
   patchReadAllNotificationResponseDTO,
-  patchRedirectNotificationRequestDTO,
   patchRedirectNotificationResponseDTO,
 } from "../utils/types/notification";
 
 const API = import.meta.env.VITE_API_BASE_URL;
 
-export async function getNotifications(pageParam: number) {
+export async function getNotifications(pageParam: number, size: number) {
   console.log("fetchNotifications called");
   const res = await axiosInstance.get("/notifications", {
     params: {
       page: pageParam,
-      size: 4,
+      size,
     },
   });
   console.log("fetchNotifications response:", res.data);
@@ -37,12 +36,12 @@ export function getSubscribeToNotifications() {
 }
 
 export async function patchReadAllNotifications(
-  totalElements: number,
+  totalElements: number
 ): Promise<patchReadAllNotificationResponseDTO> {
   try {
     console.log(
       "patchReadAllNotifications called with totalElements:",
-      totalElements,
+      totalElements
     );
     const { data } =
       await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
@@ -52,7 +51,7 @@ export async function patchReadAllNotifications(
             page: 1,
             size: totalElements,
           },
-        },
+        }
       );
 
     return data;
@@ -64,10 +63,12 @@ export async function patchReadAllNotifications(
 
 export async function patchRedirectNotification({
   notificationId,
-}: patchRedirectNotificationRequestDTO): Promise<patchRedirectNotificationResponseDTO> {
+}: {
+  notificationId: number;
+}): Promise<patchRedirectNotificationResponseDTO> {
   try {
     const { data } = await axiosInstance.patch(
-      `/notifications/${notificationId}/read-redirect`,
+      `/notifications/${notificationId}/read-redirect`
     );
 
     return data;

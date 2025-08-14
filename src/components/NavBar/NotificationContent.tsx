@@ -3,37 +3,48 @@ import type { NotificationContentProps } from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postFriendAccept, postFriendRefuse } from "../../apis/friend";
-import { patchRedirectNotification } from "../../apis/notification";
+import { useNavigate } from "react-router-dom";
 
 const NotificationContent = ({
   notifications,
 }: {
   notifications: NotificationContentProps;
+  onClick?: () => void;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
 
   const handleAcceptFriend = () => {
-    postFriendAccept({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendAccept(Number(requesterId));
+    }
   };
   const handleRefuseFriend = () => {
-    postFriendRefuse({ requesterId: notifications.id });
-    patchRedirectNotification({ notificationId: notifications.id });
+    // notifications.redirectUrl에서 memberId 추출
+    const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    if (requesterId) {
+      postFriendRefuse(Number(requesterId));
+    }
   };
 
-  const handleNotificationContentClick = () => {
-    patchRedirectNotification({ notificationId: notifications.id });
+  const navigate = useNavigate();
+  const navigateToEvent = () => {
+    if (notifications.redirectUrl?.startsWith("/diaries")) {
+      const diaryId = notifications.redirectUrl
+        .split("/diaries/")[1]
+        .split("/")[0];
+      navigate(`/feed/${diaryId}`);
+    }
   };
-
   return (
     <div
       className={`${
         notifications.read ? "bg-gray-200" : "bg-white"
-      } w-full h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
-      //redirectUrl이 없다면 활성화되면 안 되는 건데 이 거는 어떻게 처리?
+      } w-115 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
       role="link"
-      onClick={handleNotificationContentClick}
+      onClick={navigateToEvent}
     >
       <div className="pl-4 w-22">
         <Avatar src={notifications.profileImg} />

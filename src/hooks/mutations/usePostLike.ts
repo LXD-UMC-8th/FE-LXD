@@ -1,58 +1,79 @@
-import { useMutation } from "@tanstack/react-query";
-import type {
-  getLikeResponseDTO,
-  LikeResponseDto,
-  LikeTargetType,
-} from "../../utils/types/likes";
+import { useMutation, type InfiniteData } from "@tanstack/react-query";
+import type { LikeResponseDto, LikeTargetType } from "../../utils/types/likes";
 import { postLike } from "../../apis/likes";
 import { queryClient } from "../../App.tsx";
+import type { getDiariesResponseDTO, diaries } from "../../utils/types/diary";
 
 interface Params {
   targetType: LikeTargetType;
   targetId: number;
 }
 
+// Closed-over params pattern: mutate() with no args (variables = void)
 export const usePostLike = ({ targetType, targetId }: Params) => {
-  return useMutation<LikeResponseDto, Error, Params>({
+  return useMutation<
+    LikeResponseDto,
+    Error,
+    void,
+    { previousFeed?: InfiniteData<getDiariesResponseDTO> }
+  >({
     mutationKey: ["postLike", targetType, targetId],
-    mutationFn: ({ targetType, targetId }) => postLike(targetType, targetId),
-    onMutate: async ({ targetType, targetId }) => {
-      await queryClient.cancelQueries({
-        queryKey: ["postLike", targetType, targetId],
-      });
+    mutationFn: () => postLike(targetType, targetId),
 
-      const previousData = queryClient.getQueryData<getLikeResponseDTO>([
-        "postLike",
-        targetType,
-        targetId,
+    onMutate: async () => {
+      await Promise.all([
+        queryClient.cancelQueries({
+          queryKey: ["postLike", targetType, targetId],
+        }),
+        queryClient.cancelQueries({ queryKey: ["diaries"], exact: false }),
       ]);
 
-      console.log("previous data: ", previousData);
+      // Snapshot
+      const previousFeed = queryClient.getQueryData<
+        InfiniteData<getDiariesResponseDTO>
+      >(["diaries"]);
 
-      if (previousData) {
-        const nextResult = {
-          ...previousData.result,
-          liked: !previousData.result.liked,
-          likeCount: previousData.result.liked
-            ? previousData.result.likeCount - 1
-            : previousData.result.likeCount + 1,
+      // Compute + apply optimistic update inside the feed pages
+      // NOTE: Make sure ["diaries"] matches the queryKey used in your useInfiniteQuery for the feed (e.g., FEED_QK)
+      if (previousFeed?.pages) {
+        const nextFeed: InfiniteData<getDiariesResponseDTO> = {
+          ...previousFeed,
+          pages: previousFeed.pages.map((page) => ({
+            ...page,
+            result: {
+              ...page.result,
+              diaries: page.result.diaries.map((d: diaries) => {
+                if (d.diaryId === targetId && typeof d.likeCount === "number") {
+                  const nextLiked = !d.isLiked;
+                  const nextCount = nextLiked
+                    ? d.likeCount + 1
+                    : Math.max(0, d.likeCount - 1);
+
+                  return { ...d, isLiked: nextLiked, likeCount: nextCount };
+                }
+                return d;
+              }),
+            },
+          })),
         };
-
-        const nextData = { ...previousData, result: nextResult };
-
-        queryClient.setQueryData(["postLike", targetType, targetId], nextData);
+        queryClient.setQueryData(["diaries"], () => nextFeed);
       }
 
-      return { previousData };
+      // (Optional) also update the dedicated like-detail cache if you use it elsewhere
+      // queryClient.setQueryData(["postLike", targetType, targetId], ...);
+
+      return { previousFeed };
     },
-    onSuccess: (data) => {
-      console.log("좋아요 완료", data);
+
+    onError: (_err, _vars, ctx) => {
+      if (ctx?.previousFeed) {
+        queryClient.setQueryData(["diaries"], ctx.previousFeed);
+      }
     },
-    onError: (err) => {
-      console.error("좋아요 실패", err.message);
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({
+
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["diaries"] });
+      await queryClient.invalidateQueries({
         queryKey: ["postLike", targetType, targetId],
       });
     },

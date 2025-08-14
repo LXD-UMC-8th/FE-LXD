@@ -5,7 +5,7 @@ import type {
   DiaryUploadRequestDTO,
   DiaryUploadResponseDTO,
 } from "../../utils/types/diary";
-import { postDiaryUpload } from "../../apis/diary";
+import { postDiaryUpload, updateDiary } from "../../apis/diary";
 import { QUERY_KEY } from "../../constants/key";
 
 export function useWritingSubmit() {
@@ -29,3 +29,18 @@ export function useWritingSubmit() {
     },
   });
 }
+
+export const useUpdateDiary = () => {
+  const navigate = useNavigate();
+  return useMutation<DiaryUploadResponseDTO, Error, DiaryUploadRequestDTO>({
+    mutationKey: ["UpdateDiary"],
+    mutationFn: (body: DiaryUploadRequestDTO) => updateDiary(body),
+    onSuccess: (data) => {
+      navigate(`/feed/${data.result.diaryId}`);
+    },
+    onError: (err) => {
+      console.error("Writing update failed:", err);
+      alert();
+    },
+  });
+};

@@ -1,3 +1,4 @@
+import type { APIResponse } from "./APIresponse";
 //회원가입할 때 이용하는 type
 export type JoinRequestDTO = {
   email: string;
@@ -16,7 +17,7 @@ export type MemberDTO = {
   username: string;
   nickname: string;
   profileImg: string;
-  language: string;
+  language?: string;
 };
 
 //로그인 했을 때 받는 type
@@ -24,9 +25,48 @@ export type JoinResponseDTO = {
   member: MemberDTO;
 };
 
+export type CheckDuplicatedIDDTO = {
+  username: string;
+  duplicated: boolean;
+};
+
+export type CheckDuplicatedIDResponseDTO = APIResponse<CheckDuplicatedIDDTO>;
+
 export type CorrectionsMemberDTO = {
+  memberId?: number;
+  username?: string;
+  nickname?: string;
+  profileImageUrl?: string;
+};
+
+export type MemberLanguageDTO = {
+  nativeLanguage: string;
+  studyLanguage: string;
+  systemLanguage: string;
+};
+
+export type MemberLanguageResponseDTO = APIResponse<MemberLanguageDTO>;
+
+export type MemberProfileDTO = {
   memberId: number;
   username: string;
+  email: string;
   nickname: string;
-  profileImageUrl: string;
+  profileImg: string;
 };
+
+export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
+
+export type MemberProfileRequest = {
+  nickname: string;
+  profileImg?: File | null;
+  removeProfileImg?: boolean;
+};
+
+export type ChangePasswordRequestDTO = {
+  email: string;
+  newPassword: string;
+  confirmNewPassword: string;
+};
+
+export type ChangePasswordResponseDTO = APIResponse<string>;

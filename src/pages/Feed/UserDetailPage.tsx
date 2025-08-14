@@ -27,10 +27,13 @@ const UserDetailPage = () => {
     friendCount: 0,
     relation: "",
     status: "",
+    language: "",
+    nativeLanguage: "",
   });
 
   useEffect(() => {
     getUserDiarySummary(memberIdNumber).then((response) => {
+      console.log("User diary summary:", response);
       setIsDiarySummary(response.result);
     });
   }, []);
@@ -58,16 +61,18 @@ const UserDetailPage = () => {
       <div>
         <DiaryHeader DiaryHeaderProps={_isDiarySummary} />
         {/* <CommonComponentInDiaryNFeed/> */}
-        {data?.pages.flatMap((page) =>
-          page.result.diaries.map((data, _idx) => (
-            <CommonComponentInDiaryNFeed
-              key={data.diaryId}
-              props={data}
-              // pageResult={page.result}
-              // idx={idx}
-            />
-          )),
-        )}
+        <div className="mt-15">
+          {data?.pages.flatMap((page) =>
+            page.result.diaries.map((data, _idx) => (
+              <CommonComponentInDiaryNFeed
+                key={data.diaryId}
+                props={data}
+                // pageResult={page.result}
+                // idx={idx}
+              />
+            ))
+          )}
+        </div>
         {isFetching && (
           <div>
             <CommonComponentSkeleton />

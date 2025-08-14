@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface LangOptionsButtonProps {
   name: string;
@@ -12,18 +15,26 @@ const LangOptionsButton = ({
   onSelect,
 }: LangOptionsButtonProps) => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
+  const ref = useRef<HTMLDivElement | null>(null);
+  const onClose = useCallback(() => setIsOpen(false), []);
+  useOutsideClick(ref, onClose);
+  const { language } = useLanguage();
+  const t = translate[language];
+  
+
+  
 
   return (
     <div className="space-y-[10px]">
       <div className="text-subhead3 font-medium">{name}</div>
 
       {/* 언어선택버튼 */}
-      <div className="relative">
+      <div className="relative" ref={ref}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
           className="w-[250px] h-[55px] px-[32px] py-[16px] border rounded-md 
-              border-gray-300 bg-gray-50 focus:outline-none"
+              border-gray-300 bg-gray-50 focus:outline-none cursor-pointer"
         >
           <span
             className={`block truncate text-left text-body1 
@@ -37,7 +48,7 @@ const LangOptionsButton = ({
               ? "한국어"
               : selected === "ENG"
               ? "English"
-              : "언어 선택"}
+              : t.langPlaceholder}
           </span>
 
           {/* Arrow Icon */}
@@ -47,10 +58,14 @@ const LangOptionsButton = ({
           >
             {isOpen ? (
               // ▲ 모양
-              <img src="/images/toggleUp.svg" className="w-3 h-3" />
+              <img alt="image" src="/images/toggleUp.svg" className="w-3 h-3" />
             ) : (
               // ▼ 모양
-              <img src="/images/toggleDown.svg" className="w-3 h-3" />
+              <img
+                alt="image "
+                src="/images/toggleDown.svg"
+                className="w-3 h-3"
+              />
             )}
           </span>
         </button>

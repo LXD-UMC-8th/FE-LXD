@@ -8,17 +8,19 @@ import {
   patchFriendCancel,
 } from "../../../apis/friend";
 import type { FriendRequestListResponseDTO } from "../../../utils/types/friend";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const RequestTab = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
-  const [receivedRequests, setReceivedRequests] =
-    useState<
-      FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"]
-    >([]);
-  const [sentRequests, setSentRequests] =
-    useState<
-      FriendRequestListResponseDTO["result"]["sentRequests"]["contents"]
-    >([]);
+  const [receivedRequests, setReceivedRequests] = useState<
+    FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"]
+  >([]);
+  const [sentRequests, setSentRequests] = useState<
+    FriendRequestListResponseDTO["result"]["sentRequests"]["contents"]
+  >([]);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -49,7 +51,7 @@ const RequestTab = () => {
 
   const handleAccept = async (memberId: number) => {
     try {
-      await postFriendAccept({ requesterId: memberId });
+      await postFriendAccept(memberId);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
@@ -60,7 +62,7 @@ const RequestTab = () => {
 
   const handleRefuse = async (memberId: number) => {
     try {
-      await postFriendRefuse({ requesterId: memberId });
+      await postFriendRefuse(memberId);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
@@ -79,6 +81,15 @@ const RequestTab = () => {
     }
   };
 
+    const receivedCountLabel = t.requestsCountLabel.replace(
+    "{count}",
+    String(isLoading ? 0 : receivedRequests.length)
+  );
+  const sentCountLabel = t.requestsCountLabel.replace(
+    "{count}",
+    String(isLoading ? 0 : sentRequests.length)
+  );
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -86,10 +97,10 @@ const RequestTab = () => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              내가 받은 요청
+              {t.receivedRequestsTitle}
             </h2>
             <span className="text-sm text-[#4170FE] bg-[#CFDFFF] rounded px-2 py-0.5 font-medium">
-              {isLoading ? 0 : receivedRequests.length}개
+              {receivedCountLabel}
             </span>
           </div>
           {isLoading ? (
@@ -121,13 +132,13 @@ const RequestTab = () => {
                       onClick={() => handleAccept(user.memberId)}
                       className="px-3 py-1 text-xs text-white bg-[#4170FE] rounded hover:bg-blue-600 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
                     >
-                      수락
+                      {t.acceptButton}
                     </button>
                     <button
                       onClick={() => handleRefuse(user.memberId)}
                       className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
                     >
-                      삭제
+                      {t.deleteButton}
                     </button>
                   </div>
                 </div>
@@ -140,10 +151,10 @@ const RequestTab = () => {
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-800">
-              내가 보낸 요청
+              {t.sentRequestsTitle}
             </h2>
             <span className="text-sm text-[#4170FE] bg-[#CFDFFF] rounded px-2 py-0.5 font-medium">
-              {isLoading ? 0 : sentRequests.length}개
+              {sentCountLabel}
             </span>
           </div>
           {isLoading ? (
@@ -180,13 +191,13 @@ const RequestTab = () => {
                         alt="request"
                         className="w-5 h-5 mr-2"
                       />
-                      요청중
+                      {t.pendingLabel}
                     </button>
                     <button
                       onClick={() => handleCancel(user.memberId)}
                       className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
                     >
-                      취소
+                      {t.cancelButton}
                     </button>
                   </div>
                 </div>

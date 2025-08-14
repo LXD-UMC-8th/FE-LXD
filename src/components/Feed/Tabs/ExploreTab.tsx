@@ -3,7 +3,7 @@ import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFeed";
 import { useEffect, useState } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
-import { getExploreDiaries } from "../../../apis/diary";
+import { getDiaryDetail, getExploreDiaries } from "../../../apis/diary";
 import type {
   diaries,
   getDiariesResponseDTO,
@@ -11,19 +11,25 @@ import type {
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ExploreTab = () => {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const { language } = useLanguage();
   const t = translate[language];
+  const titleKorean = "한국어";
+  const titleEnglish = "English";
   const [lang, setLang] = useState<string>("KO");
   const handleLangChange = (value: string) => {
-    if (value === "한국어") {
+    if (value === titleKorean) {
       setLang("KO");
-    } else if (value === "English") {
+    } else if (value === titleEnglish) {
       setLang("ENG");
     }
   };
-  useEffect(() => {}, [lang]);
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
@@ -44,13 +50,23 @@ const ExploreTab = () => {
       console.log("Fetching next page of friends' diaries:", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
+
+  const handleOpenDiary = async (diaryId?: number) => {
+    await queryClient.prefetchQuery({
+      queryKey: ["diaryDetail", diaryId],
+      queryFn: () => getDiaryDetail(diaryId || 0),
+      staleTime: 30_000,
+    });
+
+    navigate(`/feed/${diaryId}`);
+  };
+
   return (
     <div className="flex flex-col w-260 mb-10">
       <div className="mb-5">
         <ValueSettingButton
-          title1="한국어"
-          title2="English"
-          selectedValue={lang}
+          title1={titleKorean}
+          title2={titleEnglish}
           onClick={handleLangChange}
         />
       </div>
@@ -58,11 +74,21 @@ const ExploreTab = () => {
         page.result.diaries
           .filter(
             (diary: diaries) =>
-              diary.language === lang && diary.visibility !== "PRIVATE",
+              diary.language === lang && diary.visibility !== "PRIVATE"
           )
-          .map((data: diaries) => (
-            <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
-          )),
+          .map((d: diaries) => (
+            <div
+              key={d.diaryId}
+              role="button"
+              tabIndex={0}
+              aria-label={`Open diary ${d.diaryId}`}
+              title={`Open diary ${d.diaryId}`}
+              onClick={() => handleOpenDiary(d.diaryId)}
+              onKeyDown={(e) => e.key === "Enter" && handleOpenDiary(d.diaryId)}
+            >
+              <CommonComponentInDiaryNFeed props={d} />
+            </div>
+          ))
       )}
       {isFetching && (
         <div>

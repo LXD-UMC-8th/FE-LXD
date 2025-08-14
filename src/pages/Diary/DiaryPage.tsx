@@ -3,37 +3,34 @@ import ModalWithTabs from "../../components/Common/ModalWithTabs";
 import CalendarModal from "../../components/Common/CalendarModal";
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getDiaryMySummary } from "../../apis/diary";
 import type { DiarySummary } from "../../utils/types/diary";
 const DiaryPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
-  const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary>({
-    profileImg: "",
-    username: "",
-    nickname: "",
-    diaryCount: 0,
-    friendCount: 0,
-    relation: "",
-    status: "",
-  });
+  const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary | null>(
+    null
+  );
   useEffect(() => {
     getDiaryMySummary().then((response) => {
       setIsDiarySummary(response.result);
     });
   }, []);
-  const tabvalue = [
-    { value: "totalINdiary", title: t.modaltabtitle_total },
-    { value: "likeINdiary", title: t.modaltabtitle_likes },
-  ];
+  const tabvalue = useMemo(
+    () => [
+      { value: "totalINdiary", title: t.modaltabtitle_total },
+      { value: "likeINdiary", title: t.modaltabtitle_likes },
+    ],
+    [t]
+  );
 
   return (
     <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
       <div>
-        <DiaryHeader DiaryHeaderProps={_isDiarySummary} />
+        {_isDiarySummary && <DiaryHeader DiaryHeaderProps={_isDiarySummary} />}
         {/*다이어리 밑 내용 추가 구분선*/}
-        <ModalWithTabs tabvalue={tabvalue} />
+        <ModalWithTabs key={language} tabvalue={tabvalue} />
       </div>
       <div>
         <div className="z-10 mx-10">

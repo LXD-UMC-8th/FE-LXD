@@ -4,7 +4,7 @@ interface TitleHeaderProps {
 
 const TitleHeader = ({ title }: TitleHeaderProps) => {
   return (
-    <h1 className="text-headline3 font-bold">
+    <h1 className="w-[600px] text-headline3 font-bold">
       {title}
     </h1>
   );

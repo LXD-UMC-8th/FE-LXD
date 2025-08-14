@@ -3,7 +3,7 @@ import TabsMap from "./TabsMap";
 
 type Tabvalue = {
   value: string;
-  title?: string;
+  title: string;
   count?: number | undefined;
 };
 interface ModalWithTabsProps {
@@ -12,7 +12,7 @@ interface ModalWithTabsProps {
 
 const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
   const [activeTab, setActiveTab] = useState<string | undefined>(
-    tabvalue[0].title,
+    tabvalue[0].title
   );
 
   const renderTab = (value: string, title: string, count?: number) => (
@@ -27,7 +27,11 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
         {count !== undefined && (
           <span
             className={`ml-1 text-xs rounded py-0.5 font-medium px-2
-          ${activeTab === title ? "bg-gray-400 text-gray-900" : "bg-gray-300 text-gray-500"}`}
+          ${
+            activeTab === title
+              ? "bg-gray-400 text-gray-900"
+              : "bg-gray-300 text-gray-500"
+          }`}
           >
             {count}
           </span>
@@ -44,12 +48,9 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
   return (
     <div className="w-full">
       {/* Tabs */}
-      <div
-        className="flex space-x-10 pt-5 px-4 border-b border-gray-300"
-        role="tablist"
-      >
+      <div className="flex space-x-10 pt-5 px-4 border-b border-gray-300">
         {tabvalue.map((tab) =>
-          renderTab(tab.value, tab.title as string, tab.count),
+          renderTab(tab.value, tab.title as string, tab.count)
         )}
       </div>
 
@@ -59,7 +60,7 @@ const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
           (tabvalue) =>
             activeTab === tabvalue.title && (
               <TabsMap key={tabvalue.value} tabvalue={tabvalue} />
-            ),
+            )
         )}
       </div>
     </div>

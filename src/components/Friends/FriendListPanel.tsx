@@ -10,6 +10,8 @@ import {
 } from "../../utils/types/recentSearch";
 import useDebounce from "../../hooks/queries/useDebounce";
 import { searchFriends } from "../../apis/friend";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 export interface Friend {
   id: number;
@@ -32,6 +34,8 @@ interface FriendListPanelProps {
 }
 
 const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const [search, setSearch] = useState("");
   const [friends, setFriends] = useState<FriendSearchItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +94,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
       );
 
       if (!found) {
-        alert("해당 사용자를 찾을 수 없습니다.");
+        alert(t.userNotFound);
         return;
       }
 
@@ -105,7 +109,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
       onSelect(friend);
     } catch (err) {
       console.error("❌ 사용자 재조회 실패:", err);
-      alert("사용자 정보를 불러오는 데 실패했습니다.");
+      alert(t.fetchUserFailed);
     }
   };
 
@@ -125,12 +129,12 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
 
       {!debouncedSearch && (
         <div className="flex justify-between text-sm font-semibold text-gray-700">
-          <span>최근 검색항목</span>
+          <span>{t.recentSearchTitle}</span>
           <button
             onClick={handleClearRecent}
             className="text-xs text-blue-500 hover:underline"
           >
-            모두 지우기
+            {t.clearAllRecent}
           </button>
         </div>
       )}

@@ -1,9 +1,11 @@
 import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
+// import { useLanguage } from "../../../context/LanguageProvider";
+// import { translate } from "../../../context/translate";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;
-  _profileName: string;
+  _profileName: string | undefined;
   _onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   _onRemoveImage: () => void;
   _nickname: string;
@@ -19,6 +21,8 @@ const ProfileInfo = ({
   _onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // const { language } = useLanguage();
+  // const t = translate[language];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     _onImageChange(e);
@@ -47,10 +51,14 @@ const ProfileInfo = ({
               <button
                 type="button"
                 onClick={_onRemoveImage}
+                title="프로필 이미지 삭제"
+                aria-label="프로필 이미지 삭제"
                 className="bg-[url('/images/x_icon.svg')]
                 bg-no-repeat bg-center bg-contain absolute top-1 right-1 w-5 h-5  
                  flex items-center justify-center cursor-pointer"
-              />
+              >
+                <span className="sr-only">프로필 이미지 삭제</span>
+              </button>
             )}
           </div>
 
@@ -103,7 +111,7 @@ const ProfileInfo = ({
           onChange={_onNicknameChange}
         />
         <p className="text-gray-600 text-sm mb-3">
-          1자 이상 40자 이내로 입력해주세요(혹시 닉네임 바이트 수에 제한 있다면)
+          1자 이상 20자 이내로 입력해주세요.
         </p>
       </div>
     </div>
