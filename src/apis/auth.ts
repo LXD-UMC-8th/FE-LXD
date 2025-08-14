@@ -8,7 +8,6 @@ import type {
   postEmailVerificationResponseDTO,
   postLoginRequestDTO,
   postLoginResponseDTO,
-  postReissueRequestDTO,
   postReissueResponseDTO,
 } from "../utils/types/auth";
 import { axiosInstance } from "./axios";
@@ -76,13 +75,11 @@ export const getEmail = async (token: string): Promise<getEmailResponseDTO> => {
 
 // 토큰 재발급 API
 export const postReissue = async (
-  payload: postReissueRequestDTO
+  refreshToken: string
 ): Promise<postReissueResponseDTO> => {
   const { data } = await axiosInstance.post<postReissueResponseDTO>(
     "/auth/reissue",
-    {
-      refreshToken: payload.refreshToken,
-    }
+    { refreshToken }
   );
   return data;
 };

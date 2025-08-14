@@ -40,9 +40,6 @@ export type getEmailResponse = {
 export type getEmailResponseDTO = APIResponse<getEmailResponse>;
 
 //reissue DTO
-export type postReissueRequestDTO = {
-  refreshToken: string;
-};
 export type postReissueResponseDTO = APIResponse<{
   accessToken: string;
   refreshToken: string;
