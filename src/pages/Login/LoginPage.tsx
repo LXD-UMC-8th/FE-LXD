@@ -6,6 +6,9 @@ import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
+import { useGoogleLogin } from "@react-oauth/google";
+import type { GoogleLoginRequestDTO } from "../../utils/types/auth";
+import { postGoogleLogin } from "../../apis/auth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -74,10 +77,45 @@ const LoginPage = () => {
     return () => window.removeEventListener("keydown", onGlobalKey);
   }, [isFormValid]);
 
+  const googleLogin = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: async ({ code }) => {
+      console.log("구글 로그인 성공, code:", code);
+
+      try {
+        const payload: GoogleLoginRequestDTO = { code };
+        const res = await postGoogleLogin(payload);
+
+        if (res.isSuccess) {
+          const { accessToken, refreshToken, member } = res.result;
+
+          // 토큰 저장
+          localStorage.setItem("accessToken", accessToken);
+          localStorage.setItem("refreshToken", refreshToken);
+
+          // 원하는 페이지로 이동
+          navigate("/feed");
+
+          console.log("로그인 성공:", member);
+        } else {
+          alert("로그인 실패: " + res.message);
+        }
+      } catch (err) {
+        console.error("구글 로그인 실패", err);
+        alert("로그인 중 오류 발생");
+      }
+    },
+    onError: (err) => {
+      console.error("구글 로그인 실패", err);
+      alert("구글 로그인에 실패했습니다");
+    },
+    redirect_uri: import.meta.env.DEV
+      ? "http://localhost:5173/feed"
+      : "https://lxd-fe.netlify.app/feed", // 구글 콘솔에 등록한 redirect_uri와 동일해야 함 
+  });
   const handleGoogleLogin = () => {
-    // 구글로그인 요청 API 나중에 작성 예정
     console.log("구글 로그인 요청");
-    navigate("/auth/google/login");
+    googleLogin();
   };
 
   return (

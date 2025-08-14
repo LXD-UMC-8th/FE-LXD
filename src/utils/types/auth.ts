@@ -48,3 +48,22 @@ export type postReissueResponseDTO = APIResponse<{
   refreshToken: string;
 }>;
 
+// 구글 로그인 DTO
+export type GoogleLoginRequestDTO = {
+  code: string;
+};
+export type GoogleLoginResponse = {
+  isNewMember: boolean;
+  accessToken: string;
+  refreshToken: string;
+  member: {
+    memberId: number;
+    email: string;
+    username: string;
+    nickname: string;
+    profileImg: string;
+    nativeLanguage: "KO" | "ENG";
+    studyLanguage: "KO" | "ENG";
+  };
+};
+export type GoogleLoginResponseDTO = APIResponse<GoogleLoginResponse>;

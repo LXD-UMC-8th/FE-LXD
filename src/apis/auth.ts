@@ -1,6 +1,8 @@
 // 로그인, 로그아웃 등 인증 관련
 import type {
   getEmailResponseDTO,
+  GoogleLoginRequestDTO,
+  GoogleLoginResponseDTO,
   postEmailVerificationinPWRequestDTO,
   postEmailVerificationRequestDTO,
   postEmailVerificationResponseDTO,
@@ -60,8 +62,7 @@ export const getEmailVerification = (token: string): void => {
 // 비밀번호 변경 - 이메일 인증 API
 export const getEmailVerificationinPW = (token: string): void => {
   const apiURL =
-    import.meta.env.VITE_API_BASE_URL +
-    `/home/change-pw?token=${token}`;
+    import.meta.env.VITE_API_BASE_URL + `/home/change-pw?token=${token}`;
   window.location.href = apiURL;
 };
 
@@ -84,4 +85,12 @@ export const postReissue = async (
     }
   );
   return data;
+};
+
+// 구글 로그인 API
+export const postGoogleLogin = async (
+  payload: GoogleLoginRequestDTO
+): Promise<GoogleLoginResponseDTO> => {
+  const response = await axiosInstance.post("/auth/google/login", payload);
+  return response.data;
 };
