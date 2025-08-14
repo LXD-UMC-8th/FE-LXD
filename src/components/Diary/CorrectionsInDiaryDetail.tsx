@@ -6,16 +6,38 @@ import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionCommen
 import LoadingModal from "../Common/LoadingModal";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import { axiosInstance } from "../../apis/axios"; // ✅ 다른 파일 수정 없이 여기서 바로 호출
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
 };
+
+type CorrectionLikeResponseDTO = {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  result: {
+    correctionId: number;
+    memberId: number;
+    likeCount: number;
+    liked: boolean;
+  };
+};
+
+// ✅ 빨간색 채움 필터 (원본 SVG/PNG에 붉은 톤 입힘)
+const RED_FILTER =
+  "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
 
 const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
   const [commentText, setCommentText] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
+
+  // ✅ 좋아요 상태 (props에 liked가 없을 수 있으니 안전 디폴트)
+  const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
+  const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
+  const [liking, setLiking] = useState(false);
 
   // 댓글 목록
   const {
@@ -29,10 +51,8 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     usePostCorrectionComment();
 
   // 서버에서 받은 댓글 배열
-  const comments = useMemo(
-    () => listData?.result?.content ?? listData?.result?.content ?? [],
-    [listData]
-  );
+  const comments = useMemo(() => listData?.result?.content ?? [], [listData]);
+
   // 총 댓글 수
   const total = listData?.result?.totalElements ?? props.commentCount ?? 0;
 
@@ -69,6 +89,36 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
         },
       }
     );
+  };
+
+  // ✅ 좋아요 토글 (POST 한 엔드포인트에 맞춤, 낙관적 업데이트 + 롤백)
+  const _handleToggleLike = async () => {
+    if (liking) return;
+    setLiking(true);
+
+    const prevLiked = liked;
+    const prevCount = likeCount;
+
+    // 낙관적 업데이트
+    setLiked(!prevLiked);
+    setLikeCount(prevLiked ? prevCount - 1 : prevCount + 1);
+
+    try {
+      const { data } = await axiosInstance.post<CorrectionLikeResponseDTO>(
+        `/corrections/${props.correctionId}/likes`
+      );
+      if (data?.result) {
+        // 서버 authoritative 값으로 동기화
+        setLiked(data.result.liked);
+        setLikeCount(data.result.likeCount);
+      }
+    } catch {
+      // 실패 시 롤백
+      setLiked(prevLiked);
+      setLikeCount(prevCount);
+    } finally {
+      setLiking(false);
+    }
   };
 
   return (
@@ -109,13 +159,24 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           <p>{total}</p>
         </button>
 
-        <button className="flex items-center gap-1">
+        <button
+          onClick={_handleToggleLike}
+          disabled={liking}
+          className={`flex items-center gap-1 p-1 rounded-[5px] disabled:opacity-60`}
+          aria-pressed={liked}
+        >
+          {/* ✅ 원래 이미지 사용 + 좋아요면 빨간 채움 */}
           <img
-            src="/images/CommonComponentIcon/LikeIcon.svg"
-            className="w-4 h-4"
-            alt="좋아요 수"
+            src={
+              liked
+                ? "/images/CommonComponentIcon/LikeFullIcon.svg" // 꽉 찬 하트 원본
+                : "/images/CommonComponentIcon/LikeIcon.svg"      // 테두리 하트 원본
+            }
+            className={`w-4 h-4 transition-transform ${liked ? "scale-110" : ""}`}
+            alt="좋아요"
+            style={liked ? { filter: RED_FILTER } : undefined}
           />
-          <p>{props.likeCount}</p>
+          <p className={liked ? "text-red-500" : undefined}>{likeCount}</p>
         </button>
       </div>
 
