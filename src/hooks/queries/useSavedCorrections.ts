@@ -1,5 +1,5 @@
 // hooks/queries/useSavedCorrections.ts
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, type InfiniteData } from "@tanstack/react-query";
 import { getSavedCorrections } from "../../apis/correctionsSaved";
 import type {
   SavedCorrectionsResponseDTO,
@@ -7,32 +7,33 @@ import type {
   SavedCorrectionContentDTO,
 } from "../../utils/types/savedCorrection";
 
-const mapToItem = (c: SavedCorrectionContentDTO): SavedCorrectionItem => ({
-  savedCorrectionId: c.savedCorrectionId,
-  memo: c.memo,
-  original: c.correction.originalText,
-  corrected: c.correction.corrected,
-  commentText: c.correction.commentText,
-  createdAt: c.correction.correctionCreatedAt,
-  commentCount: c.correction.commentCount,
-  likeCount: c.correction.likeCount,
-  diaryId: c.diary.diaryId,
-  diaryTitle: c.diary.diaryTitle,
+const mapToItem = (content: SavedCorrectionContentDTO) => ({
+  memo: content.memo,
+  original: content.correction.originalText,
+  corrected: content.correction.corrected,
+  commentText: content.correction.commentText,
+  createdAt: content.correction.correctionCreatedAt,
+  commentCount: content.correction.commentCount,
+  likeCount: content.correction.likeCount,
   member: {
-    memberId: c.member.memberId,
-    username: c.member.username,
-    nickname: c.member.nickname,
-    profileImageUrl: c.member.profileImageUrl,
+    memberId: content.member.memberId,
+    username: content.member.username,
+    nickname: content.member.nickname,
+    profileImageUrl: content.member.profileImageUrl,
+  },
+  diaryInfo: {
+    diaryId: content.diary.diaryId,
+    title: content.diary.diaryTitle,
   },
 });
 
 export function useSavedCorrections() {
   return useInfiniteQuery<
     SavedCorrectionsResponseDTO, // TQueryFnData: queryFn이 반환하는 원본 타입
-    unknown,                     // TError
-    SavedCorrectionItem[],       // TData: select 이후 컴포넌트에 전달할 타입
-    ["savedCorrections"],        // TQueryKey
-    number                       // TPageParam
+    unknown, // TError
+    SavedCorrectionItem[], // TData: select 이후 컴포넌트에 전달할 타입
+    ["savedCorrections"], // TQueryKey
+    number // TPageParam
   >({
     queryKey: ["savedCorrections"],
     initialPageParam: 1, // ✅ pageParam을 number로 고정
@@ -41,7 +42,7 @@ export function useSavedCorrections() {
       last.result.savedCorrections.hasNext
         ? last.result.savedCorrections.page + 1
         : undefined,
-    select: (data) =>
+    select: (data: InfiniteData<SavedCorrectionsResponseDTO>) =>
       data.pages.flatMap((p) =>
         (p.result.savedCorrections.contents ?? []).map(mapToItem)
       ),

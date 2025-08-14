@@ -6,11 +6,11 @@ import { useProvidedCorrections } from "../../../hooks/queries/useProvidedCorrec
 
 const ProvidedCorrectionTab = () => {
   const {
-    data,                // SavedCorrectionItem[]
+    data, // SavedCorrectionItem[]
     fetchNextPage,
     hasNextPage,
     isFetching,
-    status,              // 'pending' | 'success' | 'error'
+    status, // 'pending' | 'success' | 'error'
     error,
   } = useProvidedCorrections();
 
@@ -22,16 +22,17 @@ const ProvidedCorrectionTab = () => {
     }
   }, [inView, hasNextPage, isFetching, fetchNextPage]);
 
-  if (status === "pending") return <LoadingModal />;
-  if (status === "error")
+  if (isFetching) return <LoadingModal />;
+  if (status === "error") {
     return (
       <div className="p-4 text-red-500">
         교정 목록을 불러오지 못했습니다.
         <div className="text-gray-500 text-sm">{String(error)}</div>
       </div>
     );
-
+  }
   const list = data ?? [];
+  console.log("ProvidedCorrectionTab data: ", data);
 
   return (
     <div className="flex flex-col gap-4">
@@ -41,11 +42,8 @@ const ProvidedCorrectionTab = () => {
         </div>
       )}
 
-      {list.map((item) => (
-        <CorrectionComponent
-          key={`${item.diaryId}-${item.createdAt}-${item.original}`}
-          correction={item}
-        />
+      {list.map((item, _idx) => (
+        <CorrectionComponent key={_idx} correction={item} />
       ))}
 
       {/* 무한스크롤 트리거 */}

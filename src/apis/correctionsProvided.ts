@@ -1,9 +1,17 @@
+import type { getCorrectionProvidedResponseDTO } from "../utils/types/savedCorrection";
 import { axiosInstance } from "./axios";
 
 // 1부터 시작 (스웨거 예시 기준)
-export const getProvidedCorrections = async (page = 1, size = 10) => {
-  const { data } = await axiosInstance.get("/corrections/provided", {
-    params: { page, size },
-  });
-  return data; // 서버 DTO 그대로 반환
+export const getProvidedCorrections = async (
+  pageParam: number,
+  size = 10
+): Promise<getCorrectionProvidedResponseDTO> => {
+  const response = await axiosInstance.get<getCorrectionProvidedResponseDTO>(
+    "/corrections/provided",
+    {
+      params: { page: pageParam, size },
+    }
+  );
+  return response.data;
+  // 서버 DTO 그대로 반환
 };
