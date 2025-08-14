@@ -238,72 +238,72 @@ const DiaryDetailPage = () => {
 
   const diary: DiaryUploadResult | undefined = diaryData?.result;
 
+  // 답글 렌더링
   const renderReplies = (replies: any[] = [], depth = 1) =>
-    replies.map((r) => {
-      const hasChildren = Array.isArray(r.replies) && r.replies.length > 0;
-      const isMenuOpen = openMenuId === r.commentId;
-      return (
-        <div key={r.commentId} className="" style={{ marginLeft: depth * 12 }}>
-          <div className="border-t border-gray-200 my-4" />
-          <div className="flex items-center gap-3 mb-2">
-            <Avatar
-              src={r.profileImage}
-              alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
-              size="w-8 h-8"
-            />
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">
-                {r.nickname ?? "사용자"}
-              </span>
-              <div className="w-px h-4 bg-gray-500" />
-              <span className="text-xs text-gray-600">
-                @{r.username ?? "user"}
-              </span>
-            </div>
-            <span className="text-[11px] text-gray-500 ml-auto">
-              {r.createdAt ?? ""}
-            </span>
+  replies.map((r) => {
+    const hasChildren = Array.isArray(r.replies) && r.replies.length > 0;
+    const isMenuOpen = openMenuId === r.commentId;
+
+    return (
+      <div key={r.commentId} style={{ marginLeft: depth * 12 }}>
+        <div className="border-t border-gray-200 my-4" />
+
+        <div className="flex items-center gap-3 mb-2">
+          <Avatar
+            src={r.profileImage}
+            alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
+            size="w-8 h-8"
+          />
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-sm">{r.nickname ?? "사용자"}</span>
+            <div className="w-px h-4 bg-gray-500" />
+            <span className="text-xs text-gray-600">@{r.username ?? "user"}</span>
+          </div>
+          <span className="text-[11px] text-gray-500 ml-auto">{r.createdAt ?? ""}</span>
+
+          {/* 더보기 아이콘 + 메뉴 */}
+          <div className="relative" ref={isMenuOpen ? menuWrapperRef : null}>
             <img
               src="/images/more_options.svg"
               className="w-5 h-5 cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation();
-                setOpenMenuId((prev) =>
-                prev === r.commentId ? null : r.commentId
-                );
+                setOpenMenuId((prev) => (prev === r.commentId ? null : r.commentId));
               }}
             />
-            {Number(getLocalStorageItem("userId")) === Number(r.memberId) &&
-              isMenuOpen && (
-                <div className="flex absolute top-6 left-2 z-10">
-                  <button
-                    className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
-                    onClick={() => {
-                      if(!confirm("댓글을 삭제하시겠습니까?")) return;
-                        setOpenMenuId(null);
-                        _handleDeleteComment(r.commentId);
-                        }
-                      }
-                  >
-                    {t.DeleteDiary}
-                  </button>
-                </div>
+
+            {/* 내가 쓴 답글일 때만 삭제 버튼 */}
+            {Number(getLocalStorageItem("userId")) === Number(r.memberId) && isMenuOpen && (
+              <div className="flex absolute top-6 left-2 z-10">
+                <button
+                  className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
+                  onClick={() => {
+                    if (!confirm("답글을 삭제하시겠습니까?")) return;
+                    setOpenMenuId(null);
+                    _handleDeleteComment(r.commentId);
+                  }}
+                >
+                  {t.DeleteDiary}
+                </button>
+              </div>
             )}
           </div>
-
-          <p className="text-sm text-black whitespace-pre-line leading-relaxed mb-2">
-            {r.content ?? r.commentText}
-          </p>
-
-          {hasChildren ? renderReplies(r.replies, depth + 1) : null}
-          {/* 답글 좋아요 수 */}
-          <div className="flex justify-end items-center gap-1">
-            <img src="/images/CommonComponentIcon/LikeIcon.svg"/>
-            <div className="text-body2 text-gray-700">{r.likeCount}</div>
-          </div>
         </div>
-      );
-    });
+
+        <p className="text-sm text-black whitespace-pre-line leading-relaxed mb-2">
+          {r.content ?? r.commentText}
+        </p>
+
+        {hasChildren ? renderReplies(r.replies, depth + 1) : null}
+
+        <div className="flex justify-end items-center gap-1">
+          <img src="/images/CommonComponentIcon/LikeIcon.svg" />
+          <div className="text-body2 text-gray-700">{r.likeCount}</div>
+        </div>
+      </div>
+    );
+  });
+
 
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
