@@ -16,23 +16,12 @@ export const postDiaryComments = async (
 export const getDiaryComments = async (
   params: DiaryCommentGetRequestDTO
 ): Promise<DiaryCommentGetResponseDTO> => {
-  if (!params) throw new Error("getDiaryComments: params가 없습니다.");
-
-  const { diaryId, page = 0, size = 10 } = params; // 스펙상 page 기본 0
-  if (diaryId == null || Number.isNaN(Number(diaryId))) {
-    throw new Error("getDiaryComments: diaryId가 유효하지 않습니다.");
-  }
-
-  console.log("[REQ] GET", `/diaries/${diaryId}/comments?page=${page}&size=${size}`);
+  const { diaryId, page = 0, size = 10 } = params;
 
   const { data } = await axiosInstance.get<DiaryCommentGetResponseDTO>(
     `/diaries/${diaryId}/comments`,
     { params: { page, size } }
   );
-
-  const snap = JSON.parse(JSON.stringify(data));
-  console.log("[RES] GET comments (snap):", snap);
-  console.log("[RES] length:", snap?.result?.content?.length);
 
   return data;
 };

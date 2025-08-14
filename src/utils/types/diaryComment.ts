@@ -26,7 +26,6 @@ export type DiaryCommentResponseDTO = APIResponse<DiaryCommentDTO>;
 
 // 일기 댓글 조회
 export type DiaryCommentGetRequestDTO = {
-    // body: DiaryCommentGetRequestDTO;
     diaryId: number;
     page?: number;
     size?: number;
