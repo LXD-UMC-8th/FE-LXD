@@ -35,7 +35,26 @@ const DiaryDetailPage = () => {
   };
 
   const _handleCorrectionsClick = () => {
-    navigate(`/feed/${parsedDiaryId}/corrections`);
+    const commentCount =
+      (commentData?.result?.totalElements ?? commentData?.result?.content?.length)
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      diary?.commentCount ?? 0;
+
+      const likeCount = diary?.likeCount ?? 0;
+      const correctCount = diary?.correctCount ?? 0;
+
+    navigate(`/feed/${parsedDiaryId}/corrections`, {
+      state: {
+        stats: {
+          commentCount,
+          likeCount,
+          correctCount,
+        },
+        meta: {
+          diaryId: parsedDiaryId,
+        },
+      },
+    });
   };
 
   /** 교정 댓글 조회 */
@@ -60,12 +79,10 @@ const DiaryDetailPage = () => {
   } = useGetDiaryComments();
 
   /** 일기 댓글 작성(댓글/답글 공통) */
-  const { mutate: postDiaryComment, isPending: isPostingComment } =
-    usePostDiaryComments();
+  const { mutate: postDiaryComment, isPending: isPostingComment } = usePostDiaryComments();
 
   /** 일기 댓글 삭제 */
-  const { mutate: deleteDiaryComment, isPending: isDeletingComment } =
-    useDeleteDiaryComments();
+  const { mutate: deleteDiaryComment, isPending: isDeletingComment } = useDeleteDiaryComments();
 
   useEffect(() => {
     if (!hasValidId) return;
@@ -81,7 +98,9 @@ const DiaryDetailPage = () => {
       <div>
         <div>
           잘못된 접근입니다.
-          <button>피드로 돌아가기</button>
+          <button onClick={() => navigate('/feed')}>
+            피드로 돌아가기
+          </button>
         </div>
       </div>
     );
@@ -156,27 +175,27 @@ const DiaryDetailPage = () => {
     replies.map((r) => {
       const hasChildren = Array.isArray(r.replies) && r.replies.length > 0;
       return (
-        <div key={r.commentId} className="" style={{ marginLeft: depth * 12 }}>
+        <div
+          key={r.commentId}
+          className=""
+          style={{ marginLeft: depth * 12 }}
+        >
           <div className="border-t border-gray-200 my-4" />
           <div className="flex items-center gap-3 mb-2">
-            <Avatar
+            <Avatar 
               src={r.profileImage}
               alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
               size="w-8 h-8"
               // onClick={() => ()}
             />
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">
-                {r.nickname ?? "사용자"}
-              </span>
+              <span className="font-semibold text-sm">{r.nickname ?? "사용자"}</span>
               <div className="w-px h-4 bg-gray-500" />
-              <span className="text-xs text-gray-600">
-                @{r.username ?? "user"}
-              </span>
+              <span className="text-xs text-gray-600">@{r.username ?? "user"}</span>
             </div>
             <span className="text-[11px] text-gray-500 ml-auto">
-              {r.createdAt ?? ""}
-            </span>
+                {r.createdAt ?? ""}
+              </span>
           </div>
 
           <p className="text-sm text-black whitespace-pre-line leading-relaxed mb-2">
@@ -196,12 +215,18 @@ const DiaryDetailPage = () => {
           <PrevButton navigateURL={backURL} />
           <button
             onClick={_handleCorrectionsClick}
-            className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer"
+            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 
+            font-pretendard font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
           >
             <img
               src="/images/correctionpencil.svg"
               alt="교정 아이콘"
-              className="w-[20.7px] h-[21.06px]"
+              className="w-[20px] h-[21px] group-hover:hidden"
+            />
+            <img
+              src="/images/CorrectHover.svg"
+              alt="교정 아이콘 hover"
+              className="w-[20px] h-[21px] hidden group-hover:block transition-300"
             />
             {t.CorrectButton}
           </button>
@@ -211,7 +236,7 @@ const DiaryDetailPage = () => {
           {diary && (
             <DiaryContent
               title={diary.title}
-              language={diary.language}
+              lang={diary.language}
               visibility={diary.visibility}
               content={diary.content}
               profileImg={diary.profileImg}
@@ -234,6 +259,9 @@ const DiaryDetailPage = () => {
                   alt: "교정",
                 },
               ]}
+              diaryId={diary.diaryId}
+              createdAt={diary.createdAt ?? ""}
+              {...(diary.thumbnail ? { thumbnail: diary.thumbnail }: {})}
             />
           )}
 
@@ -245,9 +273,7 @@ const DiaryDetailPage = () => {
                 alt="댓글 아이콘"
                 className="w-[24px] h-[24px]"
               />
-              <span>
-                {t.Comment} ({commentTotal})
-              </span>
+              <span>{t.Comment} ({commentTotal})</span>
             </div>
 
             {/* 최상위 댓글 입력창 */}
@@ -286,35 +312,33 @@ const DiaryDetailPage = () => {
 
             {/* 댓글 리스트 */}
             {comments.map((c: any) => {
-              const hasReplies =
-                Array.isArray(c.replies) && c.replies.length > 0;
+              const hasReplies = Array.isArray(c.replies) && c.replies.length > 0;
 
               return (
-                <div
-                  key={c.commentId}
-                  className="border border-gray-200 rounded-lg p-5 mb-6"
-                >
+                <div key={c.commentId} className="p-4">
+                  <div className="border-t border-gray-200 mb-6" />
                   {/* 작성자 */}
                   <div className="flex items-center gap-3 mb-2">
-                    <Avatar
+                    <Avatar 
                       src={c.profileImage}
                       alt={`${c.nickname ?? c.username ?? "profile"}의 프로필`}
                       size="w-9 h-9"
                       // onClick={() => ()}
                     />
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-body2">
-                        {c.nickname ?? "사용자"}
-                      </span>
-                      <div className="w-px h-5 bg-gray-500" />
-                      <span className="text-xs text-gray-600">
-                        @{c.username ?? "user"}
-                      </span>
-                    </div>
-                    <p className="text-caption text-gray-500 ml-auto">
-                      {c.createdAt ?? ""}
-                    </p>
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-body2">
+                          {c.nickname ?? "사용자"}
+                        </span>
+                        <div className="w-px h-5 bg-gray-500" />
+                        <span className="text-xs text-gray-600">
+                          @{c.username ?? "user"}
+                        </span>
+                      </div>
+                      <p className="text-caption text-gray-500 ml-auto">
+                        {c.createdAt ?? ""}
+                      </p>
                   </div>
+
 
                   {/* 본문 */}
                   <p className="text-body2 text-black whitespace-pre-line leading-relaxed mb-4">
@@ -326,9 +350,7 @@ const DiaryDetailPage = () => {
                     {/* 답글 토글 버튼 */}
                     <button
                       className={`flex items-center gap-1 cursor-pointer p-1 ${
-                        openReplyId === c.commentId
-                          ? "bg-gray-200 rounded-[5px] text-black"
-                          : ""
+                        openReplyId === c.commentId ? "bg-gray-200 rounded-[5px] text-black" : ""
                       }`}
                       onClick={() => _toggleReplyInput(c.commentId)}
                     >
@@ -341,7 +363,7 @@ const DiaryDetailPage = () => {
                         alt="댓글 수"
                         className="w-4 h-4"
                       />
-                      <span>{c.replyCount ?? c.replies?.length ?? 0}</span>
+                      <span>{c.replyCount ?? (c.replies?.length ?? 0)}</span>
                     </button>
 
                     {/* 좋아요 */}
@@ -368,33 +390,31 @@ const DiaryDetailPage = () => {
                   {openReplyId === c.commentId && (
                     <div className="mt-3">
                       {hasReplies && (
-                        <div className="mb-3">{renderReplies(c.replies)}</div>
+                        <div className="mb-3">
+                          {renderReplies(c.replies)}
+                        </div>
                       )}
 
                       {/* 답글 입력 */}
                       <div className="flex items-center gap-2">
                         <textarea
-                          placeholder="답글을 입력하세요."
-                          className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 
+                        placeholder={t.ReplyPlaceholder}
+                        className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 
                                   focus:outline-none focus:ring-2 focus:ring-gray-200"
-                          rows={1}
-                          value={replyTexts[c.commentId] ?? ""}
-                          onChange={(e) =>
-                            _handleReplyChange(c.commentId, e.target.value)
+                        rows={1}
+                        value={replyTexts[c.commentId] ?? ""}
+                        onChange={(e) => _handleReplyChange(c.commentId, e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && !e.shiftKey) {
+                            e.preventDefault();
+                            _handleSubmitReply(c.commentId);
                           }
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" && !e.shiftKey) {
-                              e.preventDefault();
-                              _handleSubmitReply(c.commentId);
-                            }
-                          }}
-                          disabled={isPostingComment}
-                        />
+                        }}
+                        disabled={isPostingComment}
+                      />
                         <button
                           onClick={() => _handleSubmitReply(c.commentId)}
-                          disabled={
-                            isPostingComment || !replyTexts[c.commentId]?.trim()
-                          }
+                          disabled={isPostingComment || !(replyTexts[c.commentId]?.trim())}
                           className="bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold 
                                     hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -413,20 +433,18 @@ const DiaryDetailPage = () => {
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
         <div className="flex items-center gap-2">
-          <img src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">
-            {t.CorrectionsInDiary}
-          </p>
+          <img 
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
+          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
         </div>
 
         {isCorrectionsPending && <LoadingModal />}
 
         {(correctionData?.result?.corrections?.contents ?? []).map(
           (correction: ContentsDTO) => (
-            <CorrectionsInFeedDetail
-              key={correction.correctionId}
-              props={correction}
-            />
+            <CorrectionsInFeedDetail key={correction.correctionId} props={correction} />
           )
         )}
       </div>
