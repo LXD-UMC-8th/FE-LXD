@@ -15,6 +15,7 @@ import Avatar from "../../components/Common/Avatar";
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { getLocalStorageItem } from "../../apis/axios";
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
@@ -229,7 +230,6 @@ const DiaryDetailPage = () => {
       }
     );
   };
-
   const comments = commentsState;
   const commentTotal = stableTotal; // 표시도 안정 total 기준
 
@@ -241,6 +241,7 @@ const DiaryDetailPage = () => {
   const renderReplies = (replies: any[] = [], depth = 1) =>
     replies.map((r) => {
       const hasChildren = Array.isArray(r.replies) && r.replies.length > 0;
+      const isMenuOpen = openMenuId === r.commentId;
       return (
         <div key={r.commentId} className="" style={{ marginLeft: depth * 12 }}>
           <div className="border-t border-gray-200 my-4" />
@@ -262,6 +263,32 @@ const DiaryDetailPage = () => {
             <span className="text-[11px] text-gray-500 ml-auto">
               {r.createdAt ?? ""}
             </span>
+            <img
+              src="/images/more_options.svg"
+              className="w-5 h-5 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenMenuId((prev) =>
+                prev === r.commentId ? null : r.commentId
+                );
+              }}
+            />
+            {Number(getLocalStorageItem("userId")) === Number(r.memberId) &&
+              isMenuOpen && (
+                <div className="flex absolute top-6 left-2 z-10">
+                  <button
+                    className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
+                    onClick={() => {
+                      if(!confirm("댓글을 삭제하시겠습니까?")) return;
+                        setOpenMenuId(null);
+                        _handleDeleteComment(r.commentId);
+                        }
+                      }
+                  >
+                    {t.DeleteDiary}
+                  </button>
+                </div>
+            )}
           </div>
 
           <p className="text-sm text-black whitespace-pre-line leading-relaxed mb-2">
@@ -430,12 +457,18 @@ const DiaryDetailPage = () => {
                         }}
                       />
                       {/* 더보기 메뉴 */}
-                      {isMenuOpen && (
+                      { Number(getLocalStorageItem("userId")) === Number(c.memberId) &&
+                        isMenuOpen && (
                         <div className="flex absolute top-6 left-2 z-10">
                           <button
                             className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
-                            onClick={() => _handleDeleteComment(c.commentId)}
-                          >
+                            onClick={() => {
+                              if(!confirm("댓글을 삭제하시겠습니까?")) return;
+                              setOpenMenuId(null);
+                              _handleDeleteComment(c.commentId);
+                            }
+                          }
+                        >
                             {t.DeleteDiary}
                           </button>
                         </div>
@@ -449,7 +482,7 @@ const DiaryDetailPage = () => {
                   </p>
 
                   {/* 답글/좋아요 */}
-                  <div className="flex items-center gap-4 text-xs text-gray-500 mb-2 mt-3">
+                  <div className="flex items-center gap-2 text-xs text-gray-500 mb-2 mt-3">
                     <button
                       className={`flex items-center gap-1 cursor-pointer p-1 ${
                         openReplyId === c.commentId
@@ -465,7 +498,7 @@ const DiaryDetailPage = () => {
                             : "/images/CommonComponentIcon/CommentIcon.svg"
                         }
                         alt="댓글 수"
-                        className="w-4 h-4"
+                        className="w-5 h-5"
                       />
                       <span>{c.replyCount ?? c.replies?.length ?? 0}</span>
                     </button>
@@ -474,7 +507,7 @@ const DiaryDetailPage = () => {
                       <img
                         src="/images/CommonComponentIcon/LikeIcon.svg"
                         alt="좋아요 수"
-                        className="w-4 h-4"
+                        className="w-5 h-5"
                       />
                       <span>{c.likeCount ?? 0}</span>
                     </div>

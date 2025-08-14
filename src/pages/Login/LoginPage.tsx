@@ -6,6 +6,7 @@ import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
+import { setLocalStorageItem } from "../../apis/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -24,6 +25,7 @@ const LoginPage = () => {
         const { accessToken, refreshToken, member } = response.result;
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
+        setLocalStorageItem("userId", member.memberId);
 
         console.log("로그인 성공", member);
         alert("로그인 되었습니다.");
