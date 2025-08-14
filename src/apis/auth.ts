@@ -1,34 +1,12 @@
 // 로그인, 로그아웃 등 인증 관련
+import type { EmailResponseDTO, EmailVerificationResponseDTO, LoginRequestDTO, LoginResponseDTO } from "../utils/types/auth";
 import { axiosInstance } from "./axios";
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    accessToken: string;
-    refreshToken: string;
-    member: {
-      memberId: number;
-      email: string;
-      username: string;
-      nickname: string;
-      profileImg: string;
-      language: string;
-    };
-  };
-}
 
 // 로그인 요청 API
 export const postSignin = async (
-  payload: LoginRequest,
-): Promise<LoginResponse> => {
-  const { data } = await axiosInstance.post<LoginResponse>(
+  payload: LoginRequestDTO,
+): Promise<LoginResponseDTO> => {
+  const { data } = await axiosInstance.post<LoginResponseDTO>(
     "/auth/login",
     payload,
     {
@@ -40,19 +18,12 @@ export const postSignin = async (
   return data;
 };
 
-export interface EmailVerificationResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: string;
-}
-
 // 이메일 인증 링크 발송 API
 export const postEmailVerificationRequest = async (
   email: string,
   verificationType: "EMAIL"
 ) => {
-  const response = await axiosInstance.post<EmailVerificationResponse>(
+  const response = await axiosInstance.post<EmailVerificationResponseDTO>(
     "auth/emails/verification-requests",
     { email, verificationType }
 
@@ -68,18 +39,9 @@ export const getEmailVerification = async (token: string) => {
   window.location.href = apiURL;
 };
 
-export interface EmailResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  result: {
-    email: string;
-  };
-}
-
 // 이메일 인증 후 토큰 주인 반환 API
 export const getEmail = async (token: string) => {
-  const response = await axiosInstance.get<EmailResponse>("/auth/email", {
+  const response = await axiosInstance.get<EmailResponseDTO>("/auth/email", {
     params: { token },
   });
   return response.data;
@@ -102,5 +64,18 @@ export const postReissue = async (
   const response = await axiosInstance.post<ReissueResponse>("//auth/reissue", {
     refreshToken,
   });
+  return response.data;
+};
+
+// 비밀번호 변경 - 이메일 인증 링크 발송 API
+export const postEmailVerificationinPWRequest = async (
+  email: string,
+  verificationType: "PASSWORD"
+) => {
+  const response = await axiosInstance.post<EmailVerificationResponseDTO>(
+    "auth/emails/verification-requests",
+    { email, verificationType }
+
+  );
   return response.data;
 };

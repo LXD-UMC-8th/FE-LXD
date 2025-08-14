@@ -12,7 +12,7 @@ import {
   isPasswordValid,
 } from "../../utils/validate";
 import { useSearchParams } from "react-router-dom";
-import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
+import { getEmail, postEmailVerificationinPWRequest, postEmailVerificationRequest } from "../../apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
 import { patchMemberPassword } from "../../apis/members";
@@ -29,41 +29,6 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [searchParams] = useSearchParams();
-
-//  const [hasTriedVerify, setHasTriedVerify] = useState(false); // 인증하기 버튼 눌렀는지 상태관리
-//     // 이메일 인증 모킹 함수 (나중에 삭제)
-//   async function fakeEmailVerify(
-//     email: string,
-//     mode: "available" | "taken" | "random" = "available"
-//   ): Promise<{ ok: boolean }> {
-//     return new Promise((resolve) => {
-//       setTimeout(() => {
-//         if (mode === "random") {
-//           const available = Math.random() > 0.5;
-//           resolve({ ok: available });
-//           return;
-//         }
-//         resolve({ ok: mode === "available" });
-//       }, 500);
-//     });
-//   }
-// const handleEmailCheck = async () => {
-//     setHasTriedVerify(true);
-//     try {
-//       const response = await fakeEmailVerify(userInfo.email, "random");
-
-//       if (!response.ok) {
-//         console.log("인증 실패");
-//         setEmailVerified(false);
-//         return;
-//       }
-//       setEmailVerified(true);
-//       console.log("이메일 인증 성공");
-//     } catch (error) {
-//       alert("인증할 수 없는 이메일입니다");
-//       console.error("인증 실패:", error);
-//     }
-//   };
 
    const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
@@ -85,9 +50,9 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     try {
-      const response = await postEmailVerificationRequest(
+      const response = await postEmailVerificationinPWRequest(
         userInfo.email,
-        "EMAIL"
+        "PASSWORD"
       );
 
       if (response.isSuccess) {
