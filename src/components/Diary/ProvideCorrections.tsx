@@ -79,9 +79,9 @@ const ProvideCorrections = () => {
       const allowed = contentAreaRef.current;
       const isInsideContent =
         !!allowed &&
-        (allowed.contains(range.commonAncestorContainer) ||
-          (selection.anchorNode && allowed.contains(selection.anchorNode)) ||
-          (selection.focusNode && allowed.contains(selection.focusNode)));
+        allowed.contains(range.startContainer) &&
+        allowed.contains(range.endContainer);
+
 
       // 본문 밖이거나, 빈 문자열/너무 짧은 선택은 무시
       if (!isInsideContent || !text || text.length < 2) {
@@ -167,6 +167,7 @@ const ProvideCorrections = () => {
               title={diary?.title ?? ""}
               lang={diary?.language ?? ""}
               visibility={diary?.visibility ?? ""}
+              profileImg={diary?.profileImg}
               content={diary?.content}
               writerNickname={diary?.writerNickName}
               writerUsername={diary?.writerUserName}

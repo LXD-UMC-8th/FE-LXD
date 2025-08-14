@@ -71,7 +71,7 @@ const DiaryContent = ({
     <div className="relative">
       <div className="flex items-center justify-between pb-3">
         {/* 다이어리 번호 & 작성 날짜 */}
-        <div className="text-subhead4 text-gray-600 font-medium">
+        <div className="text-subhead4 text-gray-600 font-medium select-none">
           #{diaryId} · {createdAt?.slice(0, 10)}
         </div>
         <div
@@ -119,7 +119,7 @@ const DiaryContent = ({
         </div>
       </div>
       {/* 제목 & 상태 */}
-      <div className="flex items-center mb-5">
+      <div className="flex items-center mb-5 no-click no-drag select-none">
         <Header props={{ visibility: visibility }} />
         <h1 className="text-subhead2 font-semibold">{title}</h1>
         <span className="text-blue-600 text-body2 font-medium ml-auto">
@@ -128,7 +128,7 @@ const DiaryContent = ({
       </div>
 
       {/* 작성자 + 우측 메뉴 */}
-      <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
+      <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
         <div className="flex items-center gap-2">
           <Avatar
             src={profileImg}
@@ -145,7 +145,7 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 본문 */}
-      <div className="">
+      <div className="select-text">
         {thumbnail && (
           <img className="rounded-[10px]" src={thumbnail} alt="이미지" />
         )}
@@ -157,7 +157,7 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 하단 통계 */}
-      <div className="flex items-center gap-3 text-caption text-gray-700">
+      <div className="flex items-center gap-3 text-caption text-gray-700 select-none">
         {stats &&
           stats.map((item, index) => (
             <div key={index} className="flex gap-1 items-center">
