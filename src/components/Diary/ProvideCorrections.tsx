@@ -39,7 +39,8 @@ const ProvideCorrections = () => {
   const { mutate: postCorrection } = usePostCorrection();
 
   // 일기 상세 조회
-  const { mutate: fetchDiaryDetail, data: diaryData } = useGetDiaryDetail();
+  const { mutate: fetchDiaryDetail, data: diaryData, isPending: isDiaryPending } =
+    useGetDiaryDetail();
 
   useEffect(() => {
     if (hasValidId) {
@@ -62,15 +63,15 @@ const ProvideCorrections = () => {
   }, [hasValidId, parsedDiaryId, fetchCorrections]);
 
   useEffect(() => {
-    const handleMouseUp = (e: MouseEvent) => {
-      const selection = window.getSelection();
+    const handleMouseUp = (e: MouseEvent | TouchEvent) => {
+      const modalEl = document.getElementById("correction-modal");
+      if (modalEl?.contains(e.target as Node)) return;
+
+      const selection = window.getSelection?.();
       if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
         setShowModal(false);
         return;
       }
-
-      const modalEl = document.getElementById("correction-modal");
-      if (modalEl?.contains(e.target as Node)) return;
 
       const range = selection.getRangeAt(0);
       const text = selection.toString().trim();
@@ -78,9 +79,9 @@ const ProvideCorrections = () => {
       const allowed = contentAreaRef.current;
       const isInsideContent =
         !!allowed &&
-        (allowed.contains(range.commonAncestorContainer) ||
-          (selection.anchorNode && allowed.contains(selection.anchorNode)) ||
-          (selection.focusNode && allowed.contains(selection.focusNode)));
+        allowed.contains(range.startContainer) &&
+        allowed.contains(range.endContainer);
+
 
       // 본문 밖이거나, 빈 문자열/너무 짧은 선택은 무시
       if (!isInsideContent || !text || text.length < 2) {
@@ -89,13 +90,23 @@ const ProvideCorrections = () => {
       }
 
       // 위치 계산 (containerRef 기준)
-      const rect = range.getBoundingClientRect();
+      const rect0 =
+        range.getBoundingClientRect().width || range.getBoundingClientRect().height
+          ? range.getBoundingClientRect()
+          : range.getClientRects()[0]; // ✅ 보완
+
+      if (!rect0) return;
       const container = containerRef.current;
       if (!container) return;
       const containerRect = container.getBoundingClientRect();
 
-      const top = rect.bottom - containerRect.top + 10;
-      const left = rect.left - containerRect.left;
+      // 컨테이너 기준 좌표 + 살짝 아래
+      const top = rect0.bottom - containerRect.top + 10;
+      let left = rect0.left - containerRect.left;
+
+      // 컨테이너 범위 안으로 클램핑
+      const modalWidth = 450; // 아래 modal width와 동일
+      left = Math.max(8, Math.min(left, containerRect.width - modalWidth - 8));
 
       setModalPosition({ top, left });
       setSelectedText(text);
@@ -104,12 +115,15 @@ const ProvideCorrections = () => {
     };
 
     document.addEventListener("mouseup", handleMouseUp);
-    return () => document.removeEventListener("mouseup", handleMouseUp);
+    document.addEventListener("touchend", handleMouseUp);
+    return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("touchend", handleMouseUp);
+    };
   }, []);
 
   const handleSubmit = () => {
-    if (!editedText.trim() || !description.trim() || !selectedText.trim())
-      return;
+    if (!editedText.trim() || !description.trim() || !selectedText.trim()) return;
 
     postCorrection(
       {
@@ -148,35 +162,27 @@ const ProvideCorrections = () => {
 
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
-          <DiaryContent
-            title={diary?.title ?? ""}
-            lang={diary?.language ?? ""}
-            visibility={diary?.visibility ?? ""}
-            content={diary?.content}
-            writerNickname={diary?.writerNickName}
-            writerUsername={diary?.writerUserName}
-            stats={[
-              {
-                label: String(commentCount),
-                icon: "/images/CommonComponentIcon/CommentIcon.svg",
-                alt: "댓글",
-              },
-              {
-                label: String(likeCount),
-                icon: "/images/CommonComponentIcon/LikeIcon.svg",
-                alt: "좋아요",
-              },
-              {
-                label: String(correctCount),
-                icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-                alt: "교정",
-              },
-            ]}
-            diaryId={diary?.diaryId ?? 0}
-            createdAt={diary?.createdAt ?? ""}
-            {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-            // contentRootRef={contentAreaRef}
-          />
+          <div ref={contentAreaRef}>
+            <DiaryContent
+              title={diary?.title ?? ""}
+              lang={diary?.language ?? ""}
+              visibility={diary?.visibility ?? ""}
+              profileImg={diary?.profileImg}
+              content={diary?.content}
+              writerNickname={diary?.writerNickName}
+              writerUsername={diary?.writerUserName}
+              stats={[
+                { label: String(commentCount), icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
+                { label: String(likeCount), icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
+                { label: String(correctCount), icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
+              ]}
+              diaryId={diary?.diaryId ?? 0}
+              createdAt={diary?.createdAt ?? ""}
+              {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
+              // 만약 DiaryContent가 contentRootRef를 지원한다면 위 래퍼 대신:
+              // contentRootRef={contentAreaRef}
+            />
+          </div>
         </div>
       </div>
 
@@ -191,16 +197,10 @@ const ProvideCorrections = () => {
             onClick={() => setShowModal(false)}
             className="absolute top-7 right-5 cursor-pointer"
           >
-            <img
-              src="/images/DeleteButton.svg"
-              className="w-3 h-3"
-              alt="닫기 버튼"
-            />
+            <img src="/images/DeleteButton.svg" className="w-3 h-3" alt="닫기 버튼" />
           </button>
 
-          <h2 className="text-subhead3 font-semibold mb-4">
-            {t.ProvideCorrect}
-          </h2>
+          <h2 className="text-subhead3 font-semibold mb-4">{t.ProvideCorrect}</h2>
           <div className="border-t border-gray-300 my-4" />
 
           <div className="flex flex-col gap-3">
@@ -227,6 +227,12 @@ const ProvideCorrections = () => {
                 className="w-full rounded-[10px] px-3 py-3 text-body2 h-15 resize-none focus:outline-none"
                 rows={2}
                 placeholder={t.CorrectExp}
+                onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmit();
+                }
+              }}
               />
             </div>
           </div>
@@ -237,16 +243,8 @@ const ProvideCorrections = () => {
               onClick={handleSubmit}
               className="group absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
-              <img
-                src="/images/correctionpencil.svg"
-                alt="교정 아이콘"
-                className="w-5 h-5 group-hover:hidden"
-              />
-              <img
-                src="/images/CorrectHover.svg"
-                alt="교정 아이콘 hover"
-                className="w-5 h-5 hidden group-hover:block transition-300"
-              />
+              <img src="/images/correctionpencil.svg" alt="교정 아이콘" className="w-5 h-5 group-hover:hidden" />
+              <img src="/images/CorrectHover.svg" alt="교정 아이콘 hover" className="w-5 h-5 hidden group-hover:block transition-300" />
               {t.CorrectEnroll}
             </button>
           </div>
@@ -257,19 +255,14 @@ const ProvideCorrections = () => {
       <div className="flex flex-col px-5 gap-3 select-none">
         <div className="flex items-center gap-2">
           <img src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">
-            {t.CorrectionsInDiary}
-          </p>
+          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
         </div>
 
-        {isCorrectionsPending && <LoadingModal />}
+        {(isDiaryPending || isCorrectionsPending) && <LoadingModal />}
 
         {(correctionData?.result?.corrections?.contents ?? []).map(
           (correction: ContentsDTO) => (
-            <CorrectionsInDiaryDetail
-              key={correction.correctionId}
-              props={correction}
-            />
+            <CorrectionsInDiaryDetail key={correction.correctionId} props={correction} />
           )
         )}
       </div>

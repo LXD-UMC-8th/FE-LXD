@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Avatar from "../Common/Avatar"; // 경로 맞게 수정
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -7,6 +7,7 @@ import { translate } from "../../context/translate";
 
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface DiaryContentProps {
   title?: string;
@@ -21,6 +22,7 @@ interface DiaryContentProps {
   createdAt: string;
   thumbnail?: string;
   contentRootRef?: React.RefObject<HTMLDivElement>;
+  writerId?: number;
 }
 
 const DiaryContent = ({
@@ -36,6 +38,7 @@ const DiaryContent = ({
   createdAt,
   thumbnail,
   contentRootRef,
+  writerId,
 }: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -50,15 +53,7 @@ const DiaryContent = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useOutsideClick(menuRef, () => setMenuOpen(false));
 
   const safeContent = useCleanHtml(content);
 
@@ -78,7 +73,7 @@ const DiaryContent = ({
     <div className="relative">
       <div className="flex items-center justify-between pb-3">
         {/* 다이어리 번호 & 작성 날짜 */}
-        <div className="text-subhead4 text-gray-600 font-medium">
+        <div className="text-subhead4 text-gray-600 font-medium select-none">
           #{diaryId} · {createdAt?.slice(0, 10)}
         </div>
         <div
@@ -99,7 +94,10 @@ const DiaryContent = ({
 
           {/* 더보기 아이콘: mydiary에서 왔을 때만 */}
           {canEdit && menuOpen && (
-            <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
+            <div 
+              ref={menuRef}
+              className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50"
+            >
               <button
                 className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
                 onClick={(e) => {
@@ -123,7 +121,7 @@ const DiaryContent = ({
         </div>
       </div>
       {/* 제목 & 상태 */}
-      <div className="flex items-center mb-5">
+      <div className="flex items-center mb-5 no-click no-drag select-none">
         <Header props={{ visibility: visibility }} />
         <h1 className="text-subhead2 font-semibold">{title}</h1>
         <span className="text-blue-600 text-body2 font-medium ml-auto">
@@ -132,8 +130,11 @@ const DiaryContent = ({
       </div>
 
       {/* 작성자 + 우측 메뉴 */}
-      <div className="flex justify-between items-center text-sm text-gray-600 mb-4">
-        <div className="flex items-center gap-2">
+      <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
+        <div 
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate(`/diaries/member/${writerId}`)}  
+        >
           <Avatar
             src={profileImg}
             alt={writerNickname}
@@ -149,7 +150,7 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 본문 */}
-      <div className="">
+      <div className="select-text">
         {thumbnail && (
           <img className="rounded-[10px]" src={thumbnail} alt="이미지" />
         )}
@@ -161,7 +162,7 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 하단 통계 */}
-      <div className="flex items-center gap-3 text-caption text-gray-700">
+      <div className="flex items-center gap-3 text-caption text-gray-700 select-none">
         {stats &&
           stats.map((item, index) => (
             <div key={index} className="flex gap-1 items-center">

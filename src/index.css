@@ -136,6 +136,9 @@ body {
   .text-mint-100 {
     color: #e4fff2;
   }
+  .text-alert {
+    color: #FD4B4A;
+  }
 
   /* Background Colors */
   .bg-primary {

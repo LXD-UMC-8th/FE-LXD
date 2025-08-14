@@ -14,20 +14,14 @@ export const postDiaryComments = async (
 }
 
 export const getDiaryComments = async (
-  body: DiaryCommentGetRequestDTO,
+  params: DiaryCommentGetRequestDTO
 ): Promise<DiaryCommentGetResponseDTO> => {
-  const { diaryId, page = 1, size = 10 } = body;
-
-  console.log("[REQ] GET", `/diaries/${diaryId}/comments?page=${page}&size=${size}`);
+  const { diaryId, page = 0, size = 10 } = params;
 
   const { data } = await axiosInstance.get<DiaryCommentGetResponseDTO>(
     `/diaries/${diaryId}/comments`,
     { params: { page, size } }
   );
-
-  const snap = JSON.parse(JSON.stringify(data));
-  console.log("[RES] GET comments (snap):", snap);
-  console.log("[RES] length:", snap?.result?.content?.length);
 
   return data;
 };
