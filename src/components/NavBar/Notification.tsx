@@ -1,6 +1,6 @@
 import NotificationContent from "./NotificationContent";
 import {
-  getSubscribeToNotifications,
+
   getNotifications,
 } from "../../apis/notification";
 import { useEffect, useState } from "react";
@@ -36,27 +36,7 @@ const Notification = () => {
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
   //알람 구독을 위한 event처리
-  useEffect(() => {
-    let es: EventSource | null = null;
-    const setupSSE = () => {
-      if (es) {
-        es.close();
-      }
-      es = getSubscribeToNotifications();
-    };
 
-    setupSSE();
-
-    const intervalId = setInterval(() => {
-      console.log("🔁 Re-subscribing to SSE after 50 minutes...");
-      setupSSE();
-    }, 50 * 60 * 1000);
-
-    return () => {
-      clearInterval(intervalId);
-      if (es) es.close();
-    };
-  }, []);
 
   const handleReadAll = () => {
     patchReadAllNotifications(data?.pages[0].result.totalElements as number);

@@ -47,7 +47,6 @@ export interface SavedCorrectionItem {
   // 메모/ID
   savedCorrectionId: number;
   memo: string;
-  
 
   // 본문
   original: string;
@@ -58,8 +57,14 @@ export interface SavedCorrectionItem {
   likeCount: number;
 
   // 연결 정보
-  diaryId: number;
-  diaryTitle: string;
+  diaryInfo: {
+    createdAt: string;
+    diaryId: number;
+    thumbImg: string;
+    title: string;
+    userProfileImg: string;
+    username: string;
+  };
 
   // 작성자
   member: {

@@ -8,6 +8,7 @@ import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
 import { getMemberProfile } from "../../apis/members";
 import type { MemberProfileDTO } from "../../utils/types/member";
+import { getSubscribeToNotifications } from "../../apis/notification";
 
 type OpenModal = "notifications" | "profile" | false;
 const NavBar = () => {
@@ -26,6 +27,28 @@ const NavBar = () => {
       setProfileData(data?.result);
       console.log("Profile data: ", data?.result);
     });
+  }, []);
+  
+  useEffect(() => {
+    let es: EventSource | null = null;
+    const setupSSE = () => {
+      if (es) {
+        es.close();
+      }
+      es = getSubscribeToNotifications();
+    };
+
+    setupSSE();
+
+    const intervalId = setInterval(() => {
+      console.log("🔁 Re-subscribing to SSE after 50 minutes...");
+      setupSSE();
+    }, 50 * 60 * 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      if (es) es.close();
+    };
   }, []);
 
   return (
