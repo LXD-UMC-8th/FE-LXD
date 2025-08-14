@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  postSignin,
-  type LoginRequest,
-  type LoginResponse,
-} from "../../apis/auth";
+import { postSignin } from "../../apis/auth";
+import type {
+  postLoginRequestDTO,
+  postLoginResponseDTO,
+} from "../../utils/types/auth";
 import { setLocalStorageItem } from "../../apis/axios";
 
 export const useSignin = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<LoginResponse, Error, LoginRequest>({
+  return useMutation<postLoginResponseDTO, Error, postLoginRequestDTO>({
     mutationFn: postSignin,
     onSuccess: (data) => {
       // 1️⃣ Store tokens in localStorage
