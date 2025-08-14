@@ -31,10 +31,6 @@ const NotificationContent = ({
 
   const navigate = useNavigate();
   const navigateToEvent = () => {
-    console.log(
-      "Navigating to event with memberId:",
-      notifications.redirectUrl
-    );
     if (notifications.redirectUrl?.startsWith("/diaries")) {
       const diaryId = notifications.redirectUrl
         .split("/diaries/")[1]

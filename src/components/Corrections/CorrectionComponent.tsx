@@ -1,16 +1,24 @@
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ProfileInCorrections from "./ProfileInCorrections";
-import { postSavedMemo, patchSavedMemo, deleteSavedMemo } from "../../apis/correctionsSaved";
+import {
+  postSavedMemo,
+  patchSavedMemo,
+  deleteSavedMemo,
+} from "../../apis/correctionsSaved";
 import { useCorrectionComments } from "../../hooks/queries/useCorrectionComments";
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 import AlertModal from "../Common/AlertModal"; // ✅ 모달
 
-interface Props { correction: SavedCorrectionItem; }
+interface Props {
+  correction: SavedCorrectionItem;
+}
 
 const CorrectionComponent = ({ correction }: Props) => {
   // ===== 좋아요 =====
-  const [isLiked, setIsLiked] = useState<boolean>((correction as any)?.liked ?? (correction as any)?.isLiked ?? false);
+  const [isLiked, setIsLiked] = useState<boolean>(
+    (correction as any)?.liked ?? (correction as any)?.isLiked ?? false
+  );
   const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
   const [deleteLikeModal, setDeleteLikeModal] = useState(false);
 
@@ -22,9 +30,9 @@ const CorrectionComponent = ({ correction }: Props) => {
   // ✅ baseline으로 관리(저장 성공 시 갱신)
   const [baselineMemo, setBaselineMemo] = useState<string>(initialMemo);
   const [memoText, setMemoText] = useState<string>(initialMemo);
-  const isDirty = memoText.trim() !== baselineMemo.trim();   // 변경 여부
+  const isDirty = memoText.trim() !== baselineMemo.trim(); // 변경 여부
 
-  const savedId = correction.savedCorrectionId;              // 저장 탭에서만 존재
+  const savedId = correction.savedCorrectionId; // 저장 탭에서만 존재
   const isSavedList = !!savedId;
 
   const hadMemoAtMount = useRef<boolean>(!!initialMemo.trim());
@@ -33,20 +41,24 @@ const CorrectionComponent = ({ correction }: Props) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSaveMemo = async () => {
-    if (!isSavedList) return alert("‘저장한 교정’에서만 메모를 추가할 수 있어요.");
+    if (!isSavedList)
+      return alert("‘저장한 교정’에서만 메모를 추가할 수 있어요.");
     if (!memoText.trim()) return alert("메모 내용을 입력해 주세요.");
     if (!isDirty && hadMemoAtMount.current) return; // 변경 없으면 무시
 
     setIsSaving(true);
     try {
-      const payload = { savedCorrectionId: Number(savedId), memo: memoText.trim() };
+      const payload = {
+        savedCorrectionId: Number(savedId),
+        memo: memoText.trim(),
+      };
       if (hadMemoAtMount.current) {
-        await patchSavedMemo(payload);   // ✅ 수정
+        await patchSavedMemo(payload); // ✅ 수정
       } else {
-        await postSavedMemo(payload);    // ✅ 최초 등록
+        await postSavedMemo(payload); // ✅ 최초 등록
         hadMemoAtMount.current = true;
       }
-      setBaselineMemo(memoText.trim());  // ✅ 저장 성공 시 기준값 갱신 → 이후 수정 버튼 정상 동작
+      setBaselineMemo(memoText.trim()); // ✅ 저장 성공 시 기준값 갱신 → 이후 수정 버튼 정상 동작
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
       console.error("❌ 메모 저장 실패:", e);
@@ -62,7 +74,7 @@ const CorrectionComponent = ({ correction }: Props) => {
     try {
       await deleteSavedMemo(Number(savedId));
       setMemoText("");
-      setBaselineMemo("");               // ✅ 기준값도 비우기
+      setBaselineMemo(""); // ✅ 기준값도 비우기
       hadMemoAtMount.current = false;
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
@@ -111,26 +123,33 @@ const CorrectionComponent = ({ correction }: Props) => {
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* 상단 프로필/시간 */}
       <div className="mb-3">
-        <ProfileInCorrections member={correction.member} createdAt={createdAtText} />
+        <ProfileInCorrections
+          member={correction.member}
+          createdAt={createdAtText}
+        />
       </div>
 
       {/* 다이어리 제목 */}
-      {correction.diaryTitle && (
+      {correction.diaryInfo?.diaryTitle && (
         <div className="mt-1">
           <span className="text-primary-600 font-semibold underline cursor-pointer">
-            {correction.diaryTitle}
+            {correction.diaryInfo?.diaryTitle}
           </span>
         </div>
       )}
 
       {/* 본문 */}
       <div className="mt-3 space-y-3">
-        {correction.original && <p className="text-body1 text-gray-900">{correction.original}</p>}
+        {correction.original && (
+          <p className="text-body1 text-gray-900">{correction.original}</p>
+        )}
 
         {correction.corrected && (
           <div className="flex gap-2">
             <div className="w-1.5 rounded bg-primary-500 mt-1" />
-            <p className="text-body1 font-semibold text-primary-600">{correction.corrected}</p>
+            <p className="text-body1 font-semibold text-primary-600">
+              {correction.corrected}
+            </p>
           </div>
         )}
 
@@ -145,11 +164,17 @@ const CorrectionComponent = ({ correction }: Props) => {
           onClick={() => !commentDisabled && setOpenReply((p) => !p)}
           disabled={commentDisabled}
           className={`flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 ${
-            commentDisabled ? "opacity-40 cursor-not-allowed hover:bg-transparent" : ""
+            commentDisabled
+              ? "opacity-40 cursor-not-allowed hover:bg-transparent"
+              : ""
           }`}
         >
           <img
-            src={openReply ? "/images/commentIcon.svg" : "/images/emptycommentIcon.svg"}
+            src={
+              openReply
+                ? "/images/commentIcon.svg"
+                : "/images/emptycommentIcon.svg"
+            }
             alt="댓글"
             className="w-5 h-5"
           />
@@ -161,11 +186,15 @@ const CorrectionComponent = ({ correction }: Props) => {
           className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100"
         >
           <img
-            src={isLiked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
+            src={
+              isLiked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"
+            }
             alt="좋아요"
             className={`w-5 h-5 ${isLiked ? "scale-110" : ""}`}
           />
-          <span className={isLiked ? "text-red-500" : undefined}>{likeCount}</span>
+          <span className={isLiked ? "text-red-500" : undefined}>
+            {likeCount}
+          </span>
         </button>
       </div>
 
@@ -211,7 +240,11 @@ const CorrectionComponent = ({ correction }: Props) => {
       {isSavedList && (
         <div className="mt-4 flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
-            <img src="/images/MemoPlusIcon.svg" alt="메모 추가" className="w-4 h-4" />
+            <img
+              src="/images/MemoPlusIcon.svg"
+              alt="메모 추가"
+              className="w-4 h-4"
+            />
             <input
               type="text"
               placeholder="메모를 추가하기"
@@ -245,10 +278,16 @@ const CorrectionComponent = ({ correction }: Props) => {
       <div className="mt-4 flex items-center gap-3">
         <div className="h-9 w-9 rounded-md bg-gray-200" />
         <div className="text-body1 text-gray-700">
-          <span className="mr-2 text-gray-500">#{correction.diaryId}</span>
-        <span className="font-medium">{correction.diaryTitle || "제목 없음"}</span>
+          <span className="mr-2 text-gray-500">
+            #{correction.diaryInfo?.diaryId}
+          </span>
+          <span className="font-medium">
+            {correction.diaryInfo?.diaryTitle || "제목 없음"}
+          </span>
         </div>
-        <div className="ml-auto text-caption text-gray-500">{createdAtText}</div>
+        <div className="ml-auto text-caption text-gray-500">
+          {createdAtText}
+        </div>
       </div>
 
       {/* ✅ 좋아요 취소 모달 */}
