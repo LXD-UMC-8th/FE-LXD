@@ -16,12 +16,11 @@ import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
   const navigate = useNavigate();
-  const location = useLocation() ;
+  const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
@@ -31,20 +30,20 @@ const DiaryDetailPage = () => {
   const [openReplyId, setOpenReplyId] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
   const [replyTexts, setReplyTexts] = useState<Record<number, string>>({});
-  // 댓글 페이지네이션
+
+  // 페이지네이션
   const [page, setPage] = useState(0);
   const [commentsState, setCommentState] = useState<any[]>([]);
   const [totalElements, setTotalElements] = useState(0);
   const [hasNext, setHasNext] = useState(true);
-  const [ deleteOpen, setDeleteOpen ] = useState(false);
-  const deleteMenuRef = useRef<HTMLDivElement | null>(null);
 
-  useOutsideClick(deleteMenuRef, () => setDeleteOpen(false));
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const menuWrapperRef = useRef<HTMLDivElement | null>(null);
+  useOutsideClick(menuWrapperRef, () => setOpenMenuId(null));
 
-  // 총 개수의 안정값(로딩/이동 중에도 버튼이 안 사라지게)
   const totalStableRef = useRef(0);
 
-  const PAGE_SIZE = 20;
+  const PAGE_SIZE = 10;
   const stableTotal = totalStableRef.current || totalElements;
   const totalPages = Math.max(1, Math.ceil(stableTotal / PAGE_SIZE));
 
@@ -117,7 +116,7 @@ const DiaryDetailPage = () => {
           totalStableRef.current = total; // 안정값 업데이트
           setCommentState(content);
 
-          const isLast = res?.result?.last ?? ((p + 1) * PAGE_SIZE >= total);
+          const isLast = res?.result?.last ?? ( (p + 1) * PAGE_SIZE >= total );
           setHasNext(!isLast);
         },
       }
@@ -270,6 +269,11 @@ const DiaryDetailPage = () => {
           </p>
 
           {hasChildren ? renderReplies(r.replies, depth + 1) : null}
+          {/* 답글 좋아요 수 */}
+          <div className="flex justify-end items-center gap-1">
+            <img src="/images/CommonComponentIcon/LikeIcon.svg"/>
+            <div className="text-body2 text-gray-700">{r.likeCount}</div>
+          </div>
         </div>
       );
     });
@@ -385,10 +389,12 @@ const DiaryDetailPage = () => {
               const hasReplies =
                 Array.isArray(c.replies) && c.replies.length > 0;
 
+              const isMenuOpen = openMenuId === c.commentId;
+
               return (
                 <div key={c.commentId} className="p-4">
                   <div className="border-t border-gray-200 mb-6" />
-                  {/* 작성자 */}
+                  {/* 작성자 줄 */}
                   <div className="flex items-center gap-3 mb-2">
                     <Avatar
                       src={c.profileImage}
@@ -407,25 +413,27 @@ const DiaryDetailPage = () => {
                     <p className="text-caption text-gray-500 ml-auto">
                       {c.createdAt ?? ""}
                     </p>
-                    <div className="relative">
+
+                    <div
+                      className="relative"
+                      ref={isMenuOpen ? menuWrapperRef : null}
+                    >
                       {/* 더보기 아이콘 */}
-                      <img 
+                      <img
                         src="/images/more_options.svg"
                         className="w-5 h-5 cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
-                          console.log("더보기 클릭");
-                          setDeleteOpen((prev) => !prev);
+                          setOpenMenuId((prev) =>
+                            prev === c.commentId ? null : c.commentId
+                          );
                         }}
                       />
-                      {/* 더보기 아이콘 열렸을 때 (삭제 버튼) */}
-                      {deleteOpen && (
-                        <div 
-                          ref={deleteMenuRef}
-                          className="flex absolute top-6 left-2"
-                        >
+                      {/* 더보기 메뉴 */}
+                      {isMenuOpen && (
+                        <div className="flex absolute top-6 left-2 z-10">
                           <button
-                            className="w-25 h-10 bg-white rounded-[5px] shadow-sm border border-gray-300 text-body2 text-alert whitespace-nowra hover:bg-gray-100 cursor-pointer"
+                            className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
                             onClick={() => _handleDeleteComment(c.commentId)}
                           >
                             {t.DeleteDiary}
@@ -440,9 +448,8 @@ const DiaryDetailPage = () => {
                     {c.content ?? c.commentText}
                   </p>
 
-                  {/* 답글 토글 / 좋아요 / 삭제 */}
+                  {/* 답글/좋아요 */}
                   <div className="flex items-center gap-4 text-xs text-gray-500 mb-2 mt-3">
-                    {/* 답글 토글 버튼 */}
                     <button
                       className={`flex items-center gap-1 cursor-pointer p-1 ${
                         openReplyId === c.commentId
@@ -463,7 +470,6 @@ const DiaryDetailPage = () => {
                       <span>{c.replyCount ?? c.replies?.length ?? 0}</span>
                     </button>
 
-                    {/* 좋아요 */}
                     <div className="flex items-center gap-1">
                       <img
                         src="/images/CommonComponentIcon/LikeIcon.svg"
@@ -474,14 +480,12 @@ const DiaryDetailPage = () => {
                     </div>
                   </div>
 
-                  {/* 답글 영역 */}
+                  {/* 답글 입력 영역 */}
                   {openReplyId === c.commentId && (
                     <div className="mt-3">
                       {hasReplies && (
                         <div className="mb-3">{renderReplies(c.replies)}</div>
                       )}
-
-                      {/* 답글 입력 */}
                       <div className="flex items-center gap-2">
                         <textarea
                           placeholder={t.ReplyPlaceholder}
@@ -505,7 +509,7 @@ const DiaryDetailPage = () => {
                           disabled={
                             isPostingComment || !replyTexts[c.commentId]?.trim()
                           }
-                          className="bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold 
+                          className="bg-gray-900 text-white text-sm px-4 py-[10px] rounded-[5px] text-caption font-semibold 
                                     hover:bg-gray-800 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {t.CommentSubmit}
@@ -520,18 +524,11 @@ const DiaryDetailPage = () => {
             {/* 페이지네이션 */}
             <div className="mt-6 flex items-center justify-center gap-2">
               <button
-                onClick={() => goToPage(0)}
-                disabled={page === 0 || isCommentsPending}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                처음
-              </button>
-              <button
                 onClick={() => goToPage(page - 1)}
                 disabled={page === 0 || isCommentsPending}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                이전
+                <img src="/images/CommentsPrevButton.svg"/>
               </button>
 
               {(() => {
@@ -552,8 +549,8 @@ const DiaryDetailPage = () => {
                     key={p}
                     onClick={() => goToPage(p)}
                     disabled={isCommentsPending}
-                    className={`px-3 py-1 border rounded ${
-                      p === page ? "bg-gray-900 text-white" : "hover:bg-gray-50"
+                    className={`px-3 py-1 rounded cursor-pointer ${
+                      p === page ? "bg-gray-200 text-black" : "hover:bg-gray-50"
                     }`}
                   >
                     {p + 1}
@@ -564,16 +561,9 @@ const DiaryDetailPage = () => {
               <button
                 onClick={() => goToPage(page + 1)}
                 disabled={page >= totalPages - 1 || isCommentsPending}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                다음
-              </button>
-              <button
-                onClick={() => goToPage(totalPages - 1)}
-                disabled={page >= totalPages - 1 || isCommentsPending}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
-                마지막
+                <img src="/images/CommentsNextButton.svg"/>
               </button>
             </div>
           </div>
