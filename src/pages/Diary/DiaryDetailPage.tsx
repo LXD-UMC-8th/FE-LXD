@@ -363,7 +363,6 @@ const DiaryDetailPage = () => {
               diaryId={diary.diaryId}
               createdAt={diary.createdAt ?? ""}
               {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              thumbnail={diary.thumbnail}
               writerId={diary.writerId}
             />
           )}
@@ -377,7 +376,7 @@ const DiaryDetailPage = () => {
                 className="w-[24px] h-[24px]"
               />
               <span>
-                {t.Comment} ({stableTotal})
+                {t.Comment} ({commentTotal})
               </span>
             </div>
 
@@ -401,7 +400,7 @@ const DiaryDetailPage = () => {
                 <button
                   onClick={_handleSubmitComment}
                   disabled={isPostingComment || !commentText.trim()}
-                  className={`absolute bottom-7 right-3 absolute bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
+                  className={`absolute bottom-7 right-3 bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
                     isPostingComment || !commentText.trim()
                       ? "opacity-50 cursor-not-allowed"
                       : "hover:bg-gray-800"
