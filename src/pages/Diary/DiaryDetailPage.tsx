@@ -248,7 +248,10 @@ const DiaryDetailPage = () => {
       <div key={r.commentId} style={{ marginLeft: depth * 12 }}>
         <div className="border-t border-gray-200 my-4" />
 
-        <div className="flex items-center gap-3 mb-2">
+        <div 
+          className="flex items-center gap-3 mb-2 cursor-pointer"
+          onClick={() => navigate(`/diaries/member/${r.memberId}`)}
+        >
           <Avatar
             src={r.profileImage}
             alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
@@ -361,6 +364,7 @@ const DiaryDetailPage = () => {
               createdAt={diary.createdAt ?? ""}
               {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
               thumbnail={diary.thumbnail}
+              memberId={diary.memberId}
             />
           )}
 
@@ -422,7 +426,10 @@ const DiaryDetailPage = () => {
                 <div key={c.commentId} className="p-4">
                   <div className="border-t border-gray-200 mb-6" />
                   {/* 작성자 줄 */}
-                  <div className="flex items-center gap-3 mb-2">
+                  <div 
+                    className="flex items-center gap-3 mb-2 cursor-pointer"
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
+                  >
                     <Avatar
                       src={c.profileImage}
                       alt={`${c.nickname ?? c.username ?? "profile"}의 프로필`}

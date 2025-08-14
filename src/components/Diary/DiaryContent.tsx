@@ -22,6 +22,7 @@ interface DiaryContentProps {
   createdAt: string;
   thumbnail?: string;
   contentRootRef?: React.RefObject<HTMLDivElement>;
+  memberId?: number;
 }
 
 const DiaryContent = ({
@@ -37,6 +38,7 @@ const DiaryContent = ({
   createdAt,
   thumbnail,
   contentRootRef,
+  memberId,
 }: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -129,7 +131,10 @@ const DiaryContent = ({
 
       {/* 작성자 + 우측 메뉴 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
-        <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate(`/diaries/member/${memberId}`)}  
+        >
           <Avatar
             src={profileImg}
             alt={writerNickname}
