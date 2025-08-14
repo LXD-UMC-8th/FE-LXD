@@ -7,6 +7,7 @@ import { translate } from "../../context/translate";
 
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface DiaryContentProps {
   title?: string;
@@ -50,15 +51,7 @@ const DiaryContent = ({
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useOutsideClick(menuRef, () => setMenuOpen(false));
 
   const safeContent = useCleanHtml(content);
 
@@ -99,7 +92,10 @@ const DiaryContent = ({
 
           {/* 더보기 아이콘: mydiary에서 왔을 때만 */}
           {canEdit && menuOpen && (
-            <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
+            <div 
+              ref={menuRef}
+              className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50"
+            >
               <button
                 className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
                 onClick={(e) => {

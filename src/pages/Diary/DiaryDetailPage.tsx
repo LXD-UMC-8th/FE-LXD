@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import CorrectionsInFeedDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
@@ -14,12 +14,14 @@ import { useDeleteDiaryComments } from "../../hooks/mutations/DiaryComment/useDe
 import Avatar from "../../components/Common/Avatar";
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
+import useOutsideClick from "../../hooks/useOutsideClick";
+
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation() ;
   const { diaryId } = useParams<{ diaryId?: string }>();
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
@@ -29,6 +31,22 @@ const DiaryDetailPage = () => {
   const [openReplyId, setOpenReplyId] = useState<number | null>(null);
   const [commentText, setCommentText] = useState("");
   const [replyTexts, setReplyTexts] = useState<Record<number, string>>({});
+  // 댓글 페이지네이션
+  const [page, setPage] = useState(0);
+  const [commentsState, setCommentState] = useState<any[]>([]);
+  const [totalElements, setTotalElements] = useState(0);
+  const [hasNext, setHasNext] = useState(true);
+  const [ deleteOpen, setDeleteOpen ] = useState(false);
+  const deleteMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useOutsideClick(deleteMenuRef, () => setDeleteOpen(false));
+
+  // 총 개수의 안정값(로딩/이동 중에도 버튼이 안 사라지게)
+  const totalStableRef = useRef(0);
+
+  const PAGE_SIZE = 20;
+  const stableTotal = totalStableRef.current || totalElements;
+  const totalPages = Math.max(1, Math.ceil(stableTotal / PAGE_SIZE));
 
   const _toggleReplyInput = (id: number) => {
     setOpenReplyId((prev) => (prev === id ? null : id));
@@ -87,13 +105,41 @@ const DiaryDetailPage = () => {
   const { mutate: deleteDiaryComment, isPending: isDeletingComment } =
     useDeleteDiaryComments();
 
+  const loadCommentsPage = (p: number) => {
+    fetchDiaryComments(
+      { diaryId: parsedDiaryId, page: p, size: PAGE_SIZE },
+      {
+        onSuccess: (res: any) => {
+          const content = res?.result?.content ?? [];
+          const total = res?.result?.totalElements ?? 0;
+
+          setTotalElements(total);
+          totalStableRef.current = total; // 안정값 업데이트
+          setCommentState(content);
+
+          const isLast = res?.result?.last ?? ((p + 1) * PAGE_SIZE >= total);
+          setHasNext(!isLast);
+        },
+      }
+    );
+  };
+
   useEffect(() => {
     if (!hasValidId) return;
     fetchDiaryDetail({ diaryId: parsedDiaryId });
     fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
-    fetchDiaryComments({ diaryId: parsedDiaryId, page: 0, size: 20 });
+    setPage(0);
+    setCommentState([]);
+    loadCommentsPage(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasValidId, parsedDiaryId]);
+
+  // 페이지 이동
+  const goToPage = (p: number) => {
+    if (p < 0 || p >= totalPages) return;
+    setPage(p);
+    loadCommentsPage(p);
+  };
 
   // 잘못된 접근 처리
   if (!hasValidId) {
@@ -121,7 +167,7 @@ const DiaryDetailPage = () => {
       {
         onSuccess: () => {
           setCommentText("");
-          fetchDiaryComments({ diaryId: parsedDiaryId, page: 0, size: 20 });
+          goToPage(0); // 최신이 0페이지라고 가정
         },
       }
     );
@@ -146,7 +192,7 @@ const DiaryDetailPage = () => {
       {
         onSuccess: () => {
           setReplyTexts((prev) => ({ ...prev, [parentCommentId]: "" }));
-          fetchDiaryComments({ diaryId: parsedDiaryId, page: 0, size: 20 });
+          goToPage(page);
         },
       }
     );
@@ -158,14 +204,35 @@ const DiaryDetailPage = () => {
       { diaryId: parsedDiaryId, commentId },
       {
         onSuccess: () => {
-          fetchDiaryComments({ diaryId: parsedDiaryId, page: 0, size: 20 });
+          fetchDiaryComments(
+            { diaryId: parsedDiaryId, page, size: PAGE_SIZE }, // 현재 페이지 재조회
+            {
+              onSuccess: (res: any) => {
+                const content = res?.result?.content ?? [];
+                const total = res?.result?.totalElements ?? 0;
+
+                if (content.length === 0 && page > 0) {
+                  const prevPage = page - 1;
+                  setPage(prevPage);
+                  loadCommentsPage(prevPage);
+                } else {
+                  setTotalElements(total);
+                  totalStableRef.current = total; // 안정값 갱신
+                  setCommentState(content);
+                  const isLast =
+                    res?.result?.last ?? ((page + 1) * PAGE_SIZE >= total);
+                  setHasNext(!isLast);
+                }
+              },
+            }
+          );
         },
       }
     );
   };
 
-  const comments = commentData?.result?.content ?? [];
-  const commentTotal = commentData?.result?.totalElements ?? comments.length;
+  const comments = commentsState;
+  const commentTotal = stableTotal; // 표시도 안정 total 기준
 
   /** 로딩 처리 */
   if (isDiaryPending) return <LoadingModal />;
@@ -183,7 +250,6 @@ const DiaryDetailPage = () => {
               src={r.profileImage}
               alt={`${r.nickname ?? r.username ?? "profile"}의 프로필`}
               size="w-8 h-8"
-              // onClick={() => ()}
             />
             <div className="flex items-center gap-2">
               <span className="font-semibold text-sm">
@@ -245,7 +311,7 @@ const DiaryDetailPage = () => {
               writerNickname={diary.writerNickName}
               stats={[
                 {
-                  label: String(commentTotal ?? diary.commentCount ?? 0),
+                  label: String(stableTotal),
                   icon: "/images/CommonComponentIcon/CommentIcon.svg",
                   alt: "댓글",
                 },
@@ -276,7 +342,7 @@ const DiaryDetailPage = () => {
                 className="w-[24px] h-[24px]"
               />
               <span>
-                {t.Comment} ({commentTotal})
+                {t.Comment} ({stableTotal})
               </span>
             </div>
 
@@ -328,7 +394,6 @@ const DiaryDetailPage = () => {
                       src={c.profileImage}
                       alt={`${c.nickname ?? c.username ?? "profile"}의 프로필`}
                       size="w-9 h-9"
-                      // onClick={() => ()}
                     />
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-body2">
@@ -342,6 +407,32 @@ const DiaryDetailPage = () => {
                     <p className="text-caption text-gray-500 ml-auto">
                       {c.createdAt ?? ""}
                     </p>
+                    <div className="relative">
+                      {/* 더보기 아이콘 */}
+                      <img 
+                        src="/images/more_options.svg"
+                        className="w-5 h-5 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("더보기 클릭");
+                          setDeleteOpen((prev) => !prev);
+                        }}
+                      />
+                      {/* 더보기 아이콘 열렸을 때 (삭제 버튼) */}
+                      {deleteOpen && (
+                        <div 
+                          ref={deleteMenuRef}
+                          className="flex absolute top-6 left-2"
+                        >
+                          <button
+                            className="w-25 h-10 bg-white rounded-[5px] shadow-sm border border-gray-300 text-body2 text-alert whitespace-nowra hover:bg-gray-100 cursor-pointer"
+                            onClick={() => _handleDeleteComment(c.commentId)}
+                          >
+                            {t.DeleteDiary}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   {/* 본문 */}
@@ -381,15 +472,6 @@ const DiaryDetailPage = () => {
                       />
                       <span>{c.likeCount ?? 0}</span>
                     </div>
-
-                    {/* 삭제 */}
-                    <button
-                      onClick={() => _handleDeleteComment(c.commentId)}
-                      disabled={isDeletingComment}
-                      className="ml-auto px-2 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
-                    >
-                      {isDeletingComment ? "삭제 중..." : "삭제"}
-                    </button>
                   </div>
 
                   {/* 답글 영역 */}
@@ -434,6 +516,66 @@ const DiaryDetailPage = () => {
                 </div>
               );
             })}
+
+            {/* 페이지네이션 */}
+            <div className="mt-6 flex items-center justify-center gap-2">
+              <button
+                onClick={() => goToPage(0)}
+                disabled={page === 0 || isCommentsPending}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                처음
+              </button>
+              <button
+                onClick={() => goToPage(page - 1)}
+                disabled={page === 0 || isCommentsPending}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                이전
+              </button>
+
+              {(() => {
+                const windowSize = 5;
+                const start = Math.max(
+                  0,
+                  Math.min(
+                    page - Math.floor(windowSize / 2),
+                    totalPages - windowSize
+                  )
+                );
+                const end = Math.min(totalPages - 1, start + windowSize - 1);
+                const pages: number[] = [];
+                for (let i = start; i <= end; i++) pages.push(i);
+
+                return pages.map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => goToPage(p)}
+                    disabled={isCommentsPending}
+                    className={`px-3 py-1 border rounded ${
+                      p === page ? "bg-gray-900 text-white" : "hover:bg-gray-50"
+                    }`}
+                  >
+                    {p + 1}
+                  </button>
+                ));
+              })()}
+
+              <button
+                onClick={() => goToPage(page + 1)}
+                disabled={page >= totalPages - 1 || isCommentsPending}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                다음
+              </button>
+              <button
+                onClick={() => goToPage(totalPages - 1)}
+                disabled={page >= totalPages - 1 || isCommentsPending}
+                className="px-3 py-1 border rounded disabled:opacity-50"
+              >
+                마지막
+              </button>
+            </div>
           </div>
         </div>
       </div>

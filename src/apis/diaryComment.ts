@@ -15,8 +15,9 @@ export const postDiaryComments = async (
 
 export const getDiaryComments = async (
   body: DiaryCommentGetRequestDTO,
+  pageParam: number
 ): Promise<DiaryCommentGetResponseDTO> => {
-  const { diaryId, page = 1, size = 10 } = body;
+  const { diaryId, page = pageParam, size = 10 } = body;
 
   console.log("[REQ] GET", `/diaries/${diaryId}/comments?page=${page}&size=${size}`);
 
