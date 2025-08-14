@@ -35,7 +35,27 @@ const DiaryDetailPage = () => {
   };
 
   const _handleCorrectionsClick = () => {
-    navigate(`/feed/${parsedDiaryId}/corrections`);
+    const commentCount =
+      commentData?.result?.totalElements ??
+      commentData?.result?.content?.length;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    diary?.commentCount ?? 0;
+
+    const likeCount = diary?.likeCount ?? 0;
+    const correctCount = diary?.correctCount ?? 0;
+
+    navigate(`/feed/${parsedDiaryId}/corrections`, {
+      state: {
+        stats: {
+          commentCount,
+          likeCount,
+          correctCount,
+        },
+        meta: {
+          diaryId: parsedDiaryId,
+        },
+      },
+    });
   };
 
   /** 교정 댓글 조회 */
@@ -81,7 +101,7 @@ const DiaryDetailPage = () => {
       <div>
         <div>
           잘못된 접근입니다.
-          <button>피드로 돌아가기</button>
+          <button onClick={() => navigate("/feed")}>피드로 돌아가기</button>
         </div>
       </div>
     );
@@ -196,12 +216,18 @@ const DiaryDetailPage = () => {
           <PrevButton navigateURL={backURL} />
           <button
             onClick={_handleCorrectionsClick}
-            className="flex items-center justify-center bg-[#4170FE] text-[#F1F5FD] font-bold text-sm h-[43px] w-[118.7px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] hover:scale-105 duration-300 cursor-pointer"
+            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 
+            font-pretendard font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
           >
             <img
               src="/images/correctionpencil.svg"
               alt="교정 아이콘"
-              className="w-[20.7px] h-[21.06px]"
+              className="w-[20px] h-[21px] group-hover:hidden"
+            />
+            <img
+              src="/images/CorrectHover.svg"
+              alt="교정 아이콘 hover"
+              className="w-[20px] h-[21px] hidden group-hover:block transition-300"
             />
             {t.CorrectButton}
           </button>
@@ -211,7 +237,7 @@ const DiaryDetailPage = () => {
           {diary && (
             <DiaryContent
               title={diary.title}
-              language={diary.language}
+              lang={diary.language}
               visibility={diary.visibility}
               content={diary.content}
               profileImg={diary.profileImg}
@@ -234,6 +260,10 @@ const DiaryDetailPage = () => {
                   alt: "교정",
                 },
               ]}
+              diaryId={diary.diaryId}
+              createdAt={diary.createdAt ?? ""}
+              {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
+              thumbnail={diary.thumbnail}
             />
           )}
 
@@ -290,10 +320,8 @@ const DiaryDetailPage = () => {
                 Array.isArray(c.replies) && c.replies.length > 0;
 
               return (
-                <div
-                  key={c.commentId}
-                  className="border border-gray-200 rounded-lg p-5 mb-6"
-                >
+                <div key={c.commentId} className="p-4">
+                  <div className="border-t border-gray-200 mb-6" />
                   {/* 작성자 */}
                   <div className="flex items-center gap-3 mb-2">
                     <Avatar
@@ -374,7 +402,7 @@ const DiaryDetailPage = () => {
                       {/* 답글 입력 */}
                       <div className="flex items-center gap-2">
                         <textarea
-                          placeholder="답글을 입력하세요."
+                          placeholder={t.ReplyPlaceholder}
                           className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none border border-gray-300 rounded-[5px] px-3 py-2 
                                   focus:outline-none focus:ring-2 focus:ring-gray-200"
                           rows={1}
@@ -413,7 +441,11 @@ const DiaryDetailPage = () => {
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
         <div className="flex items-center gap-2">
-          <img src="/images/Correct.svg" className="w-5 h-5" />
+          <img
+            alt="correction image"
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
           <p className="text-subhead3 font-semibold py-3">
             {t.CorrectionsInDiary}
           </p>

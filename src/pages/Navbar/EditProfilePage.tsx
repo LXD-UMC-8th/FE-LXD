@@ -63,7 +63,7 @@ const EditProfilePage = () => {
             : null,
         removeProfileImg: _userInfo.profileImgAction === "remove",
       }),
-    onSuccess: (res) => {
+    onSuccess: (_res) => {
       qc.invalidateQueries({ queryKey: ["member", "profile"] });
       alert("프로필이 수정되었습니다.");
 
