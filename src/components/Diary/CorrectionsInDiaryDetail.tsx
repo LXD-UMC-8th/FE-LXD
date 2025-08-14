@@ -4,6 +4,8 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -12,6 +14,8 @@ type CorrectionsInDiaryDetailProps = {
 const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const { language } = useLanguage();
+  const t = translate[language];
 
   // 댓글 목록
   const {
@@ -21,14 +25,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   } = useGetCorrectionComments();
 
   // 댓글 등록
-  const { mutate: postComment, isPending: posting } = usePostCorrectionComment();
+  const { mutate: postComment, isPending: posting } =
+    usePostCorrectionComment();
 
   // 서버에서 받은 댓글 배열
   const comments = useMemo(
-    () =>
-      listData?.result?.contents ??
-      listData?.result?.content ??
-      [],
+    () => listData?.result?.content ?? listData?.result?.content ?? [],
     [listData]
   );
   // 총 댓글 수
@@ -129,7 +131,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c /* : CorrectionCommentDTO */) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
-                  <ProfileComponent 
+                  <ProfileComponent
                     member={{
                       memberId: c.memberId,
                       username: c.username,
@@ -139,7 +141,9 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                     createdAt={c.createdAt}
                   />
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
+                    <p className="text-body2 whitespace-pre-wrap">
+                      {c.content}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -151,12 +155,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              placeholder="댓글을 입력하세요."
+              placeholder={t.CommentPlaceholder}
               className="w-45 bg-gray-200 text-sm text-gray-800 resize-none rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-60"
               rows={1}
               disabled={posting}
               onKeyDown={(e) => {
-                if(e.key === "Enter" && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   _handleCommentSubmit();
                 }

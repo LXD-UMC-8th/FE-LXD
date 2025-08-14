@@ -12,7 +12,10 @@ import {
   isPasswordValid,
 } from "../../utils/validate";
 import { useSearchParams } from "react-router-dom";
-import { getEmail, postEmailVerificationinPWRequest, postEmailVerificationRequest } from "../../apis/auth";
+import {
+  getEmail,
+  postEmailVerificationinPWRequest,
+} from "../../apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
 import { patchMemberPassword } from "../../apis/members";
@@ -30,7 +33,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [searchParams] = useSearchParams();
 
-   const mutation = useMutation({
+  const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
       patchMemberPassword(payload),
     onSuccess: (data) => {
@@ -50,10 +53,10 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
     try {
-      const response = await postEmailVerificationinPWRequest(
-        userInfo.email,
-        "PASSWORD"
-      );
+      const response = await postEmailVerificationinPWRequest({
+        email: userInfo.email,
+        verificationType: "PASSWORD",
+      });
 
       if (response.isSuccess) {
         alert("이메일 인증 링크 전송 성공");
@@ -67,35 +70,36 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   };
 
   // 이메일 인증 링크에서 토큰 받아오기
-  useEffect(() => {
-    const token = searchParams.get("token");
-    if (token) {
-      handleVerifyEmailToken(token);
-    }
-  }, [searchParams]);
+useEffect(() => {
+  const token = searchParams.get("token");
+  if (token) {
+    handleVerifyEmailToken(token);
+  }
+}, [searchParams]);
 
-  // 이메일에서 들어온 인증 링크 토큰 처리 함수
-  const handleVerifyEmailToken = async (token: string) => {
-    try {
-      const emailInfoRes = await getEmail(token);
-      if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
-        console.error("이메일 조회 실패");
-      }
-      const verifiedEmail = emailInfoRes.result.email;
-
-      setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
-      setHasVerifiedByToken(true);
-      setEmailVerified(true);
-
-      console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
-      alert("이메일 인증 성공 및 조회 성공");
-    } catch (error) {
-      console.error("인증 실패:", error);
+// 이메일에서 들어온 인증 링크 토큰 처리
+const handleVerifyEmailToken = async (token: string) => {
+  try {
+    const emailInfoRes = await getEmail(token); 
+    if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
+      console.error("이메일 조회 실패");
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert("인증 실패:");
+      return;
     }
-  };
+    const verifiedEmail = emailInfoRes.result.email;
+    setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
+    setHasVerifiedByToken(true);
+    setEmailVerified(true);
+    console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
+    alert("이메일 인증 성공 및 조회 성공");
+  } catch (e) {
+    console.error("인증 실패:", e);
+    setHasVerifiedByToken(true);
+    setEmailVerified(false);
+    alert("인증 실패");
+  }
+};
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -174,13 +178,13 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   }, [isAllValid]);
 
   const handlePWChange = async () => {
-  if (mutation.isPending) return;  // 중복 클릭 방지
+    if (mutation.isPending) return; // 중복 클릭 방지
 
-  mutation.mutate({
-    email: userInfo.email,
-    newPassword: userInfo.password,
-    confirmNewPassword: userInfo.checkPassword,
-  });
+    mutation.mutate({
+      email: userInfo.email,
+      newPassword: userInfo.password,
+      confirmNewPassword: userInfo.checkPassword,
+    });
   };
 
   return (
@@ -219,7 +223,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
               />
             </div>
             {emailTouched &&
-              isEmailValid(userInfo.email) && 
+              isEmailValid(userInfo.email) &&
               hasVerifiedByToken && (
                 <>
                   {emailVerified ? (
@@ -252,7 +256,9 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
                 비밀번호 조건: ~~~
               </span>
             ) : (
-              <span className="text-body2 text-mint-500">유효한 비밀번호입니다</span>
+              <span className="text-body2 text-mint-500">
+                유효한 비밀번호입니다
+              </span>
             )}
           </div>
           <div className="flex flex-col space-y-2">

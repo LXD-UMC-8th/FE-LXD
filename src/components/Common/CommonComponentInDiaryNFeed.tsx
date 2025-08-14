@@ -26,12 +26,12 @@ const CommonComponentInDiaryNFeed = ({
   const navigate = useNavigate();
   console.log("props", props);
 
-  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
-  const [likeCount, setLikeCount] = useState<number>(props.likeCount);
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked || false);
+  const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
 
   const { mutate: likeMutate } = usePostLike({
     targetType: "diaries",
-    targetId: props.diaryId,
+    targetId: props.diaryId || 0,
   });
 
   //css를 외부에서 적용할지 말지 고민을 조금 해봐야할듯.
@@ -83,8 +83,10 @@ const CommonComponentInDiaryNFeed = ({
     }
   };
 
-  const handleToDetail = () => {
-    navigate(`/feed/${props.diaryId}`);
+  const goToDetail = () => {
+    navigate(`/feed/${props.diaryId}`, {
+      state: isMyDiaryTab ? { from: "mydiary" } : undefined,
+    });
   };
 
   const [DeleteLikeModal, setDeleteLikeModal] = useState<boolean>(false);
@@ -95,7 +97,9 @@ const CommonComponentInDiaryNFeed = ({
     switch (iconIndex) {
       case 0:
         // 댓글 아이콘 클릭 핸들러
-        navigate(`/feed/${props.diaryId}`);
+        navigate(`/feed/${props.diaryId}`, {
+          state: isMyDiaryTab ? { from: "mydiary" } : undefined,
+        });
         break;
       case 1:
         //좋아요 아이콘 클릭 핸들러
@@ -123,7 +127,7 @@ const CommonComponentInDiaryNFeed = ({
   return (
     <div
       className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4 cursor-pointer`}
-      onClick={handleToDetail}
+      onClick={goToDetail}
     >
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
@@ -139,16 +143,19 @@ const CommonComponentInDiaryNFeed = ({
                 size="w-9 h-9"
               />
               <div className="flex flex-col">
-                <span className="text-sm font-semibold text-black">
-                  {props.writerUsername}
-                </span>
-                <span className="text-xs text-gray-500">
-                  @{props.writerNickname}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold text-black">
+                    {props.writerUsername}
+                  </span>
+                  <div className="w-px h-4 bg-gray-500" />
+                  <span className="text-xs text-gray-500">
+                    @{props.writerNickname}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-400 mt-1">
+                  {props.createdAt}
                 </span>
               </div>
-              <span className="text-xs text-gray-400 ml-2 mt-0.5">
-                {props.createdAt}
-              </span>
             </div>
           ) : (
             isDiaryTab && (
@@ -174,9 +181,9 @@ const CommonComponentInDiaryNFeed = ({
                 alt="설정 아이콘"
               />
               {menuOpen && (
-                <div className="absolute top-8 right-0 bg-white border rounded-md shadow-lg w-28 z-50">
+                <div className="absolute top-8 right-0 bg-white border border-gray-400 rounded-md shadow-lg w-28 z-50">
                   <button
-                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-sm hover:bg-gray-100 text-left cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEdit();
@@ -185,7 +192,7 @@ const CommonComponentInDiaryNFeed = ({
                     {t.EditDiary}
                   </button>
                   <button
-                    className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left"
+                    className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete();
