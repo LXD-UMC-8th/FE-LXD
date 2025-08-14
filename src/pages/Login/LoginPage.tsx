@@ -14,13 +14,13 @@ const LoginPage = () => {
   // const t = translate[language];
   const navigate = useNavigate();
 
-  const { mutate: postSignin } = useSignin();
+  const { mutateAsync: postSignin } = useSignin();
   // 로그인 요청 함수
   const handleLogin = async () => {
     try {
       const response = await postSignin({ email, password });
 
-      if (response.isSuccess) {
+      if (response?.isSuccess) {
         const { accessToken, refreshToken, member } = response.result;
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
@@ -29,7 +29,7 @@ const LoginPage = () => {
         alert("로그인 되었습니다.");
         navigate("/");
       } else {
-        alert(response.message);
+        alert(response?.message ?? "로그인에 실패했습니다.");
       }
     } catch (error) {
       console.log("로그인 실패", error);
@@ -93,7 +93,7 @@ const LoginPage = () => {
           src="images/Language_Xchange_Diary.svg"
         />
       </header>
-      
+
       <div className="flex flex-col w-[430px] p-4 space-y-10">
         <form
           id="login-form"
@@ -108,8 +108,8 @@ const LoginPage = () => {
           />
 
           <FormInput
-            name={t.password}
-            placeholder={t.passwordPlaceholder}
+            name={password}
+            placeholder="passwordPlaceholder"
             input={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -125,7 +125,7 @@ const LoginPage = () => {
       bg-[#4170FE] hover:bg-blue-600 cursor-pointer transition 
       disabled:bg-gray-300"
           >
-            <span className="text-subhead3 text-white">{t.login}</span>
+            <span className="text-subhead3 text-white">login</span>
           </button>
           <button
             type="button"
@@ -135,7 +135,7 @@ const LoginPage = () => {
           >
             <img alt="google logo" src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
-              {t.googleLogin}
+              googleLogin
             </span>
           </button>
 
@@ -143,8 +143,8 @@ const LoginPage = () => {
             className="flex w-full justify-between text-body3 text-gray-700 py-3 
         underline underline-offset-2 cursor-pointer"
           >
-            <a href="/home/signup">{t.signup}</a>
-            <a href="/home/signup/change-pw">{t.changePassword}</a>
+            <a href="/home/signup">signup</a>
+            <a href="/home/signup/change-pw">changePassword</a>
           </div>
         </section>
       </div>

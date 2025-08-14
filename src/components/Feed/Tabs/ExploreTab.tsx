@@ -51,10 +51,10 @@ const ExploreTab = () => {
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
-  const handleOpenDiary = async (diaryId: number) => {
+  const handleOpenDiary = async (diaryId?: number) => {
     await queryClient.prefetchQuery({
       queryKey: ["diaryDetail", diaryId],
-      queryFn: () => getDiaryDetail(diaryId),
+      queryFn: () => getDiaryDetail(diaryId || 0),
       staleTime: 30_000,
     });
 

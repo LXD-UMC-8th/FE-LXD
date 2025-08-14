@@ -25,14 +25,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   } = useGetCorrectionComments();
 
   // 댓글 등록
-  const { mutate: postComment, isPending: posting } = usePostCorrectionComment();
+  const { mutate: postComment, isPending: posting } =
+    usePostCorrectionComment();
 
   // 서버에서 받은 댓글 배열
   const comments = useMemo(
-    () =>
-      listData?.result?.contents ??
-      listData?.result?.content ??
-      [],
+    () => listData?.result?.content ?? listData?.result?.content ?? [],
     [listData]
   );
   // 총 댓글 수
@@ -133,7 +131,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c /* : CorrectionCommentDTO */) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
-                  <ProfileComponent 
+                  <ProfileComponent
                     member={{
                       memberId: c.memberId,
                       username: c.username,
@@ -143,7 +141,9 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                     createdAt={c.createdAt}
                   />
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
+                    <p className="text-body2 whitespace-pre-wrap">
+                      {c.content}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -160,7 +160,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               rows={1}
               disabled={posting}
               onKeyDown={(e) => {
-                if(e.key === "Enter" && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
                   _handleCommentSubmit();
                 }

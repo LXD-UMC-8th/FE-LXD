@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
-import { useLanguage } from "../../../context/LanguageProvider";
-import { translate } from "../../../context/translate";
+// import { useLanguage } from "../../../context/LanguageProvider";
+// import { translate } from "../../../context/translate";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;
@@ -21,8 +21,8 @@ const ProfileInfo = ({
   _onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     _onImageChange(e);

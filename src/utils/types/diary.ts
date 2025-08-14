@@ -109,17 +109,17 @@ export type getDiarySummary = APIResponse<DiarySummary>;
 export type getDiariesResponseDTO = APIResponse<getDiariesResult>;
 
 export type diaries = {
-  diaryId: number;
-  createdAt: string;
-  title: string;
-  visibility: string;
-  thumbnailUrl: string;
-  likeCount: number;
-  commentCount: number;
-  correctionCount: number;
-  contentPreview: string;
-  language: string;
-  isLiked: boolean;
+  diaryId?: number;
+  createdAt?: string;
+  title?: string;
+  visibility?: string;
+  thumbnailUrl?: string;
+  likeCount?: number;
+  commentCount?: number;
+  correctionCount?: number;
+  contentPreview?: string;
+  language?: string;
+  isLiked?: boolean;
   writerUsername?: string;
   writerNickname?: string;
   writerProfileImg?: string;

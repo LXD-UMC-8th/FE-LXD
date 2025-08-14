@@ -108,7 +108,8 @@ const ProvideCorrections = () => {
   }, []);
 
   const handleSubmit = () => {
-    if (!editedText.trim() || !description.trim() || !selectedText.trim()) return;
+    if (!editedText.trim() || !description.trim() || !selectedText.trim())
+      return;
 
     postCorrection(
       {
@@ -155,14 +156,26 @@ const ProvideCorrections = () => {
             writerNickname={diary?.writerNickName}
             writerUsername={diary?.writerUserName}
             stats={[
-              { label: String(commentCount), icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
-              { label: String(likeCount), icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
-              { label: String(correctCount), icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
+              {
+                label: String(commentCount),
+                icon: "/images/CommonComponentIcon/CommentIcon.svg",
+                alt: "댓글",
+              },
+              {
+                label: String(likeCount),
+                icon: "/images/CommonComponentIcon/LikeIcon.svg",
+                alt: "좋아요",
+              },
+              {
+                label: String(correctCount),
+                icon: "/images/CommonComponentIcon/CorrectIcon.svg",
+                alt: "교정",
+              },
             ]}
             diaryId={diary?.diaryId ?? 0}
             createdAt={diary?.createdAt ?? ""}
             {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-            contentRootRef={contentAreaRef}
+            // contentRootRef={contentAreaRef}
           />
         </div>
       </div>
@@ -178,10 +191,16 @@ const ProvideCorrections = () => {
             onClick={() => setShowModal(false)}
             className="absolute top-7 right-5 cursor-pointer"
           >
-            <img src="/images/DeleteButton.svg" className="w-3 h-3" alt="닫기 버튼" />
+            <img
+              src="/images/DeleteButton.svg"
+              className="w-3 h-3"
+              alt="닫기 버튼"
+            />
           </button>
 
-          <h2 className="text-subhead3 font-semibold mb-4">{t.ProvideCorrect}</h2>
+          <h2 className="text-subhead3 font-semibold mb-4">
+            {t.ProvideCorrect}
+          </h2>
           <div className="border-t border-gray-300 my-4" />
 
           <div className="flex flex-col gap-3">
@@ -218,8 +237,16 @@ const ProvideCorrections = () => {
               onClick={handleSubmit}
               className="group absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
-              <img src="/images/correctionpencil.svg" alt="교정 아이콘" className="w-5 h-5 group-hover:hidden" />
-              <img src="/images/CorrectHover.svg" alt="교정 아이콘 hover" className="w-5 h-5 hidden group-hover:block transition-300" />
+              <img
+                src="/images/correctionpencil.svg"
+                alt="교정 아이콘"
+                className="w-5 h-5 group-hover:hidden"
+              />
+              <img
+                src="/images/CorrectHover.svg"
+                alt="교정 아이콘 hover"
+                className="w-5 h-5 hidden group-hover:block transition-300"
+              />
               {t.CorrectEnroll}
             </button>
           </div>
@@ -230,14 +257,19 @@ const ProvideCorrections = () => {
       <div className="flex flex-col px-5 gap-3 select-none">
         <div className="flex items-center gap-2">
           <img src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+          <p className="text-subhead3 font-semibold py-3">
+            {t.CorrectionsInDiary}
+          </p>
         </div>
 
         {isCorrectionsPending && <LoadingModal />}
 
         {(correctionData?.result?.corrections?.contents ?? []).map(
           (correction: ContentsDTO) => (
-            <CorrectionsInDiaryDetail key={correction.correctionId} props={correction} />
+            <CorrectionsInDiaryDetail
+              key={correction.correctionId}
+              props={correction}
+            />
           )
         )}
       </div>

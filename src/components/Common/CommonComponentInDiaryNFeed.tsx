@@ -26,12 +26,12 @@ const CommonComponentInDiaryNFeed = ({
   const navigate = useNavigate();
   console.log("props", props);
 
-  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked);
-  const [likeCount, setLikeCount] = useState<number>(props.likeCount);
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked || false);
+  const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
 
   const { mutate: likeMutate } = usePostLike({
     targetType: "diaries",
-    targetId: props.diaryId,
+    targetId: props.diaryId || 0,
   });
 
   //css를 외부에서 적용할지 말지 고민을 조금 해봐야할듯.
@@ -85,7 +85,7 @@ const CommonComponentInDiaryNFeed = ({
 
   const goToDetail = () => {
     navigate(`/feed/${props.diaryId}`, {
-      state: isMyDiaryTab ? {from: "mydiary" } : undefined,
+      state: isMyDiaryTab ? { from: "mydiary" } : undefined,
     });
   };
 
