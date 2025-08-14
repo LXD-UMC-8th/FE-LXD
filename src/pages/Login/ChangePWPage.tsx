@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
 import FormInput from "../../components/Login/FormInput";
@@ -11,8 +11,11 @@ import {
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useSearchParams } from "react-router-dom";
+import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
+import { useMutation } from "@tanstack/react-query";
+import type { ChangePasswordRequestDTO } from "../../utils/types/member";
+import { patchMemberPassword } from "../../apis/members";
 
 interface ChangePWPageProps {
   userInfo: SignupFlowProps;
@@ -20,63 +23,154 @@ interface ChangePWPageProps {
 }
 
 const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
-  const [hasTriedVerify, setHasTriedVerify] = useState(false); // 인증하기 버튼 눌렀는지 상태관리
-  const [emailVerified, setEmailVerified] = useState(false); // 이메일 인증 완료 여부 상태관리
+  const [hasVerifiedByToken, setHasVerifiedByToken] = useState(false); // 이메일 토큰 인증 시도 여부 상태관리
+  const [emailVerified, setEmailVerified] = useState(false); // 이메일 최종 인증 여부 상태관리
   const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  // 이메일 인증 모킹 함수 (나중에 삭제)
-  async function fakeEmailVerify(
-    _email: string,
-    mode: "available" | "taken" | "random" = "available"
-  ): Promise<{ ok: boolean }> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (mode === "random") {
-          const available = Math.random() > 0.5;
-          resolve({ ok: available });
-          return;
-        }
-        resolve({ ok: mode === "available" });
-      }, 500);
-    });
-  }
+//  const [hasTriedVerify, setHasTriedVerify] = useState(false); // 인증하기 버튼 눌렀는지 상태관리
+//     // 이메일 인증 모킹 함수 (나중에 삭제)
+//   async function fakeEmailVerify(
+//     email: string,
+//     mode: "available" | "taken" | "random" = "available"
+//   ): Promise<{ ok: boolean }> {
+//     return new Promise((resolve) => {
+//       setTimeout(() => {
+//         if (mode === "random") {
+//           const available = Math.random() > 0.5;
+//           resolve({ ok: available });
+//           return;
+//         }
+//         resolve({ ok: mode === "available" });
+//       }, 500);
+//     });
+//   }
+// const handleEmailCheck = async () => {
+//     setHasTriedVerify(true);
+//     try {
+//       const response = await fakeEmailVerify(userInfo.email, "random");
 
+//       if (!response.ok) {
+//         console.log("인증 실패");
+//         setEmailVerified(false);
+//         return;
+//       }
+//       setEmailVerified(true);
+//       console.log("이메일 인증 성공");
+//     } catch (error) {
+//       alert("인증할 수 없는 이메일입니다");
+//       console.error("인증 실패:", error);
+//     }
+//   };
+
+   const mutation = useMutation({
+    mutationFn: (payload: ChangePasswordRequestDTO) =>
+      patchMemberPassword(payload),
+    onSuccess: (data) => {
+      if (data.isSuccess) {
+        alert("비밀번호가 성공적으로 변경되었습니다.");
+        console.log("비밀번호 변경 성공:", data);
+      } else {
+        alert(data.message || "비밀번호 변경에 실패했습니다.");
+      }
+    },
+    onError: (error) => {
+      console.error("비밀번호 변경 중 오류 발생:", error);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
+    },
+  });
+
+  // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
-    setHasTriedVerify(true);
     try {
-      // 여기에 이메일 인증 API 요청이 들어감 (나중에 axios로 대체)
-      const response = await fakeEmailVerify(userInfo.email, "random");
+      const response = await postEmailVerificationRequest(
+        userInfo.email,
+        "EMAIL"
+      );
 
-      if (!response.ok) {
-        console.log("인증 실패");
-        setEmailVerified(false);
+      if (response.isSuccess) {
+        alert("이메일 인증 링크 전송 성공");
+        console.log("이메일 인증 링크 전송 성공");
         return;
       }
-      setEmailVerified(true);
-      console.log("이메일 인증 성공");
     } catch (error) {
-      alert("인증할 수 없는 이메일입니다");
-      console.error("인증 실패:", error);
+      alert("발송 실패:");
+      console.error("발송 실패:", error);
     }
   };
+
+  // 이메일 인증 링크에서 토큰 받아오기
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      handleVerifyEmailToken(token);
+    }
+  }, [searchParams]);
+
+  // 이메일에서 들어온 인증 링크 토큰 처리 함수
+  const handleVerifyEmailToken = async (token: string) => {
+    try {
+      const emailInfoRes = await getEmail(token);
+      if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
+        console.error("이메일 조회 실패");
+      }
+      const verifiedEmail = emailInfoRes.result.email;
+
+      setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
+      setHasVerifiedByToken(true);
+      setEmailVerified(true);
+
+      console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
+      alert("이메일 인증 성공 및 조회 성공");
+    } catch (error) {
+      console.error("인증 실패:", error);
+      setHasVerifiedByToken(true);
+      setEmailVerified(false);
+      alert("인증 실패:");
+    }
+  };
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.emailVerified && event.data.email) {
+        setUserInfo((prev) => ({ ...prev, email: event.data.email }));
+        setEmailVerified(true);
+        setHasVerifiedByToken(true);
+        alert("이메일 인증이 완료되었습니다!");
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   const handleInputChange = (key: keyof typeof userInfo, value: string) => {
     setUserInfo((prev) => ({ ...prev, [key]: value }));
   };
 
-  const isAllValid = () => {
-    const _isEmailValid = isEmailValid(userInfo.email);
+  const isAllValid = useCallback(() => {
+    const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
     const _isPasswordValid = isPasswordValid(userInfo.password);
     const _isPasswordChecked = isPasswordMatch(
       userInfo.password,
       userInfo.checkPassword
     );
 
-    return _isEmailValid && _isPasswordValid && _isPasswordChecked;
-  };
+    return (
+      _isEmailValid &&
+      _isPasswordValid &&
+      _isPasswordChecked &&
+      userInfo.isPrivacy
+    );
+  }, [
+    userInfo.email,
+    userInfo.password,
+    userInfo.checkPassword,
+    userInfo.isPrivacy,
+    emailVerified,
+  ]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,52 +178,44 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
     handlePWChange();
   };
 
-   // 전역 Enter/Space
-    useEffect(() => {
-      const onGlobalKey = (e: KeyboardEvent) => {
-        if (e.isComposing || e.repeat) return;
-  
-        const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
-        const isFormField =
-          tag === "input" ||
-          tag === "textarea" ||
-          tag === "select" ||
-          tag === "button";
-  
-        const isEnter = e.key === "Enter";
-        const isSpace = e.code === "Space";
-  
-        if ((isEnter || isSpace) && !isFormField) {
-          if (!isAllValid()) return;
-          e.preventDefault();
-          const form = document.getElementById(
-            "profile-form"
-          ) as HTMLFormElement | null;
-          if (form?.requestSubmit) form.requestSubmit();
-          else form?.submit();
-        }
-      };
-  
-      window.addEventListener("keydown", onGlobalKey);
-      return () => window.removeEventListener("keydown", onGlobalKey);
-    }, [isAllValid]);
+  // 전역 Enter/Space
+  useEffect(() => {
+    const onGlobalKey = (e: KeyboardEvent) => {
+      if (e.isComposing || e.repeat) return;
+
+      const tag = (e.target as HTMLElement | null)?.tagName?.toLowerCase();
+      const isFormField =
+        tag === "input" ||
+        tag === "textarea" ||
+        tag === "select" ||
+        tag === "button";
+
+      const isEnter = e.key === "Enter";
+      const isSpace = e.code === "Space";
+
+      if ((isEnter || isSpace) && !isFormField) {
+        if (!isAllValid()) return;
+        e.preventDefault();
+        const form = document.getElementById(
+          "changepw-form"
+        ) as HTMLFormElement | null;
+        if (form?.requestSubmit) form.requestSubmit();
+        else form?.submit();
+      }
+    };
+
+    window.addEventListener("keydown", onGlobalKey);
+    return () => window.removeEventListener("keydown", onGlobalKey);
+  }, [isAllValid]);
 
   const handlePWChange = async () => {
-    const payload = {
-      password: userInfo.password,
-    };
-    try {
-      const response = await axios.post(
-        "비밀번호 변경 API (로그인 전)",
-        payload
-      );
-      console.log("비밀번호 변경 성공", response.data);
-      alert("비밀번호가 정상적으로 변경되었습니다");
-    } catch (err) {
-      console.error("비밀번호 변경 실패:", err);
-      alert("비밀번호 변경 실패, 다시 시도해주세요");
-    }
-    navigate("/home");
+  if (mutation.isPending) return;  // 중복 클릭 방지
+
+  mutation.mutate({
+    email: userInfo.email,
+    newPassword: userInfo.password,
+    confirmNewPassword: userInfo.checkPassword,
+  });
   };
 
   return (
@@ -144,9 +230,11 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
           <TitleHeader title="비밀번호 변경" />
         </section>
 
-        <form id="changepw-form"
-        onSubmit={handleSubmit}
-        className="w-full h-[390px] space-y-5">
+        <form
+          id="changepw-form"
+          onSubmit={handleSubmit}
+          className="w-full h-[390px] space-y-5"
+        >
           <div className="flex flex-col space-y-2">
             <div className="flex gap-2 items-end">
               <div className="flex-1">
@@ -166,25 +254,20 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
               />
             </div>
             {emailTouched &&
-              userInfo.email.trim() !== "" &&
-              !isEmailValid(userInfo.email) && (
-                <span className="text-body2 text-red-500">
-                  유효하지 않은 형식입니다
-                </span>
+              isEmailValid(userInfo.email) && 
+              hasVerifiedByToken && (
+                <>
+                  {emailVerified ? (
+                    <span className="text-body2 text-mint-500">
+                      인증되었습니다
+                    </span>
+                  ) : (
+                    <span className="text-body2 text-red-500">
+                      인증할 수 없는 이메일입니다
+                    </span>
+                  )}
+                </>
               )}
-            {emailTouched && isEmailValid(userInfo.email) && hasTriedVerify && (
-              <>
-                {emailVerified ? (
-                  <span className="text-body2 text-mint-500">
-                    인증되었습니다
-                  </span>
-                ) : (
-                  <span className="text-body2 text-red-500">
-                    사용할 수 없는 이메일입니다
-                  </span>
-                )}
-              </>
-            )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
@@ -195,14 +278,17 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
               onBlur={() => setPasswordTouched(true)}
               type="password"
             />
-            {passwordTouched &&
-              userInfo.password.trim() !== "" &&
-              !isPasswordValid(userInfo.password) && (
-                <span className="text-body2 text-red-500">
-                  비밀번호는 10자 이상, 영문 대소문자/숫자/특수문자를 포함해야
-                  합니다
-                </span>
-              )}
+            {!passwordTouched || userInfo.password.trim() === "" ? (
+              <span className="text-body2 text-gray-600">
+                비밀번호 조건: ~~~
+              </span>
+            ) : !isPasswordValid(userInfo.password) ? (
+              <span className="text-body2 text-red-500">
+                비밀번호 조건: ~~~
+              </span>
+            ) : (
+              <span className="text-body2 text-mint-500">유효한 비밀번호입니다</span>
+            )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
