@@ -40,11 +40,27 @@ export type getEmailResponse = {
 export type getEmailResponseDTO = APIResponse<getEmailResponse>;
 
 //reissue DTO
-export type postReissueRequestDTO = {
-  refreshToken: string;
-};
 export type postReissueResponseDTO = APIResponse<{
   accessToken: string;
   refreshToken: string;
 }>;
 
+// 구글 로그인 DTO
+export type GoogleLoginRequestDTO = {
+  code: string;
+};
+export type GoogleLoginResponse = {
+  isNewMember: boolean;
+  accessToken: string;
+  refreshToken: string;
+  member: {
+    memberId: number;
+    email: string;
+    username: string;
+    nickname: string;
+    profileImg: string;
+    nativeLanguage: "KO" | "ENG";
+    studyLanguage: "KO" | "ENG";
+  };
+};
+export type GoogleLoginResponseDTO = APIResponse<GoogleLoginResponse>;
