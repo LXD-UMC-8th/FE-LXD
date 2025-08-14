@@ -3,51 +3,7 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
-    explore: string;
-    email: string;
     emailPlaceholder: string;
-    password: string;
-    Likes: string;
-    passwordPlaceholder: string;
-    login: string;
-    googleLogin: string;
-    signup: string;
-    changePassword: string;
-    signupHeader: string;
-    beforeVerify: string;
-    afterVerify: string;
-    comfirmPassword: string;
-    TosAgreed: string;
-    nextButton: string;
-    emailVerifiedToast: string;
-    emailErrorToast: string;
-    pwConditionToast: string;
-    pwValidToast: string;
-    pwConfirmedToast: string;
-    pwNotConfirmedToast: string;
-    profileHeader: string;
-    addPhoto: string;
-    id: string;
-    idPlaceholder: string;
-    idCheck: string;
-    idConditionToast: string;
-    idAvaliableToast: string;
-    idNotAvaliableToast: string;
-    nickname: string;
-    nicknamePlaceholder: string;
-    nicknameConditionToast: string;
-    primaryLang: string;
-    learningLang: string;
-    langPlaceholder: string;
-    signupButton: string;
-    loginSuccessAlert: string;
-    loginErrorAlert: string;
-    emailLinkSuccessAlert: string;
-    emailLinkErrorAlert: string;
-    emailVerifySuccessAlert: string;
-    emailVerifyErrorAlert: string;
-    signupSuccessAlert: string;
-    signupErrorAlert: string;
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
     titleStyle_FREE: string;
@@ -115,23 +71,17 @@ export const translate: Record<
     friendsTotalLabel: string;
     receivedRequestsTitle: string;
     sentRequestsTitle: string;
-    requestsCountLabel: string;
-    acceptButton: string;
-    deleteButton: string;
-    cancelButton: string;
-    pendingLabel: string;
+    requestsCountLabel: string; 
+    acceptButton: string; 
+    deleteButton: string; 
+    cancelButton: string; 
+    pendingLabel: string; 
     friendRequestFailed: string;
     profileImageAlt: string;
     sendFriendRequestButton: string;
     viewDiaryButton: string;
     refuseButton: string;
     loadingLabel: string;
-    CommentSubmit: string;
-    Comment: string;
-    CorrectionsInDiary: string;
-    CorrectButton: string;
-    CommentPlaceholder: string;
-    ReplyPlaceholder: string;
     User: string;
     EditProfile: string;
     SignOut: string;
@@ -140,62 +90,12 @@ export const translate: Record<
     LogOutStatementBack: string;
     CompleteLogOut: string;
     Close: string;
-    ProvideCorrect: string;
-    CorrectSentence: string;
-    CorrectExp: string;
-    CorrectEnroll: string;
-    CompleteCorrect: string;
   }
+
+  
 > = {
   [Language.ENGLISH]: {
-    Likes: "Likes",
-    email: "Email",
-    emailPlaceholder: "Enter your email",
-    password: "Password",
-    passwordPlaceholder: "Enter your password",
-    login: "Login",
-    googleLogin: "Start with Google",
-    signup: "Sign-up",
-    changePassword: "Forgot password?",
-    signupHeader: "Enter your information to create an account",
-    beforeVerify: "Verify",
-    afterVerify: "Verified",
-    comfirmPassword: "Confirm Password",
-    TosAgreed: "I agree to the Terms of Service and Privacy Policy",
-    nextButton: "Next",
-    emailVerifiedToast: "Your email has verified",
-    emailErrorToast: "Cannot send verification email to that address",
-    pwConditionToast:
-      "At least 8 characters, including uppercase, lowercase, and a number.",
-    pwValidToast: "Passwords are valid",
-    pwConfirmedToast: "Passwords match",
-    pwNotConfirmedToast: "Passwords do not match",
-    profileHeader: "Enter the information to create your profile",
-    addPhoto: "Add Photo",
-    id: "ID",
-    idPlaceholder: "Enter your ID",
-    idCheck: "Check",
-    idConditionToast:
-      "At least 2 characters, you can only use lowercase, numbers, and symbols(-._).",
-    idAvaliableToast: "ID is avaliable.",
-    idNotAvaliableToast: "ID is already in use.",
-    nickname: "Nickname",
-    nicknamePlaceholder: "Enter your nickname",
-    nicknameConditionToast: "Maximum 20 characters",
-    primaryLang: "Primary Language",
-    learningLang: "Learning Language",
-    langPlaceholder: "Select Language",
-    signupButton: "Sign Up",
-    loginSuccessAlert: "Login Complete.",
-    loginErrorAlert: "Login Error. Please try it again.",
-    emailLinkSuccessAlert:
-      "An authentication link has been sent to the email you provided. Please click the link to complete the authentication.",
-    emailLinkErrorAlert:
-      "Failed to send verification email. Please try it again.",
-    emailVerifySuccessAlert: "Verified.",
-    emailVerifyErrorAlert: "Verification Error. Please try it again.",
-    signupSuccessAlert: "Signup Complete! You can now log in to your account.",
-    signupErrorAlert: "Signup Error. Please try it again.",
+    emailPlaceholder: "Please enter your email",
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -263,7 +163,7 @@ export const translate: Record<
     friendsTotalLabel: "{count} friends in total",
     receivedRequestsTitle: "Received requests",
     sentRequestsTitle: "Sent requests",
-    requestsCountLabel: "{count}", // 배지: 12
+    requestsCountLabel: "{count}",         // 배지: 12
     acceptButton: "Accept",
     deleteButton: "Delete",
     cancelButton: "Cancel",
@@ -274,12 +174,6 @@ export const translate: Record<
     viewDiaryButton: "View diary",
     refuseButton: "Decline",
     loadingLabel: "Loading…",
-    CommentSubmit: "Post",
-    Comment: "Comments",
-    CorrectionsInDiary: "Provided Corrections",
-    CorrectButton: "Correct",
-    CommentPlaceholder: "Write a comment",
-    ReplyPlaceholder: "Write a Reply",
     User: "",
     EditProfile: "Edit Profile",
     SignOut: "Log Out",
@@ -288,59 +182,9 @@ export const translate: Record<
     LogOutStatementBack: "on LXD?",
     CompleteLogOut: "Logout is complete.",
     Close: "Close",
-    ProvideCorrect: "Provide Corrections",
-    CorrectSentence: "Please add an corrections",
-    CorrectExp: "Please add an explanation",
-    CorrectEnroll: "Post",
-    CompleteCorrect: "Complete",
-    explore: "Explore",
   },
   [Language.KOREAN]: {
-    email: "이메일",
     emailPlaceholder: "이메일을 입력해주세요",
-    password: "비밀번호",
-    passwordPlaceholder: "비밀번호를 입력해주세요",
-    login: "로그인",
-    googleLogin: "Google 로 시작하기",
-    signup: "회원가입",
-    changePassword: "비밀번호 변경",
-    signupHeader: "계정 생성을 위해 정보를 입력해주세요",
-    beforeVerify: "인증하기",
-    afterVerify: "인증완료",
-    comfirmPassword: "비밀번호 확인",
-    TosAgreed: "이용약관 및 개인정보 처리 방침에 동의합니다",
-    nextButton: "다음으로",
-    emailVerifiedToast: "인증되었습니다",
-    emailErrorToast: "입력하신 이메일로 인증 메일을 보낼 수 없습니다",
-    pwConditionToast: "8자 이상, 대소문자, 숫자 포함",
-    pwValidToast: "유효한 비밀번호입니다",
-    pwConfirmedToast: "비밀번호가 일치합니다",
-    pwNotConfirmedToast: "비밀번호가 일치하지 않습니다",
-    profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
-    addPhoto: "사진 추가",
-    id: "아이디",
-    idPlaceholder: "아이디를 입력해주세요",
-    idCheck: "중복확인",
-    idConditionToast: "2자 이상, 영어 소문자, 숫자, 특수기호(-._)만 사용가능",
-    idAvaliableToast: "사용가능한 아이디입니다.",
-    idNotAvaliableToast: "이미 사용중인 아이디입니다.",
-    nickname: "닉네임",
-    nicknamePlaceholder: "닉네임을 입력해주세요",
-    nicknameConditionToast: "최대 20자",
-    primaryLang: "모국어 / 주사용 언어",
-    learningLang: "학습 언어",
-    langPlaceholder: "언어 선택",
-    signupButton: "가입완료",
-    loginSuccessAlert: "로그인 되었습니다.",
-    loginErrorAlert: "로그인 중 오류가 발생하였습니다. 다시 시도해주세요.",
-    emailLinkSuccessAlert:
-      "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요.",
-    emailLinkErrorAlert: "인증 메일 발송 중 오류 발생. 다시 시도해주세요.",
-    emailVerifySuccessAlert: "인증되었습니다.",
-    emailVerifyErrorAlert:
-      "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
-    signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
-    signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",
@@ -387,7 +231,7 @@ export const translate: Record<
     SidebarDiary: "나의 다이어리",
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
-    SidebarSettings: "설정",
+    SidebarSettings: "설정", 
     findFriendsHeadline: "전 세계에서 친구를 찾아보세요",
     findFriendsDesc1: "검색창에 아이디를 입력해서 친구를 찾아보세요.",
     findFriendsDesc2: "다른 사람과 친구를 맺고, 다이어리를 구경해보세요.",
@@ -408,7 +252,7 @@ export const translate: Record<
     friendsTotalLabel: "총 {count}명",
     receivedRequestsTitle: "내가 받은 요청",
     sentRequestsTitle: "내가 보낸 요청",
-    requestsCountLabel: "{count}개",
+    requestsCountLabel: "{count}개", 
     acceptButton: "수락",
     deleteButton: "삭제",
     cancelButton: "취소",
@@ -419,12 +263,6 @@ export const translate: Record<
     viewDiaryButton: "다이어리 보러가기",
     refuseButton: "거절",
     loadingLabel: "로딩중…",
-    CommentSubmit: "등록",
-    Comment: "댓글",
-    CorrectionsInDiary: "작성된 교정",
-    CorrectButton: "교정하기",
-    CommentPlaceholder: "댓글을 입력해주세요",
-    ReplyPlaceholder: "답글을 입력해주세요",
     User: "님",
     EditProfile: "프로필 수정",
     SignOut: "로그아웃",
@@ -433,12 +271,6 @@ export const translate: Record<
     LogOutStatementBack: "계정을 로그아웃하시겠습니까?",
     CompleteLogOut: "로그아웃이 완료되었습니다.",
     Close: "닫기",
-    ProvideCorrect: "교정 제공하기",
-    CorrectSentence: "교정된 문장을 입력하세요.",
-    CorrectExp: "교정 이유를 작성해주세요.",
-    CorrectEnroll: "등록하기",
-    CompleteCorrect: "교정완료",
-    explore: "탐색",
-    Likes: "좋아요",
+
   },
 };
