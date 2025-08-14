@@ -278,7 +278,7 @@ const DiaryDetailPage = () => {
                 <button
                   className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
                   onClick={() => {
-                    if (!confirm("답글을 삭제하시겠습니까?")) return;
+                    if (!confirm(t.DeleteReplyAlert)) return;
                     setOpenMenuId(null);
                     _handleDeleteComment(r.commentId);
                   }}
@@ -463,7 +463,7 @@ const DiaryDetailPage = () => {
                           <button
                             className="min-w-[96px] h-9 bg-white rounded-[5px] shadow-sm border border-gray-300 text-sm text-red-600 whitespace-nowrap hover:bg-gray-100 cursor-pointer px-3"
                             onClick={() => {
-                              if(!confirm("댓글을 삭제하시겠습니까?")) return;
+                              if(!confirm(t.DeleteCommentAlert)) return;
                               setOpenMenuId(null);
                               _handleDeleteComment(c.commentId);
                             }
