@@ -11,8 +11,6 @@ import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
-// import { useLanguage } from "../../context/LanguageProvider";
-// import { translate } from "../../context/translate";
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -26,8 +24,6 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
-  // const { language } = useLanguage();
-  // const t = translate[language];
 
   const handleIDCheck = async () => {
     setIdTouched(true);

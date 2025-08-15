@@ -22,7 +22,7 @@ const PrevButton = ({ navigateURL }: PrevButtonProps) => {
         src={prevvector}
         className="cursor-pointer"
         onClick={handleNavigate}
-        alt="뒤로가기"
+        alt="To back"
       />
     </div>
   );

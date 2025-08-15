@@ -1,25 +1,14 @@
 import { useEffect, useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-//import { useLanguage } from "../../context/LanguageProvider";
-// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
-// import { useGoogleLogin } from "@react-oauth/google";
-// import type {
-//   GoogleLoginRequestDTO,
-//   GoogleLoginResponseDTO,
-// } from "../../utils/types/auth";
-// import { postGoogleLogin } from "../../apis/auth";
-// import { axiosInstance } from "../../apis/axios";
-
+import { setLocalStorageItem } from "../../apis/axios";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { language } = useLanguage();
-  // const t = translate[language];
   const navigate = useNavigate();
 
   const { mutateAsync: postSignin } = useSignin();
@@ -32,6 +21,7 @@ const LoginPage = () => {
         const { accessToken, refreshToken, member } = response.result;
         localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
+        setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
         alert("로그인 되었습니다.");

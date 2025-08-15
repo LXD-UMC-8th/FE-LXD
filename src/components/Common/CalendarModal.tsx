@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getDiaryStats } from "../../apis/diary";
+import { translate } from "../../context/translate";
+import { useLanguage } from "../../context/LanguageProvider";
 
 interface value {
   date: string;
@@ -9,12 +11,12 @@ interface value {
 }
 
 const CalendarModal = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const [_values, setValues] = useState<value[]>([]);
   const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
   const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
-
-  const _isFirstRender = useRef(true);
 
   const _datesToRequest = useMemo(() => {
     const current = new Date(activeStartDate);
@@ -31,13 +33,10 @@ const CalendarModal = () => {
     ];
   }, [activeStartDate]);
 
-  useEffect(() => {
-    if (_isFirstRender.current) {
-      _isFirstRender.current = false;
-      return;
-    }
-    console.log("calendarModal re-rendering");
+  console.log("this is CalendarModal");
+  console.log("dates to request", _datesToRequest);
 
+  useEffect(() => {
     Promise.all(_datesToRequest.map(getDiaryStats))
       .then((response) => {
         const merged: value[] = response.flatMap((r) => r?.result || []);
@@ -54,7 +53,7 @@ const CalendarModal = () => {
         acc[date] = count;
         return acc;
       },
-      {},
+      {}
     );
   }, [_values]);
 
@@ -78,7 +77,15 @@ const CalendarModal = () => {
             .toUpperCase()}`
         }
         formatShortWeekday={(_locale, date) =>
-          ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"][date.getDay()]
+          [
+            t.Sunday,
+            t.Monday,
+            t.Tuesday,
+            t.Wednesday,
+            t.Thursday,
+            t.Friday,
+            t.Saturday,
+          ][date.getDay()]
         }
         locale="en-US"
         prev2Label={null}

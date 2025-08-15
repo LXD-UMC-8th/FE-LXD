@@ -56,6 +56,8 @@ const UserDetailPage = () => {
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
+  
+
   return (
     <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
       <div>

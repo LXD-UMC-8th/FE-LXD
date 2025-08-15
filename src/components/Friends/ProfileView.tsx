@@ -127,7 +127,7 @@ const ProfileView = ({
               {t.acceptButton}
             </button>
             <button className="py-3 rounded-xl bg-gray-100 text-gray-700 font-semibold">
-              {t.refuseButton} 
+              {t.refuseButton}
             </button>
           </div>
         ) : (

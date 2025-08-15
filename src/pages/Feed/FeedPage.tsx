@@ -5,13 +5,12 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 // import { axiosInstance } from "../../apis/axios";
 // import type { GoogleLoginResponseDTO } from "../../utils/types/auth";
-import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
 
 const FeedPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
-  const navigate = useNavigate();
+  
   const tabvalue = useMemo(
     () => [
       { value: "friendINfeed", title: t.Friends },
@@ -21,7 +20,7 @@ const FeedPage = () => {
     [t]
   );
 
-  const [authCode, setAuthCode] = useState<string | null>(null);
+  const [_authCode, setAuthCode] = useState<string | null>(null);
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
     const code = sp.get("code");
