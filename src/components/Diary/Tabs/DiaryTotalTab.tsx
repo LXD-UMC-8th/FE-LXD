@@ -8,11 +8,12 @@ import type {
   getDiariesResponseDTO,
 } from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
+import { QUERY_KEY } from "../../../constants/key";
 
 const DiaryTotalTab = () => {
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["MyDiaryTotal"],
+      queryKey: [QUERY_KEY.MyDiaryTotal],
       queryFn: ({ pageParam = 1 }) => getMyDiaries(pageParam as number),
       getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,

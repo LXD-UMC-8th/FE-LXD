@@ -13,6 +13,7 @@ import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../../constants/key";
 
 const ExploreTab = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const ExploreTab = () => {
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["ExploreTab", lang],
+      queryKey: [QUERY_KEY.ExploreTab, lang],
       queryFn: ({ pageParam = 1, queryKey }) => {
         const [_, lang] = queryKey as [string, string];
         return getExploreDiaries(pageParam as number, lang);
@@ -53,7 +54,7 @@ const ExploreTab = () => {
 
   const handleOpenDiary = async (diaryId?: number) => {
     await queryClient.prefetchQuery({
-      queryKey: ["diaryDetail", diaryId],
+      queryKey: [QUERY_KEY.DiaryDetail, diaryId],
       queryFn: () => getDiaryDetail(diaryId || 0),
       staleTime: 30_000,
     });
