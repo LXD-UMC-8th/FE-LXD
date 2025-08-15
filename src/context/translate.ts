@@ -397,7 +397,7 @@ export const translate: Record<
     saving:"Saving..."
   },
   [Language.KOREAN]: {
-    saving:"저장 중.."
+    saving:"저장 중..",
     changeProfile: "프로필이 수정되었습니다.",
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
     OnlyCanAddInSavedCorrection: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
