@@ -3,6 +3,15 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    ConfirmDeleteFeedLikes: string;
+    ConfirmDelete: string;
+    Sunday: string;
+    Monday: string;
+    Tuesday: string;
+    Wednesday: string;
+    Thursday: string;
+    Friday: string;
+    Saturday: string;
     RequestFriend: string;
     explore: string;
     email: string;
@@ -102,6 +111,7 @@ export const translate: Record<
     unfriendConfirmTitle: string;
     unfriendConfirmAction: string;
     unfriendDoneToast: string;
+    PageLoading: string;
     friendSearchPlaceholder: string;
     recentSearchTitle: string;
     clearAllRecent: string;
@@ -151,6 +161,15 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    ConfirmDeleteFeedLikes:
+      "If you cancel 'Like', your diary will be deleted from 'Feed-Like'. Are you sure you want to cancel?",
+    Sunday: "SUN",
+    Saturday: "SAT",
+    Monday: "MON",
+    Tuesday: "TUE",
+    Wednesday: "WED",
+    Thursday: "THU",
+    Friday: "FRI",
     RequestFriend: "Friend Request",
     Likes: "Likes",
     email: "Email",
@@ -300,8 +319,14 @@ export const translate: Record<
     explore: "Explore",
     DeleteCommentAlert: "Are you sure you want to delete the comments?",
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
+    ConfirmDelete: "Are you sure you want to delete?",
+    PageLoading: "Loading...",
   },
   [Language.KOREAN]: {
+    PageLoading: "로딩중입니다...",
+    ConfirmDeleteFeedLikes:
+      "좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?",
+    ConfirmDelete: "정말 삭제하시겠습니까?",
     RequestFriend: "친구 요청",
     email: "이메일",
     emailPlaceholder: "이메일을 입력해주세요",
@@ -449,5 +474,12 @@ export const translate: Record<
     Likes: "좋아요",
     DeleteCommentAlert: "댓글을 삭제하시겠습니까?",
     DeleteReplyAlert: "답글을 삭제하시겠습니까?",
+    Saturday: "토",
+    Sunday: "일",
+    Monday: "월",
+    Tuesday: "화",
+    Wednesday: "수",
+    Thursday: "목",
+    Friday: "금",
   },
 };
