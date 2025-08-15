@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getDiaryStats } from "../../apis/diary";
@@ -13,8 +13,6 @@ const CalendarModal = () => {
   const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
   const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
-
-  const _isFirstRender = useRef(true);
 
   const _datesToRequest = useMemo(() => {
     const current = new Date(activeStartDate);
