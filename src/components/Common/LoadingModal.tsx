@@ -13,7 +13,7 @@ const LoadingModal = () => {
             border-t-blue-500 rounded-full animate-spin
           "
         />
-        <p className="font-bold text-2xl">{t.PageLoading}</p>
+        <p className="font-bold text-2xl">{t.Loading}</p>
       </div>
     </div>
   );
