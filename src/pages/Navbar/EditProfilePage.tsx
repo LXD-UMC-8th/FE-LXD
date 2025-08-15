@@ -50,9 +50,9 @@ const EditProfilePage = () => {
       queryKey: [QUERY_KEY.member, QUERY_KEY.profile],
       queryFn: async () => {
         const response = await getMemberProfile();
-        if (!response) throw new Error("프로필 응답이 없습니다.");
+        if (!response) throw new Error(t.notProfileResponse);
         if (!response.isSuccess)
-          throw new Error(response.message || "프로필 조회 실패");
+          throw new Error(response.message || t.notProfileResponse);
         return response;
       },
     });
@@ -70,7 +70,7 @@ const EditProfilePage = () => {
       }),
     onSuccess: (_res) => {
       qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
-      alert("프로필이 수정되었습니다.");
+      alert(t.changeProfile);
 
       // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
       if (_objectURL) {
@@ -83,9 +83,8 @@ const EditProfilePage = () => {
         profileImgPreview: null,
       }));
     },
-    onError: (err: unknown) => {
-      console.error("patchMemberProfile error:", err);
-      alert("수정 중 오류가 발생했습니다.");
+    onError: () => {
+      alert(t.errorduringedit);
     },
   });
 
@@ -137,8 +136,12 @@ const EditProfilePage = () => {
 
   if (isLoading || !_userInfo) return <LoadingModal />;
   if (isError) {
-    const msg = error instanceof Error ? error.message : "알 수 없는 오류";
-    return <div className="p-6">프로필을 불러오지 못했습니다: {msg}</div>;
+    const msg = error instanceof Error ? error.message : t.undefinedErrorOccur;
+    return (
+      <div className="p-6">
+        {t.donotrenderprofile}: {msg}
+      </div>
+    );
   }
 
   const _handleChangePw = () => {
@@ -202,7 +205,7 @@ const EditProfilePage = () => {
     e.preventDefault();
     if (!_isModified) return;
     if (_userInfo.nickname.trim().length === 0) {
-      alert("닉네임을 입력해주세요.");
+      alert(t.putInNick);
       return;
     }
     _saveProfile();
@@ -214,7 +217,11 @@ const EditProfilePage = () => {
     items-center justify-center space-y-10 px-4"
     >
       <section className="flex flex-col w-[775px] items-left">
+<<<<<<< HEAD
         <TitleHeader title={t.editProfileHeader} />
+=======
+        <TitleHeader title={t.profileEdit} />
+>>>>>>> 6e95c86a867eec2d044fa4ce6a84dcaa3a38ba69
       </section>
 
       <div className="space-y-3">
@@ -257,17 +264,21 @@ const EditProfilePage = () => {
                 : "bg-gray-300 text-gray-600"
             }`}
         >
+<<<<<<< HEAD
           {_isSaving ? t.Loading : t.SaveChange}
+=======
+          {_isSaving ? t.saving : t.SaveChange}
+>>>>>>> 6e95c86a867eec2d044fa4ce6a84dcaa3a38ba69
         </button>
       </section>
 
       {showModal && (
         <AlertModal
           onClose={() => setSHowModal(false)}
-          title="정말 탈퇴 하시겠습니까?"
-          description="LXD에서 sohnjiahn@gmail.com 계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다."
-          confirmText="탈퇴하기"
-          alertMessage="회원탈퇴가 완료되었습니다."
+          title={t.sureLeave}
+          description={t.LeaveNoti}
+          confirmText={t.ToLeave}
+          alertMessage={t.CompleteLeave}
           onConfirm={() => navigate("/home")}
         />
       )}
