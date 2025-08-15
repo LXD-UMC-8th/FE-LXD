@@ -9,12 +9,16 @@ import {
 import { useCorrectionComments } from "../../hooks/queries/useCorrectionComments";
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 import AlertModal from "../Common/AlertModal"; // ✅ 모달
+import { translate } from "../../context/translate";
+import { useLanguage } from "../../context/LanguageProvider";
 
 interface Props {
   correction: SavedCorrectionItem;
 }
 
 const CorrectionComponent = ({ correction }: Props) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   // ===== 좋아요 =====
   const [isLiked, setIsLiked] = useState<boolean>(
     (correction as any)?.liked ?? (correction as any)?.isLiked ?? false
@@ -41,9 +45,8 @@ const CorrectionComponent = ({ correction }: Props) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleSaveMemo = async () => {
-    if (!isSavedList)
-      return alert("‘저장한 교정’에서만 메모를 추가할 수 있어요.");
-    if (!memoText.trim()) return alert("메모 내용을 입력해 주세요.");
+    if (!isSavedList) return alert(t.OnlyCanAddInSavedCorrection);
+    if (!memoText.trim()) return alert(t.PlzEnterInContent);
     if (!isDirty && hadMemoAtMount.current) return; // 변경 없으면 무시
 
     setIsSaving(true);
@@ -79,7 +82,7 @@ const CorrectionComponent = ({ correction }: Props) => {
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
       console.error("❌ 메모 삭제 실패:", e);
-      alert("메모 삭제에 실패했어요.");
+      alert(t.FailToDeleteMemo);
     } finally {
       setIsDeleting(false);
     }
@@ -175,7 +178,7 @@ const CorrectionComponent = ({ correction }: Props) => {
                 ? "/images/commentIcon.svg"
                 : "/images/emptycommentIcon.svg"
             }
-            alt="댓글"
+            alt={t.Comment}
             className="w-5 h-5"
           />
           <span>{correction.commentCount}</span>
@@ -189,7 +192,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             src={
               isLiked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"
             }
-            alt="좋아요"
+            alt={t.Likes}
             className={`w-5 h-5 ${isLiked ? "scale-110" : ""}`}
           />
           <span className={isLiked ? "text-red-500" : undefined}>
@@ -202,10 +205,10 @@ const CorrectionComponent = ({ correction }: Props) => {
       {openReply && (
         <div className="mt-3 space-y-3">
           {commentStatus === "pending" && (
-            <div className="text-sm text-gray-400">댓글 불러오는 중…</div>
+            <div className="text-sm text-gray-400">{t.LoadingComment}</div>
           )}
           {commentStatus === "success" && comments.length === 0 && (
-            <div className="text-sm text-gray-400">첫 댓글을 남겨보세요.</div>
+            <div className="text-sm text-gray-400">{t.LeaveFirstComment}</div>
           )}
 
           {comments.map((c) => (
@@ -214,7 +217,7 @@ const CorrectionComponent = ({ correction }: Props) => {
                 <img
                   src={c.member.profileImageUrl}
                   className="h-6 w-6 rounded-full bg-gray-200"
-                  alt="프로필"
+                  alt={t.Profile}
                 />
                 <span className="font-medium">{c.member.nickname}</span>
                 <span className="text-gray-400">@{c.member.username}</span>
@@ -230,7 +233,7 @@ const CorrectionComponent = ({ correction }: Props) => {
               disabled={isFetching}
               className="mt-2 rounded-md border px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-60"
             >
-              더 보기
+              {t.SeeMore}
             </button>
           )}
         </div>
@@ -242,12 +245,12 @@ const CorrectionComponent = ({ correction }: Props) => {
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
             <img
               src="/images/MemoPlusIcon.svg"
-              alt="메모 추가"
+              alt={t.AddMemo}
               className="w-4 h-4"
             />
             <input
               type="text"
-              placeholder="메모를 추가하기"
+              placeholder={t.AddMemo}
               className="w-full bg-transparent text-body1 text-gray-900 placeholder-gray-400 outline-none"
               value={memoText}
               onChange={(e) => setMemoText(e.target.value)}
@@ -259,7 +262,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             disabled={isSaving || (!isDirty && hadMemoAtMount.current)}
             className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60"
           >
-            {hadMemoAtMount.current ? "수정하기" : "저장하기"}
+            {hadMemoAtMount.current ? t.EditMemo : t.SaveMemo}
           </button>
 
           <button
@@ -267,7 +270,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             disabled={isDeleting || !hadMemoAtMount.current}
             className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
           >
-            메모 삭제
+            {t.DeleteMemo}
           </button>
         </div>
       )}
@@ -293,14 +296,14 @@ const CorrectionComponent = ({ correction }: Props) => {
       {/* ✅ 좋아요 취소 모달 */}
       {deleteLikeModal && (
         <AlertModal
-          title="'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?"
-          confirmText="취소하기"
+          title={t.CancelLikeInCorrection}
+          confirmText={t.cancelButton}
           onConfirm={confirmUnlike}
           onClose={(e) => {
             e.stopPropagation();
             setDeleteLikeModal(false);
           }}
-          alertMessage="'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다."
+          alertMessage={t.CancelLikeInCorrectionConfirm}
         />
       )}
     </div>

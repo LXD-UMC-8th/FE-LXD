@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useSavedCorrections } from "../../../hooks/queries/useSavedCorrections";
 import { useInView } from "react-intersection-observer";
 import CorrectionComponent from "../CorrectionComponent";
+import { translate } from "../../../context/translate";
+import { useLanguage } from "../../../context/LanguageProvider";
 
 const ReceivedCorrectionTab = () => {
   const {
@@ -13,6 +15,8 @@ const ReceivedCorrectionTab = () => {
     status, // 'pending' | 'success' | 'error'
     error,
   } = useSavedCorrections();
+  const { language } = useLanguage();
+  const t = translate[language]; 
 
   const { ref, inView } = useInView();
 
@@ -43,7 +47,7 @@ const ReceivedCorrectionTab = () => {
       {/* 3) 빈 목록 안내 */}
       {list.length === 0 && (
         <div className="p-6 text-center text-gray-500">
-          저장된 교정이 없습니다.
+          {t.NotSavedCorrection}
         </div>
       )}
 

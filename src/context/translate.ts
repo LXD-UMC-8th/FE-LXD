@@ -3,6 +3,13 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    CancelLikeInCorrection: string;
+    FailToDeleteMemo: string;
+    SeeMore: string;
+    PlzEnterInContent: string;
+    NotSavedCorrection: string;
+    FailToLoadCorrections: string;
+    Profile: string;
     ConfirmDeleteFeedLikes: string;
     ConfirmDelete: string;
     Sunday: string;
@@ -57,6 +64,7 @@ export const translate: Record<
     emailVerifySuccessAlert: string;
     emailVerifyErrorAlert: string;
     signupSuccessAlert: string;
+    UnTitled: string;
     signupErrorAlert: string;
     modaltabtitle_total: string;
     modaltabtitle_likes: string;
@@ -65,6 +73,7 @@ export const translate: Record<
     visibility_PUBLIC: string;
     visibility_FRIEND: string;
     visibility_PRIVATE: string;
+    OnlyCanAddInSavedCorrection: string;
     commentPermission_PUBLIC: string;
     commentPermission_FRIEND: string;
     commentPermission_PRIVATE: string;
@@ -94,7 +103,9 @@ export const translate: Record<
     CannotLoadList: string;
     titleRequired: string;
     FriendFeedX: string;
+    LeaveFirstComment: string;
     settingTitle: string;
+    LoadingComment: string;
     SaveChange: string;
     setLanguage: string;
     nativeLanguage: string;
@@ -111,7 +122,7 @@ export const translate: Record<
     unfriendConfirmTitle: string;
     unfriendConfirmAction: string;
     unfriendDoneToast: string;
-    PageLoading: string;
+    Loading: string;
     friendSearchPlaceholder: string;
     recentSearchTitle: string;
     clearAllRecent: string;
@@ -158,14 +169,26 @@ export const translate: Record<
     CompleteCorrect: string;
     DeleteCommentAlert: string;
     DeleteReplyAlert: string;
+    AddMemo: string;
+    NothingCreatedCorrection: string;
+    EditMemo: string;
+    SaveMemo: string;
+    DeleteMemo: string;
+    CancelLikeInCorrectionConfirm: string;
   }
 > = {
   [Language.ENGLISH]: {
+    EditMemo: "Edit Memo",
+    SaveMemo: "Save Memo",
+    PlzEnterInContent: "Please enter the memo content.",
+    NotSavedCorrection: "No correction has been saved.",
+    NothingCreatedCorrection: "No correction has been created.",
     ConfirmDeleteFeedLikes:
       "If you cancel 'Like', your diary will be deleted from 'Feed-Like'. Are you sure you want to cancel?",
     Sunday: "SUN",
     Saturday: "SAT",
     Monday: "MON",
+    AddMemo: "Add Memo.",
     Tuesday: "TUE",
     Wednesday: "WED",
     Thursday: "THU",
@@ -207,9 +230,12 @@ export const translate: Record<
     nicknameConditionToast: "Maximum 20 characters",
     primaryLang: "Primary Language",
     learningLang: "Learning Language",
+    CancelLikeInCorrection:
+      "If you cancel 'like', the correction will be removed from the 'like' list. Are you sure you want to cancel?",
     langPlaceholder: "Select Language",
     signupButton: "Sign Up",
     loginSuccessAlert: "Login Complete.",
+    LeaveFirstComment: "Leave your first comment.",
     loginErrorAlert: "Login Error. Please try it again.",
     emailLinkSuccessAlert:
       "An authentication link has been sent to the email you provided. Please click the link to complete the authentication.",
@@ -235,6 +261,7 @@ export const translate: Record<
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
     alertImage: "Alert",
+    LoadingComment: "Loading Comments...",
     receivedCorrections: "Received",
     givenCorrections: "Given",
     writingHeader: "New Post",
@@ -243,6 +270,7 @@ export const translate: Record<
     notificationButtonText1: "Accept",
     notificationButtonText2: "Delete",
     Diaries: "Entries",
+    SeeMore: "See More",
     Diary: "Entry",
     CountDiary: "",
     Friends: "Friends",
@@ -252,6 +280,7 @@ export const translate: Record<
     LoadingNotification: "Loading notifications...",
     EditDiary: "Edit",
     DeleteDiary: "Delete",
+    FailToDeleteMemo: "Fail to delete memo.",
     CannotLoadList: "Unable to load list.",
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
@@ -287,9 +316,13 @@ export const translate: Record<
     receivedRequestsTitle: "Received requests",
     sentRequestsTitle: "Sent requests",
     requestsCountLabel: "{count}", // 배지: 12
+    Profile: "profile",
     acceptButton: "Accept",
     deleteButton: "Delete",
     cancelButton: "Cancel",
+    CancelLikeInCorrectionConfirm:
+      "If you cancel 'Like', the correction will be removed from 'Like'.",
+    UnTitled: "Untitled",
     pendingLabel: "Pending",
     friendRequestFailed: "Failed to send friend request.",
     profileImageAlt: "{name}'s profile image",
@@ -304,6 +337,7 @@ export const translate: Record<
     CommentPlaceholder: "Write a comment",
     ReplyPlaceholder: "Write a Reply",
     User: "",
+    FailToLoadCorrections: "Failed to load corrections list.",
     EditProfile: "Edit Profile",
     SignOut: "Log Out",
     WantToLogOut: "Are you sure you want to log out?",
@@ -320,10 +354,18 @@ export const translate: Record<
     DeleteCommentAlert: "Are you sure you want to delete the comments?",
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
     ConfirmDelete: "Are you sure you want to delete?",
-    PageLoading: "Loading...",
+    Loading: "Loading...",
+    OnlyCanAddInSavedCorrection:
+      "You can only add notes in the 'Saved Correction'.",
+    DeleteMemo: "Delete Memo",
   },
   [Language.KOREAN]: {
-    PageLoading: "로딩중입니다...",
+    PlzEnterInContent: "메모 내용을 입력해 주세요.",
+    OnlyCanAddInSavedCorrection: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
+    NotSavedCorrection: "저장된 교정 목록이 없습니다.",
+    NothingCreatedCorrection: "작성한 교정이 없습니다.",
+    FailToLoadCorrections: "교정 목록을 불러오지 못했습니다.",
+    Loading: "로딩중입니다...",
     ConfirmDeleteFeedLikes:
       "좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?",
     ConfirmDelete: "정말 삭제하시겠습니까?",
@@ -338,6 +380,11 @@ export const translate: Record<
     changePassword: "비밀번호 변경",
     signupHeader: "계정 생성을 위해 정보를 입력해주세요",
     beforeVerify: "인증하기",
+    SeeMore: "더보기",
+    CancelLikeInCorrection:
+      "‘좋아요’ 취소 시 해당 교정이 ‘좋아요’ 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
+    CancelLikeInCorrectionConfirm:
+      "'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다.",
     afterVerify: "인증완료",
     comfirmPassword: "비밀번호 확인",
     TosAgreed: "이용약관 및 개인정보 처리 방침에 동의합니다",
@@ -356,10 +403,14 @@ export const translate: Record<
     idConditionToast: "2자 이상, 영어 소문자, 숫자, 특수기호(-._)만 사용가능",
     idAvaliableToast: "사용가능한 아이디입니다.",
     idNotAvaliableToast: "이미 사용중인 아이디입니다.",
+    FailToDeleteMemo: "메모 삭제에 실패했습니다.",
     nickname: "닉네임",
+    AddMemo: "메모 추가",
     nicknamePlaceholder: "닉네임을 입력해주세요",
     nicknameConditionToast: "최대 20자",
     primaryLang: "모국어 / 주사용 언어",
+    EditMemo: "메모 수정",
+    SaveMemo: "메모 저장",
     learningLang: "학습 언어",
     langPlaceholder: "언어 선택",
     signupButton: "가입완료",
@@ -408,6 +459,7 @@ export const translate: Record<
     DeleteDiary: "삭제하기",
     CannotLoadList: "목록을 불러올 수 없습니다.",
     titleRequired: "제목을 작성하세요.",
+    UnTitled: "제목 없음",
     FriendFeedX: "친구의 일기가 없습니다.",
     settingTitle: "서비스 설정",
     SaveChange: "변경 내용 저장",
@@ -416,6 +468,7 @@ export const translate: Record<
     studyLanguage: "학습 언어",
     systemLanguage: "시스템 언어",
     SidebarFeed: "피드",
+    LeaveFirstComment: "첫 댓글을 남겨보세요.",
     SidebarDiary: "나의 다이어리",
     SidebarCorrections: "나의 교정",
     SidebarFriends: "친구",
@@ -443,6 +496,7 @@ export const translate: Record<
     requestsCountLabel: "{count}개",
     acceptButton: "수락",
     deleteButton: "삭제",
+    DeleteMemo: "메모 삭제",
     cancelButton: "취소",
     pendingLabel: "요청중",
     friendRequestFailed: "친구 요청에 실패했습니다.",
@@ -459,6 +513,7 @@ export const translate: Record<
     ReplyPlaceholder: "답글을 입력해주세요",
     User: "님",
     EditProfile: "프로필 수정",
+    Profile: "프로필",
     SignOut: "로그아웃",
     WantToLogOut: "정말 로그아웃 하시겠습니까?",
     LogOutStatementFront: "LXD에서 ",
@@ -473,6 +528,7 @@ export const translate: Record<
     explore: "탐색",
     Likes: "좋아요",
     DeleteCommentAlert: "댓글을 삭제하시겠습니까?",
+    LoadingComment: "댓글 불러오는 중..",
     DeleteReplyAlert: "답글을 삭제하시겠습니까?",
     Saturday: "토",
     Sunday: "일",
