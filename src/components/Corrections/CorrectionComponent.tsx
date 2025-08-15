@@ -14,6 +14,7 @@ import {
 } from "../../hooks/mutations/useSavedMemo";
 
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
+import { QUERY_KEY } from "../../constants/key";
 
 interface Props {
   correction: SavedCorrectionItem;
@@ -79,7 +80,7 @@ const CorrectionComponent = ({ correction }: Props) => {
       writeLikedMap((m) => ({ ...m, [correctionId]: !prevLiked }));
 
       // 제공 탭 리스트 동기화
-      qc.invalidateQueries({ queryKey: ["providedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.providedCorrections] });
     } finally {
       setLiking(false);
     }
@@ -105,7 +106,7 @@ const CorrectionComponent = ({ correction }: Props) => {
       // ✅ localStorage 동기화 (false 또는 제거)
       writeLikedMap((m) => ({ ...m, [correctionId]: false }));
 
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     } catch {
       // 롤백
       setLiked(prevLiked);

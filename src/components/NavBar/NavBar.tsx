@@ -30,6 +30,11 @@ const NavBar = () => {
 
     const setupSSE = () => {
       if (es) {
+        es.onerror = (error) => {
+          if (error.type === "error") {
+            es = getSubscribeToNotifications();
+          }
+        };
         es.close();
       }
       es = getSubscribeToNotifications();

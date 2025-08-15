@@ -7,6 +7,7 @@ import type { getDiariesResponseDTO } from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { QUERY_KEY } from "../../../constants/key";
 
 const LikesTab = () => {
   const { language } = useLanguage();
@@ -14,7 +15,7 @@ const LikesTab = () => {
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["LikesTab"],
+      queryKey: [QUERY_KEY.LikesTab],
       queryFn: ({ pageParam = 1 }) => {
         return getLikedDiaries(pageParam as number);
       },
@@ -43,7 +44,7 @@ const LikesTab = () => {
               // pageResult={page.result}
               // idx={idx}
             />
-          )),
+          ))
       )}
       {isFetching && (
         <div>

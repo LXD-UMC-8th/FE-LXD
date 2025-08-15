@@ -10,13 +10,14 @@ import type {
 import { useEffect } from "react";
 import { translate } from "../../../context/translate";
 import { useLanguage } from "../../../context/LanguageProvider";
+import { QUERY_KEY } from "../../../constants/key";
 
 const FeedFriendTab = () => {
   const { language } = useLanguage();
   const t = translate[language];
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["FriendsDiaries"],
+      queryKey: [QUERY_KEY.FriendsDiaries],
       queryFn: ({ pageParam = 1 }) => getFriendsDiaries(pageParam as number),
       getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,

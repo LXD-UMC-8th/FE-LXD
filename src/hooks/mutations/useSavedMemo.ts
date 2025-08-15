@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { patchSavedMemo, deleteSavedMemo, postSavedMemo } from "../../apis/correctionsSaved";
+import { QUERY_KEY } from "../../constants/key";
 
 // 어떤 캐시 모양이 와도 memo만 안전하게 패치
 function patchSavedCorrectionsCache(
@@ -7,7 +8,7 @@ function patchSavedCorrectionsCache(
   savedCorrectionId: number,
   nextMemo: string
 ) {
-  qc.setQueryData(["savedCorrections"], (old: any) => {
+  qc.setQueryData([QUERY_KEY.savedCorrections], (old: any) => {
     if (!old) return old;
 
     if (Array.isArray(old)) {
@@ -58,16 +59,16 @@ export function useUpsertSavedMemo() {
       return v.hadMemo ? patchSavedMemo(payload) : postSavedMemo(payload);
     },
     onMutate: async ({ savedCorrectionId, memo }) => {
-      await qc.cancelQueries({ queryKey: ["savedCorrections"] });
+      await qc.cancelQueries({ queryKey: [QUERY_KEY.savedCorrections] });
       patchSavedCorrectionsCache(qc, savedCorrectionId, memo);
       return { savedCorrectionId, memo };
     },
     // ⬇️ ctx 제거 (미사용 인자)
     onError: () => {
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     },
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     },
   });
 }
@@ -79,16 +80,16 @@ export function useDeleteSavedMemo() {
   return useMutation({
     mutationFn: (savedCorrectionId: number) => deleteSavedMemo(savedCorrectionId),
     onMutate: async (savedCorrectionId) => {
-      await qc.cancelQueries({ queryKey: ["savedCorrections"] });
+      await qc.cancelQueries({ queryKey: [QUERY_KEY.savedCorrections] });
       patchSavedCorrectionsCache(qc, savedCorrectionId, "");
       return { savedCorrectionId };
     },
     // ⬇️ ctx 제거 (미사용 인자)
     onError: () => {
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     },
     onSettled: () => {
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     },
   });
 }
