@@ -26,7 +26,7 @@ const ProfileInCorrections = ({ member, createdAt }: Props) => {
           <div className="flex gap-2 items-center">
             <div className="text-body1 font-medium">{member?.nickname}</div>
             <div className="w-px h-5 bg-gray-500" />
-            <div className="text-body1 text-gray-600">{member?.username}</div>
+            <div className="text-body1 text-gray-600">@{member?.username}</div>
           </div>
         </div>
 

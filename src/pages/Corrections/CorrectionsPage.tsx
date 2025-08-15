@@ -12,7 +12,7 @@ const CorrectionsPage = () => {
   ];
 
   return (
-    <div className="w-300 min-h-screen bg-gray-100">
+    <div className="w-260 mb-10 ml-10 min-h-screen bg-gray-100">
       <ModalWithTabs key={language} tabvalue={tabvalue} />
     </div>
   );
