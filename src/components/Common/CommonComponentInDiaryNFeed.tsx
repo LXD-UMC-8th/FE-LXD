@@ -78,7 +78,7 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   const handleDelete = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+    if (window.confirm(t.ConfirmDelete)) {
       deleteMutation?.mutate();
     }
   };
@@ -180,7 +180,7 @@ const CommonComponentInDiaryNFeed = ({
                   e.stopPropagation();
                   setMenuOpen((prev) => !prev);
                 }}
-                alt="설정 아이콘"
+                alt="settingIcon"
               />
               {menuOpen && (
                 <div className="absolute top-8 right-0 bg-white border border-gray-400 rounded-md shadow-lg w-28 z-50">
@@ -241,7 +241,7 @@ const CommonComponentInDiaryNFeed = ({
           >
             <img
               src={item.icon}
-              alt={`${item.label} 아이콘`}
+              alt={`${item.label} Icon`}
               className="w-6 h-6 cursor-pointer"
             />
             <span>{item.label}</span>
@@ -251,7 +251,7 @@ const CommonComponentInDiaryNFeed = ({
       {/* 좋아요 삭제 모달 */}
       {DeleteLikeModal && (
         <AlertModal
-          title="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
+          title={t.ConfirmDeleteFeedLikes}
           confirmText="취소하기"
           onConfirm={(e) => {
             e.stopPropagation();
@@ -264,7 +264,7 @@ const CommonComponentInDiaryNFeed = ({
             e.stopPropagation();
             setDeleteLikeModal(false);
           }}
-          alertMessage="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
+          alertMessage={t.ConfirmDeleteFeedLikes}
         />
       )}
     </div>

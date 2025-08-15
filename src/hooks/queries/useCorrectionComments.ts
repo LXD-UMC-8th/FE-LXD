@@ -1,14 +1,12 @@
+// hooks/queries/useCorrectionComments.ts
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getCorrectionComments } from "../../apis/correctionComment"; 
+import { getCorrectionComments } from "../../apis/correctionComment";
 import type {
   CorrectionCommentDTO,
   CorrectionCommentGetResponseDTO,
-  UICorrectionComment, 
+  UICorrectionComment,
 } from "../../utils/types/correctionComment";
 
-
-
-// 서버 DTO → UI 타입으로 매핑
 const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
   commentId: c.commentId,
   content: c.content,
@@ -21,15 +19,19 @@ const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
   },
 });
 
+// result.content 또는 result.contents 둘 다 지원
+const pickList = (r: any): CorrectionCommentDTO[] =>
+  (Array.isArray(r?.contents) ? r?.contents : r?.content) ?? [];
+
 export function useCorrectionComments(
   correctionId?: number,
   enabled: boolean = true,
   pageSize: number = 10
 ) {
   return useInfiniteQuery<
-    CorrectionCommentGetResponseDTO,        // 원본 API 응답
+    CorrectionCommentGetResponseDTO,
     unknown,
-    UICorrectionComment[],                  
+    UICorrectionComment[],
     [string, number | undefined, number],
     number
   >({

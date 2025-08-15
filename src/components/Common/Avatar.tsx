@@ -20,7 +20,7 @@ const Avatar = ({
       onError={(e) => {
         (e.target as HTMLImageElement).src = "/images/profileimage.svg";
       }}
-      onClick={onClick} // ✅ 클릭 핸들러 적용
+      onClick={onClick} 
       className={` ${className} ${size} rounded-full object-cover ${
         onClick ? "cursor-pointer" : ""
       }`}
