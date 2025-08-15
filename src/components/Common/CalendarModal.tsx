@@ -31,13 +31,10 @@ const CalendarModal = () => {
     ];
   }, [activeStartDate]);
 
-  useEffect(() => {
-    if (_isFirstRender.current) {
-      _isFirstRender.current = false;
-      return;
-    }
-    console.log("calendarModal re-rendering");
+  console.log("this is CalendarModal");
+  console.log("dates to request", _datesToRequest);
 
+  useEffect(() => {
     Promise.all(_datesToRequest.map(getDiaryStats))
       .then((response) => {
         const merged: value[] = response.flatMap((r) => r?.result || []);
@@ -46,7 +43,7 @@ const CalendarModal = () => {
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
       });
-  }, []);
+  }, [_datesToRequest]);
 
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(
