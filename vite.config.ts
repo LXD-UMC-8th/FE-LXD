@@ -4,6 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/",
   build: {
     outDir: "dist",
     rollupOptions: {
@@ -21,6 +22,5 @@ export default defineConfig({
       },
     },
   },
-  base: "./",
   plugins: [react(), tailwindcss()],
 });
