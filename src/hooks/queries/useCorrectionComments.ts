@@ -43,10 +43,10 @@ export function useCorrectionComments(
         size: pageSize,
       }),
     getNextPageParam: (last, allPages) => {
-      const count = last?.result?.content?.length ?? 0;
+      const count = last?.result?.contents?.length ?? 0;
       return count === pageSize ? allPages.length + 1 : undefined;
     },
     select: (data) =>
-      data.pages.flatMap((p) => (p.result.content ?? []).map(mapToUI)),
+      data.pages.flatMap((p) => (p.result.contents ?? []).map(mapToUI)),
   });
 }
