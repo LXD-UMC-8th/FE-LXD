@@ -5,11 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
 import { setLocalStorageItem } from "../../apis/axios";
+import { useHomeLanguage } from "../../context/HomeLanguageProvider";
+import { translate } from "../../context/translate";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { language } = useHomeLanguage();
+  const t = translate[language];
 
   const { mutateAsync: postSignin } = useSignin();
   // 로그인 요청 함수
@@ -24,14 +28,14 @@ const LoginPage = () => {
         setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
-        alert("로그인 되었습니다.");
+        alert(t.loginSuccessAlert);
         navigate("/");
       } else {
-        alert(response?.message ?? "로그인에 실패했습니다.");
+        alert(response?.message ?? t.loginErrorAlert);
       }
     } catch (error) {
       console.log("로그인 실패", error);
-      alert("로그인 중 오류가 발생하였습니다.");
+      alert(t.loginErrorAlert);
     }
   };
   const isFormValid = email.trim() !== "" && password.trim() !== "";
@@ -148,15 +152,15 @@ const LoginPage = () => {
           className="flex flex-col space-y-5"
         >
           <FormInput
-            name="이메일"
-            placeholder="이메일을 입력해주세요"
+            name={t.email}
+            placeholder={t.emailPlaceholder}
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <FormInput
-            name="비밀번호"
-            placeholder="비밀번호를 입력해주세요"
+            name={t.password}
+            placeholder={t.passwordPlaceholder}
             input={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -172,7 +176,7 @@ const LoginPage = () => {
       bg-[#4170FE] hover:bg-blue-600 cursor-pointer transition 
       disabled:bg-gray-300"
           >
-            <span className="text-subhead3 text-white">로그인</span>
+            <span className="text-subhead3 text-white">{t.login}</span>
           </button>
           <button
             type="button"
@@ -182,7 +186,7 @@ const LoginPage = () => {
           >
             <img alt="google logo" src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
-              Google 로 시작하기
+              {t.googleLogin}
             </span>
           </button>
 
@@ -190,8 +194,8 @@ const LoginPage = () => {
             className="flex w-full justify-between text-body3 text-gray-700 py-3 
         underline underline-offset-2 cursor-pointer"
           >
-            <a href="/home/signup">회원가입</a>
-            <a href="/home/signup/change-pw">비밀번호 변경</a>
+            <a href="/home/signup">{t.signup}</a>
+            <a href="/home/signup/change-pw">{t.changePassword}</a>
           </div>
         </section>
       </div>
