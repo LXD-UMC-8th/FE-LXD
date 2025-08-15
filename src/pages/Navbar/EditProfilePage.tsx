@@ -9,6 +9,7 @@ import type { MemberProfileResponseDTO } from "../../utils/types/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "../../components/Common/LoadingModal";
 import { extractFilenameFromUrl } from "../../utils/profileFile";
+import { QUERY_KEY } from "../../constants/key";
 
 type ProfileImgAction = "keep" | "upload" | "remove";
 
@@ -42,7 +43,7 @@ const EditProfilePage = () => {
   // 프로필 조회
   const { data, isLoading, isError, error } =
     useQuery<MemberProfileResponseDTO>({
-      queryKey: ["member", "profile"],
+      queryKey: [QUERY_KEY.member, QUERY_KEY.profile],
       queryFn: async () => {
         const response = await getMemberProfile();
         if (!response) throw new Error("프로필 응답이 없습니다.");
@@ -64,7 +65,7 @@ const EditProfilePage = () => {
         removeProfileImg: _userInfo.profileImgAction === "remove",
       }),
     onSuccess: (_res) => {
-      qc.invalidateQueries({ queryKey: ["member", "profile"] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
       alert("프로필이 수정되었습니다.");
 
       // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
@@ -137,7 +138,7 @@ const EditProfilePage = () => {
   }
 
   const _handleChangePw = () => {
-    navigate("/home/signup/change-pw")
+    navigate("/home/signup/change-pw");
   };
 
   const _handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

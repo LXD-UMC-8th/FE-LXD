@@ -9,8 +9,10 @@ import { translate } from "../../../context/translate";
 import { useFriendCounts } from "../../../context/FriendCountsContext";
 
 const FriendTab = () => {
+
   const { decFriend } = useFriendCounts();
   const { language } = useLanguage();  
+
   const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<

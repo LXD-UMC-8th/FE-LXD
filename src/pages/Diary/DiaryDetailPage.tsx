@@ -16,6 +16,7 @@ import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { getLocalStorageItem } from "../../apis/axios";
+import type { DiaryCommentDTO, DiaryCommentGetResponseDTO } from "../../utils/types/diaryComment";
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
@@ -23,6 +24,7 @@ const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
+
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
 
@@ -34,7 +36,7 @@ const DiaryDetailPage = () => {
 
   // 페이지네이션
   const [page, setPage] = useState(0);
-  const [commentsState, setCommentState] = useState<any[]>([]);
+  const [commentsState, setCommentState] = useState<DiaryCommentDTO[]>([]);
   const [totalElements, setTotalElements] = useState(0);
   const [, setHasNext] = useState(true);
 
@@ -53,12 +55,7 @@ const DiaryDetailPage = () => {
   };
 
   const _handleCorrectionsClick = () => {
-    const commentCount =
-      commentData?.result?.totalElements ??
-      commentData?.result?.content?.length;
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    diary?.commentCount ?? 0;
-
+    const commentCount = commentData?.result?.totalElements ?? 0;
     const likeCount = diary?.likeCount ?? 0;
     const correctCount = diary?.correctCount ?? 0;
 
@@ -109,15 +106,15 @@ const DiaryDetailPage = () => {
     fetchDiaryComments(
       { diaryId: parsedDiaryId, page: p, size: PAGE_SIZE },
       {
-        onSuccess: (res: any) => {
-          const content = res?.result?.content ?? [];
+        onSuccess: (res: DiaryCommentGetResponseDTO) => {
+          const content = res?.result?.contents ?? [];
           const total = res?.result?.totalElements ?? 0;
 
           setTotalElements(total);
-          totalStableRef.current = total; // 안정값 업데이트
+          totalStableRef.current = total;
           setCommentState(content);
 
-          const isLast = res?.result?.last ?? ( (p + 1) * PAGE_SIZE >= total );
+          const isLast = !res.result.hasNext;
           setHasNext(!isLast);
         },
       }
@@ -173,6 +170,40 @@ const DiaryDetailPage = () => {
     );
   };
 
+  /** 댓글 삭제 */
+  const _handleDeleteComment = (commentId: number) => {
+    deleteDiaryComment(
+      { diaryId: parsedDiaryId, commentId },
+      {
+        onSuccess: () => {
+          fetchDiaryComments(
+            { diaryId: parsedDiaryId, page, size: PAGE_SIZE }, // 현재 페이지 재조회
+            {
+              onSuccess: (res: DiaryCommentGetResponseDTO) => {
+                const content = res?.result?.contents ?? [];
+                const total = res?.result?.totalElements ?? 0;
+
+                if (content.length === 0 && page > 0) {
+                  const prevPage = page - 1;
+                  setPage(prevPage);
+                  loadCommentsPage(prevPage);
+                } else {
+                  setTotalElements(total);
+                  totalStableRef.current = total; // 안정값 갱신
+                  setCommentState(content);
+                  const isLast = !res.result.hasNext;
+                  setHasNext(!isLast);
+                }
+              },
+            }
+          );
+        },
+      }
+    );
+  };
+  const comments = commentsState;
+  const commentTotal = stableTotal; // 표시도 안정 total 기준
+
   /** 답글 입력 변경 */
   const _handleReplyChange = (commentId: number, v: string) => {
     setReplyTexts((prev) => ({ ...prev, [commentId]: v }));
@@ -197,41 +228,6 @@ const DiaryDetailPage = () => {
       }
     );
   };
-
-  /** 댓글 삭제 */
-  const _handleDeleteComment = (commentId: number) => {
-    deleteDiaryComment(
-      { diaryId: parsedDiaryId, commentId },
-      {
-        onSuccess: () => {
-          fetchDiaryComments(
-            { diaryId: parsedDiaryId, page, size: PAGE_SIZE }, // 현재 페이지 재조회
-            {
-              onSuccess: (res: any) => {
-                const content = res?.result?.content ?? [];
-                const total = res?.result?.totalElements ?? 0;
-
-                if (content.length === 0 && page > 0) {
-                  const prevPage = page - 1;
-                  setPage(prevPage);
-                  loadCommentsPage(prevPage);
-                } else {
-                  setTotalElements(total);
-                  totalStableRef.current = total; // 안정값 갱신
-                  setCommentState(content);
-                  const isLast =
-                    res?.result?.last ?? ((page + 1) * PAGE_SIZE >= total);
-                  setHasNext(!isLast);
-                }
-              },
-            }
-          );
-        },
-      }
-    );
-  };
-  const comments = commentsState;
-  const commentTotal = stableTotal; // 표시도 안정 total 기준
 
   /** 로딩 처리 */
   if (isDiaryPending) return <LoadingModal />;
@@ -306,7 +302,6 @@ const DiaryDetailPage = () => {
       </div>
     );
   });
-
 
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
@@ -427,7 +422,7 @@ const DiaryDetailPage = () => {
                   {/* 작성자 줄 */}
                   <div 
                     className="flex items-center gap-3 mb-2 cursor-pointer"
-                    // onClick={() => navigate(`/diaries/member/${memberId}`)}
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
                   >
                     <Avatar
                       src={c.profileImage}

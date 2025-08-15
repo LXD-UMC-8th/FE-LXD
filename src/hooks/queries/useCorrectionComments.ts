@@ -6,6 +6,7 @@ import type {
   CorrectionCommentGetResponseDTO,
   UICorrectionComment,
 } from "../../utils/types/correctionComment";
+import { QUERY_KEY } from "../../constants/key";
 
 const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
   commentId: c.commentId,
@@ -20,9 +21,6 @@ const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
 });
 
 // result.content 또는 result.contents 둘 다 지원
-const pickList = (r: any): CorrectionCommentDTO[] =>
-  (Array.isArray(r?.contents) ? r?.contents : r?.content) ?? [];
-
 export function useCorrectionComments(
   correctionId?: number,
   enabled: boolean = true,
@@ -35,7 +33,7 @@ export function useCorrectionComments(
     [string, number | undefined, number],
     number
   >({
-    queryKey: ["correctionComments", correctionId, pageSize],
+    queryKey: [QUERY_KEY.correctionComments, correctionId, pageSize],
     enabled: !!correctionId && enabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
@@ -45,17 +43,11 @@ export function useCorrectionComments(
         size: pageSize,
       }),
     getNextPageParam: (last, allPages) => {
-      const r = last?.result as unknown;
-
-      // ✅ hasNext가 있는 API이면 그걸 사용
-      if (r && typeof r === "object" && "hasNext" in (r as any)) {
-        return (r as any).hasNext ? allPages.length + 1 : undefined;
-      }
-
-      // ✅ hasNext가 없으면 길이로 추정
-      const count = pickList(last?.result).length;
+      const count = last?.result?.contents?.length ?? 0;
       return count === pageSize ? allPages.length + 1 : undefined;
     },
-    select: (data) => data.pages.flatMap((p) => pickList(p.result).map(mapToUI)),
+    select: (data) =>
+      data.pages.flatMap((p) => (p.result.contents ?? []).map(mapToUI)),
+
   });
 }

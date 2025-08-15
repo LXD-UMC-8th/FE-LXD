@@ -74,10 +74,10 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
         </div>
         <div className="flex flex-col">
           <div className="text-body1 font-bold">
-            {profileData?.username}&nbsp;{t.User}
+            {profileData?.nickname}&nbsp;{t.User}
           </div>
           <div className="text-caption text-gray-600">
-            @{profileData?.nickname}
+            @{profileData?.username}
           </div>
         </div>
       </div>

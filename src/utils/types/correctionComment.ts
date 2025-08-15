@@ -7,17 +7,17 @@ export type CorrectionCommentRequestDTO = {
 
 export type CorrectionCommentDTO = {
   commentId: number;
-  parentId: number | null;
+  parentId?: number | null;
   memberId: number;
   username: string;
   nickname: string;
   profileImage: string;
   content: string;
-  likeCount: number;
+  likeCount?: number;
   createdAt: string;
-  replyCount: number;
-  replies: CorrectionCommentDTO[];
-  liked: boolean;
+  replyCount?: number;
+  replies?: CorrectionCommentDTO[];
+  liked?: boolean;
 };
 
 export type CorrectionCommentResponseDTO = APIResponse<CorrectionCommentDTO>;
@@ -30,8 +30,11 @@ export type CorrectionCommentGetRequestDTO = {
 };
 
 export type CorrectionCommentGetResponseDTO = APIResponse<{
-  content: CorrectionCommentDTO[];
   totalElements: number;
+  contents: CorrectionCommentDTO[];
+  page: number;
+  size: number;
+  hasNext: boolean;
 }>;
 
 // 교정 댓글 삭제

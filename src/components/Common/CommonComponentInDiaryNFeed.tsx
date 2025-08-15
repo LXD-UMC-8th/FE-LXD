@@ -159,7 +159,9 @@ const CommonComponentInDiaryNFeed = ({
 
         {/* 언어 + 더보기 */}
         <div className="flex items-center gap-3 relative" ref={menuRef}>
-          <span className="text-blue-600 text-sm font-medium">한국어</span>
+          <span className="text-blue-600 text-sm font-medium">
+            한국어
+          </span>
           {isMyDiaryTab && (
             <>
               <img

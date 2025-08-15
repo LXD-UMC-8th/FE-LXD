@@ -6,6 +6,7 @@ import type {
   FriendListResponseDTO,
   FriendRequestListResponseDTO,
 } from "../../utils/types/friend";
+import { QUERY_KEY } from "../../constants/key";
 
 export type FriendshipState = "friend" | "pending" | "incoming" | "none";
 
@@ -28,6 +29,7 @@ export default function useFriendship(targetMemberId: number) {
   // 1) 내 친구 목록
   const friendsQ = useQuery({
     queryKey: FRIENDS_QK, // ✅ 키 단순화
+
     queryFn: () => getFriends(1, FRIEND_FETCH_SIZE),
     staleTime: 30_000,
     select: (res: FriendListResponseDTO) =>
@@ -38,7 +40,9 @@ export default function useFriendship(targetMemberId: number) {
 
   // 2) 보낸/받은 친구요청
   const requestsQ = useQuery({
+
     queryKey: FRIEND_REQUESTS_QK, // ✅ 키 단순화
+
     queryFn: getFriendRequests,
     staleTime: 30_000,
     select: (res: FriendRequestListResponseDTO) => ({

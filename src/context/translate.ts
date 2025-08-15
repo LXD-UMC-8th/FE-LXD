@@ -175,6 +175,7 @@ export const translate: Record<
     SaveMemo: string;
     DeleteMemo: string;
     CancelLikeInCorrectionConfirm: string;
+    diaryOwner: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -255,8 +256,8 @@ export const translate: Record<
     commentPermission_PUBLIC: "PUBLIC",
     commentPermission_FRIEND: "FRIEND",
     commentPermission_PRIVATE: "PRIVATE",
-    enrollButtonText: "ENROLL",
-    refreshButtonText: "REFRESH",
+    enrollButtonText: "POST",
+    refreshButtonText: "Refresh",
     questionGeneratorButtonText: "Generate Question",
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
@@ -358,6 +359,7 @@ export const translate: Record<
     OnlyCanAddInSavedCorrection:
       "You can only add notes in the 'Saved Correction'.",
     DeleteMemo: "Delete Memo",
+    diaryOwner: "'s Diary",
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -537,5 +539,6 @@ export const translate: Record<
     Wednesday: "수",
     Thursday: "목",
     Friday: "금",
+    diaryOwner: "님의 다이어리",
   },
 };

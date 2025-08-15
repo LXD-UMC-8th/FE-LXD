@@ -4,7 +4,6 @@ import Avatar from "../Common/Avatar"; // 경로 맞게 수정
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -94,7 +93,7 @@ const DiaryContent = ({
 
           {/* 더보기 아이콘: mydiary에서 왔을 때만 */}
           {canEdit && menuOpen && (
-            <div 
+            <div
               ref={menuRef}
               className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50"
             >
@@ -131,9 +130,9 @@ const DiaryContent = ({
 
       {/* 작성자 + 우측 메뉴 */}
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
-        <div 
+        <div
           className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${writerId}`)}  
+          onClick={() => navigate(`/diaries/member/${writerId}`)}
         >
           <Avatar
             src={profileImg}
