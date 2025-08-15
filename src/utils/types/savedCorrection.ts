@@ -46,6 +46,7 @@ export interface SavedCorrectionItem {
 
   // 좋아요/댓글 API에 필요한 교정 ID
   correctionId: number;
+  
 
   // 본문
   original: string;
@@ -59,6 +60,9 @@ export interface SavedCorrectionItem {
   diaryId: number;
   diaryTitle: string;
 
+  // (옵션) 제공 탭에서 서버가 주면 씀
+  liked?: boolean;
+
   // 작성자
   member: {
     memberId: number;
@@ -68,7 +72,7 @@ export interface SavedCorrectionItem {
   };
 }
 
-/** ---------- 평탄화(helper) ---------- */
+/** ---------- 평탄화(helper) (저장 탭용) ---------- */
 export const normalizeSavedCorrection = (
   raw: SavedCorrectionContentDTO
 ): SavedCorrectionItem => ({

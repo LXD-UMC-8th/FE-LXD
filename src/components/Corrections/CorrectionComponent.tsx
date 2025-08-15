@@ -6,14 +6,9 @@ import ProfileInCorrections from "./ProfileInCorrections";
 import AlertModal from "../Common/AlertModal";
 import LoadingModal from "../Common/LoadingModal";
 
-import {
-  postSavedMemo,
-  patchSavedMemo,
-  deleteSavedMemo,
-} from "../../apis/correctionsSaved";
-
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { useToggleCorrectionLike } from "../../hooks/mutations/CorrectionLike/useToggleCorrectionLike";
+import { useUpsertSavedMemo, useDeleteSavedMemo } from "../../hooks/mutations/useSavedMemo";
 
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 
@@ -23,17 +18,18 @@ interface Props {
 
 const CorrectionComponent = ({ correction }: Props) => {
   /** ---------- 기본 값/ID ---------- */
-  const correctionId = correction.correctionId;     // ✅ 항상 존재
-  const savedId = correction.savedCorrectionId;     // '내가 받은 교정' 탭에서만 존재
+  const correctionId = correction.correctionId; // 항상 존재(타입 보장)
+  const savedId = correction.savedCorrectionId; // '내가 받은 교정' 탭에서만 의미
   const isSavedList = !!savedId;
 
   /** ---------- 좋아요 ---------- */
-  // '내가 받은 교정'은 좋아요 된 것만 보여주므로 기본 true
-  const [liked, setLiked] = useState<boolean>(isSavedList ? true : false);
+  // 제공 탭(liked가 올 수도 있음), 저장 탭(무조건 true) 케이스 모두 커버
+  const initiallyLiked = isSavedList ? true : Boolean((correction as any).liked);
+  const [liked, setLiked] = useState<boolean>(initiallyLiked);
   const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
   const [liking, setLiking] = useState(false);
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false);
-  const [removed, setRemoved] = useState(false); // 취소 후 UI에서 즉시 숨김
+  const [removed, setRemoved] = useState(false); // 저장 탭에서 취소 시 카드 숨김
 
   const qc = useQueryClient();
   const { mutateAsync: toggleLike } = useToggleCorrectionLike();
@@ -43,19 +39,20 @@ const CorrectionComponent = ({ correction }: Props) => {
     if (liking || removed) return;
 
     if (isSavedList && liked) {
-      // 저장 탭에서 취소는 모달
+      // 저장 탭: 취소 확인 모달
       setDeleteLikeOpen(true);
       return;
     }
 
-    // 일반 토글(등록 또는 취소)
     setLiking(true);
     const prevLiked = liked;
     const prevCnt = likeCount;
     try {
-      await toggleLike({ correctionId, liked: prevLiked }); // 너의 훅 시그니쳐 유지
+      await toggleLike({ correctionId }); // 서버는 POST 하나로 토글
       setLiked(!prevLiked);
       setLikeCount(prevLiked ? Math.max(0, prevCnt - 1) : prevCnt + 1);
+      // 제공 탭 리스트 동기화
+      qc.invalidateQueries({ queryKey: ["providedCorrections"] });
     } finally {
       setLiking(false);
     }
@@ -68,7 +65,7 @@ const CorrectionComponent = ({ correction }: Props) => {
     setDeleteLikeOpen(false);
     setLiking(true);
 
-    // 낙관적 숨김
+    // 낙관적 업데이트: 카드 숨김 + 카운트/상태 변경
     const prevLiked = liked;
     const prevCnt = likeCount;
     setLiked(false);
@@ -76,7 +73,7 @@ const CorrectionComponent = ({ correction }: Props) => {
     setRemoved(true);
 
     try {
-      await toggleLike({ correctionId, liked: true }); // 서버는 POST 토글
+      await toggleLike({ correctionId });
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch {
       // 롤백
@@ -106,24 +103,21 @@ const CorrectionComponent = ({ correction }: Props) => {
     return [];
   }, [listData]);
 
-  // 패널 열릴 때 전체 목록 조회
   const toggleReply = () => {
     const next = !openReply;
     setOpenReply(next);
     if (next) fetchComments({ correctionId, page: 1, size: 20 });
   };
 
-  // 서버 totalElements 반영
   useEffect(() => {
     const total = (listData as any)?.result?.totalElements;
     if (typeof total === "number") setCommentCount(total);
   }, [listData]);
 
-  // ✅ 최초 렌더에서 댓글 수가 0이면 size=1로 선조회해서 totalElements만 빠르게 채우기
+  // 최초 렌더에서 숫자가 0이면 가볍게 size=1로 총개수만 프라임
   const primedRef = useRef(false);
   useEffect(() => {
     if (primedRef.current) return;
-    if (!correctionId) return;
     if ((correction.commentCount ?? 0) > 0) {
       primedRef.current = true;
       return;
@@ -144,63 +138,44 @@ const CorrectionComponent = ({ correction }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctionId]);
 
-  /** ---------- 메모(등록/수정/삭제) — 핵심 ---------- */
-  // baseline(서버 저장값)과 입력값 분리, 저장/삭제 성공 시 baseline 갱신
+  /** ---------- 메모(등록/수정/삭제) ---------- */
   const baselineRef = useRef<string>(correction.memo ?? "");
   const [memoText, setMemoText] = useState<string>(baselineRef.current);
-
-  // 버튼 활성화 기준: 현재 입력값이 기준값과 다르면 수정 가능
   const isDirty = memoText !== baselineRef.current;
 
-  // 서버에서 memo가 바뀌어 들어오면(리스트 refetch 등), 사용자가 수정 중이 아닐 때만 동기화
-  useEffect(() => {
-    const serverMemo = correction.memo ?? "";
-    if (!isDirty && serverMemo !== baselineRef.current) {
-      baselineRef.current = serverMemo;
-      setMemoText(serverMemo);
-    }
-  }, [correction.memo, isDirty]);
-
-  const [isSaving, setIsSaving] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { mutateAsync: upsertMemo, isPending: isSaving } = useUpsertSavedMemo();
+  const { mutateAsync: removeMemo, isPending: isDeleting } = useDeleteSavedMemo();
 
   const handleSaveMemo = async () => {
     if (!isSavedList) return alert("‘저장한 교정’에서만 메모를 추가/수정할 수 있어요.");
-    if (!memoText.trim()) return alert("메모 내용을 입력해 주세요.");
+    const trimmed = memoText.trim();
+    if (!trimmed) return alert("메모 내용을 입력해 주세요.");
     if (!isDirty) return;
 
-    setIsSaving(true);
     try {
-      const payload = { savedCorrectionId: Number(savedId), memo: memoText.trim() };
-
-      // 기존 메모가 있었으면 수정, 없었으면 생성
-      if (baselineRef.current) await patchSavedMemo(payload);
-      else await postSavedMemo(payload);
-
-      // ✅ 저장 성공 시 기준값 갱신 → 다음 수정에서 버튼 다시 활성화됨
-      baselineRef.current = memoText;
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+      await upsertMemo({
+        savedCorrectionId: Number(savedId),
+        memo: trimmed,
+        hadMemo: Boolean(baselineRef.current),
+      } as any); // hadMemo는 mutationFn에서만 사용
+      // 로컬 기준값 동기화 → 다음 수정 때 버튼 활성화 정상
+      baselineRef.current = trimmed;
+      setMemoText(trimmed);
     } catch (e) {
       console.error("❌ 메모 저장 실패:", e);
       alert("메모 저장에 실패했어요.");
-    } finally {
-      setIsSaving(false);
     }
   };
 
   const handleDeleteMemo = async () => {
     if (!isSavedList) return;
-    setIsDeleting(true);
     try {
-      await deleteSavedMemo(Number(savedId));
+      await removeMemo(Number(savedId));
+      baselineRef.current = "";
       setMemoText("");
-      baselineRef.current = ""; // ✅ 삭제 성공 시 기준값도 비우기
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
       console.error("❌ 메모 삭제 실패:", e);
       alert("메모 삭제에 실패했어요.");
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -244,20 +219,20 @@ const CorrectionComponent = ({ correction }: Props) => {
       <div className="mt-4 flex items-center justify-end gap-6 text-sm text-gray-500">
         <button
           onClick={toggleReply}
-          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100"
+          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 cursor-pointer"
         >
           <img
             src={openReply ? "/images/commentIcon.svg" : "/images/emptycommentIcon.svg"}
             alt="댓글"
             className="w-5 h-5"
           />
-        <span>{commentCount}</span>
+          <span>{commentCount}</span>
         </button>
 
         <button
           onClick={onClickLike}
           disabled={liking}
-          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 disabled:opacity-60"
+          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 disabled:opacity-60 cursor-pointer"
           aria-pressed={liked}
         >
           <img
@@ -314,7 +289,7 @@ const CorrectionComponent = ({ correction }: Props) => {
           <button
             onClick={handleSaveMemo}
             disabled={isSaving || !isDirty}
-            className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60"
+            className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
           >
             {baselineRef.current ? "수정하기" : "저장하기"}
           </button>
@@ -322,7 +297,7 @@ const CorrectionComponent = ({ correction }: Props) => {
           <button
             onClick={handleDeleteMemo}
             disabled={isDeleting || !baselineRef.current}
-            className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+            className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
           >
             메모 삭제
           </button>
