@@ -182,6 +182,12 @@ export const translate: Record<
     pwChangeButton: string;
     editProfileHeader: string;
     deleteAccount: string;
+    accountInfo: string;
+    profileInfo: string;
+    profileImg: string;
+    selectFile: string;
+    selectFilePlaceholder: string;
+    imgSize: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -292,7 +298,7 @@ export const translate: Record<
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
     settingTitle: "Settings",
-    SaveChange: "Save Change",
+    SaveChange: "Save Changes",
     setLanguage: "Language Setting",
     nativeLanguage: "Native Language",
     studyLanguage: "Study Language",
@@ -372,7 +378,12 @@ export const translate: Record<
     pwChangeButton: "Change",
     editProfileHeader: "Edit Profile",
     deleteAccount: "Delete Account",
-    
+    accountInfo: "Account Information",
+    profileInfo: "Profile Information",
+    profileImg: "Profile Image",
+    selectFile: "Browse",
+    selectFilePlaceholder: "Select a file",
+    imgSize: "Please upload an image file up to 500MG.",
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -556,9 +567,15 @@ export const translate: Record<
     newPassword: "새 비밀번호",
     confirmNewPassword: "새 비밀번호 확인",
     newPasswordPlaceholder: "새로운 비밀번호를 입력해주세요",
-    pwChangeButton: "변경하기"
-    editProfileHeader: "프로필 편집"
+    pwChangeButton: "변경하기",
+    editProfileHeader: "프로필 편집",
     deleteAccount: "회원탈퇴",
-    
+
+    accountInfo: "계정 정보",
+    profileInfo: "프로필 정보",
+    profileImg: "프로필 이미지",
+    selectFile: "파일선택",
+    selectFilePlaceholder: "파일을 선택해주세요",
+    imgSize: "최대 500MB의 이미지 파일을 업로드 해주세요.",
   },
 };

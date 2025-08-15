@@ -10,6 +10,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "../../components/Common/LoadingModal";
 import { extractFilenameFromUrl } from "../../utils/profileFile";
 import { QUERY_KEY } from "../../constants/key";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 type ProfileImgAction = "keep" | "upload" | "remove";
 
@@ -39,6 +41,8 @@ const EditProfilePage = () => {
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const { language } = useLanguage();
+  const t = translate[language];
 
   // 프로필 조회
   const { data, isLoading, isError, error } =
@@ -210,7 +214,7 @@ const EditProfilePage = () => {
     items-center justify-center space-y-10 px-4"
     >
       <section className="flex flex-col w-[775px] items-left">
-        <TitleHeader title="프로필 편집" />
+        <TitleHeader title={t.editProfileHeader} />
       </section>
 
       <div className="space-y-3">
@@ -240,7 +244,7 @@ const EditProfilePage = () => {
           className="text-subhead3 text-gray-600 underline underline-offset-3 cursor-pointer"
           onClick={() => setSHowModal(true)}
         >
-          회원탈퇴
+          {t.deleteAccount}
         </button>
 
         <button
@@ -253,7 +257,7 @@ const EditProfilePage = () => {
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-          {_isSaving ? "저장 중..." : "변경내용저장"}
+          {_isSaving ? t.Loading : t.SaveChange}
         </button>
       </section>
 
