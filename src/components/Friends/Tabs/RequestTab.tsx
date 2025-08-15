@@ -10,8 +10,10 @@ import {
 import type { FriendRequestListResponseDTO } from "../../../utils/types/friend";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { useFriendCounts } from "../../../context/FriendCountsContext";
 
 const RequestTab = () => {
+  const { incFriend, decRequests } = useFriendCounts();
   const { language } = useLanguage();
   const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
@@ -52,6 +54,8 @@ const RequestTab = () => {
   const handleAccept = async (memberId: number) => {
     try {
       await postFriendAccept(memberId);
+      incFriend(1); 
+      decRequests(1);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
@@ -66,6 +70,7 @@ const RequestTab = () => {
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
+      decRequests(1);
     } catch (err) {
       console.error("❌ 요청 거절 실패:", err);
     }
@@ -75,6 +80,7 @@ const RequestTab = () => {
     try {
       // Swagger에서 body가 { receiverId: number } 형태일 경우 이렇게 보내야 함
       await patchFriendCancel({ receiverId });
+      decRequests(1);
       setSentRequests((prev) => prev.filter((u) => u.memberId !== receiverId));
     } catch (err) {
       console.error("❌ 요청 취소 실패:", err);

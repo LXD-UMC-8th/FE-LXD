@@ -6,9 +6,11 @@ import { getFriends, deleteFriend } from "../../../apis/friend";
 import type { FriendListResponseDTO } from "../../../utils/types/friend";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { useFriendCounts } from "../../../context/FriendCountsContext";
 
 const FriendTab = () => {
-  const { language } = useLanguage();           // ✅
+  const { decFriend } = useFriendCounts();
+  const { language } = useLanguage();  
   const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<
@@ -58,6 +60,7 @@ const FriendTab = () => {
     if (!selectedUser) return;
     try {
       await deleteFriend(selectedUser.memberId);
+      decFriend(1);
       console.log("✅ 친구 삭제 성공:", selectedUser.nickname);
 
       // 삭제 후 리스트에서 제거
