@@ -183,6 +183,14 @@ export const translate: Record<
     NotFoundComment3: string;
     BackToFeed: string;
     diaryOwner: string;
+
+    newPassword: string;
+    confirmNewPassword: string;
+    newPasswordPlaceholder: string;
+    pwChangeButton: string;
+    editProfileHeader: string;
+    deleteAccount: string;
+
     Unlike: string;
     profileEdit: string;
     notProfileResponse: string;
@@ -193,6 +201,7 @@ export const translate: Record<
     CompleteLeave: string;
     sureLeave: string;
     donotrenderprofile: string;
+
   }
 > = {
   [Language.ENGLISH]: {
@@ -392,9 +401,18 @@ export const translate: Record<
       "or the address of the page you requested was changed, deleted, and could not be found",
     BackToFeed: "Return to feed",
     diaryOwner: "'s Diary",
+
+    newPassword: "New Password",
+    confirmNewPassword: "Confirm new password",
+    newPasswordPlaceholder: "Enter your new password",
+    pwChangeButton: "Change",
+    editProfileHeader: "Edit Profile",
+    deleteAccount: "Delete Account",
+   
     LeaveNoti:"Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
     Unlike: "Unlike",
     saving:"Saving..."
+
   },
   [Language.KOREAN]: {
     saving:"저장 중..",
@@ -592,6 +610,16 @@ export const translate: Record<
       "요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.",
     BackToFeed: "피드로 돌아가기",
     diaryOwner: "님의 다이어리",
+
+    newPassword: "새 비밀번호",
+    confirmNewPassword: "새 비밀번호 확인",
+    newPasswordPlaceholder: "새로운 비밀번호를 입력해주세요",
+    pwChangeButton: "변경하기"
+    editProfileHeader: "프로필 편집"
+    deleteAccount: "회원탈퇴",
+    
+
     Unlike: "취소하기",
+
   },
 };
