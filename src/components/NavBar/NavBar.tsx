@@ -21,7 +21,7 @@ const NavBar = () => {
   const [profileData, setProfileData] = useState<
     MemberProfileDTO | undefined
   >();
-  const [hasAnyRead, setHasAnyRead] = useState(false);
+  const [_hasAnyRead, setHasAnyRead] = useState(false);
   const [onChangeSetting, setOnChangeSetting] = useState<boolean>(false);
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
@@ -89,19 +89,11 @@ const NavBar = () => {
               )
             }
           >
-            {hasAnyRead ? (
-              <img
-                src="/images/NoticeIcon.svg"
-                alt={t.alertImage}
-                className="w-7 h-7 cursor-pointer"
-              />
-            ) : (
-              <img
-                src="/images/NotificationAlertIcon.svg"
-                alt={t.alertImage}
-                className="w-7 h-7 cursor-pointer"
-              />
-            )}
+            <img
+              src="/images/NoticeIcon.svg"
+              alt={t.alertImage}
+              className="w-7 h-7 cursor-pointer"
+            />
           </div>
           <div
             className="flex items-center gap-2"
