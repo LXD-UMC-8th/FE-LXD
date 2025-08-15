@@ -8,6 +8,7 @@ import useFriendship from "../../hooks/queries/useFriendship";
 import useUnfriend from "../../hooks/mutations/useUnfriend"; // ✅ 친구삭제 훅
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
+import { useFriendCounts } from "../../context/FriendCountsContext";
 
 interface ProfileViewProps {
   user: {
@@ -34,12 +35,16 @@ const ProfileView = ({
   const { language } = useLanguage();
   const t = translate[language];
 
+  const { incRequests } = useFriendCounts();
+
   // 친구관계 상태(friend | pending | incoming | none)
   const { state, isLoading, refetchAll } = useFriendship(user.id);
 
   // ✅ 내부 확인 모달/버튼 로딩
   const [showConfirm, setShowConfirm] = useState(false);
   const [btnBusy, setBtnBusy] = useState(false);
+
+
 
   // ✅ 친구삭제 뮤테이션 (성공 시 friends / friendRequests invalidate)
   const { mutateAsync: unfriend } = useUnfriend();
@@ -61,6 +66,7 @@ const ProfileView = ({
   }, [user?.username]);
 
   const handleSendRequest = async () => {
+    incRequests(1);
     try {
       await postFriendRequest({ receiverId: user.id });
       onSendRequestClick?.();
