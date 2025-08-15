@@ -20,9 +20,6 @@ const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
 });
 
 // result.content 또는 result.contents 둘 다 지원
-const pickList = (r: any): CorrectionCommentDTO[] =>
-  (Array.isArray(r?.contents) ? r?.contents : r?.content) ?? [];
-
 export function useCorrectionComments(
   correctionId?: number,
   enabled: boolean = true,
