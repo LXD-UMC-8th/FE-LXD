@@ -23,6 +23,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailPage from "./pages/Feed/UserDetailPage";
+import "react-calendar/dist/Calendar.css";
 
 const publicRoutes: RouteObject[] = [
   {
