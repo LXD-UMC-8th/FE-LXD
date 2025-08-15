@@ -11,8 +11,8 @@ import { isIdValid, isNicknameValid } from "../../utils/validate";
 import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
+// import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 
 interface ProfilePageProps {
   userInfo: SignupFlowProps;
@@ -26,8 +26,8 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
   const [isIdAvailable, setIsIdAvailable] = useState<boolean | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
 
   const handleIDCheck = async () => {
     setIdTouched(true);
@@ -146,7 +146,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
 
       if (response.isSuccess) {
         console.log("회원가입 성공", response.result.member);
-        alert(t.signupSuccessAlert);
+        alert("회원가입 성공");
         navigate("/home");
       } else {
         alert(response.message);
@@ -154,7 +154,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
     } catch (error) {
       console.error("회원가입 실패:", error);
       console.log(userInfo);
-      alert(t.signupErrorAlert);
+      alert("회원가입 실패:");
     }
   };
 
@@ -167,7 +167,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home/signup" />
-          <TitleHeader title={t.profileHeader} />
+          <TitleHeader title="프로필 생성에 필요한 정보를 입력해주세요" />
         </section>
 
         <section className="w-full flex items-center justify-center">
@@ -186,7 +186,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <span>{t.addPhoto}</span>
+                <span>사진 추가</span>
               )}
             </label>
 
@@ -219,15 +219,15 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
             <div className="flex gap-2 items-end">
               <div className="flex-1">
                 <FormInput
-                  name={t.id}
-                  placeholder={t.idPlaceholder}
+                  name="아이디"
+                  placeholder="아이디를 입력해주세요"
                   input={userInfo.id}
                   onChange={(e) => handleInputChange("id", e.target.value)}
                   onBlur={() => setIdTouched(true)}
                 />
               </div>
               <IDButton
-                name={t.idCheck}
+                name="중복확인"
                 onClick={handleIDCheck}
                 disabled={!isIdValid(userInfo.id)}
               />
@@ -236,15 +236,15 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
               <>
                 {!isIdValid(userInfo.id) ? (
                   <span className="text-body2 text-red-500">
-                    {t.idConditionToast}
+                    2자 이상, 영어 소문자, 숫자, 특수기호(-._)만 사용가능
                   </span>
                 ) : idChecked && isIdAvailable === true ? (
                   <span className="text-body2 text-mint-500">
-                    {t.idAvaliableToast}
+                    사용가능한 아이디입니다.
                   </span>
                 ) : idChecked && isIdAvailable === false ? (
                   <span className="text-body2 text-red-500">
-                    {t.idNotAvaliableToast}
+                    이미 사용중인 아이디입니다.
                   </span>
                 ) : null}
               </>
@@ -252,34 +252,28 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name={t.nickname}
-              placeholder={t.nicknamePlaceholder}
+              name="닉네임"
+              placeholder="닉네임을 입력해주세요"
               input={userInfo.nickname}
               onChange={(e) => handleInputChange("nickname", e.target.value)}
               onBlur={() => setNicknameTouched(true)}
             />
             {!nicknameTouched || userInfo.nickname.trim() === "" ? (
-              <span className="text-body2 text-gray-600">
-                {t.nicknameConditionToast}
-              </span>
+              <span className="text-body2 text-gray-600">최대 20자</span>
             ) : !isNicknameValid(userInfo.nickname) ? (
-              <span className="text-body2 text-red-500">
-                {t.nicknameConditionToast}
-              </span>
+              <span className="text-body2 text-red-500">최대 20자</span>
             ) : (
-              <span className="text-body2 text-mint-500">
-                {t.nicknameConditionToast}
-              </span>
+              <span className="text-body2 text-mint-500">최대 20자</span>
             )}
           </div>
           <div className="flex justify-between">
             <LangOptionsButton
-              name={t.primaryLang}
+              name="모국어 / 주사용 언어"
               selected={userInfo.nativeLanguage}
               onSelect={handleNativeLanguageSelect}
             />
             <LangOptionsButton
-              name={t.learningLang}
+              name="학습 언어"
               selected={userInfo.studyLanguage}
               onSelect={handleStudyLanguageSelect}
             />
@@ -290,7 +284,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
           <SignupButton
             form="profile-form"
             type="submit"
-            name={t.signupButton}
+            name="가입완료"
             disabled={!isAllValid()}
           />
         </section>
