@@ -3,6 +3,7 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    changeProfile: string;
     CancelLikeInCorrection: string;
     FailToDeleteMemo: string;
     SeeMore: string;
@@ -121,6 +122,7 @@ export const translate: Record<
     findFriendsDesc2: string;
     unfriendConfirmTitle: string;
     unfriendConfirmAction: string;
+    undefinedErrorOccur: string;
     unfriendDoneToast: string;
     Loading: string;
     friendSearchPlaceholder: string;
@@ -142,6 +144,7 @@ export const translate: Record<
     deleteButton: string;
     cancelButton: string;
     pendingLabel: string;
+    saving: string;
     friendRequestFailed: string;
     profileImageAlt: string;
     sendFriendRequestButton: string;
@@ -175,10 +178,45 @@ export const translate: Record<
     SaveMemo: string;
     DeleteMemo: string;
     CancelLikeInCorrectionConfirm: string;
+    NotFoundComment1: string;
+    NotFoundComment2: string;
+    NotFoundComment3: string;
+    BackToFeed: string;
     diaryOwner: string;
+
+    newPassword: string;
+    confirmNewPassword: string;
+    newPasswordPlaceholder: string;
+    pwChangeButton: string;
+    editProfileHeader: string;
+    deleteAccount: string;
+    accountInfo: string;
+    profileInfo: string;
+    profileImg: string;
+    selectFile: string;
+    selectFilePlaceholder: string;
+    imgSize: string;
+    Unlike: string;
+    profileEdit: string;
+    notProfileResponse: string;
+    errorduringedit: string;
+    putInNick: string;
+    ToLeave: string;
+    LeaveNoti: string;
+    CompleteLeave: string;
+    sureLeave: string;
+    donotrenderprofile: string;
   }
 > = {
   [Language.ENGLISH]: {
+    donotrenderprofile:"Failed to load profile.",
+    ToLeave: "To leave",
+    CompleteLeave: "Complete Leave",
+    sureLeave: "Are you sure you want to leave the account?",
+    putInNick:"put in your nickname",
+    changeProfile: "Your profile has been modified.",
+        errorduringedit: "An error occurred while editing.",
+    notProfileResponse: "No profile information found.",
     EditMemo: "Edit Memo",
     SaveMemo: "Save Memo",
     PlzEnterInContent: "Please enter the memo content.",
@@ -222,6 +260,7 @@ export const translate: Record<
     id: "ID",
     idPlaceholder: "Enter your ID",
     idCheck: "Check",
+    undefinedErrorOccur: "undefined error",
     idConditionToast:
       "At least 2 characters, you can only use lowercase, numbers, and symbols(-._).",
     idAvaliableToast: "ID is avaliable.",
@@ -286,12 +325,13 @@ export const translate: Record<
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
     settingTitle: "Settings",
-    SaveChange: "Save Change",
+    SaveChange: "Save Changes",
     setLanguage: "Language Setting",
     nativeLanguage: "Native Language",
     studyLanguage: "Study Language",
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
+    profileEdit: "Edit Profile",
     SidebarDiary: "My Diary",
     SidebarCorrections: "MyCorrections",
     SidebarFriends: "Friends",
@@ -359,9 +399,33 @@ export const translate: Record<
     OnlyCanAddInSavedCorrection:
       "You can only add notes in the 'Saved Correction'.",
     DeleteMemo: "Delete Memo",
+    NotFoundComment1: "Sorry, the page could not be found.",
+    NotFoundComment2: "You entered a non-existent address,",
+    NotFoundComment3:
+      "or the address of the page you requested was changed, deleted, and could not be found",
+    BackToFeed: "Return to feed",
     diaryOwner: "'s Diary",
+
+    newPassword: "New Password",
+    confirmNewPassword: "Confirm new password",
+    newPasswordPlaceholder: "Enter your new password",
+    pwChangeButton: "Change",
+    editProfileHeader: "Edit Profile",
+    deleteAccount: "Delete Account",
+    accountInfo: "Account Information",
+    profileInfo: "Profile Information",
+    profileImg: "Profile Image",
+    selectFile: "Browse",
+    selectFilePlaceholder: "Select a file",
+    imgSize: "Please upload an image file up to 500MG.",
+    LeaveNoti:"Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
+    Unlike: "Unlike",
+    saving:"Saving..."
+
   },
   [Language.KOREAN]: {
+    saving:"저장 중..",
+    changeProfile: "프로필이 수정되었습니다.",
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
     OnlyCanAddInSavedCorrection: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
     NotSavedCorrection: "저장된 교정 목록이 없습니다.",
@@ -382,6 +446,7 @@ export const translate: Record<
     changePassword: "비밀번호 변경",
     signupHeader: "계정 생성을 위해 정보를 입력해주세요",
     beforeVerify: "인증하기",
+    errorduringedit: "수정 중 에러가 발생했습니다.",
     SeeMore: "더보기",
     CancelLikeInCorrection:
       "‘좋아요’ 취소 시 해당 교정이 ‘좋아요’ 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
@@ -399,6 +464,7 @@ export const translate: Record<
     pwNotConfirmedToast: "비밀번호가 일치하지 않습니다",
     profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
     addPhoto: "사진 추가",
+    profileEdit: "프로필 편집",
     id: "아이디",
     idPlaceholder: "아이디를 입력해주세요",
     idCheck: "중복확인",
@@ -408,6 +474,7 @@ export const translate: Record<
     FailToDeleteMemo: "메모 삭제에 실패했습니다.",
     nickname: "닉네임",
     AddMemo: "메모 추가",
+    putInNick:"닉네임을 입력해주세요.",
     nicknamePlaceholder: "닉네임을 입력해주세요",
     nicknameConditionToast: "최대 20자",
     primaryLang: "모국어 / 주사용 언어",
@@ -427,14 +494,18 @@ export const translate: Record<
     signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
     signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",
+    undefinedErrorOccur: "알 수 없는 에러",
+    sureLeave: "정말 탈퇴 하시겠습니까?",
     modaltabtitle_likes: "좋아요",
     titleStyle_FREE: "자유글",
     titleStyle_QUESTION: "질문글",
     visibility_PUBLIC: "공개",
+    donotrenderprofile: "프로필을 불러오지 못했습니다.",
     visibility_FRIEND: "친구공개",
     visibility_PRIVATE: "비공개",
     commentPermission_PUBLIC: "전체허용",
     commentPermission_FRIEND: "친구허용",
+    LeaveNoti:"계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다.",
     commentPermission_PRIVATE: "비허용",
     enrollButtonText: "등록하기",
     refreshButtonText: "새로고침",
@@ -456,6 +527,8 @@ export const translate: Record<
     Friend: "친구",
     CountFriend: "명",
     ContentNotification: "새로운 알림이 없습니다",
+    ToLeave: "탈퇴하기",
+    CompleteLeave:"탈퇴가 완료되었습니다.",
     LoadingNotification: "알림을 불러오는 중...",
     EditDiary: "수정하기",
     DeleteDiary: "삭제하기",
@@ -480,6 +553,7 @@ export const translate: Record<
     findFriendsDesc2: "다른 사람과 친구를 맺고, 다이어리를 구경해보세요.",
     unfriendConfirmTitle: "{name}님과 친구를 취소하시겠습니까?",
     unfriendConfirmAction: "친구 취소하기",
+    notProfileResponse: "프로필 응답이 없습니다.",
     unfriendDoneToast: "친구 취소가 완료되었습니다.",
     friendSearchPlaceholder: "친구 목록에서 아이디를 검색하세요",
     recentSearchTitle: "최근 검색항목",
@@ -539,6 +613,25 @@ export const translate: Record<
     Wednesday: "수",
     Thursday: "목",
     Friday: "금",
+    NotFoundComment1: "죄송합니다. 페이지를 찾을 수 없습니다.",
+    NotFoundComment2: "존재하지 않는 주소를 입력하셨거나,",
+    NotFoundComment3:
+      "요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.",
+    BackToFeed: "피드로 돌아가기",
     diaryOwner: "님의 다이어리",
+
+    newPassword: "새 비밀번호",
+    confirmNewPassword: "새 비밀번호 확인",
+    newPasswordPlaceholder: "새로운 비밀번호를 입력해주세요",
+    pwChangeButton: "변경하기",
+    editProfileHeader: "프로필 편집",
+    deleteAccount: "회원탈퇴",
+    accountInfo: "계정 정보",
+    profileInfo: "프로필 정보",
+    profileImg: "프로필 이미지",
+    selectFile: "파일선택",
+    selectFilePlaceholder: "파일을 선택해주세요",
+    imgSize: "최대 500MB의 이미지 파일을 업로드 해주세요.",
+    Unlike: "취소하기",
   },
 };

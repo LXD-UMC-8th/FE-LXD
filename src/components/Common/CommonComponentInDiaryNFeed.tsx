@@ -235,7 +235,7 @@ const CommonComponentInDiaryNFeed = ({
       {DeleteLikeModal && (
         <AlertModal
           title={t.ConfirmDeleteFeedLikes}
-          confirmText="취소하기"
+          confirmText={t.Unlike}
           onConfirm={(e) => {
             e.stopPropagation();
             setDeleteLikeModal(false);
