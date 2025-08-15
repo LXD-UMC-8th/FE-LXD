@@ -136,13 +136,13 @@ const RequestTab = () => {
                   <div className="flex flex-row gap-2">
                     <button
                       onClick={() => handleAccept(user.memberId)}
-                      className="px-3 py-1 text-xs text-white bg-[#4170FE] rounded hover:bg-blue-600 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
+                      className="px-3 py-1 text-xs text-white bg-[#4170FE] rounded hover:bg-blue-600 min-w-[64px] h-8 font-semibold cursor-pointer"
                     >
                       {t.acceptButton}
                     </button>
                     <button
                       onClick={() => handleRefuse(user.memberId)}
-                      className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
+                      className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-semibold cursor-pointer"
                     >
                       {t.deleteButton}
                     </button>
@@ -190,7 +190,7 @@ const RequestTab = () => {
                   <div className="flex gap-2">
                     <button
                       disabled
-                      className="px-3 py-1 text-xs text-[#618BFD] bg-[#EDF3FE] rounded min-w-[64px] h-8 font-[Pretendard] font-semibold flex items-center justify-center gap-1"
+                      className="px-3 py-1 text-xs text-[#618BFD] bg-[#EDF3FE] rounded min-w-[64px] h-8 font-semibold flex items-center justify-center gap-1"
                     >
                       <img
                         src="/images/requestingIcon.svg"
@@ -201,7 +201,7 @@ const RequestTab = () => {
                     </button>
                     <button
                       onClick={() => handleCancel(user.memberId)}
-                      className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-[Pretendard] font-semibold cursor-pointer"
+                      className="px-3 py-1 text-xs text-[#747785] border-[1.5px] border-[#A4A7B2] rounded hover:bg-gray-50 min-w-[64px] h-8 font-semibold cursor-pointer"
                     >
                       {t.cancelButton}
                     </button>

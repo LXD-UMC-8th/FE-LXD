@@ -1,3 +1,4 @@
+// src/components/Friends/Tabs/FindTab.tsx
 import { useState } from "react";
 import FriendListPanel from "../FriendListPanel";
 import ProfileView from "../ProfileView";
@@ -12,7 +13,7 @@ interface Friend {
   id: number;            // 서버 memberId에 해당
   name: string;
   username: string;
-  image?: string;
+  image?: string | null; // ✅ null 허용 (FriendListPanel과 호환)
   isFriend: boolean;
 }
 
@@ -43,7 +44,9 @@ const FindTab = () => {
       setRequestingUsernames((prev) =>
         prev.includes(username) ? prev : [...prev, username]
       );
-      setSelectedUser((prev) => (prev?.username === username ? { ...prev } : prev));
+      setSelectedUser((prev) =>
+        prev?.username === username ? { ...prev } : prev
+      );
     }
     setShowProfileModal(false);
   };
@@ -62,7 +65,7 @@ const FindTab = () => {
 
   return (
     // ✅ 고정 레이아웃: 최소 가로폭(1120px) 유지
-    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
+    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA]">
       {/* 왼쪽 친구 검색 패널 - 항상 표시 */}
       <div className="flex-none w-[420px] border-r border-gray-200 bg-white">
         <FriendListPanel
@@ -75,7 +78,13 @@ const FindTab = () => {
       <div className="flex-none w-[700px] px-10 mx-auto pt-8 flex items-start justify-center">
         {selectedUser ? (
           <ProfileView
-            user={selectedUser}
+            user={{
+              id: selectedUser.id,
+              name: selectedUser.name,
+              username: selectedUser.username,
+              image: selectedUser.image ?? undefined, // ✅ null → undefined 정규화
+              isFriend: selectedUser.isFriend,
+            }}
             onClose={onClearSelection}
             onUnfriendClick={onUnfriendClick}
             onAvatarClick={() => setShowProfileModal(true)}
@@ -85,11 +94,11 @@ const FindTab = () => {
             }
           />
         ) : (
-          <div className="flex flex-col items-start bg-[#F5F7FE] w/full rounded-xl px-8 py-10 text-left">
+          <div className="flex flex-col items-start bg-[#F5F7FE] w-full rounded-xl px-8 py-10 text-left">
             <img
               src="/images/findtabpic.svg"
               alt="find friends"
-              className="w-[25000px] max-w-full mb-6 rounded-xl"
+              className="w-[250000px] max-w-full mb-6 rounded-xl"  // ✅ 오타 수정
             />
             <p className="text-xl font-semibold text-black">
               {t.findFriendsHeadline}
@@ -119,10 +128,10 @@ const FindTab = () => {
       {showProfileModal && selectedUser && (
         <ProfileModal
           user={{
-            memberId: selectedUser.id,         // ✅ id → memberId 매핑
+            memberId: selectedUser.id,                        // ✅ id → memberId 매핑
             name: selectedUser.name,
             username: selectedUser.username,
-            profileImage: selectedUser.image,  // ✅ image → profileImage 매핑
+            profileImage: selectedUser.image ?? undefined,    // ✅ null → undefined
             isFriend: selectedUser.isFriend,
             isRequesting: isRequesting(selectedUser.username),
           }}

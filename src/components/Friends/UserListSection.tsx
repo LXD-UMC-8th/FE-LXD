@@ -37,10 +37,10 @@ const UserListSection = ({ users, isLoading, onUserCardClick, onFriendButtonClic
                 <div className="flex items-center gap-3 overflow-hidden">
                   <Avatar src={user.image} alt={user.name} size="w-10 h-10" />
                   <div className="truncate">
-                    <div className="text-sm font-semibold text-gray-900 truncate font-[Pretendard]">
+                    <div className="text-sm font-semibold text-gray-900 truncate ">
                       {user.name}
                     </div>
-                    <div className="text-xs text-gray-500 truncate font-[Pretendard]">
+                    <div className="text-xs text-gray-500 truncate">
                       @{user.username}
                     </div>
                   </div>
@@ -49,7 +49,7 @@ const UserListSection = ({ users, isLoading, onUserCardClick, onFriendButtonClic
                 {/* 친구 버튼 */}
                 {onFriendButtonClick && (
                   <button
-                    className="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-300 transition-colors font-[Pretendard] shrink-0 cursor-pointer"
+                    className="px-3 py-1 text-xs text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-300 transition-colors shrink-0 cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       onFriendButtonClick(user);
