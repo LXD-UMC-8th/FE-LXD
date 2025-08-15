@@ -99,7 +99,8 @@ const FriendTab = () => {
             name: selectedUser.nickname,
             username: selectedUser.username,
             profileImage: selectedUser.profileImg,
-            isFriend: true,
+            memberId: selectedUser.memberId,   
+            isFriend: true, 
           }}
           onClose={() => setShowProfileModal(false)}
           onUnfriendClick={() => {
