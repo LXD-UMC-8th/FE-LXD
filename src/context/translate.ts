@@ -180,6 +180,7 @@ export const translate: Record<
     NotFoundComment3: string;
     BackToFeed: string;
     diaryOwner: string;
+    Unlike: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -368,6 +369,7 @@ export const translate: Record<
     NotFoundComment3: "or the address of the page you requested was changed, deleted, and could not be found",
     BackToFeed: "Return to feed",
     diaryOwner: "'s Diary",
+    Unlike: "Unlike",
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -552,5 +554,6 @@ export const translate: Record<
     NotFoundComment3: "요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.",
     BackToFeed: "피드로 돌아가기",
     diaryOwner: "님의 다이어리",
+    Unlike: "취소하기",
   },
 };
