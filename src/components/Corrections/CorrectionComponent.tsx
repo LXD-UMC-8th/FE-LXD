@@ -16,10 +16,26 @@ interface Props {
   correction: SavedCorrectionItem;
 }
 
+/** ---- localStorage for liked map (동기화용) ---- */
+const LIKED_KEY = "lxd-liked-corrections";
+function readLikedMap(): Record<number, boolean> {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(localStorage.getItem(LIKED_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+function writeLikedMap(updater: (m: Record<number, boolean>) => Record<number, boolean>) {
+  const m = readLikedMap();
+  const next = updater(m);
+  localStorage.setItem(LIKED_KEY, JSON.stringify(next));
+}
+
 const CorrectionComponent = ({ correction }: Props) => {
   /** ---------- 기본 값/ID ---------- */
   const correctionId = correction.correctionId; // 항상 존재(타입 보장)
-  const savedId = correction.savedCorrectionId; // '내가 받은 교정' 탭에서만 의미
+  const savedId = correction.savedCorrectionId; // '저장 탭'에서만 의미
   const isSavedList = !!savedId;
 
   /** ---------- 좋아요 ---------- */
@@ -51,6 +67,10 @@ const CorrectionComponent = ({ correction }: Props) => {
       await toggleLike({ correctionId }); // 서버는 POST 하나로 토글
       setLiked(!prevLiked);
       setLikeCount(prevLiked ? Math.max(0, prevCnt - 1) : prevCnt + 1);
+
+      // ✅ localStorage 동기화 (리패치/리마운트 시 표시 일관)
+      writeLikedMap((m) => ({ ...m, [correctionId]: !prevLiked }));
+
       // 제공 탭 리스트 동기화
       qc.invalidateQueries({ queryKey: ["providedCorrections"] });
     } finally {
@@ -74,6 +94,10 @@ const CorrectionComponent = ({ correction }: Props) => {
 
     try {
       await toggleLike({ correctionId });
+
+      // ✅ localStorage 동기화 (false 또는 제거)
+      writeLikedMap((m) => ({ ...m, [correctionId]: false }));
+
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch {
       // 롤백
@@ -194,7 +218,7 @@ const CorrectionComponent = ({ correction }: Props) => {
       {!!correction.diaryTitle && (
         <div className="mt-1">
           <span className="text-primary-600 font-semibold underline cursor-pointer">
-            {correction.diaryInfo?.diaryTitle}
+            {correction.diaryTitle}
           </span>
         </div>
       )}
@@ -256,7 +280,7 @@ const CorrectionComponent = ({ correction }: Props) => {
           {listLoading && <LoadingModal />}
 
           {!listLoading && comments.length === 0 && (
-            <div className="text-sm text-gray-400">첫 댓글을 남겨보세요.</div>
+            <div className="text-sm text-gray-400">댓글이 없습니다.</div>
           )}
 
           {!listLoading &&
