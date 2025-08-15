@@ -8,7 +8,7 @@ import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
 
 const FriendTab = () => {
-  const { language } = useLanguage();           // ✅
+  const { language } = useLanguage();
   const t = translate[language];
   const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<

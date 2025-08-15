@@ -27,11 +27,11 @@ const DiaryHeader = ({
           </div>
           <div className="pb-2 mt-5 text-xl font-bold grid grid-rows-2 gap-4">
             <TitleHeader
-              title={`${DiaryHeaderProps?.username} 님의 다이어리`}
+              title={`${DiaryHeaderProps?.nickname} ${t.diaryOwner}`}
             />
             <div className=" flex text-gray-600">
               <p className="text-[16px] flex gap-3 font-normal">
-                <p className="font-bold">@{DiaryHeaderProps?.nickname} </p>
+                <p className="font-bold">@{DiaryHeaderProps?.username} </p>
                 <p>&middot;</p>
                 <p className="flex">
                   {DiaryHeaderProps?.diaryCount > 1 ? t.Diaries : t.Diary}

@@ -179,6 +179,7 @@ export const translate: Record<
     NotFoundComment2: string;
     NotFoundComment3: string;
     BackToFeed: string;
+    diaryOwner: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -259,8 +260,8 @@ export const translate: Record<
     commentPermission_PUBLIC: "PUBLIC",
     commentPermission_FRIEND: "FRIEND",
     commentPermission_PRIVATE: "PRIVATE",
-    enrollButtonText: "ENROLL",
-    refreshButtonText: "REFRESH",
+    enrollButtonText: "POST",
+    refreshButtonText: "Refresh",
     questionGeneratorButtonText: "Generate Question",
     titleInputPlaceholder: "Put in title",
     createNewDiary: "New Diary",
@@ -366,6 +367,7 @@ export const translate: Record<
     NotFoundComment2: "You entered a non-existent address,",
     NotFoundComment3: "or the address of the page you requested was changed, deleted, and could not be found",
     BackToFeed: "Return to feed",
+    diaryOwner: "'s Diary",
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -549,5 +551,6 @@ export const translate: Record<
     NotFoundComment2: "존재하지 않는 주소를 입력하셨거나,",
     NotFoundComment3: "요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.",
     BackToFeed: "피드로 돌아가기",
+    diaryOwner: "님의 다이어리",
   },
 };
