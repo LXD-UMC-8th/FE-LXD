@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getDiaryStats } from "../../apis/diary";
@@ -13,8 +13,6 @@ const CalendarModal = () => {
   const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
   const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
-
-  const _isFirstRender = useRef(true);
 
   const _datesToRequest = useMemo(() => {
     const current = new Date(activeStartDate);
@@ -31,13 +29,10 @@ const CalendarModal = () => {
     ];
   }, [activeStartDate]);
 
-  useEffect(() => {
-    if (_isFirstRender.current) {
-      _isFirstRender.current = false;
-      return;
-    }
-    console.log("calendarModal re-rendering");
+  console.log("this is CalendarModal");
+  console.log("dates to request", _datesToRequest);
 
+  useEffect(() => {
     Promise.all(_datesToRequest.map(getDiaryStats))
       .then((response) => {
         const merged: value[] = response.flatMap((r) => r?.result || []);
@@ -46,7 +41,7 @@ const CalendarModal = () => {
       .catch((err) => {
         console.error("Error fetching diary stats:", err);
       });
-  }, []);
+  }, [_datesToRequest]);
 
   const _dateToCount = useMemo<Record<string, number>>(() => {
     return _values.reduce<Record<string, number>>(
