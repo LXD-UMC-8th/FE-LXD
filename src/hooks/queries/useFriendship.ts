@@ -8,19 +8,18 @@ import type {
 } from "../../utils/types/friend";
 import { QUERY_KEY } from "../../constants/key";
 
-type FriendshipState = "friend" | "pending" | "incoming" | "none";
+export type FriendshipState = "friend" | "pending" | "incoming" | "none";
+
+// ✅ 어디서나 invalidate할 수 있도록 쿼리키 상수 export
+export const FRIENDS_QK = ["friends"] as const;
+export const FRIEND_REQUESTS_QK = ["friendRequests"] as const;
 
 // undefined 안전 배열 헬퍼
-const pick = <T>(arr: T[] | undefined | null) =>
-  Array.isArray(arr) ? arr : [];
+const pick = <T>(arr: T[] | undefined | null) => (Array.isArray(arr) ? arr : []);
 
-// 환경변수 안전하게 읽기 (CRA/Vite 모두 대응)
+// 환경변수 안전하게 읽기
 const FRIEND_FETCH_SIZE: number = Number(
-  // Vite
-
-  (typeof import.meta !== "undefined" &&
-    (import.meta as any)?.env?.VITE_FRIEND_FETCH_SIZE) ??
-    // CRA
+  (typeof import.meta !== "undefined" && (import.meta as any)?.env?.VITE_FRIEND_FETCH_SIZE) ??
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (globalThis as any)?.process?.env?.REACT_APP_FRIEND_FETCH_SIZE ??
     100
@@ -29,7 +28,8 @@ const FRIEND_FETCH_SIZE: number = Number(
 export default function useFriendship(targetMemberId: number) {
   // 1) 내 친구 목록
   const friendsQ = useQuery({
-    queryKey: [QUERY_KEY.friends, 1, FRIEND_FETCH_SIZE] as const,
+    queryKey: FRIENDS_QK, // ✅ 키 단순화
+
     queryFn: () => getFriends(1, FRIEND_FETCH_SIZE),
     staleTime: 30_000,
     select: (res: FriendListResponseDTO) =>
@@ -40,7 +40,9 @@ export default function useFriendship(targetMemberId: number) {
 
   // 2) 보낸/받은 친구요청
   const requestsQ = useQuery({
-    queryKey: [QUERY_KEY.friendRequests] as const,
+
+    queryKey: FRIEND_REQUESTS_QK, // ✅ 키 단순화
+
     queryFn: getFriendRequests,
     staleTime: 30_000,
     select: (res: FriendRequestListResponseDTO) => ({
@@ -73,7 +75,6 @@ export default function useFriendship(targetMemberId: number) {
     return { state, isFriend, isPendingSent, isPendingReceived };
   }, [friendsQ.data, requestsQ.data, targetMemberId]);
 
-  // ✅ v5 호환: isPending 사용
   const isLoading = friendsQ.isPending || requestsQ.isPending;
 
   const refetchAll = async () => {
@@ -81,11 +82,11 @@ export default function useFriendship(targetMemberId: number) {
   };
 
   return {
-    state, // "friend" | "pending" | "incoming" | "none"
+    state,
     isFriend,
     isPendingSent,
     isPendingReceived,
-    isLoading, // 컴포넌트에선 그대로 사용 가능
+    isLoading,
     refetchAll,
   };
 }

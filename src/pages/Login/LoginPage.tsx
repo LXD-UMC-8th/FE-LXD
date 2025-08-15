@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
 import FormInput from "../../components/Login/FormInput";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
+//import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
+import { useGoogleLogin } from "@react-oauth/google";
+import type { GoogleLoginRequestDTO } from "../../utils/types/auth";
+import { postGoogleLogin } from "../../apis/auth";
 import { setLocalStorageItem } from "../../apis/axios";
-import { useHomeLanguage } from "../../context/HomeLanguageProvider";
-import { translate } from "../../context/translate";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const { language } = useLanguage();
+  // const t = translate[language];
   const navigate = useNavigate();
-  const { language } = useHomeLanguage();
-  const t = translate[language];
 
   const { mutateAsync: postSignin } = useSignin();
   // 로그인 요청 함수
@@ -31,11 +34,11 @@ const LoginPage = () => {
         alert(t.loginSuccessAlert);
         navigate("/");
       } else {
-        alert(response?.message ?? t.loginErrorAlert);
+        alert(response?.message ?? "로그인에 실패했습니다.");
       }
     } catch (error) {
       console.log("로그인 실패", error);
-      alert(t.loginErrorAlert);
+      alert("로그인 중 오류가 발생하였습니다.");
     }
   };
   const isFormValid = email.trim() !== "" && password.trim() !== "";
@@ -76,59 +79,14 @@ const LoginPage = () => {
     return () => window.removeEventListener("keydown", onGlobalKey);
   }, [isFormValid]);
 
-  // const googleLogin = useGoogleLogin({
-  //   flow: "auth-code",
-  //   onSuccess: async ({ code }) => {
-  //     console.log("구글 로그인 성공, code:", code);
-
-  //     // try {
-  //     //   const res = await postGoogleLogin({code});
-
-  //     //   if (res.isSuccess) {
-  //     //     const { accessToken, refreshToken, member } = res.result;
-
-  //     //     // 토큰 저장
-  //     //     localStorage.setItem("accessToken", accessToken);
-  //     //     localStorage.setItem("refreshToken", refreshToken);
-
-  //     //     // 원하는 페이지로 이동
-  //     //     navigate("/feed");
-  //     //     console.log("로그인 성공:", member);
-  //     //   } else {
-  //     //     alert("로그인 실패: " + res.message);
-  //     //   }
-  //     // } catch (err) {
-  //     //   console.error("구글 로그인 실패", err);
-  //     //   alert("로그인 중 오류 발생");
-  //     // }
-  //   },
-  //   onError: (err) => {
-  //     console.error("구글 로그인 실패", err);
-  //     alert("구글 로그인에 실패했습니다");
-  //   },
-  //   // redirect_uri: import.meta.env.DEV
-  //   //   ? "http://localhost:5173/feed"
-  //   //   : "https://lxd-fe.netlify.app/feed", // 구글 콘솔에 등록한 redirect_uri와 동일해야 함
-  // });
-
-  const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
-  const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
-  const REDIRECT_URI = import.meta.env.DEV
-    ? "http://localhost:5173/feed"
-    : "https://lxd-fe.netlify.app/feed";
+  const googleLogin = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: async ({ code }) => {
+      console.log("구글 로그인 성공, code:", code);
 
   const handleGoogleLogin = () => {
     console.log("구글 로그인 요청");
-    const params = new URLSearchParams({
-      client_id: CLIENT_ID,
-      redirect_uri: REDIRECT_URI,
-      response_type: "code",
-      scope: "openid email profile",
-      access_type: "offline",
-      prompt: "consent",
-      // PKCE 안 씀: code_challenge / code_challenge_method 절대 넣지 않음
-    });
-    window.location.href = `${GOOGLE_AUTH_URL}?${params.toString()}`;
+    googleLogin();
   };
 
   return (
@@ -152,15 +110,15 @@ const LoginPage = () => {
           className="flex flex-col space-y-5"
         >
           <FormInput
-            name={t.email}
-            placeholder={t.emailPlaceholder}
+            name="이메일"
+            placeholder="이메일을 입력하세요"
             input={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 
           <FormInput
-            name={t.password}
-            placeholder={t.passwordPlaceholder}
+            name="비밀번호"
+            placeholder="passwordPlaceholder"
             input={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
@@ -176,7 +134,7 @@ const LoginPage = () => {
       bg-[#4170FE] hover:bg-blue-600 cursor-pointer transition 
       disabled:bg-gray-300"
           >
-            <span className="text-subhead3 text-white">{t.login}</span>
+            <span className="text-subhead3 text-white">login</span>
           </button>
           <button
             type="button"
@@ -186,7 +144,7 @@ const LoginPage = () => {
           >
             <img alt="google logo" src="images/Google__G__logo.svg" />
             <span className="text-subhead3 text-gray-600 font-medium">
-              {t.googleLogin}
+              googleLogin
             </span>
           </button>
 
@@ -194,8 +152,8 @@ const LoginPage = () => {
             className="flex w-full justify-between text-body3 text-gray-700 py-3 
         underline underline-offset-2 cursor-pointer"
           >
-            <a href="/home/signup">{t.signup}</a>
-            <a href="/home/signup/change-pw">{t.changePassword}</a>
+            <a href="/home/signup">signup</a>
+            <a href="/home/signup/change-pw">changePassword</a>
           </div>
         </section>
       </div>
