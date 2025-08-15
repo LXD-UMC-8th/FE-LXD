@@ -21,7 +21,7 @@ const NavBar = () => {
   const [profileData, setProfileData] = useState<
     MemberProfileDTO | undefined
   >();
-  const [hasAnyRead, setHasAnyRead] = useState(false);
+  const [_hasAnyRead, setHasAnyRead] = useState(false);
   const [onChangeSetting, setOnChangeSetting] = useState<boolean>(false);
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 

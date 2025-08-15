@@ -614,8 +614,8 @@ export const translate: Record<
     newPassword: "새 비밀번호",
     confirmNewPassword: "새 비밀번호 확인",
     newPasswordPlaceholder: "새로운 비밀번호를 입력해주세요",
-    pwChangeButton: "변경하기"
-    editProfileHeader: "프로필 편집"
+    pwChangeButton: "변경하기",
+    editProfileHeader: "프로필 편집",
     deleteAccount: "회원탈퇴",
     
 

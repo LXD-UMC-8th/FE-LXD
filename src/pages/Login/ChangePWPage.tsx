@@ -257,9 +257,7 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
                 {t.pwConditionToast}
               </span>
             ) : (
-              <span className="text-body2 text-mint-500">
-                {t.pwValidToast}
-              </span>
+              <span className="text-body2 text-mint-500">{t.pwValidToast}</span>
             )}
           </div>
           <div className="flex flex-col space-y-2">
