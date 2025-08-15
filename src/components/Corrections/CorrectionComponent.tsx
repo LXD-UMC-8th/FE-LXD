@@ -194,7 +194,7 @@ const CorrectionComponent = ({ correction }: Props) => {
       {!!correction.diaryTitle && (
         <div className="mt-1">
           <span className="text-primary-600 font-semibold underline cursor-pointer">
-            {correction.diaryTitle}
+            {correction.diaryInfo?.diaryTitle}
           </span>
         </div>
       )}
@@ -206,7 +206,9 @@ const CorrectionComponent = ({ correction }: Props) => {
         {!!correction.corrected && (
           <div className="flex gap-2">
             <div className="w-1.5 rounded bg-primary-500 mt-1" />
-            <p className="text-body1 font-semibold text-primary-600">{correction.corrected}</p>
+            <p className="text-body1 font-semibold text-primary-600">
+              {correction.corrected}
+            </p>
           </div>
         )}
 
@@ -222,7 +224,11 @@ const CorrectionComponent = ({ correction }: Props) => {
           className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 cursor-pointer"
         >
           <img
-            src={openReply ? "/images/commentIcon.svg" : "/images/emptycommentIcon.svg"}
+            src={
+              openReply
+                ? "/images/commentIcon.svg"
+                : "/images/emptycommentIcon.svg"
+            }
             alt="댓글"
             className="w-5 h-5"
           />
@@ -276,7 +282,11 @@ const CorrectionComponent = ({ correction }: Props) => {
       {!!isSavedList && (
         <div className="mt-4 flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
-            <img src="/images/MemoPlusIcon.svg" alt="메모 추가" className="w-4 h-4" />
+            <img
+              src="/images/MemoPlusIcon.svg"
+              alt="메모 추가"
+              className="w-4 h-4"
+            />
             <input
               type="text"
               placeholder="메모를 추가하기"

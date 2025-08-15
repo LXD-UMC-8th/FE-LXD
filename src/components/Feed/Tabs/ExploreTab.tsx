@@ -81,6 +81,8 @@ const ExploreTab = () => {
               key={d.diaryId}
               role="button"
               tabIndex={0}
+              aria-label={`Open diary ${d.diaryId}`}
+              title={`Open diary ${d.diaryId}`}
               onClick={() => handleOpenDiary(d.diaryId)}
               onKeyDown={(e) => e.key === "Enter" && handleOpenDiary(d.diaryId)}
             >

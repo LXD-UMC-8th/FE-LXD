@@ -1,7 +1,11 @@
 // src/hooks/queries/useProvidedCorrections.ts
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProvidedCorrections } from "../../apis/correctionsProvided";
-import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
+import type {
+  getCorrectionProvidedResponseDTO,
+  ProvidedProps,
+  SavedCorrectionItem,
+} from "../../utils/types/savedCorrection";
 
 /** ---- localStorage for liked map ---- */
 const LIKED_KEY = "lxd-liked-corrections";

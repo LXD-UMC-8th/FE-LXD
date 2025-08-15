@@ -1,9 +1,6 @@
 import NotificationContent from "./NotificationContent";
-import {
-  getSubscribeToNotifications,
-  getNotifications,
-} from "../../apis/notification";
-import { useEffect, useState } from "react";
+import { getNotifications } from "../../apis/notification";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useNotificationReadAll } from "../../hooks/mutations/useNotification";
@@ -12,7 +9,11 @@ import { useInView } from "react-intersection-observer";
 import type { getNotificationsResponseDTO } from "../../utils/types/notification";
 import { useNotifications } from "../../hooks/mutations/useNotification";
 
-const Notification = () => {
+interface NotificationProps {
+  onChangeSetting?: boolean;
+  setOnChangeSetting: Dispatch<SetStateAction<boolean>>;
+}
+const Notification = ({ setOnChangeSetting }: NotificationProps) => {
   const { language } = useLanguage();
   const t = translate[language];
   const [_isRender, setIsRender] = useState<boolean>(false);
@@ -21,7 +22,7 @@ const Notification = () => {
 
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
     queryKey: ["notifications"],
-    queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number),
+    queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number, 5),
     getNextPageParam: (last: getNotificationsResponseDTO) =>
       last.result.hasNext ? last.result.page + 1 : undefined,
   });
@@ -34,29 +35,6 @@ const Notification = () => {
       if (!isFetching && hasNextPage) fetchNextPage();
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
-
-  //알람 구독을 위한 event처리
-  useEffect(() => {
-    let es: EventSource | null = null;
-    const setupSSE = () => {
-      if (es) {
-        es.close();
-      }
-      es = getSubscribeToNotifications();
-    };
-
-    setupSSE();
-
-    const intervalId = setInterval(() => {
-      console.log("🔁 Re-subscribing to SSE after 50 minutes...");
-      setupSSE();
-    }, 50 * 60 * 1000);
-
-    return () => {
-      clearInterval(intervalId);
-      if (es) es.close();
-    };
-  }, []);
 
   const handleReadAll = () => {
     patchReadAllNotifications(data?.pages[0].result.totalElements as number);
@@ -84,14 +62,15 @@ const Notification = () => {
             </div>
           ) : (
             data.pages.flatMap((page) =>
-              page.result.contents.map((note) => (
+              page.result.contents.map((note, _idx) => (
                 <div
                   onClick={() => {
                     patchRedirectNotification({ notificationId: note.id });
+                    setOnChangeSetting((onChangeSetting) => !onChangeSetting);
                   }}
                 >
                   <NotificationContent
-                    key={note.id}
+                    key={_idx}
                     notifications={note}
                     onClick={() => setIsRender((prev) => !prev)}
                   />

@@ -11,9 +11,10 @@ export interface SavedCorrectionsResponseDTO
       size: number;
       hasNext: boolean;
     };
-  }> {}
+  };
+};
 
-export interface SavedCorrectionContentDTO {
+export type SavedCorrectionContentDTO = {
   savedCorrectionId: number;
   memo: string;
   correction: {
@@ -36,7 +37,7 @@ export interface SavedCorrectionContentDTO {
     nickname: string;
     profileImageUrl: string;
   };
-}
+};
 
 /** ---------- 화면에서 바로 쓰기 좋은 평탄화 타입 ---------- */
 export interface SavedCorrectionItem {
@@ -57,13 +58,32 @@ export interface SavedCorrectionItem {
   likeCount: number;
 
   // 연결 정보
-  diaryId: number;
-  diaryTitle: string;
+  diaryInfo?: {
+    createdAt?: string;
+    diaryId?: number;
+    thumbImg?: string;
+    title?: string;
+    userProfileImg?: string;
+    username?: string;
+    diaryTitle?: string;
+  };
 
   // (옵션) 제공 탭에서 서버가 주면 씀
   liked?: boolean;
 
   // 작성자
+  member?: {
+    memberId?: number;
+    username?: string;
+    nickname?: string;
+    profileImageUrl?: string;
+  };
+
+  diaryTitle?: string;
+  diaryId?: string;
+}
+
+export type getCorrectionProvidedResponse = {
   member: {
     memberId: number;
     username: string;

@@ -21,7 +21,7 @@ export function useSavedCorrections() {
       last.result.savedCorrections.hasNext
         ? last.result.savedCorrections.page + 1
         : undefined,
-    select: (data) =>
+    select: (data: InfiniteData<SavedCorrectionsResponseDTO>) =>
       data.pages.flatMap((p) =>
         (p.result.savedCorrections.contents ?? []).map(normalizeSavedCorrection)
       ),

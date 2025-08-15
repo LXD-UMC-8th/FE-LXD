@@ -354,7 +354,7 @@ export const translate: Record<
     visibility_PRIVATE: "비공개",
     commentPermission_PUBLIC: "전체허용",
     commentPermission_FRIEND: "친구허용",
-    commentPermission_PRIVATE: "비공개",
+    commentPermission_PRIVATE: "비허용",
     enrollButtonText: "등록하기",
     refreshButtonText: "새로고침",
     questionGeneratorButtonText: "질문 생성하기",
