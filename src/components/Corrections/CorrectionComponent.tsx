@@ -1,150 +1,233 @@
-import { useRef, useState } from "react";
+// src/components/Corrections/CorrectionComponent.tsx
+import type React from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import ProfileInCorrections from "./ProfileInCorrections";
-import {
-  postSavedMemo,
-  patchSavedMemo,
-  deleteSavedMemo,
-} from "../../apis/correctionsSaved";
-import { useCorrectionComments } from "../../hooks/queries/useCorrectionComments";
+import AlertModal from "../Common/AlertModal";
+import LoadingModal from "../Common/LoadingModal";
+
+import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
+import { useToggleCorrectionLike } from "../../hooks/mutations/CorrectionLike/useToggleCorrectionLike";
+import { useUpsertSavedMemo, useDeleteSavedMemo } from "../../hooks/mutations/useSavedMemo";
+
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
-import AlertModal from "../Common/AlertModal"; // ✅ 모달
 
 interface Props {
   correction: SavedCorrectionItem;
 }
 
+/** ---- localStorage for liked map (동기화용) ---- */
+const LIKED_KEY = "lxd-liked-corrections";
+function readLikedMap(): Record<number, boolean> {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(localStorage.getItem(LIKED_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+function writeLikedMap(updater: (m: Record<number, boolean>) => Record<number, boolean>) {
+  const m = readLikedMap();
+  const next = updater(m);
+  localStorage.setItem(LIKED_KEY, JSON.stringify(next));
+}
+
 const CorrectionComponent = ({ correction }: Props) => {
-  // ===== 좋아요 =====
-  const [isLiked, setIsLiked] = useState<boolean>(
-    (correction as any)?.liked ?? (correction as any)?.isLiked ?? false
-  );
-  const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
-  const [deleteLikeModal, setDeleteLikeModal] = useState(false);
-
-  // ===== 댓글 토글 =====
-  const [openReply, setOpenReply] = useState(false);
-
-  // ===== 메모 (등록/수정/삭제) =====
-  const initialMemo = correction.memo ?? "";
-  // ✅ baseline으로 관리(저장 성공 시 갱신)
-  const [baselineMemo, setBaselineMemo] = useState<string>(initialMemo);
-  const [memoText, setMemoText] = useState<string>(initialMemo);
-  const isDirty = memoText.trim() !== baselineMemo.trim(); // 변경 여부
-
-  const savedId = correction.savedCorrectionId; // 저장 탭에서만 존재
+  /** ---------- 기본 값/ID ---------- */
+  const correctionId = correction.correctionId; // 항상 존재(타입 보장)
+  const savedId = correction.savedCorrectionId; // '저장 탭'에서만 의미
   const isSavedList = !!savedId;
 
-  const hadMemoAtMount = useRef<boolean>(!!initialMemo.trim());
+  /** ---------- 좋아요 ---------- */
+  // 제공 탭(liked가 올 수도 있음), 저장 탭(무조건 true) 케이스 모두 커버
+  const initiallyLiked = isSavedList ? true : Boolean((correction as any).liked);
+  const [liked, setLiked] = useState<boolean>(initiallyLiked);
+  const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
+  const [liking, setLiking] = useState(false);
+  const [deleteLikeOpen, setDeleteLikeOpen] = useState(false);
+  const [removed, setRemoved] = useState(false); // 저장 탭에서 취소 시 카드 숨김
+
   const qc = useQueryClient();
-  const [isSaving, setIsSaving] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const { mutateAsync: toggleLike } = useToggleCorrectionLike();
+
+  const onClickLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (liking || removed) return;
+
+    if (isSavedList && liked) {
+      // 저장 탭: 취소 확인 모달
+      setDeleteLikeOpen(true);
+      return;
+    }
+
+    setLiking(true);
+    const prevLiked = liked;
+    const prevCnt = likeCount;
+    try {
+      await toggleLike({ correctionId }); // 서버는 POST 하나로 토글
+      setLiked(!prevLiked);
+      setLikeCount(prevLiked ? Math.max(0, prevCnt - 1) : prevCnt + 1);
+
+      // ✅ localStorage 동기화 (리패치/리마운트 시 표시 일관)
+      writeLikedMap((m) => ({ ...m, [correctionId]: !prevLiked }));
+
+      // 제공 탭 리스트 동기화
+      qc.invalidateQueries({ queryKey: ["providedCorrections"] });
+    } finally {
+      setLiking(false);
+    }
+  };
+
+  const confirmUnlike = async (e?: React.MouseEvent) => {
+    e?.stopPropagation?.();
+    if (liking || removed) return;
+
+    setDeleteLikeOpen(false);
+    setLiking(true);
+
+    // 낙관적 업데이트: 카드 숨김 + 카운트/상태 변경
+    const prevLiked = liked;
+    const prevCnt = likeCount;
+    setLiked(false);
+    setLikeCount(Math.max(0, prevCnt - 1));
+    setRemoved(true);
+
+    try {
+      await toggleLike({ correctionId });
+
+      // ✅ localStorage 동기화 (false 또는 제거)
+      writeLikedMap((m) => ({ ...m, [correctionId]: false }));
+
+      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+    } catch {
+      // 롤백
+      setLiked(prevLiked);
+      setLikeCount(prevCnt);
+      setRemoved(false);
+    } finally {
+      setLiking(false);
+    }
+  };
+
+  /** ---------- 댓글 ---------- */
+  const [openReply, setOpenReply] = useState(false);
+  const [commentCount, setCommentCount] = useState<number>(correction.commentCount ?? 0);
+
+  const {
+    mutate: fetchComments,
+    data: listData,
+    isPending: listLoading,
+  } = useGetCorrectionComments();
+
+  const comments = useMemo(() => {
+    const r: any = listData?.result;
+    if (!r) return [];
+    if (Array.isArray(r.content)) return r.content;     // 표준
+    if (Array.isArray(r.contents)) return r.contents;   // 변형 대응
+    return [];
+  }, [listData]);
+
+  const toggleReply = () => {
+    const next = !openReply;
+    setOpenReply(next);
+    if (next) fetchComments({ correctionId, page: 1, size: 20 });
+  };
+
+  useEffect(() => {
+    const total = (listData as any)?.result?.totalElements;
+    if (typeof total === "number") setCommentCount(total);
+  }, [listData]);
+
+  // 최초 렌더에서 숫자가 0이면 가볍게 size=1로 총개수만 프라임
+  const primedRef = useRef(false);
+  useEffect(() => {
+    if (primedRef.current) return;
+    if ((correction.commentCount ?? 0) > 0) {
+      primedRef.current = true;
+      return;
+    }
+    fetchComments(
+      { correctionId, page: 1, size: 1 },
+      {
+        onSuccess: (d: any) => {
+          const total = d?.result?.totalElements ?? 0;
+          setCommentCount(total);
+          primedRef.current = true;
+        },
+        onError: () => {
+          primedRef.current = true;
+        },
+      }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [correctionId]);
+
+  /** ---------- 메모(등록/수정/삭제) ---------- */
+  const baselineRef = useRef<string>(correction.memo ?? "");
+  const [memoText, setMemoText] = useState<string>(baselineRef.current);
+  const isDirty = memoText !== baselineRef.current;
+
+  const { mutateAsync: upsertMemo, isPending: isSaving } = useUpsertSavedMemo();
+  const { mutateAsync: removeMemo, isPending: isDeleting } = useDeleteSavedMemo();
 
   const handleSaveMemo = async () => {
-    if (!isSavedList)
-      return alert("‘저장한 교정’에서만 메모를 추가할 수 있어요.");
-    if (!memoText.trim()) return alert("메모 내용을 입력해 주세요.");
-    if (!isDirty && hadMemoAtMount.current) return; // 변경 없으면 무시
+    if (!isSavedList) return alert("‘저장한 교정’에서만 메모를 추가/수정할 수 있어요.");
+    const trimmed = memoText.trim();
+    if (!trimmed) return alert("메모 내용을 입력해 주세요.");
+    if (!isDirty) return;
 
-    setIsSaving(true);
     try {
-      const payload = {
+      await upsertMemo({
         savedCorrectionId: Number(savedId),
-        memo: memoText.trim(),
-      };
-      if (hadMemoAtMount.current) {
-        await patchSavedMemo(payload); // ✅ 수정
-      } else {
-        await postSavedMemo(payload); // ✅ 최초 등록
-        hadMemoAtMount.current = true;
-      }
-      setBaselineMemo(memoText.trim()); // ✅ 저장 성공 시 기준값 갱신 → 이후 수정 버튼 정상 동작
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
+        memo: trimmed,
+        hadMemo: Boolean(baselineRef.current),
+      } as any); // hadMemo는 mutationFn에서만 사용
+      // 로컬 기준값 동기화 → 다음 수정 때 버튼 활성화 정상
+      baselineRef.current = trimmed;
+      setMemoText(trimmed);
     } catch (e) {
       console.error("❌ 메모 저장 실패:", e);
       alert("메모 저장에 실패했어요.");
-    } finally {
-      setIsSaving(false);
     }
   };
 
   const handleDeleteMemo = async () => {
     if (!isSavedList) return;
-    setIsDeleting(true);
     try {
-      await deleteSavedMemo(Number(savedId));
+      await removeMemo(Number(savedId));
+      baselineRef.current = "";
       setMemoText("");
-      setBaselineMemo(""); // ✅ 기준값도 비우기
-      hadMemoAtMount.current = false;
-      qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
       console.error("❌ 메모 삭제 실패:", e);
       alert("메모 삭제에 실패했어요.");
-    } finally {
-      setIsDeleting(false);
     }
   };
 
-  // ===== 댓글 (토글 시점에 로드) =====
-  // 사용 안 하는 correctionId 변수는 삭제해서 TS6133 방지
-  const {
-    data: comments = [],
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    status: commentStatus,
-  } = useCorrectionComments(correction.savedCorrectionId, openReply);
-  const createdAtText = correction.createdAt ?? "";
+  /** ---------- 제거된 카드면 렌더 스킵 ---------- */
+  if (removed) return null;
 
-  // 댓글 0개면 버튼 비활성화
-  const commentDisabled = (correction.commentCount ?? 0) === 0;
-
-  // 좋아요 클릭 핸들러 (UI 기준)
-  const onClickLike = () => {
-    if (!isLiked) {
-      setIsLiked(true);
-      setLikeCount((p) => p + 1);
-      // TODO: 여기서 좋아요 등록 API 호출(성공/실패에 따라 롤백)
-      return;
-    }
-    // 이미 좋아요면 모달로 확인 받고 취소
-    setDeleteLikeModal(true);
-  };
-
-  const confirmUnlike = (e?: React.MouseEvent) => {
-    e?.stopPropagation?.();
-    setDeleteLikeModal(false);
-    setIsLiked(false);
-    setLikeCount((p) => Math.max(0, p - 1));
-    // TODO: 여기서 좋아요 취소 API 호출(성공/실패에 따라 롤백)
-  };
-
+  /** ---------- 렌더 ---------- */
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* 상단 프로필/시간 */}
       <div className="mb-3">
-        <ProfileInCorrections
-          member={correction.member}
-          createdAt={createdAtText}
-        />
+        <ProfileInCorrections member={correction.member} createdAt={correction.createdAt ?? ""} />
       </div>
 
       {/* 다이어리 제목 */}
-      {correction.diaryInfo?.diaryTitle && (
+      {!!correction.diaryTitle && (
         <div className="mt-1">
           <span className="text-primary-600 font-semibold underline cursor-pointer">
-            {correction.diaryInfo?.diaryTitle}
+            {correction.diaryTitle}
           </span>
         </div>
       )}
 
       {/* 본문 */}
       <div className="mt-3 space-y-3">
-        {correction.original && (
-          <p className="text-body1 text-gray-900">{correction.original}</p>
-        )}
+        {!!correction.original && <p className="text-body1 text-gray-900">{correction.original}</p>}
 
-        {correction.corrected && (
+        {!!correction.corrected && (
           <div className="flex gap-2">
             <div className="w-1.5 rounded bg-primary-500 mt-1" />
             <p className="text-body1 font-semibold text-primary-600">
@@ -153,7 +236,7 @@ const CorrectionComponent = ({ correction }: Props) => {
           </div>
         )}
 
-        {correction.commentText && (
+        {!!correction.commentText && (
           <p className="text-body2 text-gray-700">{correction.commentText}</p>
         )}
       </div>
@@ -161,13 +244,8 @@ const CorrectionComponent = ({ correction }: Props) => {
       {/* 액션 */}
       <div className="mt-4 flex items-center justify-end gap-6 text-sm text-gray-500">
         <button
-          onClick={() => !commentDisabled && setOpenReply((p) => !p)}
-          disabled={commentDisabled}
-          className={`flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 ${
-            commentDisabled
-              ? "opacity-40 cursor-not-allowed hover:bg-transparent"
-              : ""
-          }`}
+          onClick={toggleReply}
+          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 cursor-pointer"
         >
           <img
             src={
@@ -178,66 +256,54 @@ const CorrectionComponent = ({ correction }: Props) => {
             alt="댓글"
             className="w-5 h-5"
           />
-          <span>{correction.commentCount}</span>
+          <span>{commentCount}</span>
         </button>
 
         <button
           onClick={onClickLike}
-          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100"
+          disabled={liking}
+          className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 disabled:opacity-60 cursor-pointer"
+          aria-pressed={liked}
         >
           <img
-            src={
-              isLiked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"
-            }
+            src={liked ? "/images/HeartIcon.svg" : "/images/EmptyHeartIcon.svg"}
             alt="좋아요"
-            className={`w-5 h-5 ${isLiked ? "scale-110" : ""}`}
+            className={`w-5 h-5 ${liked ? "scale-110" : ""}`}
           />
-          <span className={isLiked ? "text-red-500" : undefined}>
-            {likeCount}
-          </span>
+          <span className={liked ? "text-red-500" : undefined}>{likeCount}</span>
         </button>
       </div>
 
       {/* 댓글 리스트 */}
       {openReply && (
         <div className="mt-3 space-y-3">
-          {commentStatus === "pending" && (
-            <div className="text-sm text-gray-400">댓글 불러오는 중…</div>
-          )}
-          {commentStatus === "success" && comments.length === 0 && (
-            <div className="text-sm text-gray-400">첫 댓글을 남겨보세요.</div>
+          {listLoading && <LoadingModal />}
+
+          {!listLoading && comments.length === 0 && (
+            <div className="text-sm text-gray-400">댓글이 없습니다.</div>
           )}
 
-          {comments.map((c) => (
-            <div key={c.commentId} className="border-t border-gray-200 pt-3">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <img
-                  src={c.member.profileImageUrl}
-                  className="h-6 w-6 rounded-full bg-gray-200"
-                  alt="프로필"
-                />
-                <span className="font-medium">{c.member.nickname}</span>
-                <span className="text-gray-400">@{c.member.username}</span>
-                <span className="ml-auto text-gray-400">{c.createdAt}</span>
+          {!listLoading &&
+            comments.map((c: any) => (
+              <div key={c.commentId} className="border-t border-gray-200 pt-3">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <img
+                    src={c.profileImage ?? c.member?.profileImageUrl}
+                    className="h-6 w-6 rounded-full bg-gray-200"
+                    alt="프로필"
+                  />
+                  <span className="font-medium">{c.nickname ?? c.member?.nickname}</span>
+                  <span className="text-gray-400">@{c.username ?? c.member?.username}</span>
+                  <span className="ml-auto text-gray-400">{c.createdAt}</span>
+                </div>
+                <div className="mt-2 text-body1 text-gray-900">{c.content}</div>
               </div>
-              <div className="mt-2 text-body1 text-gray-900">{c.content}</div>
-            </div>
-          ))}
-
-          {hasNextPage && (
-            <button
-              onClick={() => fetchNextPage()}
-              disabled={isFetching}
-              className="mt-2 rounded-md border px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-60"
-            >
-              더 보기
-            </button>
-          )}
+            ))}
         </div>
       )}
 
       {/* 저장 탭에서만 메모 입력 */}
-      {isSavedList && (
+      {!!isSavedList && (
         <div className="mt-4 flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
             <img
@@ -256,16 +322,16 @@ const CorrectionComponent = ({ correction }: Props) => {
 
           <button
             onClick={handleSaveMemo}
-            disabled={isSaving || (!isDirty && hadMemoAtMount.current)}
-            className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60"
+            disabled={isSaving || !isDirty}
+            className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
           >
-            {hadMemoAtMount.current ? "수정하기" : "저장하기"}
+            {baselineRef.current ? "수정하기" : "저장하기"}
           </button>
 
           <button
             onClick={handleDeleteMemo}
-            disabled={isDeleting || !hadMemoAtMount.current}
-            className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
+            disabled={isDeleting || !baselineRef.current}
+            className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50 cursor-pointer"
           >
             메모 삭제
           </button>
@@ -278,27 +344,21 @@ const CorrectionComponent = ({ correction }: Props) => {
       <div className="mt-4 flex items-center gap-3">
         <div className="h-9 w-9 rounded-md bg-gray-200" />
         <div className="text-body1 text-gray-700">
-          <span className="mr-2 text-gray-500">
-            #{correction.diaryInfo?.diaryId}
-          </span>
-          <span className="font-medium">
-            {correction.diaryInfo?.diaryTitle || "제목 없음"}
-          </span>
+          <span className="mr-2 text-gray-500">#{correction.diaryId}</span>
+          <span className="font-medium">{correction.diaryTitle || "제목 없음"}</span>
         </div>
-        <div className="ml-auto text-caption text-gray-500">
-          {createdAtText}
-        </div>
+        <div className="ml-auto text-caption text-gray-500">{correction.createdAt ?? ""}</div>
       </div>
 
-      {/* ✅ 좋아요 취소 모달 */}
-      {deleteLikeModal && (
+      {/* 좋아요 취소 모달 */}
+      {deleteLikeOpen && (
         <AlertModal
           title="'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?"
           confirmText="취소하기"
           onConfirm={confirmUnlike}
           onClose={(e) => {
             e.stopPropagation();
-            setDeleteLikeModal(false);
+            setDeleteLikeOpen(false);
           }}
           alertMessage="'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다."
         />
