@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { patchMemberLanguage } from "../../apis/members";
 import { useQueryClient } from "@tanstack/react-query";
+import { QUERY_KEY } from "../../constants/key";
 
 export const usePatchLanguage = () => {
   const queryClient = useQueryClient();
@@ -9,7 +10,7 @@ export const usePatchLanguage = () => {
       return patchMemberLanguage(language);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["myInfo"] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.myInfo] });
 
       // window.location.reload();
     },

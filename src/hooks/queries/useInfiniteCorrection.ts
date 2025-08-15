@@ -4,16 +4,17 @@ import type {
   CorrectionGetListResponseDTO,
   CorrectionsGetRequestDTO,
 } from "../../utils/types/correction";
+import { QUERY_KEY } from "../../constants/key";
 
 type Lang = "KO" | "EN";
 
 export function useInfiniteProvidedCorrectionList(
   size: number,
   lang: Lang,
-  enabled = true,
+  enabled = true
 ) {
   return useInfiniteQuery<CorrectionGetListResponseDTO, Error>({
-    queryKey: ["providedCorrectionList", size, lang],
+    queryKey: [QUERY_KEY.providedCorrectionList, size, lang],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getCorrectionList({

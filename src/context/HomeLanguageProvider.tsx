@@ -15,7 +15,9 @@ interface IHomeLanguageContext {
   setLanguage: (lang: TLanguage) => void;
 }
 
-const HomeLanguageContext = createContext<IHomeLanguageContext | undefined>(undefined);
+const HomeLanguageContext = createContext<IHomeLanguageContext | undefined>(
+  undefined
+);
 
 // 브라우저 언어를 ENG/KO로 매핑 (첫 방문 기본값 결정용)
 const detectBrowserLanguage = (): TLanguage => {
@@ -66,7 +68,9 @@ export const HomeLanguageProvider = ({ children }: PropsWithChildren) => {
 export const useHomeLanguage = () => {
   const ctx = useContext(HomeLanguageContext);
   if (!ctx) {
-    throw new Error("useHomeLanguage must be used within a HomeLanguageProvider");
+    throw new Error(
+      "useHomeLanguage must be used within a HomeLanguageProvider"
+    );
   }
   return ctx;
 };

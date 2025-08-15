@@ -6,6 +6,7 @@ import type {
   CorrectionCommentGetResponseDTO,
   UICorrectionComment,
 } from "../../utils/types/correctionComment";
+import { QUERY_KEY } from "../../constants/key";
 
 const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
   commentId: c.commentId,
@@ -32,7 +33,7 @@ export function useCorrectionComments(
     [string, number | undefined, number],
     number
   >({
-    queryKey: ["correctionComments", correctionId, pageSize],
+    queryKey: [QUERY_KEY.correctionComments, correctionId, pageSize],
     enabled: !!correctionId && enabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
@@ -47,5 +48,6 @@ export function useCorrectionComments(
     },
     select: (data) =>
       data.pages.flatMap((p) => (p.result.contents ?? []).map(mapToUI)),
+
   });
 }

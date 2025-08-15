@@ -21,7 +21,12 @@ function readLikedMap(): Record<number, boolean> {
 /** 어디에 있어도 correctionId를 찾아내는 헬퍼 */
 function extractCorrectionId(raw: any): number {
   if (!raw || typeof raw !== "object") return 0;
-  const keys = ["correctionId", "id", "targetCorrectionId", "diaryCorrectionId"];
+  const keys = [
+    "correctionId",
+    "id",
+    "targetCorrectionId",
+    "diaryCorrectionId",
+  ];
 
   // 1) 1차 키 검사
   for (const k of keys) {
@@ -51,7 +56,10 @@ function extractCorrectionId(raw: any): number {
 }
 
 /** 서버 → 화면용 매핑 (제공 탭 원본을 SavedCorrectionItem으로) */
-const mapToItem = (raw: ProvidedCorrectionContentDTO, me: any): SavedCorrectionItem => {
+const mapToItem = (
+  raw: ProvidedCorrectionContentDTO,
+  me: any
+): SavedCorrectionItem => {
   const correctionId = extractCorrectionId(raw);
   return {
     savedCorrectionId: 0,
@@ -60,7 +68,8 @@ const mapToItem = (raw: ProvidedCorrectionContentDTO, me: any): SavedCorrectionI
     original: raw?.originalText ?? raw?.original ?? "",
     corrected: raw?.corrected ?? raw?.correctedText ?? "",
     commentText: raw?.commentText ?? "",
-    createdAt: raw?.createdAt ?? raw?.correctionCreatedAt ?? raw?.updatedAt ?? "",
+    createdAt:
+      raw?.createdAt ?? raw?.correctionCreatedAt ?? raw?.updatedAt ?? "",
     commentCount: raw?.commentCount ?? 0,
     likeCount: raw?.likeCount ?? 0,
     diaryId: raw?.diaryInfo?.diaryId ?? raw?.diary?.diaryId ?? 0,
@@ -106,7 +115,9 @@ export function useProvidedCorrections() {
 
           // id가 유효할 때만 로컬을 사용
           const localLiked =
-            item.correctionId > 0 ? (likedMap as any)[item.correctionId] : undefined;
+            item.correctionId > 0
+              ? (likedMap as any)[item.correctionId]
+              : undefined;
 
           // 최종 liked 병합
           let liked = serverLiked ?? localLiked ?? false;
