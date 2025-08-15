@@ -20,14 +20,12 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
   const { language } = useLanguage();
   const t = translate[language];
 
-  const commonIcon = {
-    on: "/images/ExitOnIcon.svg",
-    off: "/images/ExitOffIcon.svg",
-  };
   const actions: {
     key: "edit" | "logout";
     label: string;
     onClick: () => void;
+    iconOn: string;
+    iconOff: string;
   }[] = [
     {
       key: "edit",
@@ -36,6 +34,8 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
         setActive("edit");
         navigate("/editprofile");
       },
+      iconOn: "/images/EditOnIcon.svg",
+      iconOff: "/images/EditOffIcon.svg",
     },
     {
       key: "logout",
@@ -44,6 +44,8 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
         setActive("logout");
         setShowLogoutModal(true);
       },
+      iconOn: "/images/ExitOnIcon.svg",
+      iconOff: "/images/ExitOffIcon.svg",
     },
   ];
   const alertMessage = t.CompleteLogOut;
@@ -98,7 +100,7 @@ const NavProfileModal = ({ onClose, profileData }: ProfileModalProps) => {
               }`}
           >
             <img
-              src={active === action.key ? commonIcon.on : commonIcon.off}
+              src={active === action.key ? action.iconOn : action.iconOff }
               alt={`${action.label}`}
               className="w-6 h-6"
             />
