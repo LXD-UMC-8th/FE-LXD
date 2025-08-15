@@ -1,5 +1,5 @@
 // src/components/Friends/ProfileModal.tsx
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -11,6 +11,7 @@ import {
 } from "../../apis/friend";
 import { useFriendCounts } from "../../context/FriendCountsContext";
 import { useNavigate } from "react-router-dom";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface ProfileModalProps {
   user: {
@@ -43,6 +44,10 @@ const ProfileModal = ({
   const { state, isLoading, refetchAll } = useFriendship(user.memberId);
 
   const [busy, setBusy] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // ⭐ 모달 바깥 클릭 시 닫기
+  useOutsideClick(modalRef, onClose);
 
   // 과거 프롭 폴백(훅 결과 우선)
   const mergedState: "loading" | "friend" | "pending" | "incoming" | "none" =
@@ -121,8 +126,14 @@ const ProfileModal = ({
 
 
   return (
-    <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-xl shadow-2xl w-96 p-6">
+    <div
+    className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="profile-modal-title"
+  >
+    {/* ✅ ref를 실제 모달 컨테이너에 달기 */}
+    <div ref={modalRef} className="bg-white rounded-xl shadow-2xl w-96 p-6">
         {/* 상단 */}
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-4">

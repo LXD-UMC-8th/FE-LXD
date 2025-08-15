@@ -1,16 +1,26 @@
 // src/components/Friends/ProfileView.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+
 import Avatar from "../Common/Avatar";
 import AlertModal from "../Common/AlertModal";
+import CommonComponentInDiaryNFeed from "../Common/CommonComponentInDiaryNFeed";
+import CommonComponentSkeleton from "../Common/CommonComponentSkeleton";
+
 import { addRecentSearch } from "../../utils/types/recentSearch";
 import { postFriendRequest } from "../../apis/friend";
+import { getUserDiaries, getDiaryDetail } from "../../apis/diary";
+import type { getDiariesResponseDTO, diaries } from "../../utils/types/diary";
+
 import useFriendship from "../../hooks/queries/useFriendship";
 import useUnfriend from "../../hooks/mutations/useUnfriend";
+
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useFriendCounts } from "../../context/FriendCountsContext";
-import { useNavigate } from "react-router-dom";
 
 interface ProfileViewProps {
   user: {
@@ -36,9 +46,10 @@ const ProfileView = ({
 }: ProfileViewProps) => {
   const { language } = useLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
+  const qc = useQueryClient();
 
   const { incRequests } = useFriendCounts();
-  const navigate = useNavigate();
 
   // 친구관계 상태(friend | pending | incoming | none)
   const { state, isLoading, refetchAll } = useFriendship(user.id);
@@ -81,10 +92,46 @@ const ProfileView = ({
     }
   };
 
-  // ✅ 여기서 id 사용!
-  const handleViewDiary = () => {
-    navigate(`/diaries/member/${user.id}`);
+  // 다이어리 목록(최근 일기) 무한스크롤
+  const {
+    data: diaryPages,
+    isFetching: diariesFetching,
+    isError: diariesError,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["userDiaries", user.id],
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => getUserDiaries(user.id, pageParam as number),
+    getNextPageParam: (last: getDiariesResponseDTO) =>
+      last?.result?.hasNext ? (last.result.page ?? 1) + 1 : undefined,
+    staleTime: 30_000,
+  });
+
+  const items: diaries[] = useMemo(
+    () => diaryPages?.pages.flatMap((p) => p?.result?.diaries ?? []) ?? [],
+    [diaryPages]
+  );
+
+  const { ref, inView } = useInView();
+  useEffect(() => {
+    if (inView && hasNextPage && !diariesFetching) fetchNextPage();
+  }, [inView, hasNextPage, diariesFetching, fetchNextPage]);
+
+  const openDiary = async (diaryId?: number) => {
+    if (!diaryId) return;
+    await qc.prefetchQuery({
+      queryKey: ["diaryDetail", diaryId],
+      queryFn: () => getDiaryDetail(diaryId),
+      staleTime: 30_000,
+    });
+    navigate(`/feed/${diaryId}`);
   };
+
+  const handleViewDiaryList = () => navigate(`/diaries/member/${user.id}`);
+
+  // 다이어리 보러가기 (상단 버튼)
+  const handleViewDiary = () => handleViewDiaryList();
 
   const handleConfirmUnfriend = async () => {
     try {
@@ -100,8 +147,14 @@ const ProfileView = ({
     }
   };
 
+  // 안전 라벨
+  const recentTitle = language === "KO" ? "최근 일기" : "Recent diaries";
+  const viewMoreLabel = language === "KO" ? "더보기" : "View more";
+  const cannotLoad =
+    t.CannotLoadList ?? (language === "KO" ? "목록을 불러올 수 없어요." : "Cannot load list.");
+
   return (
-    <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow">
+    <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow overflow-hidden">
       {/* 상단 */}
       <div className="p-8 pb-6 flex justify-between items-start">
         <div className="flex items-center gap-6">
@@ -170,6 +223,58 @@ const ProfileView = ({
         >
           {t.viewDiaryButton}
         </button>
+      </div>
+
+      {/* ✅ 최근 일기 프리뷰 (프로필 카드와 동일 폭으로 제한) */}
+      <div className="px-8 pb-8">
+        {/* ⬇️ 이 래퍼가 상단과 같은 내부 폭을 보장 (필요시 값 600~700 사이 조절) */}
+        <div className="mx-auto w-full max-w-[640px]">
+          {/* 헤더 */}
+          <div className="flex items-center justify-between border-t border-gray-100 pt-4 mb-3">
+            <h3 className="text-base font-semibold text-gray-900">{recentTitle}</h3>
+            <button
+              onClick={handleViewDiaryList}
+              className="text-sm text-[#4170FE] hover:underline cursor-pointer"
+            >
+              {viewMoreLabel}
+            </button>
+          </div>
+
+          {/* 리스트 (카드 폭 = 래퍼 폭) */}
+          <div className="space-y-3">
+            {items.map((d) => (
+              <div
+                key={d.diaryId}
+                role="button"
+                tabIndex={0}
+                onClick={() => openDiary(d.diaryId)}
+                onKeyDown={(e) => e.key === "Enter" && openDiary(d.diaryId)}
+                title={`Open diary ${d.diaryId}`}
+                className="
+                  rounded-2xl border border-gray-200 bg-white px-5 py-4
+                  hover:shadow-sm transition-shadow
+                  
+                "
+              >
+                <CommonComponentInDiaryNFeed props={d} variant="friendPreview" rounded={true} />
+              </div>
+            ))}
+
+            {diariesFetching && (
+              <div className="space-y-3">
+                <CommonComponentSkeleton />
+                <CommonComponentSkeleton />
+              </div>
+            )}
+
+            {diariesError && (
+              <div className="text-gray-500 text-sm mt-2">{cannotLoad}</div>
+            )}
+
+            {/* 무한스크롤 센티넬 */}
+            <div ref={ref} />
+          </div>
+        </div>
       </div>
 
       {/* 친구 취소 확인 모달 */}
