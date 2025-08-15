@@ -1,6 +1,7 @@
 // tailwind.config.ts
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  safelist: [/^react-calendar/, /^heat-/],
   theme: {
     extend: {
       screens: {
