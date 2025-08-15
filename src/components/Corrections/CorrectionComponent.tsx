@@ -8,7 +8,10 @@ import LoadingModal from "../Common/LoadingModal";
 
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { useToggleCorrectionLike } from "../../hooks/mutations/CorrectionLike/useToggleCorrectionLike";
-import { useUpsertSavedMemo, useDeleteSavedMemo } from "../../hooks/mutations/useSavedMemo";
+import {
+  useUpsertSavedMemo,
+  useDeleteSavedMemo,
+} from "../../hooks/mutations/useSavedMemo";
 
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 
@@ -26,7 +29,9 @@ function readLikedMap(): Record<number, boolean> {
     return {};
   }
 }
-function writeLikedMap(updater: (m: Record<number, boolean>) => Record<number, boolean>) {
+function writeLikedMap(
+  updater: (m: Record<number, boolean>) => Record<number, boolean>
+) {
   const m = readLikedMap();
   const next = updater(m);
   localStorage.setItem(LIKED_KEY, JSON.stringify(next));
@@ -40,7 +45,9 @@ const CorrectionComponent = ({ correction }: Props) => {
 
   /** ---------- 좋아요 ---------- */
   // 제공 탭(liked가 올 수도 있음), 저장 탭(무조건 true) 케이스 모두 커버
-  const initiallyLiked = isSavedList ? true : Boolean((correction as any).liked);
+  const initiallyLiked = isSavedList
+    ? true
+    : Boolean((correction as any).liked);
   const [liked, setLiked] = useState<boolean>(initiallyLiked);
   const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
   const [liking, setLiking] = useState(false);
@@ -111,7 +118,9 @@ const CorrectionComponent = ({ correction }: Props) => {
 
   /** ---------- 댓글 ---------- */
   const [openReply, setOpenReply] = useState(false);
-  const [commentCount, setCommentCount] = useState<number>(correction.commentCount ?? 0);
+  const [commentCount, setCommentCount] = useState<number>(
+    correction.commentCount ?? 0
+  );
 
   const {
     mutate: fetchComments,
@@ -122,8 +131,8 @@ const CorrectionComponent = ({ correction }: Props) => {
   const comments = useMemo(() => {
     const r: any = listData?.result;
     if (!r) return [];
-    if (Array.isArray(r.content)) return r.content;     // 표준
-    if (Array.isArray(r.contents)) return r.contents;   // 변형 대응
+    if (Array.isArray(r.content)) return r.content; // 표준
+    if (Array.isArray(r.contents)) return r.contents; // 변형 대응
     return [];
   }, [listData]);
 
@@ -168,10 +177,12 @@ const CorrectionComponent = ({ correction }: Props) => {
   const isDirty = memoText !== baselineRef.current;
 
   const { mutateAsync: upsertMemo, isPending: isSaving } = useUpsertSavedMemo();
-  const { mutateAsync: removeMemo, isPending: isDeleting } = useDeleteSavedMemo();
+  const { mutateAsync: removeMemo, isPending: isDeleting } =
+    useDeleteSavedMemo();
 
   const handleSaveMemo = async () => {
-    if (!isSavedList) return alert("‘저장한 교정’에서만 메모를 추가/수정할 수 있어요.");
+    if (!isSavedList)
+      return alert("‘저장한 교정’에서만 메모를 추가/수정할 수 있어요.");
     const trimmed = memoText.trim();
     if (!trimmed) return alert("메모 내용을 입력해 주세요.");
     if (!isDirty) return;
@@ -211,7 +222,10 @@ const CorrectionComponent = ({ correction }: Props) => {
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* 상단 프로필/시간 */}
       <div className="mb-3">
-        <ProfileInCorrections member={correction.member} createdAt={correction.createdAt ?? ""} />
+        <ProfileInCorrections
+          member={correction.member}
+          createdAt={correction.createdAt ?? ""}
+        />
       </div>
 
       {/* 다이어리 제목 */}
@@ -225,7 +239,9 @@ const CorrectionComponent = ({ correction }: Props) => {
 
       {/* 본문 */}
       <div className="mt-3 space-y-3">
-        {!!correction.original && <p className="text-body1 text-gray-900">{correction.original}</p>}
+        {!!correction.original && (
+          <p className="text-body1 text-gray-900">{correction.original}</p>
+        )}
 
         {!!correction.corrected && (
           <div className="flex gap-2">
@@ -270,7 +286,9 @@ const CorrectionComponent = ({ correction }: Props) => {
             alt="좋아요"
             className={`w-5 h-5 ${liked ? "scale-110" : ""}`}
           />
-          <span className={liked ? "text-red-500" : undefined}>{likeCount}</span>
+          <span className={liked ? "text-red-500" : undefined}>
+            {likeCount}
+          </span>
         </button>
       </div>
 
@@ -292,8 +310,12 @@ const CorrectionComponent = ({ correction }: Props) => {
                     className="h-6 w-6 rounded-full bg-gray-200"
                     alt="프로필"
                   />
-                  <span className="font-medium">{c.nickname ?? c.member?.nickname}</span>
-                  <span className="text-gray-400">@{c.username ?? c.member?.username}</span>
+                  <span className="font-medium">
+                    {c.nickname ?? c.member?.nickname}
+                  </span>
+                  <span className="text-gray-400">
+                    @{c.username ?? c.member?.username}
+                  </span>
                   <span className="ml-auto text-gray-400">{c.createdAt}</span>
                 </div>
                 <div className="mt-2 text-body1 text-gray-900">{c.content}</div>
@@ -345,9 +367,13 @@ const CorrectionComponent = ({ correction }: Props) => {
         <div className="h-9 w-9 rounded-md bg-gray-200" />
         <div className="text-body1 text-gray-700">
           <span className="mr-2 text-gray-500">#{correction.diaryId}</span>
-          <span className="font-medium">{correction.diaryTitle || "제목 없음"}</span>
+          <span className="font-medium">
+            {correction.diaryTitle || "제목 없음"}
+          </span>
         </div>
-        <div className="ml-auto text-caption text-gray-500">{correction.createdAt ?? ""}</div>
+        <div className="ml-auto text-caption text-gray-500">
+          {correction.createdAt ?? ""}
+        </div>
       </div>
 
       {/* 좋아요 취소 모달 */}

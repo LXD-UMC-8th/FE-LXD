@@ -2,6 +2,10 @@
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
 import { postReissue } from "./auth";
+import {
+  initActivityListeners,
+  wasRecentlyActive,
+} from "../context/ActiveTracker";
 
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean;
@@ -76,9 +80,18 @@ axiosInstance.interceptors.response.use(
           const refreshToken = getLocalStorageItem(
             LOCAL_STORAGE_KEY.refreshToken
           );
-          if (!refreshToken) throw new Error("No refresh token");
+          if (!refreshToken) return null;
 
           const reissueData = await postReissue(refreshToken);
+
+          if (
+            !reissueData ||
+            !reissueData.result ||
+            !reissueData.result.accessToken ||
+            !reissueData.result.refreshToken
+          ) {
+            return null;
+          }
 
           setLocalStorageItem(
             LOCAL_STORAGE_KEY.accessToken,
@@ -116,3 +129,43 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+initActivityListeners();
+
+setInterval(() => {
+  const isActive = wasRecentlyActive(20);
+  if (isActive) {
+    try {
+      const refreshToken = getLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+      if (refreshToken) {
+        postReissue(refreshToken)
+          .then((res) => {
+            if (res?.result?.accessToken) {
+              setLocalStorageItem(
+                LOCAL_STORAGE_KEY.accessToken,
+                res.result.accessToken
+              );
+              setLocalStorageItem(
+                LOCAL_STORAGE_KEY.refreshToken,
+                res.result.refreshToken
+              );
+            }
+          })
+          .catch((err) => {
+            console.error("❌ Token refresh failed:", err);
+            removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+            removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+            window.location.href = "/home";
+          });
+      } else {
+        removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+        removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+        window.location.href = "/home";
+      }
+    } catch (error) {
+      console.error("❌ Error during scheduled token refresh:", error);
+    }
+  } else {
+    console.log("⏳ Skipped token refresh — user inactive");
+  }
+}, 55 * 60 * 1000);

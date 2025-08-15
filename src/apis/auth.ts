@@ -1,4 +1,5 @@
 // 로그인, 로그아웃 등 인증 관련
+import { LOCAL_STORAGE_KEY } from "../constants/key";
 import type {
   getEmailResponseDTO,
   GoogleLoginRequestDTO,
@@ -10,7 +11,11 @@ import type {
   postLoginResponseDTO,
   postReissueResponseDTO,
 } from "../utils/types/auth";
-import { axiosInstance } from "./axios";
+import {
+  axiosInstance,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from "./axios";
 
 // 로그인 요청 API
 export const postSignin = async (
@@ -76,12 +81,27 @@ export const getEmail = async (token: string): Promise<getEmailResponseDTO> => {
 // 토큰 재발급 API
 export const postReissue = async (
   refreshToken: string
-): Promise<postReissueResponseDTO> => {
-  const { data } = await axiosInstance.post<postReissueResponseDTO>(
-    "/auth/reissue",
-    { refreshToken }
-  );
-  return data;
+): Promise<postReissueResponseDTO | undefined> => {
+  removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+  removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+  try {
+    const { data } = await axiosInstance.post<postReissueResponseDTO>(
+      "/auth/reissue",
+      { refreshToken }
+    );
+
+    setLocalStorageItem(LOCAL_STORAGE_KEY.accessToken, data.result.accessToken);
+    setLocalStorageItem(
+      LOCAL_STORAGE_KEY.refreshToken,
+      data.result.refreshToken
+    );
+    return data;
+  } catch {
+    alert("Error refreshing access token");
+    window.location.href = "/home";
+    removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+    removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+  }
 };
 
 // 구글 로그인 API

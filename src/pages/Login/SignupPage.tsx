@@ -14,7 +14,7 @@ import {
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
 import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
-import { useLanguage } from "../../context/LanguageProvider";
+import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
 
 interface SignupPageProps {
@@ -32,7 +32,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [isToSOpen, setIsToSOpen] = useState<boolean>(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { language } = useLanguage();
+  const { language } = useHomeLanguage();
   const t = translate[language];
 
   // 이메일 인증 링크 발송 함수
@@ -90,7 +90,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       alert(t.emailVerifyErrorAlert);
     }
   };
-  // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
+
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.emailVerified && event.data.email) {

@@ -25,7 +25,8 @@ const FindTab = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [requestingUsernames, setRequestingUsernames] = useState<string[]>([]);
 
-  const isRequesting = (username: string) => requestingUsernames.includes(username);
+  const isRequesting = (username: string) =>
+    requestingUsernames.includes(username);
 
   const handleSendRequest = async (username: string, memberId: number) => {
     let successOrAlreadySent = false;
@@ -90,7 +91,9 @@ const FindTab = () => {
               alt="find friends"
               className="w-[25000px] max-w-full mb-6 rounded-xl"
             />
-            <p className="text-xl font-semibold text-black">{t.findFriendsHeadline}</p>
+            <p className="text-xl font-semibold text-black">
+              {t.findFriendsHeadline}
+            </p>
             <p className="text-sm text-gray-500 mt-2 leading-relaxed">
               {t.findFriendsDesc1}
             </p>
