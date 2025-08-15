@@ -1,12 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
 import type { ContentsDTO } from "../../utils/types/correction";
-import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
-import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
+import {
+  useGetCorrectionComments,
+} from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
+import {
+  usePostCorrectionComment,
+} from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { axiosInstance } from "../../apis/axios"; // ✅ 다른 파일 수정 없이 여기서 바로 호출
+import { axiosInstance } from "../../apis/axios";
+
+import type {
+  CorrectionCommentDTO,
+  CorrectionCommentGetResponseDTO,
+  CorrectionCommentGetRequestDTO,
+  CorrectionCommentRequestDTO,
+} from "../../utils/types/correctionComment";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -24,7 +35,6 @@ type CorrectionLikeResponseDTO = {
   };
 };
 
-// ✅ 빨간색 채움 필터 (원본 SVG/PNG에 붉은 톤 입힘)
 const RED_FILTER =
   "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
 
@@ -34,38 +44,62 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const { language } = useLanguage();
   const t = translate[language];
 
-  // ✅ 좋아요 상태 (props에 liked가 없을 수 있으니 안전 디폴트)
   const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
   const [liking, setLiking] = useState(false);
 
-  // 댓글 목록
+  // GET 래핑 훅 (mutate로 호출)
   const {
     mutate: fetchComments,
     data: listData,
     isPending: listLoading,
   } = useGetCorrectionComments();
 
-  // 댓글 등록
-  const { mutate: postComment, isPending: posting } =
-    usePostCorrectionComment();
+  // POST 래핑 훅
+  const { mutate: postComment, isPending: posting } = usePostCorrectionComment();
 
-  // 서버에서 받은 댓글 배열
-  const comments = useMemo(() => listData?.result?.content ?? [], [listData]);
+  // ✅ 서버에서 받은 댓글 배열 (키: contents)
+  const comments: CorrectionCommentDTO[] = useMemo(
+    () =>
+      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result?.contents ??
+        []) as CorrectionCommentDTO[],
+    [listData]
+  );
 
-  // 총 댓글 수
-  const total = listData?.result?.totalElements ?? props.commentCount ?? 0;
+  // ✅ 총 댓글 수: 서버 totalElements > props.commentCount > 0
+  const total: number = useMemo(() => {
+    const totalFromServer =
+      (listData as CorrectionCommentGetResponseDTO | undefined)?.result
+        ?.totalElements;
+    if (typeof totalFromServer === "number") return totalFromServer;
+    if (typeof props.commentCount === "number") return props.commentCount;
+    return 0;
+  }, [listData, props.commentCount]);
 
-  // 댓글 열릴 때 목록 불러오기
+  // 열렸을 때 목록(size:10)
   useEffect(() => {
     if (openCorrectionReply) {
-      fetchComments({
+      const req: CorrectionCommentGetRequestDTO = {
         correctionId: props.correctionId,
         page: 1,
-        size: 20,
-      });
+        size: 10,
+      };
+      fetchComments(req);
     }
   }, [openCorrectionReply, props.correctionId, fetchComments]);
+
+  // 처음 렌더 때 totalElements 프리페치(size:1)
+  useEffect(() => {
+    if (props?.correctionId) {
+      const req: CorrectionCommentGetRequestDTO = {
+        correctionId: props.correctionId,
+        page: 1,
+        size: 1,
+      };
+      fetchComments(req);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.correctionId]);
 
   const _toggleCorrectionReply = () => {
     setOpenCorrectionReply((prev) => !prev);
@@ -75,23 +109,28 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     const content = commentText.trim();
     if (!content) return;
 
+    const body: CorrectionCommentRequestDTO = { content };
+
     postComment(
-      { correctionId: String(props.correctionId), content },
+      {
+        correctionId: String(props.correctionId),
+        ...body,
+      },
       {
         onSuccess: () => {
           setCommentText("");
-          // 등록 성공 후 목록 새로고침
-          fetchComments({
+          const req: CorrectionCommentGetRequestDTO = {
             correctionId: props.correctionId,
             page: 1,
-            size: 20,
-          });
+            size: 10,
+          };
+          fetchComments(req);
         },
       }
     );
   };
 
-  // ✅ 좋아요 토글 (POST 한 엔드포인트에 맞춤, 낙관적 업데이트 + 롤백)
+  // 좋아요 토글 (낙관 + 롤백)
   const _handleToggleLike = async () => {
     if (liking) return;
     setLiking(true);
@@ -99,7 +138,6 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     const prevLiked = liked;
     const prevCount = likeCount;
 
-    // 낙관적 업데이트
     setLiked(!prevLiked);
     setLikeCount(prevLiked ? prevCount - 1 : prevCount + 1);
 
@@ -108,12 +146,10 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
         `/corrections/${props.correctionId}/likes`
       );
       if (data?.result) {
-        // 서버 authoritative 값으로 동기화
         setLiked(data.result.liked);
         setLikeCount(data.result.likeCount);
       }
     } catch {
-      // 실패 시 롤백
       setLiked(prevLiked);
       setLikeCount(prevCount);
     } finally {
@@ -162,21 +198,20 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
         <button
           onClick={_handleToggleLike}
           disabled={liking}
-          className={`flex items-center gap-1 p-1 rounded-[5px] disabled:opacity-60`}
+          className="flex items-center gap-1 p-1 rounded-[5px] disabled:opacity-60"
           aria-pressed={liked}
         >
-          {/* ✅ 원래 이미지 사용 + 좋아요면 빨간 채움 */}
           <img
             src={
               liked
-                ? "/images/CommonComponentIcon/LikeFullIcon.svg" // 꽉 찬 하트 원본
-                : "/images/CommonComponentIcon/LikeIcon.svg"      // 테두리 하트 원본
+                ? "/images/CommonComponentIcon/LikeFullIcon.svg"
+                : "/images/CommonComponentIcon/LikeIcon.svg"
             }
-            className={`w-4 h-4 transition-transform ${liked ? "scale-110" : ""}`}
+            className="w-5 h-5 transition-transform cursor-pointer"
             alt="좋아요"
             style={liked ? { filter: RED_FILTER } : undefined}
           />
-          <p className={liked ? "text-red-500" : undefined}>{likeCount}</p>
+          <p>{likeCount}</p>
         </button>
       </div>
 
@@ -190,22 +225,22 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <LoadingModal />
           ) : (
             <ul className="flex flex-col gap-3 mb-3">
-              {comments.map((c /* : CorrectionCommentDTO */) => (
+              {comments.map((c) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
                   <ProfileComponent
                     member={{
                       memberId: c.memberId,
                       username: c.username,
                       nickname: c.nickname,
+                      // API: profileImage  → UI: profileImageUrl 로 매핑
                       profileImageUrl: c.profileImage,
                     }}
                     createdAt={c.createdAt}
                   />
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitespace-pre-wrap">
-                      {c.content}
-                    </p>
+                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
                   </div>
+                  <div className="border-t border-gray-200 my-2" />
                 </li>
               ))}
             </ul>
