@@ -56,7 +56,7 @@ const SettingsPage = () => {
                   <li>{data?.result?.studyLanguage}</li>
                   <li className="last:mt-8">
                     <select
-                      className="border rounded-md px-3 py-2 bg-gray-100"
+                      className="border border-gray-400 rounded-md px-3 py-2 bg-gray-100 cursor-pointer"
                       aria-label="select system language"
                       value={isLanguage}
                       onChange={onChangeHandler}

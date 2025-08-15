@@ -7,11 +7,19 @@ import { addRecentSearch } from "../../../utils/types/recentSearch";
 import { postFriendRequest } from "../../../apis/friend";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import type { Friend } from "../../../utils/types/friend";
+
+interface Friend {
+  id: number;            // 서버 memberId에 해당
+  name: string;
+  username: string;
+  image?: string;
+  isFriend: boolean;
+}
 
 const FindTab = () => {
   const { language } = useLanguage();
   const t = translate[language];
+
   const [selectedUser, setSelectedUser] = useState<Friend | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -35,9 +43,7 @@ const FindTab = () => {
       setRequestingUsernames((prev) =>
         prev.includes(username) ? prev : [...prev, username]
       );
-      setSelectedUser((prev) =>
-        prev?.username === username ? { ...prev } : prev
-      );
+      setSelectedUser((prev) => (prev?.username === username ? { ...prev } : prev));
     }
     setShowProfileModal(false);
   };
@@ -55,8 +61,8 @@ const FindTab = () => {
   };
 
   return (
-    // ✅ 고정 레이아웃: 최소 가로폭(1120px) 유지 → 창을 줄이면 가로 스크롤
-    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA]">
+    // ✅ 고정 레이아웃: 최소 가로폭(1120px) 유지
+    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
       {/* 왼쪽 친구 검색 패널 - 항상 표시 */}
       <div className="flex-none w-[420px] border-r border-gray-200 bg-white">
         <FriendListPanel
@@ -79,7 +85,7 @@ const FindTab = () => {
             }
           />
         ) : (
-          <div className="flex flex-col items-start bg-[#F5F7FE] w-full rounded-xl px-8 py-10 text-left">
+          <div className="flex flex-col items-start bg-[#F5F7FE] w/full rounded-xl px-8 py-10 text-left">
             <img
               src="/images/findtabpic.svg"
               alt="find friends"
@@ -112,13 +118,19 @@ const FindTab = () => {
       {/* 프로필 모달 */}
       {showProfileModal && selectedUser && (
         <ProfileModal
-          user={selectedUser}
+          user={{
+            memberId: selectedUser.id,         // ✅ id → memberId 매핑
+            name: selectedUser.name,
+            username: selectedUser.username,
+            profileImage: selectedUser.image,  // ✅ image → profileImage 매핑
+            isFriend: selectedUser.isFriend,
+            isRequesting: isRequesting(selectedUser.username),
+          }}
           onClose={() => setShowProfileModal(false)}
           onUnfriendClick={() => {
             setShowProfileModal(false);
             setShowConfirmModal(true);
           }}
-          isRequesting={isRequesting(selectedUser.username)}
           onSendRequestClick={() =>
             handleSendRequest(selectedUser.username, selectedUser.id)
           }
