@@ -96,3 +96,11 @@ export type FriendSearchResponseDTO = {
     };
   };
 };
+
+export type Friend = {
+  id: number;
+  name: string;
+  username: string;
+  image?: string;
+  isFriend: boolean;
+};

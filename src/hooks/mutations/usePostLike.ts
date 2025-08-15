@@ -3,6 +3,7 @@ import type { LikeResponseDto, LikeTargetType } from "../../utils/types/likes";
 import { postLike } from "../../apis/likes";
 import { queryClient } from "../../App.tsx";
 import type { getDiariesResponseDTO, diaries } from "../../utils/types/diary";
+import { QUERY_KEY } from "../../constants/key.ts";
 
 interface Params {
   targetType: LikeTargetType;
@@ -23,9 +24,12 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
     onMutate: async () => {
       await Promise.all([
         queryClient.cancelQueries({
-          queryKey: ["postLike", targetType, targetId],
+          queryKey: [QUERY_KEY.postLike, targetType, targetId],
         }),
-        queryClient.cancelQueries({ queryKey: ["diaries"], exact: false }),
+        queryClient.cancelQueries({
+          queryKey: [QUERY_KEY.diaries],
+          exact: false,
+        }),
       ]);
 
       // Snapshot
@@ -67,14 +71,14 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
 
     onError: (_err, _vars, ctx) => {
       if (ctx?.previousFeed) {
-        queryClient.setQueryData(["diaries"], ctx.previousFeed);
+        queryClient.setQueryData([QUERY_KEY.diaries], ctx.previousFeed);
       }
     },
 
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["diaries"] });
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEY.diaries] });
       await queryClient.invalidateQueries({
-        queryKey: ["postLike", targetType, targetId],
+        queryKey: [QUERY_KEY.postLike, targetType, targetId],
       });
     },
   });

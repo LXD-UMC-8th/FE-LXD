@@ -7,6 +7,7 @@ import { patchReadAllNotifications } from "../../apis/notification";
 import { patchRedirectNotification } from "../../apis/notification";
 import type { redirectNotificationResultDTO } from "../../utils/types/notification";
 import { queryClient } from "../../App.tsx";
+import { QUERY_KEY } from "../../constants/key.ts";
 
 export function useNotificationReadAll() {
   return useMutation<patchReadAllNotificationResponseDTO, void, number>({
@@ -17,13 +18,13 @@ export function useNotificationReadAll() {
     },
     onMutate: async () => {
       await queryClient.cancelQueries({
-        queryKey: ["notifications"],
+        queryKey: [QUERY_KEY.notifications],
         exact: false,
       });
 
       const previousList = queryClient.getQueryData<
         InfiniteData<getNotificationsResponseDTO>
-      >(["notifications"]);
+      >([QUERY_KEY.notifications]);
 
       // Optimistic: mark everything read + zero counters immediately
       if (previousList?.pages) {
@@ -40,10 +41,10 @@ export function useNotificationReadAll() {
             },
           })),
         };
-        queryClient.setQueryData(["notifications"], next);
+        queryClient.setQueryData([QUERY_KEY.notifications], next);
       }
 
-      queryClient.setQueryData(["notifications", "badge"], 0);
+      queryClient.setQueryData([QUERY_KEY.notifications, QUERY_KEY.badge], 0);
 
       return { previousList };
     },
@@ -53,14 +54,14 @@ export function useNotificationReadAll() {
         | { previousList?: InfiniteData<getNotificationsResponseDTO> }
         | undefined;
       if (context?.previousList) {
-        queryClient.setQueryData(["notifications"], context.previousList);
+        queryClient.setQueryData([QUERY_KEY.notifications], context.previousList);
       }
     },
 
     onSuccess: (data) => {
       // Reconcile with server (will also be 0 / read: true)
       queryClient.setQueryData(
-        ["notifications", "badge"],
+        [QUERY_KEY.notifications, QUERY_KEY.badge],
         typeof data.result === "object" &&
           data.result !== null &&
           "totalElements" in data.result
@@ -70,9 +71,9 @@ export function useNotificationReadAll() {
     },
 
     onSettled: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      await queryClient.invalidateQueries({ queryKey: [QUERY_KEY.notifications] });
       await queryClient.invalidateQueries({
-        queryKey: ["notifications", "badge"],
+        queryKey: [QUERY_KEY.notifications, QUERY_KEY.badge],
       });
     },
   });
@@ -83,7 +84,7 @@ export function useNotificationRedirect(
   mutateFn: () => Promise<void>
 ) {
   return useMutation({
-    mutationKey: ["notificationRedirect", id],
+    mutationKey: [QUERY_KEY.notificationRedirect, id],
     mutationFn: mutateFn,
     onSuccess: (data) => {
       console.log("Notification redirected successfully:", data);
@@ -97,33 +98,33 @@ export function useNotificationRedirect(
 
 export const useNotifications = () => {
   return useMutation({
-    mutationKey: ["notification"],
+    mutationKey: [QUERY_KEY.notification],
     mutationFn: ({ notificationId }: { notificationId: number }) =>
       patchRedirectNotification({ notificationId }),
 
     onMutate: async ({ notificationId }) => {
       await Promise.all([
         queryClient.cancelQueries({
-          queryKey: ["notifications"],
+          queryKey: [QUERY_KEY.notifications],
           exact: false,
         }),
         queryClient.cancelQueries({
-          queryKey: ["notification", notificationId],
+          queryKey: [QUERY_KEY.notification, notificationId],
         }),
       ]);
 
       const previousSingle =
         queryClient.getQueryData<redirectNotificationResultDTO>([
-          "notification",
+          QUERY_KEY.notification,
           notificationId,
         ]);
 
       const previousList = queryClient.getQueryData<
         InfiniteData<getNotificationsResponseDTO>
-      >(["notifications"]);
+      >([QUERY_KEY.notifications]);
 
       queryClient.setQueryData(
-        ["notification", notificationId],
+        [QUERY_KEY.notification, notificationId],
         (old: redirectNotificationResultDTO | undefined) => ({
           ...(old ?? {}),
           read: true,
@@ -131,7 +132,7 @@ export const useNotifications = () => {
       );
 
       if (previousList?.pages) {
-        queryClient.setQueryData(["notifications"], {
+        queryClient.setQueryData([QUERY_KEY.notifications], {
           ...previousList,
           pages: previousList.pages.map((page) => ({
             ...page,
@@ -151,18 +152,18 @@ export const useNotifications = () => {
     onError: (_err, _vars, ctx) => {
       if (!ctx) return;
       queryClient.setQueryData(
-        ["notification", ctx.notificationId],
+        [QUERY_KEY.notification, ctx.notificationId],
         ctx.previousSingle
       );
-      queryClient.setQueryData(["notifications"], ctx.previousList);
+      queryClient.setQueryData([QUERY_KEY.notifications], ctx.previousList);
     },
 
     onSettled: async (_data, _error, variables) => {
       await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ["notification", variables.notificationId],
+          queryKey: [QUERY_KEY.notification, variables.notificationId],
         }),
-        queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.notifications] }),
       ]);
     },
   });

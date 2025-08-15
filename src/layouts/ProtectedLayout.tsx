@@ -1,11 +1,16 @@
 import NavBar from "../components/NavBar/NavBar";
 import SideBar from "../components/SideBar/SideBar";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 const ProtectedLayout = () => {
   const { isLoggedIn } = useAuth();
-  if (!isLoggedIn) {
+   const location = useLocation();
+
+  // /feed?code=... 는 로그인 없이 진입 허용
+  const isOAuthRedirect = location.pathname === "/feed" && location.search.includes("code=");
+
+  if (!isLoggedIn && !isOAuthRedirect) {
     return <Navigate to="/home" replace />;
   }
 

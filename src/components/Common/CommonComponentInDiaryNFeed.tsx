@@ -7,24 +7,32 @@ import { translate } from "../../context/translate";
 import clsx from "clsx";
 import { useCleanHtml } from "../../hooks/useCleanHtml";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
-// import useDebounce from "../../hooks/queries/useDebounce";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "../Diary/Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import AlertModal from "./AlertModal";
 
-const CommonComponentInDiaryNFeed = ({
-  props,
-}: {
+type Variant = "default" | "friendPreview";
+
+interface Props {
   props: diaries;
   pageResult?: getDiariesResult;
   idx?: number;
-}) => {
+  /** ✅ 기본(true): 둥근 모서리 유지, false: 모서리 제거 */
+  rounded?: boolean;
+  /** (옵션) 표시 컨텍스트가 다르면 스타일을 살짝 달리하고 싶을 때 */
+  variant?: Variant;
+}
+
+const CommonComponentInDiaryNFeed = ({
+  props,
+  rounded = false,              // ✅ 기본은 기존처럼 둥글게
+  variant = "default",
+}: Props) => {
   const { language } = useLanguage();
   const t = translate[language];
   const location = useLocation();
   const navigate = useNavigate();
-  console.log("props", props);
 
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked || false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
@@ -34,11 +42,9 @@ const CommonComponentInDiaryNFeed = ({
     targetId: props.diaryId || 0,
   });
 
-  //css를 외부에서 적용할지 말지 고민을 조금 해봐야할듯.
   const borderRadius = clsx({
-    // "rounded-t-2xl": pageResult.page === 1 && idx === 0,
-    // "rounded-b-2xl":
-    //   idx === pageResult.diaries.length - 1 && !pageResult.hasNext,
+    // "rounded-t-2xl": pageResult?.page === 1 && idx === 0,
+    // "rounded-b-2xl": idx === (pageResult?.diaries?.length ?? 1) - 1 && !pageResult?.hasNext,
   });
 
   const isDiaryTab =
@@ -49,26 +55,19 @@ const CommonComponentInDiaryNFeed = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-
-  //모달 바깥에 띄운 것 취소하는 핸들러
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
   const content = useCleanHtml(props.contentPreview);
+
   const stats = [
-    {
-      label: `${props.commentCount}`,
-      icon: "/images/CommonComponentIcon/CommentIcon.svg",
-    },
+    { label: `${props.commentCount}`, icon: "/images/CommonComponentIcon/CommentIcon.svg" },
     {
       label: `${likeCount}`,
       icon: isLiked
         ? "/images/CommonComponentIcon/LikeFullIcon.svg"
         : "/images/CommonComponentIcon/LikeIcon.svg",
     },
-    {
-      label: `${props.correctionCount}`,
-      icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-    },
+    { label: `${props.correctionCount}`, icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
   ];
 
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
@@ -78,7 +77,7 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   const handleDelete = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+    if (window.confirm(t.ConfirmDelete)) {
       deleteMutation?.mutate();
     }
   };
@@ -98,25 +97,19 @@ const CommonComponentInDiaryNFeed = ({
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
-        // 댓글 아이콘 클릭 핸들러
         navigate(`/feed/${props.diaryId}`, {
           state: isMyDiaryTab ? { from: "mydiary" } : undefined,
         });
         break;
       case 1:
-        //좋아요 아이콘 클릭 핸들러
-
         isLiked
           ? setDeleteLikeModal(true)
-          : (likeMutate(),
-            setLikeCount((prev) => prev + 1),
-            setIsLiked((prev) => !prev));
+          : (likeMutate(), setLikeCount((prev) => prev + 1), setIsLiked((prev) => !prev));
         break;
       case 2:
-        // 교정 아이콘 클릭 핸들러
+        // 교정 아이콘 클릭 핸들러 (필요 시 구현)
         break;
       default:
-        // Handle default case
         break;
     }
   };
@@ -126,37 +119,33 @@ const CommonComponentInDiaryNFeed = ({
     navigate(`/diaries/member/${props.writerId}`);
   };
 
+  /** ✅ 둥근 모서리 토글 */
+  const roundedCls = rounded ? "rounded-2xl" : "rounded-none";
+
+  /** ✅ 컨테이너 클래스 (기존 스타일 유지, variant로 미세 조정 가능) */
+  const containerCls = clsx(
+    borderRadius,
+    "relative bg-white cursor-pointer transition-shadow",
+    variant === "friendPreview"
+      ? clsx("w-full border border-gray-200 px-5 py-4 hover:shadow-sm", roundedCls)
+      : clsx("w-260 shadow px-6 py-5 space-y-4", roundedCls)
+  );
+
   return (
-    <div
-      className={`${borderRadius} relative w-260 bg-white shadow px-6 py-5 space-y-4 cursor-pointer`}
-      onClick={goToDetail}
-    >
+    <div className={containerCls} onClick={goToDetail}>
       {/* 상단 정보 */}
       <div className="flex justify-between items-start">
         <div>
           {isFeedTab ? (
-            <div
-              className="flex items-center gap-3"
-              onClick={handleNavigateUserDetail}
-            >
-              <Avatar
-                src={props.profileImg}
-                alt={props.writerUsername}
-                size="w-9 h-9"
-              />
+            <div className="flex items-center gap-3" onClick={handleNavigateUserDetail}>
+              <Avatar src={props.profileImg} alt={props.writerUsername} size="w-9 h-9" />
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-black">
-                    {props.writerUsername}
-                  </span>
+                  <span className="text-sm font-semibold text-black">{props.writerUsername}</span>
                   <div className="w-px h-4 bg-gray-500" />
-                  <span className="text-xs text-gray-500">
-                    @{props.writerNickname}
-                  </span>
+                  <span className="text-xs text-gray-500">@{props.writerNickname}</span>
                 </div>
-                <span className="text-xs text-gray-400 mt-1">
-                  {props.createdAt}
-                </span>
+                <span className="text-xs text-gray-400 mt-1">{props.createdAt}</span>
               </div>
             </div>
           ) : (
@@ -170,7 +159,9 @@ const CommonComponentInDiaryNFeed = ({
 
         {/* 언어 + 더보기 */}
         <div className="flex items-center gap-3 relative" ref={menuRef}>
-          <span className="text-blue-600 text-sm font-medium">한국어</span>
+          <span className="text-blue-600 text-sm font-medium">
+            한국어
+          </span>
           {isMyDiaryTab && (
             <>
               <img
@@ -180,7 +171,7 @@ const CommonComponentInDiaryNFeed = ({
                   e.stopPropagation();
                   setMenuOpen((prev) => !prev);
                 }}
-                alt="설정 아이콘"
+                alt="settingIcon"
               />
               {menuOpen && (
                 <div className="absolute top-8 right-0 bg-white border border-gray-400 rounded-md shadow-lg w-28 z-50">
@@ -209,18 +200,13 @@ const CommonComponentInDiaryNFeed = ({
         </div>
       </div>
 
-      {/* 내용 시작 */}
+      {/* 내용 */}
       <div className="flex flex-rows">
         <div className="flex-1 space-y-2">
-          {/* 제목 */}
           <Header props={props} />
-
-          {/* 본문 */}
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-            {content}
-          </div>
+          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</div>
         </div>
-        {/* 썸네일 */}
+
         {props.thumbnailUrl && (
           <div>
             <img className="w-40 h-40" src={props.thumbnailUrl} alt="썸네일" />
@@ -239,20 +225,17 @@ const CommonComponentInDiaryNFeed = ({
               handleIcons(index);
             }}
           >
-            <img
-              src={item.icon}
-              alt={`${item.label} 아이콘`}
-              className="w-6 h-6 cursor-pointer"
-            />
+            <img src={item.icon} alt={`${item.label} Icon`} className="w-6 h-6 cursor-pointer" />
             <span>{item.label}</span>
           </div>
         ))}
       </div>
+
       {/* 좋아요 삭제 모달 */}
       {DeleteLikeModal && (
         <AlertModal
-          title="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
-          confirmText="취소하기"
+          title={t.ConfirmDeleteFeedLikes}
+          confirmText={t.Unlike}
           onConfirm={(e) => {
             e.stopPropagation();
             setDeleteLikeModal(false);
@@ -264,7 +247,7 @@ const CommonComponentInDiaryNFeed = ({
             e.stopPropagation();
             setDeleteLikeModal(false);
           }}
-          alertMessage="'좋아요' 취소 시 해당 일기가 '피드-좋아요'에서 삭제됩니다. 정말 취소하시겠습니까?"
+          alertMessage={t.ConfirmDeleteFeedLikes}
         />
       )}
     </div>

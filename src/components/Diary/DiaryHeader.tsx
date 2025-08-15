@@ -2,8 +2,8 @@ import TitleHeader from "../Common/TitleHeader";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { Link } from "react-router-dom";
 import type { DiarySummary } from "../../utils/types/diary";
+import DiaryHeaderButton from "./DiaryHeaderButton";
 
 const DiaryHeader = ({
   DiaryHeaderProps,
@@ -27,11 +27,11 @@ const DiaryHeader = ({
           </div>
           <div className="pb-2 mt-5 text-xl font-bold grid grid-rows-2 gap-4">
             <TitleHeader
-              title={`${DiaryHeaderProps?.username} 님의 다이어리`}
+              title={`${DiaryHeaderProps?.nickname} ${t.diaryOwner}`}
             />
             <div className=" flex text-gray-600">
               <p className="text-[16px] flex gap-3 font-normal">
-                <p className="font-bold">@{DiaryHeaderProps?.nickname} </p>
+                <p className="font-bold">@{DiaryHeaderProps?.username} </p>
                 <p>&middot;</p>
                 <p className="flex">
                   {DiaryHeaderProps?.diaryCount > 1 ? t.Diaries : t.Diary}
@@ -58,7 +58,7 @@ const DiaryHeader = ({
                   alt="Native Icon"
                 />
                 <p className="text-blue-500">
-                  모국어&nbsp;|&nbsp;
+                  {t.nativeLanguage}&nbsp;|&nbsp;
                   {
                     Native_Study_LangMap[language][
                       DiaryHeaderProps.nativeLanguage as "KO" | "ENG"
@@ -73,7 +73,7 @@ const DiaryHeader = ({
                   alt="Study Icon"
                 />
                 <p className="text-blue-500">
-                  학습언어&nbsp;|&nbsp;
+                  {t.studyLanguage}&nbsp;|&nbsp;
                   {
                     Native_Study_LangMap[language][
                       DiaryHeaderProps.language as "KO" | "ENG"
@@ -83,14 +83,7 @@ const DiaryHeader = ({
               </div>
             </div>
           </div>
-          <div className="flex justify-end items-center gap-x-6 relative">
-            <Link
-              to="/mydiary/writing"
-              className="w-auto inline-flex z-10 rounded-[8px] bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white p-3 flex flex-row gap-3 items-center justify-center"
-            >
-              <img src="/images/plusimg.svg" alt="+" /> {t.createNewDiary}
-            </Link>
-          </div>
+          <DiaryHeaderButton DiaryHeaderProps={DiaryHeaderProps} />
         </div>
       </div>
     </div>

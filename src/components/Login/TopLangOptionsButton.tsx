@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useLanguage, Language } from "../../context/LanguageProvider";
+import { Language } from "../../context/LanguageProvider";
+import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 
 interface LanguageOption {
   value: Language;
@@ -7,7 +8,7 @@ interface LanguageOption {
 }
 const TopLangOptionsButton = () => {
   const [isOpen, setIsOpen] = useState(false); // 언어선택 버튼 상태관리
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useHomeLanguage();
 
   const options: LanguageOption[] = [
     { value: Language.KOREAN, label: "한국어" },

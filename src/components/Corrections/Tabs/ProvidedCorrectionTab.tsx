@@ -3,8 +3,12 @@ import { useInView } from "react-intersection-observer";
 import LoadingModal from "../../Common/LoadingModal";
 import CorrectionComponent from "../CorrectionComponent";
 import { useProvidedCorrections } from "../../../hooks/queries/useProvidedCorrections";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const ProvidedCorrectionTab = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const {
     data, // SavedCorrectionItem[]
     fetchNextPage,
@@ -26,7 +30,7 @@ const ProvidedCorrectionTab = () => {
   if (status === "error") {
     return (
       <div className="p-4 text-red-500">
-        교정 목록을 불러오지 못했습니다.
+        {t.FailToLoadCorrections}
         <div className="text-gray-500 text-sm">{String(error)}</div>
       </div>
     );
@@ -37,7 +41,7 @@ const ProvidedCorrectionTab = () => {
     <div className="flex flex-col gap-4">
       {list.length === 0 && (
         <div className="p-6 text-center text-gray-500">
-          작성한 교정이 없습니다.
+          {t.NothingCreatedCorrection}
         </div>
       )}
 
@@ -49,7 +53,7 @@ const ProvidedCorrectionTab = () => {
       <div ref={ref} />
 
       {isFetching && status === "success" && (
-        <div className="py-3 text-center text-gray-400">불러오는 중…</div>
+        <div className="py-3 text-center text-gray-400">{t.Loading}</div>
       )}
     </div>
   );

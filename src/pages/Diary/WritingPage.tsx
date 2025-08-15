@@ -74,7 +74,7 @@ const WritingPage = () => {
       <div className="flex items-center gap-x-6">
         <PrevButton navigateURL="/mydiary" />
         <TitleHeader title={t.writingHeader} />
-        <div className="ml-auto mr-6">
+        <div className="ml-auto">
           <EnrollWrapper
             _titleName={_titleName}
             _editorRawContent={_editorRawContent}

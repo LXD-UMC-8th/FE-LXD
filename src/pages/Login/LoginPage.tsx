@@ -31,7 +31,7 @@ const LoginPage = () => {
         setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
-        alert("로그인 되었습니다.");
+        alert(t.loginSuccessAlert);
         navigate("/");
       } else {
         alert(response?.message ?? "로그인에 실패했습니다.");
@@ -84,37 +84,6 @@ const LoginPage = () => {
     onSuccess: async ({ code }) => {
       console.log("구글 로그인 성공, code:", code);
 
-      try {
-        const payload: GoogleLoginRequestDTO = { code };
-        const res = await postGoogleLogin(payload);
-
-        if (res.isSuccess) {
-          const { accessToken, refreshToken, member } = res.result;
-
-          // 토큰 저장
-          localStorage.setItem("accessToken", accessToken);
-          localStorage.setItem("refreshToken", refreshToken);
-
-          // 원하는 페이지로 이동
-          navigate("/feed");
-
-          console.log("로그인 성공:", member);
-        } else {
-          alert("로그인 실패: " + res.message);
-        }
-      } catch (err) {
-        console.error("구글 로그인 실패", err);
-        alert("로그인 중 오류 발생");
-      }
-    },
-    onError: (err) => {
-      console.error("구글 로그인 실패", err);
-      alert("구글 로그인에 실패했습니다");
-    },
-    redirect_uri: import.meta.env.DEV
-      ? "http://localhost:5173/feed"
-      : "https://lxd-fe.netlify.app/feed", // 구글 콘솔에 등록한 redirect_uri와 동일해야 함 
-  });
   const handleGoogleLogin = () => {
     console.log("구글 로그인 요청");
     googleLogin();

@@ -1,4 +1,6 @@
 import type { CorrectionsMemberDTO } from "../../utils/types/member";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface Props {
   member?: CorrectionsMemberDTO;
@@ -6,6 +8,8 @@ interface Props {
 }
 
 const ProfileInCorrections = ({ member, createdAt }: Props) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   return (
     <>
       <div className="flex items-center justify-between gap-1 p-1">
@@ -14,7 +18,7 @@ const ProfileInCorrections = ({ member, createdAt }: Props) => {
           {/* 프로필 사진 */}
           <img
             src={member?.profileImageUrl}
-            alt="프로필"
+            alt={t.Profile}
             className="w-9 h-9 rounded-full bg-gray-300"
           />
 
@@ -22,7 +26,7 @@ const ProfileInCorrections = ({ member, createdAt }: Props) => {
           <div className="flex gap-2 items-center">
             <div className="text-body1 font-medium">{member?.nickname}</div>
             <div className="w-px h-5 bg-gray-500" />
-            <div className="text-body1 text-gray-600">{member?.username}</div>
+            <div className="text-body1 text-gray-600">@{member?.username}</div>
           </div>
         </div>
 
