@@ -8,6 +8,7 @@ import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
 import type { getNotificationsResponseDTO } from "../../utils/types/notification";
 import { useNotifications } from "../../hooks/mutations/useNotification";
+import { QUERY_KEY } from "../../constants/key";
 
 interface NotificationProps {
   onChangeSetting?: boolean;
@@ -21,7 +22,7 @@ const Notification = ({ setOnChangeSetting }: NotificationProps) => {
   const { mutate: patchReadAllNotifications } = useNotificationReadAll();
 
   const { data, isFetching, fetchNextPage, hasNextPage } = useInfiniteScroll({
-    queryKey: ["notifications"],
+    queryKey: [QUERY_KEY.notifications],
     queryFn: ({ pageParam = 1 }) => getNotifications(pageParam as number, 5),
     getNextPageParam: (last: getNotificationsResponseDTO) =>
       last.result.hasNext ? last.result.page + 1 : undefined,

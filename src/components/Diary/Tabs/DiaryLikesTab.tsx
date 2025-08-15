@@ -8,11 +8,12 @@ import { getMyDiaries } from "../../../apis/diary";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import CommonComponentSkeleton from "../../Common/CommonComponentSkeleton";
+import { QUERY_KEY } from "../../../constants/key";
 
 const DiaryLikesTab = () => {
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["MyDiaryLikes"],
+      queryKey: [QUERY_KEY.MyDiaryLikes],
       queryFn: ({ pageParam = 1 }) => getMyDiaries(pageParam as number),
       getNextPageParam: (last: getDiariesResponseDTO) =>
         last.result.hasNext ? last.result.page + 1 : undefined,

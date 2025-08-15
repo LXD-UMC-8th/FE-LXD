@@ -8,11 +8,11 @@ export type DiaryCommentRequestDTO = {
 
 export type DiaryCommentDTO = {
     commentId: number;
+    parentId: number | null;
     memberId: number;
     username: string;
     nickname: string;
-    diaryId: number;
-    parentId: number | null;
+    diaryId?: number;
     profileImage: string;
     content?: string;
     commentText?: string;
@@ -31,10 +31,18 @@ export type DiaryCommentGetRequestDTO = {
     size?: number;
 }
 
-export type DiaryCommentGetResponseDTO = APIResponse<{
-    content: DiaryCommentDTO[];
+export type GetDiaryCommentDTO = {
     totalElements: number;
-}>
+    parentTotalElements: number;
+    page: number;
+    size: number;
+    totalPages: number;
+    pageItemCount: number;
+    hasNext: boolean;
+    contents: DiaryCommentDTO[];
+}
+
+export type DiaryCommentGetResponseDTO = APIResponse<GetDiaryCommentDTO>
 
 // 일기 댓글 삭제
 export type DiaryCommentDeleteRequestDTO = {

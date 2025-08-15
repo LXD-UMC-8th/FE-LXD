@@ -12,6 +12,7 @@ import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { getUserDiaries } from "../../apis/diary";
 import type { getDiariesResponseDTO } from "../../utils/types/diary";
 import { useParams } from "react-router-dom";
+import { QUERY_KEY } from "../../constants/key";
 
 const UserDetailPage = () => {
   const { language } = useLanguage();
@@ -33,7 +34,6 @@ const UserDetailPage = () => {
 
   useEffect(() => {
     getUserDiarySummary(memberIdNumber).then((response) => {
-      console.log("User diary summary:", response);
       setIsDiarySummary(response.result);
     });
   }, []);
@@ -41,7 +41,7 @@ const UserDetailPage = () => {
   const { ref, inView } = useInView();
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
     useInfiniteScroll({
-      queryKey: ["UserDiary", memberId],
+      queryKey: [QUERY_KEY.UserDiary, memberId],
       queryFn: ({ pageParam = 1, queryKey }) => {
         const [_, memberId] = queryKey as [string, number];
         return getUserDiaries(memberId, pageParam as number);

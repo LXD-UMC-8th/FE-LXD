@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { getLocalStorageItem } from "../apis/axios";
 import { Navigate } from "react-router-dom";
+import { HomeLanguageProvider } from "../context/HomeLanguageProvider";
 
 const HomeLayout = () => {
   if (
@@ -10,9 +11,11 @@ const HomeLayout = () => {
     return <Navigate to="/" replace />;
   }
   return (
-    <div className="min-h-screen bg-white">
-      <Outlet />
-    </div>
+    <HomeLanguageProvider>
+      <div className="min-h-screen bg-white">
+        <Outlet />
+      </div>
+    </HomeLanguageProvider>
   );
 };
 

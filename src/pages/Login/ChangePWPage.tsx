@@ -12,13 +12,12 @@ import {
   isPasswordValid,
 } from "../../utils/validate";
 import { useSearchParams } from "react-router-dom";
-import {
-  getEmail,
-  postEmailVerificationinPWRequest,
-} from "../../apis/auth";
+import { getEmail, postEmailVerificationinPWRequest } from "../../apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
 import { patchMemberPassword } from "../../apis/members";
+import { useHomeLanguage } from "../../context/HomeLanguageProvider";
+import { translate } from "../../context/translate";
 
 interface ChangePWPageProps {
   userInfo: SignupFlowProps;
@@ -32,6 +31,8 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [searchParams] = useSearchParams();
+  const { language } = useHomeLanguage();
+  const t = translate[language];
 
   const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
@@ -59,47 +60,47 @@ const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
       });
 
       if (response.isSuccess) {
-        alert("이메일 인증 링크 전송 성공");
+        alert(t.emailLinkSuccessAlert);
         console.log("이메일 인증 링크 전송 성공");
         return;
       }
     } catch (error) {
-      alert("발송 실패:");
+      alert(t.emailLinkErrorAlert);
       console.error("발송 실패:", error);
     }
   };
 
   // 이메일 인증 링크에서 토큰 받아오기
-useEffect(() => {
-  const token = searchParams.get("token");
-  if (token) {
-    handleVerifyEmailToken(token);
-  }
-}, [searchParams]);
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      handleVerifyEmailToken(token);
+    }
+  }, [searchParams]);
 
-// 이메일에서 들어온 인증 링크 토큰 처리
-const handleVerifyEmailToken = async (token: string) => {
-  try {
-    const emailInfoRes = await getEmail(token); 
-    if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
-      console.error("이메일 조회 실패");
+  // 이메일에서 들어온 인증 링크 토큰 처리
+  const handleVerifyEmailToken = async (token: string) => {
+    try {
+      const emailInfoRes = await getEmail(token);
+      if (!emailInfoRes.isSuccess || !emailInfoRes.result.email) {
+        console.error("이메일 조회 실패");
+        setHasVerifiedByToken(true);
+        setEmailVerified(false);
+        return;
+      }
+      const verifiedEmail = emailInfoRes.result.email;
+      setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
+      setHasVerifiedByToken(true);
+      setEmailVerified(true);
+      console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
+      alert(t.emailVerifySuccessAlert);
+    } catch (e) {
+      console.error("인증 실패:", e);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      return;
+      alert(t.emailVerifyErrorAlert);
     }
-    const verifiedEmail = emailInfoRes.result.email;
-    setUserInfo((prev) => ({ ...prev, email: verifiedEmail }));
-    setHasVerifiedByToken(true);
-    setEmailVerified(true);
-    console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
-    alert("이메일 인증 성공 및 조회 성공");
-  } catch (e) {
-    console.error("인증 실패:", e);
-    setHasVerifiedByToken(true);
-    setEmailVerified(false);
-    alert("인증 실패");
-  }
-};
+  };
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -107,7 +108,7 @@ const handleVerifyEmailToken = async (token: string) => {
         setUserInfo((prev) => ({ ...prev, email: event.data.email }));
         setEmailVerified(true);
         setHasVerifiedByToken(true);
-        alert("이메일 인증이 완료되었습니다!");
+        alert(t.emailVerifySuccessAlert);
       }
     };
 
@@ -208,8 +209,8 @@ const handleVerifyEmailToken = async (token: string) => {
             <div className="flex gap-2 items-end">
               <div className="flex-1">
                 <FormInput
-                  name="이메일"
-                  placeholder="계정의 이메일을 입력해주세요"
+                  name={t.email}
+                  placeholder={t.emailPlaceholder}
                   input={userInfo.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => setEmailTouched(true)}
@@ -217,7 +218,7 @@ const handleVerifyEmailToken = async (token: string) => {
                 />
               </div>
               <IDButton
-                name={emailVerified ? "인증완료" : "인증하기"}
+                name={emailVerified ? t.afterVerify : t.beforeVerify}
                 onClick={handleEmailCheck}
                 disabled={!isEmailValid(userInfo.email) || emailVerified}
               />
@@ -228,11 +229,11 @@ const handleVerifyEmailToken = async (token: string) => {
                 <>
                   {emailVerified ? (
                     <span className="text-body2 text-mint-500">
-                      인증되었습니다
+                      {t.emailVerifiedToast}
                     </span>
                   ) : (
                     <span className="text-body2 text-red-500">
-                      인증할 수 없는 이메일입니다
+                      {t.emailErrorToast}
                     </span>
                   )}
                 </>
@@ -240,8 +241,8 @@ const handleVerifyEmailToken = async (token: string) => {
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name="새 비밀번호"
-              placeholder="새로운 비밀번호를 입력해주세요"
+              name={t.newPassword}
+              placeholder={t.newPasswordPlaceholder}
               input={userInfo.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
               onBlur={() => setPasswordTouched(true)}
@@ -249,22 +250,20 @@ const handleVerifyEmailToken = async (token: string) => {
             />
             {!passwordTouched || userInfo.password.trim() === "" ? (
               <span className="text-body2 text-gray-600">
-                비밀번호 조건: ~~~
+                {t.pwConditionToast}
               </span>
             ) : !isPasswordValid(userInfo.password) ? (
               <span className="text-body2 text-red-500">
-                비밀번호 조건: ~~~
+                {t.pwConditionToast}
               </span>
             ) : (
-              <span className="text-body2 text-mint-500">
-                유효한 비밀번호입니다
-              </span>
+              <span className="text-body2 text-mint-500">{t.pwValidToast}</span>
             )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name="새 비밀번호 확인"
-              placeholder="새로운 비밀번호를 다시 한 번 입력해주세요"
+              name={t.newPassword}
+              placeholder={t.newPasswordPlaceholder}
               input={userInfo.checkPassword}
               onChange={(e) =>
                 handleInputChange("checkPassword", e.target.value)
@@ -277,11 +276,11 @@ const handleVerifyEmailToken = async (token: string) => {
               isPasswordValid(userInfo.password) &&
               (isPasswordMatch(userInfo.password, userInfo.checkPassword) ? (
                 <span className="text-body2 text-mint-500">
-                  비밀번호가 일치합니다
+                  {t.pwConfirmedToast}
                 </span>
               ) : (
                 <span className="text-body2 text-red-500">
-                  비밀번호가 일치하지 않습니다
+                  {t.pwNotConfirmedToast}
                 </span>
               ))}
           </div>
@@ -291,7 +290,7 @@ const handleVerifyEmailToken = async (token: string) => {
           <SignupButton
             form="changepw-form"
             type="submit"
-            name="변경하기"
+            name={t.pwChangeButton}
             onClick={handlePWChange}
             disabled={!isAllValid()}
           />
