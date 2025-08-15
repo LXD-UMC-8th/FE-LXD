@@ -217,11 +217,7 @@ const EditProfilePage = () => {
     items-center justify-center space-y-10 px-4"
     >
       <section className="flex flex-col w-[775px] items-left">
-<<<<<<< HEAD
         <TitleHeader title={t.editProfileHeader} />
-=======
-        <TitleHeader title={t.profileEdit} />
->>>>>>> 6e95c86a867eec2d044fa4ce6a84dcaa3a38ba69
       </section>
 
       <div className="space-y-3">
@@ -264,11 +260,7 @@ const EditProfilePage = () => {
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-<<<<<<< HEAD
           {_isSaving ? t.Loading : t.SaveChange}
-=======
-          {_isSaving ? t.saving : t.SaveChange}
->>>>>>> 6e95c86a867eec2d044fa4ce6a84dcaa3a38ba69
         </button>
       </section>
 
