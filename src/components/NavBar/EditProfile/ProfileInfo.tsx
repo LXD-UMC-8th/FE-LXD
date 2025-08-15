@@ -1,5 +1,7 @@
 import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
+import { translate } from "../../../context/translate";
+import { useLanguage } from "../../../context/LanguageProvider";
 // import { useLanguage } from "../../../context/LanguageProvider";
 // import { translate } from "../../../context/translate";
 
@@ -27,13 +29,15 @@ const ProfileInfo = ({
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     _onImageChange(e);
   };
+  const { language } = useLanguage();
+  const t = translate[language];
 
   return (
     <div className="flex flex-col w-full rounded-md pt-7 pb-7 pl-10 pr-10 bg-white space-y-7">
-      <h2 className="text-subhead2 font-semibold">프로필 정보</h2>
+      <h2 className="text-subhead2 font-semibold">{t.profileInfo}</h2>
 
       <div className="space-y-5">
-        <h4 className="text-subhead3 font-medium">프로필 이미지</h4>
+        <h4 className="text-subhead3 font-medium">{t.profileImg}</h4>
 
         <div className="flex items-center justify-between gap-12">
           {/* 동그라미 */}
@@ -69,7 +73,7 @@ const ProfileInfo = ({
                   readOnly
                   value={_profileName ? _profileName : ""}
                   placeholder={
-                    _profileName ? _profileName : "파일을 선택해주세요"
+                    _profileName ? _profileName : t.selectFilePlaceholder
                   }
                   className="w-full h-14 px-8 py-4 border rounded-md 
               border-gray-300 bg-gray-50 text-gray-500 text-body1 focus:outline-none"
@@ -89,13 +93,13 @@ const ProfileInfo = ({
                 onClick={() => fileInputRef.current?.click()}
                 className="w-32 h-14 px-8 bg-black text-white rounded cursor-pointer"
               >
-                파일선택
+                {t.selectFile}
               </button>
             </div>
 
             <div className="flex gap-2">
               <p className="text-gray-600 text-sm">
-                최대 (제한용량)MB의 이미지 파일을 업로드 해주세요.
+                {t.imgSize}
               </p>
             </div>
           </div>
@@ -105,13 +109,13 @@ const ProfileInfo = ({
       {/* 닉네임 */}
       <div className="space-y-2">
         <FormInput
-          name="닉네임"
-          placeholder={_nickname ? _nickname : "닉네임을 입력해주세요"}
+          name={t.nickname}
+          placeholder={_nickname ? _nickname : t.nicknamePlaceholder}
           input={_nickname}
           onChange={_onNicknameChange}
         />
         <p className="text-gray-600 text-sm mb-3">
-          1자 이상 20자 이내로 입력해주세요.
+          {t.nicknameConditionToast}
         </p>
       </div>
     </div>
