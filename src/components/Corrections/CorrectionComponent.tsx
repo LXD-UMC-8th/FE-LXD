@@ -9,12 +9,16 @@ import {
 import { useCorrectionComments } from "../../hooks/queries/useCorrectionComments";
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 import AlertModal from "../Common/AlertModal"; // ✅ 모달
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 
 interface Props {
   correction: SavedCorrectionItem;
 }
 
 const CorrectionComponent = ({ correction }: Props) => {
+  const { language } = useLanguage();
+  const t = translate[language];
   // ===== 좋아요 =====
   const [isLiked, setIsLiked] = useState<boolean>(
     (correction as any)?.liked ?? (correction as any)?.isLiked ?? false
@@ -42,8 +46,8 @@ const CorrectionComponent = ({ correction }: Props) => {
 
   const handleSaveMemo = async () => {
     if (!isSavedList)
-      return alert("‘저장한 교정’에서만 메모를 추가할 수 있어요.");
-    if (!memoText.trim()) return alert("메모 내용을 입력해 주세요.");
+      return alert(t.SaveMemoFail1);
+    if (!memoText.trim()) return alert(t.MemoEmpty);
     if (!isDirty && hadMemoAtMount.current) return; // 변경 없으면 무시
 
     setIsSaving(true);
@@ -61,8 +65,8 @@ const CorrectionComponent = ({ correction }: Props) => {
       setBaselineMemo(memoText.trim()); // ✅ 저장 성공 시 기준값 갱신 → 이후 수정 버튼 정상 동작
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
-      console.error("❌ 메모 저장 실패:", e);
-      alert("메모 저장에 실패했어요.");
+      console.error("❌", e);
+      alert(t.SaveMemoFail);
     } finally {
       setIsSaving(false);
     }
@@ -78,8 +82,8 @@ const CorrectionComponent = ({ correction }: Props) => {
       hadMemoAtMount.current = false;
       qc.invalidateQueries({ queryKey: ["savedCorrections"] });
     } catch (e) {
-      console.error("❌ 메모 삭제 실패:", e);
-      alert("메모 삭제에 실패했어요.");
+      console.error("❌", e);
+      alert(t.DeleteMemoFail);
     } finally {
       setIsDeleting(false);
     }
@@ -202,10 +206,10 @@ const CorrectionComponent = ({ correction }: Props) => {
       {openReply && (
         <div className="mt-3 space-y-3">
           {commentStatus === "pending" && (
-            <div className="text-sm text-gray-400">댓글 불러오는 중…</div>
+            <div className="text-sm text-gray-400">{t.PendingComments}</div>
           )}
           {commentStatus === "success" && comments.length === 0 && (
-            <div className="text-sm text-gray-400">첫 댓글을 남겨보세요.</div>
+            <div className="text-sm text-gray-400">{t.FirstComment}</div>
           )}
 
           {comments.map((c) => (
@@ -230,7 +234,7 @@ const CorrectionComponent = ({ correction }: Props) => {
               disabled={isFetching}
               className="mt-2 rounded-md border px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-60"
             >
-              더 보기
+              {t.More}
             </button>
           )}
         </div>
@@ -247,7 +251,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             />
             <input
               type="text"
-              placeholder="메모를 추가하기"
+              placeholder={t.AddNote}
               className="w-full bg-transparent text-body1 text-gray-900 placeholder-gray-400 outline-none"
               value={memoText}
               onChange={(e) => setMemoText(e.target.value)}
@@ -258,8 +262,14 @@ const CorrectionComponent = ({ correction }: Props) => {
             onClick={handleSaveMemo}
             disabled={isSaving || (!isDirty && hadMemoAtMount.current)}
             className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60"
+            onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSaveMemo();
+                }
+            }}
           >
-            {hadMemoAtMount.current ? "수정하기" : "저장하기"}
+            {hadMemoAtMount.current ? t.EditDiary : t.enrollButtonText}
           </button>
 
           <button
@@ -267,7 +277,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             disabled={isDeleting || !hadMemoAtMount.current}
             className="rounded-md bg-gray-200 px-4 py-2 text-body1 text-gray-700 hover:bg-gray-300 disabled:opacity-50"
           >
-            메모 삭제
+            {t.deleteButton}
           </button>
         </div>
       )}
@@ -282,7 +292,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             #{correction.diaryInfo?.diaryId}
           </span>
           <span className="font-medium">
-            {correction.diaryInfo?.diaryTitle || "제목 없음"}
+            {correction.diaryInfo?.diaryTitle || t.Untitled}
           </span>
         </div>
         <div className="ml-auto text-caption text-gray-500">
@@ -293,14 +303,14 @@ const CorrectionComponent = ({ correction }: Props) => {
       {/* ✅ 좋아요 취소 모달 */}
       {deleteLikeModal && (
         <AlertModal
-          title="'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?"
-          confirmText="취소하기"
+          title={t.DeleteLikeAlert}
+          confirmText={t.Cancle}
           onConfirm={confirmUnlike}
           onClose={(e) => {
             e.stopPropagation();
             setDeleteLikeModal(false);
           }}
-          alertMessage="'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다."
+          alertMessage={t.DeleteLikeAlert1}
         />
       )}
     </div>

@@ -147,11 +147,11 @@ const CommonComponentInDiaryNFeed = ({
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-black">
-                    {props.writerUsername}
+                    {props.writerNickname}
                   </span>
                   <div className="w-px h-4 bg-gray-500" />
                   <span className="text-xs text-gray-500">
-                    @{props.writerNickname}
+                    @{props.writerUsername}
                   </span>
                 </div>
                 <span className="text-xs text-gray-400 mt-1">

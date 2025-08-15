@@ -147,6 +147,17 @@ export const translate: Record<
     CompleteCorrect: string;
     DeleteCommentAlert: string;
     DeleteReplyAlert: string;
+    FirstComment: string;
+    AddNote: string;
+    DeleteLikeAlert: string;
+    DeleteLikeAlert1: string;
+    Cancle: string;
+    SaveMemoFail: string;
+    SaveMemoFail1: string;
+    MemoEmpty: string;
+    DeleteMemoFail: string;
+    More: string;
+    Untitled: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -298,6 +309,17 @@ export const translate: Record<
     explore: "Explore",
     DeleteCommentAlert: "Are you sure you want to delete the comments?",
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
+    FirstComment: "Leave your first comment.",
+    AddNote:"Add note",
+    DeleteLikeAlert: "If you unlike this entry, it will be removed from your “Feed - Likes”. Are you sure you want to unlike it?",
+    DeleteLikeAlert1: "If you cancel 'Like', the correction will be removed from 'Like'.",
+    Cancle: "Unlike",
+    SaveMemoFail: "Failed to save the memo.",
+    SaveMemoFail1: "You can only add notes in the 'Saved Calibration'.",
+    MemoEmpty: "Please enter the memo content.",
+    DeleteMemoFail: "Failed to delete memo.",
+    More: "More",
+    Untitled: "Untitled",
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -446,5 +468,16 @@ export const translate: Record<
     Likes: "좋아요",
     DeleteCommentAlert: "댓글을 삭제하시겠습니까?",
     DeleteReplyAlert: "답글을 삭제하시겠습니까?",
+    FirstComment: "첫 댓글을 남겨보세요.",
+    AddNote: "메모 추가하기",
+    DeleteLikeAlert: "'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
+    DeleteLikeAlert1: "'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다.",
+    Cancle: "취소하기",
+    SaveMemoFail: "메모 저장에 실패했어요.",
+    SaveMemoFail1: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
+    MemoEmpty: "메모 내용을 입력해 주세요.",
+    DeleteMemoFail: "메모 삭제에 실패했어요.",
+    More: "더보기",
+    Untitled: "제목 없음",
   },
 };
