@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useSignin } from "../../hooks/mutations/useSignin";
 import { LOCAL_STORAGE_KEY } from "../../constants/key";
 import { useGoogleLogin } from "@react-oauth/google";
-import type { GoogleLoginRequestDTO } from "../../utils/types/auth";
-import { postGoogleLogin } from "../../apis/auth";
 import { setLocalStorageItem } from "../../apis/axios";
 
 const LoginPage = () => {
@@ -30,8 +28,6 @@ const LoginPage = () => {
         localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
         setLocalStorageItem("userId", String(member.memberId));
 
-        console.log("로그인 성공", member);
-        alert(t.loginSuccessAlert);
         navigate("/");
       } else {
         alert(response?.message ?? "로그인에 실패했습니다.");
@@ -83,6 +79,9 @@ const LoginPage = () => {
     flow: "auth-code",
     onSuccess: async ({ code }) => {
       console.log("구글 로그인 성공, code:", code);
+      // You can handle the code here, e.g., send it to your backend
+    },
+  });
 
   const handleGoogleLogin = () => {
     console.log("구글 로그인 요청");

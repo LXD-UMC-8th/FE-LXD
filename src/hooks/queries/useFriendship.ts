@@ -6,7 +6,6 @@ import type {
   FriendListResponseDTO,
   FriendRequestListResponseDTO,
 } from "../../utils/types/friend";
-import { QUERY_KEY } from "../../constants/key";
 
 export type FriendshipState = "friend" | "pending" | "incoming" | "none";
 
