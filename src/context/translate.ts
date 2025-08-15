@@ -175,6 +175,10 @@ export const translate: Record<
     SaveMemo: string;
     DeleteMemo: string;
     CancelLikeInCorrectionConfirm: string;
+    NotFoundComment1: string;
+    NotFoundComment2: string;
+    NotFoundComment3: string;
+    BackToFeed: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -358,6 +362,10 @@ export const translate: Record<
     OnlyCanAddInSavedCorrection:
       "You can only add notes in the 'Saved Correction'.",
     DeleteMemo: "Delete Memo",
+    NotFoundComment1: "Sorry, the page could not be found.",
+    NotFoundComment2: "You entered a non-existent address,",
+    NotFoundComment3: "or the address of the page you requested was changed, deleted, and could not be found",
+    BackToFeed: "Return to feed",
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -537,5 +545,9 @@ export const translate: Record<
     Wednesday: "수",
     Thursday: "목",
     Friday: "금",
+    NotFoundComment1: "죄송합니다. 페이지를 찾을 수 없습니다.",
+    NotFoundComment2: "존재하지 않는 주소를 입력하셨거나,",
+    NotFoundComment3: "요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.",
+    BackToFeed: "피드로 돌아가기",
   },
 };
