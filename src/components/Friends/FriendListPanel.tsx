@@ -1,6 +1,7 @@
+// src/components/Friends/FriendListPanel.tsx
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
-import FriendItem from "./FriendItem";
+import FriendItem, { pickProfileImage } from "./FriendItem";
 import FriendListSkeleton from "./Skeleton/FriendListSkeleton";
 import {
   getRecentSearches,
@@ -17,15 +18,18 @@ export interface Friend {
   id: number;
   name: string;
   username: string;
-  image?: string;
+  image?: string | null;
   isFriend: boolean;
 }
 
+// ✅ 응답 키가 달라도 안전하게 받도록 선택지 추가
 export interface FriendSearchItem {
   memberId: number;
   username: string;
   nickname: string;
-  profileImageUrl: string;
+  profileImageUrl?: string | null;
+  profileImage?: string | null;
+  profileUrl?: string | null;
 }
 
 interface FriendListPanelProps {
@@ -79,7 +83,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
         id: userInfo.memberId,
         name: userInfo.nickname,
         username: userInfo.username,
-        image: userInfo.profileImageUrl,
+        image: pickProfileImage(userInfo), // ✅ 보정된 이미지
         isFriend: false,
       };
       onSelect(friend);
@@ -89,8 +93,8 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
     // 최근 검색에서 온 경우 → 서버 재조회
     try {
       const data = await searchFriends(username);
-      const found = data.result.members.contents.find(
-        (member) => member.username === username
+      const found: FriendSearchItem | undefined = data.result.members.contents.find(
+        (member: FriendSearchItem) => member.username === username
       );
 
       if (!found) {
@@ -102,7 +106,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
         id: found.memberId,
         name: found.nickname,
         username: found.username,
-        image: found.profileImageUrl,
+        image: pickProfileImage(found), // ✅ 보정된 이미지
         isFriend: false,
       };
 
@@ -149,7 +153,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
                   key={friend.username}
                   name={friend.nickname}
                   username={friend.username}
-                  image={friend.profileImageUrl}
+                  image={pickProfileImage(friend)}   
                   onClick={() => handleSelectFriend(friend.username, friend)}
                   isSelected={selectedUsername === friend.username}
                   showDelete={false}
@@ -174,4 +178,3 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
 };
 
 export default FriendListPanel;
-
