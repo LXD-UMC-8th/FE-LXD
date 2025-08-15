@@ -24,7 +24,7 @@ const SearchBar = ({ value, onChange }: SearchBarProps) => {
   }, [debouncedValue, onChange]);
 
   return (
-    <div className="flex items-center w-full h-[53px] bg-[#EDEEF0] rounded px-4 py-2 font-[Pretendard]">
+    <div className="flex items-center w-full h-[53px] bg-[#EDEEF0] rounded px-4 py-2 ">
       <img src={SearchIcon} alt="Search" className="w-5 h-5 mr-2" />
       <input
         type="text"
