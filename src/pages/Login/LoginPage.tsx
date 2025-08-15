@@ -26,12 +26,11 @@ const LoginPage = () => {
 
       if (response?.isSuccess) {
         const { accessToken, refreshToken, member } = response.result;
-        localStorage.setItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
-        localStorage.setItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
+        setLocalStorageItem(LOCAL_STORAGE_KEY.accessToken, accessToken);
+        setLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken, refreshToken);
         setLocalStorageItem("userId", String(member.memberId));
 
         console.log("로그인 성공", member);
-        alert("로그인 되었습니다.");
         navigate("/");
       } else {
         alert(response?.message ?? "로그인에 실패했습니다.");
@@ -113,7 +112,7 @@ const LoginPage = () => {
     },
     redirect_uri: import.meta.env.DEV
       ? "http://localhost:5173/feed"
-      : "https://lxd-fe.netlify.app/feed", // 구글 콘솔에 등록한 redirect_uri와 동일해야 함 
+      : "https://lxd-fe.netlify.app/feed", // 구글 콘솔에 등록한 redirect_uri와 동일해야 함
   });
   const handleGoogleLogin = () => {
     console.log("구글 로그인 요청");
