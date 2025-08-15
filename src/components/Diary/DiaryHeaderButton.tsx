@@ -22,28 +22,29 @@ const DiaryHeaderButton = ({
     requestingUsernames.includes(username);
 
   const handleSendRequest = async (username: string) => {
-    let successOrAlreadySent = false;
+    const receiverIdNum = memberId ? Number(memberId) : undefined;
+
+    // Optimistically update UI
+    setRequestingUsernames((prev) =>
+      prev.includes(username) ? prev : [...prev, username]
+    );
+
     try {
-      const receiverIdNum = memberId ? Number(memberId) : undefined;
       if (typeof receiverIdNum === "number" && !isNaN(receiverIdNum)) {
         await postFriendRequest({ receiverId: receiverIdNum });
       } else {
         throw new Error("Invalid memberId");
       }
-      successOrAlreadySent = true;
+
+      // Optionally: do nothing, UI already updated
     } catch (err: any) {
       console.error("❌ 친구 요청 실패: ", err);
-      if (err?.response?.status === 409) successOrAlreadySent = true;
-      else alert(t.friendRequestFailed);
-    }
 
-    if (successOrAlreadySent) {
-      setRequestingUsernames((prev) =>
-        prev.includes(username) ? prev : [...prev, username]
-      );
-      setSelectedUser((prev) =>
-        prev?.username === username ? { ...prev } : prev
-      );
+      // Revert optimistic update if it fails
+      setRequestingUsernames((prev) => prev.filter((u) => u !== username));
+      if (err?.response?.status !== 409) {
+        alert(t.friendRequestFailed);
+      }
     }
   };
 
@@ -67,20 +68,23 @@ const DiaryHeaderButton = ({
               </div>
             )}
             {DiaryHeaderProps.relation !== "FRIEND" &&
-              DiaryHeaderProps.status !== "PENDING" && (
+              DiaryHeaderProps.status !== "PENDING" &&
+              !isRequesting(DiaryHeaderProps.username ?? "") && (
                 <div
-                  className="cursor-pointer bg-blue-500 p-3 hover:bg-blue-600 active:bg-blue-700 rounded-2xl"
+                  className="cursor-pointer bg-blue-500 p-3 hover:bg-blue-600 active:bg-blue-700 rounded-2xl flex gap-3 justify-center items-center"
                   onClick={() => {
                     handleSendRequest(DiaryHeaderProps.username ?? "");
                   }}
                 >
+                  <img src="/images/plusimg.svg" alt="+" />
                   <p>{t.RequestFriend}</p>
                 </div>
               )}
-            {DiaryHeaderProps.status === "PENDING" && (
+            {(DiaryHeaderProps.status === "PENDING" ||
+              isRequesting(DiaryHeaderProps.username ?? "")) && (
               <div className="flex gap-3 bg-blue-200 rounded-2xl p-3">
                 <img src="/images/requestingIcon.svg" alt="Pending" />
-                <p className="text-blue-500">{DiaryHeaderProps.status}</p>
+                <p className="text-blue-500">PENDING</p>
               </div>
             )}
           </div>
