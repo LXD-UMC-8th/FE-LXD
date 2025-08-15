@@ -5,16 +5,9 @@ import AlertModal from "../../Common/AlertModal";
 import ProfileModal from "../ProfileModal";
 import { addRecentSearch } from "../../../utils/types/recentSearch";
 import { postFriendRequest } from "../../../apis/friend";
-import { useLanguage } from "../../../context/LanguageProvider";          
+import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-
-interface Friend {
-  id: number;
-  name: string;
-  username: string;
-  image?: string;
-  isFriend: boolean;
-}
+import type { Friend } from "../../../utils/types/friend";
 
 const FindTab = () => {
   const { language } = useLanguage();
@@ -24,7 +17,8 @@ const FindTab = () => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [requestingUsernames, setRequestingUsernames] = useState<string[]>([]);
 
-  const isRequesting = (username: string) => requestingUsernames.includes(username);
+  const isRequesting = (username: string) =>
+    requestingUsernames.includes(username);
 
   const handleSendRequest = async (username: string, memberId: number) => {
     let successOrAlreadySent = false;
@@ -38,8 +32,12 @@ const FindTab = () => {
     }
 
     if (successOrAlreadySent) {
-      setRequestingUsernames((prev) => (prev.includes(username) ? prev : [...prev, username]));
-      setSelectedUser((prev) => (prev?.username === username ? { ...prev } : prev));
+      setRequestingUsernames((prev) =>
+        prev.includes(username) ? prev : [...prev, username]
+      );
+      setSelectedUser((prev) =>
+        prev?.username === username ? { ...prev } : prev
+      );
     }
     setShowProfileModal(false);
   };
@@ -58,7 +56,7 @@ const FindTab = () => {
 
   return (
     // ✅ 고정 레이아웃: 최소 가로폭(1120px) 유지 → 창을 줄이면 가로 스크롤
-    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA] font-[Pretendard]">
+    <div className="w-full min-w-[1120px] flex h-[calc(100vh-64px)] bg-[#F8F9FA]">
       {/* 왼쪽 친구 검색 패널 - 항상 표시 */}
       <div className="flex-none w-[420px] border-r border-gray-200 bg-white">
         <FriendListPanel
@@ -87,12 +85,14 @@ const FindTab = () => {
               alt="find friends"
               className="w-[25000px] max-w-full mb-6 rounded-xl"
             />
-            <p className="text-xl font-semibold text-black">{t.findFriendsHeadline}</p>
+            <p className="text-xl font-semibold text-black">
+              {t.findFriendsHeadline}
+            </p>
             <p className="text-sm text-gray-500 mt-2 leading-relaxed">
               {t.findFriendsDesc1}
             </p>
             <p className="text-sm text-gray-500 leading-relaxed">
-              {t.findFriendsDesc2}  
+              {t.findFriendsDesc2}
             </p>
           </div>
         )}
@@ -104,8 +104,7 @@ const FindTab = () => {
           onClose={() => setShowConfirmModal(false)}
           onConfirm={onConfirmDelete}
           title={t.unfriendConfirmTitle.replace("{name}", selectedUser.name)}
-
-          confirmText={t.unfriendConfirmAction}                                    
+          confirmText={t.unfriendConfirmAction}
           alertMessage={t.unfriendDoneToast}
         />
       )}

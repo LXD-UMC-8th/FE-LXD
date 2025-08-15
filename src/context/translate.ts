@@ -3,6 +3,7 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    RequestFriend: string;
     explore: string;
     email: string;
     emailPlaceholder: string;
@@ -150,6 +151,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    RequestFriend: "Friend Request",
     Likes: "Likes",
     email: "Email",
     emailPlaceholder: "Enter your email",
@@ -300,6 +302,7 @@ export const translate: Record<
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
   },
   [Language.KOREAN]: {
+    RequestFriend: "친구 요청",
     email: "이메일",
     emailPlaceholder: "이메일을 입력해주세요",
     password: "비밀번호",
