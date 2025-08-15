@@ -172,6 +172,17 @@ export const translate: Record<
     CompleteCorrect: string;
     DeleteCommentAlert: string;
     DeleteReplyAlert: string;
+    FirstComment: string;
+    AddNote: string;
+    DeleteLikeAlert: string;
+    DeleteLikeAlert1: string;
+    Cancle: string;
+    SaveMemoFail: string;
+    SaveMemoFail1: string;
+    MemoEmpty: string;
+    DeleteMemoFail: string;
+    More: string;
+    Untitled: string;
     AddMemo: string;
     NothingCreatedCorrection: string;
     EditMemo: string;
@@ -190,7 +201,12 @@ export const translate: Record<
     pwChangeButton: string;
     editProfileHeader: string;
     deleteAccount: string;
-
+    accountInfo: string;
+    profileInfo: string;
+    profileImg: string;
+    selectFile: string;
+    selectFilePlaceholder: string;
+    imgSize: string;
     Unlike: string;
     profileEdit: string;
     notProfileResponse: string;
@@ -201,7 +217,6 @@ export const translate: Record<
     CompleteLeave: string;
     sureLeave: string;
     donotrenderprofile: string;
-
   }
 > = {
   [Language.ENGLISH]: {
@@ -321,7 +336,7 @@ export const translate: Record<
     titleRequired: "Please enter a title.",
     FriendFeedX: "There is not friend's diary.",
     settingTitle: "Settings",
-    SaveChange: "Save Change",
+    SaveChange: "Save Changes",
     setLanguage: "Language Setting",
     nativeLanguage: "Native Language",
     studyLanguage: "Study Language",
@@ -390,6 +405,17 @@ export const translate: Record<
     explore: "Explore",
     DeleteCommentAlert: "Are you sure you want to delete the comments?",
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
+    FirstComment: "Leave your first comment.",
+    AddNote:"Add note",
+    DeleteLikeAlert: "If you unlike this entry, it will be removed from your “Feed - Likes”. Are you sure you want to unlike it?",
+    DeleteLikeAlert1: "If you cancel 'Like', the correction will be removed from 'Like'.",
+    Cancle: "Unlike",
+    SaveMemoFail: "Failed to save the memo.",
+    SaveMemoFail1: "You can only add notes in the 'Saved Calibration'.",
+    MemoEmpty: "Please enter the memo content.",
+    DeleteMemoFail: "Failed to delete memo.",
+    More: "More",
+    Untitled: "Untitled",
     ConfirmDelete: "Are you sure you want to delete?",
     Loading: "Loading...",
     OnlyCanAddInSavedCorrection:
@@ -408,7 +434,12 @@ export const translate: Record<
     pwChangeButton: "Change",
     editProfileHeader: "Edit Profile",
     deleteAccount: "Delete Account",
-   
+    accountInfo: "Account Information",
+    profileInfo: "Profile Information",
+    profileImg: "Profile Image",
+    selectFile: "Browse",
+    selectFilePlaceholder: "Select a file",
+    imgSize: "Please upload an image file up to 500MG.",
     LeaveNoti:"Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
     Unlike: "Unlike",
     saving:"Saving..."
@@ -597,6 +628,17 @@ export const translate: Record<
     DeleteCommentAlert: "댓글을 삭제하시겠습니까?",
     LoadingComment: "댓글 불러오는 중..",
     DeleteReplyAlert: "답글을 삭제하시겠습니까?",
+    FirstComment: "첫 댓글을 남겨보세요.",
+    AddNote: "메모 추가하기",
+    DeleteLikeAlert: "'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
+    DeleteLikeAlert1: "'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다.",
+    Cancle: "취소하기",
+    SaveMemoFail: "메모 저장에 실패했어요.",
+    SaveMemoFail1: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
+    MemoEmpty: "메모 내용을 입력해 주세요.",
+    DeleteMemoFail: "메모 삭제에 실패했어요.",
+    More: "더보기",
+    Untitled: "제목 없음",
     Saturday: "토",
     Sunday: "일",
     Monday: "월",
@@ -617,9 +659,12 @@ export const translate: Record<
     pwChangeButton: "변경하기",
     editProfileHeader: "프로필 편집",
     deleteAccount: "회원탈퇴",
-    
-
+    accountInfo: "계정 정보",
+    profileInfo: "프로필 정보",
+    profileImg: "프로필 이미지",
+    selectFile: "파일선택",
+    selectFilePlaceholder: "파일을 선택해주세요",
+    imgSize: "최대 500MB의 이미지 파일을 업로드 해주세요.",
     Unlike: "취소하기",
-
   },
 };

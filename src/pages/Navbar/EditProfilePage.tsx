@@ -217,7 +217,7 @@ const EditProfilePage = () => {
     items-center justify-center space-y-10 px-4"
     >
       <section className="flex flex-col w-[775px] items-left">
-        <TitleHeader title={t.profileEdit} />
+        <TitleHeader title={t.editProfileHeader} />
       </section>
 
       <div className="space-y-3">
@@ -247,7 +247,7 @@ const EditProfilePage = () => {
           className="text-subhead3 text-gray-600 underline underline-offset-3 cursor-pointer"
           onClick={() => setSHowModal(true)}
         >
-          회원탈퇴
+          {t.deleteAccount}
         </button>
 
         <button
@@ -260,7 +260,7 @@ const EditProfilePage = () => {
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-          {_isSaving ? t.saving : t.SaveChange}
+          {_isSaving ? t.Loading : t.SaveChange}
         </button>
       </section>
 
