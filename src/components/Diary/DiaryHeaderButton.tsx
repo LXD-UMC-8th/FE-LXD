@@ -4,7 +4,6 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postFriendRequest } from "../../apis/friend";
 import { useState } from "react";
-import type { Friend } from "../../utils/types/friend";
 
 const DiaryHeaderButton = ({
   DiaryHeaderProps,
@@ -16,7 +15,6 @@ const DiaryHeaderButton = ({
   const t = translate[language];
   const [requestingUsernames, setRequestingUsernames] = useState<string[]>([]);
   const { memberId } = useParams<{ memberId: string }>();
-  const [selectedUser, setSelectedUser] = useState<Friend | null>(null);
 
   const isRequesting = (username: string) =>
     requestingUsernames.includes(username);
