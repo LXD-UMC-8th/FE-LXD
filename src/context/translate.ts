@@ -176,6 +176,12 @@ export const translate: Record<
     DeleteMemo: string;
     CancelLikeInCorrectionConfirm: string;
     diaryOwner: string;
+    newPassword: string;
+    confirmNewPassword: string;
+    newPasswordPlaceholder: string;
+    pwChangeButton: string;
+    editProfileHeader: string;
+    deleteAccount: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -360,6 +366,13 @@ export const translate: Record<
       "You can only add notes in the 'Saved Correction'.",
     DeleteMemo: "Delete Memo",
     diaryOwner: "'s Diary",
+    newPassword: "New Password",
+    confirmNewPassword: "Confirm new password",
+    newPasswordPlaceholder: "Enter your new password",
+    pwChangeButton: "Change",
+    editProfileHeader: "Edit Profile",
+    deleteAccount: "Delete Account",
+    
   },
   [Language.KOREAN]: {
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
@@ -540,5 +553,12 @@ export const translate: Record<
     Thursday: "목",
     Friday: "금",
     diaryOwner: "님의 다이어리",
+    newPassword: "새 비밀번호",
+    confirmNewPassword: "새 비밀번호 확인",
+    newPasswordPlaceholder: "새로운 비밀번호를 입력해주세요",
+    pwChangeButton: "변경하기"
+    editProfileHeader: "프로필 편집"
+    deleteAccount: "회원탈퇴",
+    
   },
 };
