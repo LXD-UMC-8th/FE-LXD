@@ -422,7 +422,7 @@ const DiaryDetailPage = () => {
                   {/* 작성자 줄 */}
                   <div 
                     className="flex items-center gap-3 mb-2 cursor-pointer"
-                    // onClick={() => navigate(`/diaries/member/${memberId}`)}
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
                   >
                     <Avatar
                       src={c.profileImage}
