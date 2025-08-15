@@ -24,19 +24,6 @@ import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailPage from "./pages/Feed/UserDetailPage";
 import "react-calendar/dist/Calendar.css";
-import { useEffect } from "react";
-import {
-  initActivityListeners,
-  cleanupActivityListeners,
-  wasRecentlyActive,
-} from "./context/ActiveTracker";
-import {
-  getLocalStorageItem,
-  removeLocalStorageItem,
-  setLocalStorageItem,
-} from "./apis/axios";
-import { postReissue } from "./apis/auth";
-import { LOCAL_STORAGE_KEY } from "./constants/key";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -119,37 +106,6 @@ const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
 export const queryClient = new QueryClient();
 
 function App() {
-  useEffect(() => {
-    initActivityListeners();
-
-    const interval = setInterval(() => {
-      const isActive = wasRecentlyActive(5); // active within last 5 min
-      if (isActive) {
-        try {
-          const refreshToken = getLocalStorageItem(
-            LOCAL_STORAGE_KEY.refreshToken
-          );
-          if (refreshToken) {
-            postReissue(refreshToken);
-          } else {
-            removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
-            removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
-            window.location.href = "/home";
-          }
-        } catch (error) {
-          console.error("Error refreshing access token:", error);
-        }
-      } else {
-        console.log("⏳ Skipped refresh — user inactive");
-      }
-    }, 50 * 60 * 1000);
-
-    return () => {
-      clearInterval(interval);
-      cleanupActivityListeners();
-    };
-  }, []);
-
   return (
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
@@ -161,4 +117,3 @@ function App() {
 }
 
 export default App;
-
