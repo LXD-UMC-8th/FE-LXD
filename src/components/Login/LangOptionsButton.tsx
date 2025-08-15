@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
+// import { useLanguage } from "../../context/LanguageProvider";
+// import { translate } from "../../context/translate";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface LangOptionsButtonProps {
@@ -18,8 +18,8 @@ const LangOptionsButton = ({
   const ref = useRef<HTMLDivElement | null>(null);
   const onClose = useCallback(() => setIsOpen(false), []);
   useOutsideClick(ref, onClose);
-  const { language } = useLanguage();
-  const t = translate[language];
+  // const { language } = useLanguage();
+  // const t = translate[language];
   
 
   
@@ -48,7 +48,7 @@ const LangOptionsButton = ({
               ? "한국어"
               : selected === "ENG"
               ? "English"
-              : t.langPlaceholder}
+              : "언어선택"}
           </span>
 
           {/* Arrow Icon */}

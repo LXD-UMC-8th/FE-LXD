@@ -14,8 +14,6 @@ import {
 import type { SignupFlowProps } from "./SignupFlow";
 import ToSModal from "../../components/Login/ToSModal";
 import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
 
 interface SignupPageProps {
   userInfo: SignupFlowProps;
@@ -32,8 +30,6 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
   const [isToSOpen, setIsToSOpen] = useState<boolean>(false); // 이용약관 모달 띄움 상태관리
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { language } = useLanguage();
-  const t = translate[language];
 
   // 이메일 인증 링크 발송 함수
   const handleEmailCheck = async () => {
@@ -44,12 +40,12 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       });
 
       if (response.isSuccess) {
-        alert(t.emailLinkSuccessAlert);
+        alert("이메일 인증 링크 전송 성공");
         console.log("이메일 인증 링크 전송 성공");
         return;
       }
     } catch (error) {
-      alert(t.emailLinkErrorAlert);
+      alert("발송 실패:");
       console.error("발송 실패:", error);
     }
   };
@@ -82,15 +78,15 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       // }
 
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
-      alert(t.emailVerifySuccessAlert);
+      alert("이메일 인증 성공 및 조회 성공");
     } catch (error) {
       console.error("인증 실패:", error);
       setHasVerifiedByToken(true);
       setEmailVerified(false);
-      alert(t.emailVerifyErrorAlert);
+      alert("인증 실패:");
     }
   };
-  // 창이 2개가 되는걸 어떻게 처리할까??? ㅜㅜ
+  
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.emailVerified && event.data.email) {
@@ -194,7 +190,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
           <PrevButton navigateURL="/home" />
-          <TitleHeader title={t.signupHeader} />
+          <TitleHeader title="계정 생성을 위해 정보를 입력해주세요" />
         </section>
 
         <form
@@ -206,8 +202,8 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
             <div className="flex gap-2 items-end">
               <div className="flex-1">
                 <FormInput
-                  name={t.email}
-                  placeholder={t.emailPlaceholder}
+                  name="이메일"
+                  placeholder="이메일을 입력해주세요"
                   input={userInfo.email}
                   onChange={(e) => handleInputChange("email", e.target.value)}
                   onBlur={() => setEmailTouched(true)}
@@ -215,7 +211,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                 />
               </div>
               <IDButton
-                name={emailVerified ? t.afterVerify : t.beforeVerify}
+                name={emailVerified ? "인증완료" : "인증하기"}
                 onClick={handleEmailCheck}
                 disabled={!isEmailValid(userInfo.email) || emailVerified}
               />
@@ -226,11 +222,11 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                 <>
                   {emailVerified ? (
                     <span className="text-body2 text-mint-500">
-                      {t.emailVerifiedToast}
+                      인증되었습니다
                     </span>
                   ) : (
                     <span className="text-body2 text-red-500">
-                      {t.emailErrorToast}
+                      입력하신 이메일로 인증 메일을 보낼 수 없습니다
                     </span>
                   )}
                 </>
@@ -238,8 +234,8 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name={t.password}
-              placeholder={t.passwordPlaceholder}
+              name="비밀번호"
+              placeholder="비밀번호를 입력해주세요"
               input={userInfo.password}
               onChange={(e) => handleInputChange("password", e.target.value)}
               onBlur={() => setPasswordTouched(true)}
@@ -247,20 +243,20 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
             />
             {!passwordTouched || userInfo.password.trim() === "" ? (
               <span className="text-body2 text-gray-600">
-                {t.pwConditionToast}
+                8자 이상, 대소문자, 숫자 포함
               </span>
             ) : !isPasswordValid(userInfo.password) ? (
               <span className="text-body2 text-red-500">
-                {t.pwConditionToast}
+                8자 이상, 대소문자, 숫자 포함
               </span>
             ) : (
-              <span className="text-body2 text-mint-500">{t.pwValidToast}</span>
+              <span className="text-body2 text-mint-500">유효한 비밀번호입니다</span>
             )}
           </div>
           <div className="flex flex-col space-y-2">
             <FormInput
-              name={t.comfirmPassword}
-              placeholder={t.passwordPlaceholder}
+              name="비밀번호 확인"
+              placeholder="비밀번호를 입력해주세요"
               input={userInfo.checkPassword}
               onChange={(e) =>
                 handleInputChange("checkPassword", e.target.value)
@@ -273,11 +269,11 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
               isPasswordValid(userInfo.password) &&
               (isPasswordMatch(userInfo.password, userInfo.checkPassword) ? (
                 <span className="text-body2 text-mint-500">
-                  {t.pwConfirmedToast}
+                  비밀번호가 일치합니다
                 </span>
               ) : (
                 <span className="text-body2 text-red-500">
-                  {t.pwNotConfirmedToast}
+                  비밀번호가 일치하지 않습니다
                 </span>
               ))}
           </div>
@@ -298,7 +294,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
                 onClick={handleOpenTosModal}
                 className="text-body1 hover:underline underline-offset-3 cursor-pointer"
               >
-                {t.TosAgreed}
+                이용약관 및 개인정보 처리 방침에 동의합니다
               </span>
             </div>
             {isToSOpen && <ToSModal onClose={handleCloseTosModal} />}
@@ -307,7 +303,7 @@ const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
           <SignupButton
             form="signup-form"
             type="submit"
-            name={t.nextButton}
+            name="다음으로"
             disabled={!isAllValid()}
           />
         </section>
