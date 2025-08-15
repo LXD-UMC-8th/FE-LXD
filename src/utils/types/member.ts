@@ -33,10 +33,10 @@ export type CheckDuplicatedIDDTO = {
 export type CheckDuplicatedIDResponseDTO = APIResponse<CheckDuplicatedIDDTO>;
 
 export type CorrectionsMemberDTO = {
-  memberId: number;
-  username: string;
-  nickname: string;
-  profileImageUrl: string;
+  memberId?: number;
+  username?: string;
+  nickname?: string;
+  profileImageUrl?: string;
 };
 
 export type MemberLanguageDTO = {
@@ -67,6 +67,6 @@ export type ChangePasswordRequestDTO = {
   email: string;
   newPassword: string;
   confirmNewPassword: string;
-}
+};
 
 export type ChangePasswordResponseDTO = APIResponse<string>;

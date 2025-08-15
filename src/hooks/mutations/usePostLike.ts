@@ -43,15 +43,15 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
             result: {
               ...page.result,
               diaries: page.result.diaries.map((d: diaries) => {
-                if (d.diaryId !== targetId) return d;
-                if (d.likeCount) {
+                if (d.diaryId === targetId && typeof d.likeCount === "number") {
                   const nextLiked = !d.isLiked;
                   const nextCount = nextLiked
-                    ? d?.likeCount + 1
-                    : Math.max(0, d?.likeCount - 1);
+                    ? d.likeCount + 1
+                    : Math.max(0, d.likeCount - 1);
 
                   return { ...d, isLiked: nextLiked, likeCount: nextCount };
                 }
+                return d;
               }),
             },
           })),

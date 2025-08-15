@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "react-calendar/dist/Calendar.css";
+@import "react-quill/dist/quill.snow.css";
 
 html,
 body {
@@ -78,7 +80,7 @@ body {
     color: #f1f5fd;
   }
   .text-primary-400 {
-    color: #618BFD;
+    color: #618bfd;
   }
   .text-primary-500 {
     color: #4170fe;
@@ -136,6 +138,9 @@ body {
   .text-mint-100 {
     color: #e4fff2;
   }
+  .text-alert {
+    color: #fd4b4a;
+  }
 
   /* Background Colors */
   .bg-primary {
@@ -145,10 +150,10 @@ body {
     background-color: #f1f5fd;
   }
   .bg-primary-70 {
-    background-color: #EDF3FE;
+    background-color: #edf3fe;
   }
   .bg-primary-100 {
-    background-color: #CFDFFF;
+    background-color: #cfdfff;
   }
   .bg-primary-500 {
     background-color: #4170fe;

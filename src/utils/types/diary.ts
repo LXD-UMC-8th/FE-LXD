@@ -41,6 +41,7 @@ export type DiaryUploadResult = {
   isLiked?: boolean;
   diffHtml?: string;
   commentPermission?: string;
+  writerId?: number;
 };
 
 export type DiaryGetRequestDTO = {

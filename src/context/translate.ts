@@ -145,6 +145,8 @@ export const translate: Record<
     CorrectExp: string;
     CorrectEnroll: string;
     CompleteCorrect: string;
+    DeleteCommentAlert: string;
+    DeleteReplyAlert: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -294,6 +296,8 @@ export const translate: Record<
     CorrectEnroll: "Post",
     CompleteCorrect: "Complete",
     explore: "Explore",
+    DeleteCommentAlert: "Are you sure you want to delete the comments?",
+    DeleteReplyAlert: "Are you sure you want to delete the reply?",
   },
   [Language.KOREAN]: {
     email: "이메일",
@@ -350,7 +354,7 @@ export const translate: Record<
     visibility_PRIVATE: "비공개",
     commentPermission_PUBLIC: "전체허용",
     commentPermission_FRIEND: "친구허용",
-    commentPermission_PRIVATE: "비공개",
+    commentPermission_PRIVATE: "비허용",
     enrollButtonText: "등록하기",
     refreshButtonText: "새로고침",
     questionGeneratorButtonText: "질문 생성하기",
@@ -440,5 +444,7 @@ export const translate: Record<
     CompleteCorrect: "교정완료",
     explore: "탐색",
     Likes: "좋아요",
+    DeleteCommentAlert: "댓글을 삭제하시겠습니까?",
+    DeleteReplyAlert: "답글을 삭제하시겠습니까?",
   },
 };
