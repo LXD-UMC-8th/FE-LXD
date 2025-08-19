@@ -38,13 +38,14 @@ const NavBar = () => {
         es.close();
       }
       es = getSubscribeToNotifications();
+      console.log("es data in Navbar:", es);
     };
 
     setupSSE(); // run on mount
 
     const intervalId = setInterval(() => {
       setupSSE();
-    }, 60 * 1000);
+    }, 44 * 1000);
 
     return () => {
       if (es) es.close();
@@ -60,11 +61,13 @@ const NavBar = () => {
 
   useEffect(() => {
     const checkReadStatus = async () => {
-      const data = await getNotifications(1, 100);
-      console.log("list of data", data);
-      const result = data.result.contents.some(
-        (note: NotificationContentProps) => note.read
+      const data = await getNotifications(1, 1);
+      const TotalData = await getNotifications(1, data.result.totalElements);
+      console.log("TotalData: ", TotalData);
+      const result = data.result.contents.every(
+        (note: NotificationContentProps) => note.read === true
       );
+      console.log("result value", result);
       setHasAnyRead(result);
     };
 
@@ -76,7 +79,7 @@ const NavBar = () => {
       <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
         {/* 로고 */}
         <NavLink to="/feed" className="flex items-center gap-2 cursor-pointer">
-          <img src="/images/LXD_logo.svg" alt="LXD 로고" className="w-7 h-7" />
+          <img src="/images/LXD_logo.svg" alt="LXD" className="w-7 h-7" />
           <img src="/images/LXDTitleIcon.svg" alt="LXD" className="w-9 h-4" />
         </NavLink>
 
@@ -89,11 +92,19 @@ const NavBar = () => {
               )
             }
           >
-            <img
-              src="/images/NoticeIcon.svg"
-              alt={t.alertImage}
-              className="w-7 h-7 cursor-pointer"
-            />
+            {!_hasAnyRead ? (
+              <img
+                src="/images/NotificationAlertIcon.svg"
+                alt={t.alertImage}
+                className="w-7 h-7 cursor-pointer"
+              />
+            ) : (
+              <img
+                src="/images/NoticeIcon.svg"
+                alt={t.alertImage}
+                className="w-7 h-7 cursor-pointer"
+              />
+            )}
           </div>
           <div
             className="flex items-center gap-2"

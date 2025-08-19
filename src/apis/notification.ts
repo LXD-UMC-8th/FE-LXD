@@ -1,5 +1,5 @@
 // src//notifications.ts
-import { axiosInstance } from "./axios";
+import { axiosInstance, getLocalStorageItem } from "./axios";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import type {
   patchReadAllNotificationResponseDTO,
@@ -21,7 +21,7 @@ export async function getNotifications(pageParam: number, size: number) {
 }
 
 export function getSubscribeToNotifications() {
-  const token = localStorage.getItem("accessToken");
+  const token = getLocalStorageItem("accessToken");
   const es = new EventSourcePolyfill(`${API}/notifications/subscribe`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -29,9 +29,6 @@ export function getSubscribeToNotifications() {
       Accept: "text/event-stream",
     },
   });
-
-  console.log(es);
-
   return es;
 }
 
