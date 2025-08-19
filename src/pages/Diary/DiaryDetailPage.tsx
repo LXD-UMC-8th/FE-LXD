@@ -125,9 +125,9 @@ const DiaryDetailPage = () => {
     if (!hasValidId) return;
     fetchDiaryDetail({ diaryId: parsedDiaryId });
     fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
-    setPage(0);
+    setPage(1);
     setCommentState([]);
-    loadCommentsPage(0);
+    loadCommentsPage(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasValidId, parsedDiaryId]);
 
