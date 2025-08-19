@@ -38,6 +38,7 @@ const NavBar = () => {
         es.close();
       }
       es = getSubscribeToNotifications();
+      setOnChangeSetting((prev) => !prev);
       console.log("es data in Navbar:", es);
     };
 
