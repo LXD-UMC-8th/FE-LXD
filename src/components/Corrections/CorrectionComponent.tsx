@@ -1,4 +1,3 @@
-// src/components/Corrections/CorrectionComponent.tsx
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -8,10 +7,7 @@ import LoadingModal from "../Common/LoadingModal";
 
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { useToggleCorrectionLike } from "../../hooks/mutations/CorrectionLike/useToggleCorrectionLike";
-import {
-  useUpsertSavedMemo,
-  useDeleteSavedMemo,
-} from "../../hooks/mutations/useSavedMemo";
+import { useUpsertSavedMemo, useDeleteSavedMemo } from "../../hooks/mutations/useSavedMemo";
 
 import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 import { QUERY_KEY } from "../../constants/key";
@@ -22,35 +18,15 @@ interface Props {
   correction: SavedCorrectionItem;
 }
 
-/** ---- localStorage for liked map (동기화용) ---- */
-const LIKED_KEY = "lxd-liked-corrections";
-function readLikedMap(): Record<number, boolean> {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(localStorage.getItem(LIKED_KEY) || "{}");
-  } catch {
-    return {};
-  }
-}
-function writeLikedMap(
-  updater: (m: Record<number, boolean>) => Record<number, boolean>
-) {
-  const m = readLikedMap();
-  const next = updater(m);
-  localStorage.setItem(LIKED_KEY, JSON.stringify(next));
-}
-
 const CorrectionComponent = ({ correction }: Props) => {
   /** ---------- 기본 값/ID ---------- */
-  const correctionId = correction.correctionId; // 항상 존재(타입 보장)
-  const savedId = correction.savedCorrectionId; // '저장 탭'에서만 의미
+  const correctionId = correction.correctionId;
+  const savedId = correction.savedCorrectionId;  
   const isSavedList = !!savedId;
 
-  /** ---------- 좋아요 ---------- */
-  // 제공 탭(liked가 올 수도 있음), 저장 탭(무조건 true) 케이스 모두 커버
-  const initiallyLiked = isSavedList
-    ? true
-    : Boolean((correction as any).liked);
+  /** ---------- 좋아요 (API만 사용) ---------- */
+  // 제공 탭: liked 가 올 수도 있고 안 올 수도 있어 안전 처리
+  const initiallyLiked = isSavedList ? true : Boolean((correction as any).liked);
   const [liked, setLiked] = useState<boolean>(initiallyLiked);
   const [likeCount, setLikeCount] = useState<number>(correction.likeCount ?? 0);
   const [liking, setLiking] = useState(false);
@@ -64,24 +40,25 @@ const CorrectionComponent = ({ correction }: Props) => {
     e.stopPropagation();
     if (liking || removed) return;
 
+    // 저장 탭에서 이미 좋아요 상태면 "좋아요 취소" 확인 모달
     if (isSavedList && liked) {
-      // 저장 탭: 취소 확인 모달
       setDeleteLikeOpen(true);
       return;
     }
 
     setLiking(true);
-    const prevLiked = liked;
-    const prevCnt = likeCount;
     try {
-      await toggleLike({ correctionId }); // 서버는 POST 하나로 토글
-      setLiked(!prevLiked);
-      setLikeCount(prevLiked ? Math.max(0, prevCnt - 1) : prevCnt + 1);
+      // 서버 토글 → 서버가 판단한 liked/likeCount 를 그대로 반영
+      const res = await toggleLike({ correctionId });
+      setLiked(Boolean(res.liked));
+      // res.likeCount 없을 수 있으면 안전 보정
+      setLikeCount(
+        typeof res.likeCount === "number"
+          ? res.likeCount
+          : (res.liked ? likeCount + 1 : Math.max(0, likeCount - 1))
+      );
 
-      // ✅ localStorage 동기화 (리패치/리마운트 시 표시 일관)
-      writeLikedMap((m) => ({ ...m, [correctionId]: !prevLiked }));
-
-      // 제공 탭 리스트 동기화
+      // 제공 탭 리스트 동기화(개별 invalidate는 훅에서 이미 처리)
       qc.invalidateQueries({ queryKey: [QUERY_KEY.providedCorrections] });
     } finally {
       setLiking(false);
@@ -94,26 +71,14 @@ const CorrectionComponent = ({ correction }: Props) => {
 
     setDeleteLikeOpen(false);
     setLiking(true);
-
-    // 낙관적 업데이트: 카드 숨김 + 카운트/상태 변경
-    const prevLiked = liked;
-    const prevCnt = likeCount;
-    setLiked(false);
-    setLikeCount(Math.max(0, prevCnt - 1));
-    setRemoved(true);
-
     try {
-      await toggleLike({ correctionId });
-
-      // ✅ localStorage 동기화 (false 또는 제거)
-      writeLikedMap((m) => ({ ...m, [correctionId]: false }));
+      const res = await toggleLike({ correctionId }); // 서버 토글(=취소)
+      setLiked(Boolean(res.liked));
+      setLikeCount(typeof res.likeCount === "number" ? res.likeCount : Math.max(0, likeCount - 1));
+      // 저장 탭에서는 취소 후 카드 숨김
+      if (isSavedList) setRemoved(true);
 
       qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
-    } catch {
-      // 롤백
-      setLiked(prevLiked);
-      setLikeCount(prevCnt);
-      setRemoved(false);
     } finally {
       setLiking(false);
     }
@@ -121,21 +86,15 @@ const CorrectionComponent = ({ correction }: Props) => {
 
   /** ---------- 댓글 ---------- */
   const [openReply, setOpenReply] = useState(false);
-  const [commentCount, setCommentCount] = useState<number>(
-    correction.commentCount ?? 0
-  );
+  const [commentCount, setCommentCount] = useState<number>(correction.commentCount ?? 0);
 
-  const {
-    mutate: fetchComments,
-    data: listData,
-    isPending: listLoading,
-  } = useGetCorrectionComments();
+  const { mutate: fetchComments, data: listData, isPending: listLoading } = useGetCorrectionComments();
 
   const comments = useMemo(() => {
     const r: any = listData?.result;
     if (!r) return [];
-    if (Array.isArray(r.content)) return r.content; // 표준
-    if (Array.isArray(r.contents)) return r.contents; // 변형 대응
+    if (Array.isArray(r.content)) return r.content;
+    if (Array.isArray(r.contents)) return r.contents;
     return [];
   }, [listData]);
 
@@ -150,7 +109,6 @@ const CorrectionComponent = ({ correction }: Props) => {
     if (typeof total === "number") setCommentCount(total);
   }, [listData]);
 
-  // 최초 렌더에서 숫자가 0이면 가볍게 size=1로 총개수만 프라임
   const primedRef = useRef(false);
   useEffect(() => {
     if (primedRef.current) return;
@@ -174,18 +132,19 @@ const CorrectionComponent = ({ correction }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctionId]);
 
-  /** ---------- 메모(등록/수정/삭제) ---------- */
+  /** ---------- 메모(저장 탭에서만) ---------- */
   const baselineRef = useRef<string>(correction.memo ?? "");
   const [memoText, setMemoText] = useState<string>(baselineRef.current);
   const isDirty = memoText !== baselineRef.current;
 
   const { mutateAsync: upsertMemo, isPending: isSaving } = useUpsertSavedMemo();
-  const { mutateAsync: removeMemo, isPending: isDeleting } =
-    useDeleteSavedMemo();
+  const { mutateAsync: removeMemo, isPending: isDeleting } = useDeleteSavedMemo();
+
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const handleSaveMemo = async () => {
-    if (!isSavedList)
-      return alert(t.SaveMemoFail1);
+    if (!isSavedList) return alert(t.SaveMemoFail1);
     const trimmed = memoText.trim();
     if (!trimmed) return alert("메모 내용을 입력해 주세요.");
     if (!isDirty) return;
@@ -195,8 +154,7 @@ const CorrectionComponent = ({ correction }: Props) => {
         savedCorrectionId: Number(savedId),
         memo: trimmed,
         hadMemo: Boolean(baselineRef.current),
-      } as any); // hadMemo는 mutationFn에서만 사용
-      // 로컬 기준값 동기화 → 다음 수정 때 버튼 활성화 정상
+      } as any);
       baselineRef.current = trimmed;
       setMemoText(trimmed);
     } catch (e) {
@@ -217,21 +175,15 @@ const CorrectionComponent = ({ correction }: Props) => {
     }
   };
 
-const { language } = useLanguage();
-const t = translate[language];
-
-/** ---------- 제거된 카드면 렌더 스킵 ---------- */
-if (removed) return null;
+  /** ---------- 제거된 카드면 렌더 스킵 ---------- */
+  if (removed) return null;
 
   /** ---------- 렌더 ---------- */
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
       {/* 상단 프로필/시간 */}
       <div className="mb-3">
-        <ProfileInCorrections
-          member={correction.member}
-          createdAt={correction.createdAt ?? ""}
-        />
+        <ProfileInCorrections member={correction.member} createdAt={correction.createdAt ?? ""} />
       </div>
 
       {/* 다이어리 제목 */}
@@ -245,22 +197,16 @@ if (removed) return null;
 
       {/* 본문 */}
       <div className="mt-3 space-y-3">
-        {!!correction.original && (
-          <p className="text-body1 text-gray-900">{correction.original}</p>
-        )}
+        {!!correction.original && <p className="text-body1 text-gray-900">{correction.original}</p>}
 
         {!!correction.corrected && (
           <div className="flex gap-2">
             <div className="w-1.5 rounded bg-primary-500 mt-1" />
-            <p className="text-body1 font-semibold text-primary-600">
-              {correction.corrected}
-            </p>
+            <p className="text-body1 font-semibold text-primary-600">{correction.corrected}</p>
           </div>
         )}
 
-        {!!correction.commentText && (
-          <p className="text-body2 text-gray-700">{correction.commentText}</p>
-        )}
+        {!!correction.commentText && <p className="text-body2 text-gray-700">{correction.commentText}</p>}
       </div>
 
       {/* 액션 */}
@@ -270,15 +216,11 @@ if (removed) return null;
           className="flex items-center gap-1 rounded px-1.5 py-1 hover:bg-gray-100 cursor-pointer"
         >
           <img
-            src={
-              openReply
-                ? "/images/commentIcon.svg"
-                : "/images/emptycommentIcon.svg"
-            }
+            src={openReply ? "/images/commentIcon.svg" : "/images/emptycommentIcon.svg"}
             alt="댓글"
             className="w-5 h-5"
           />
-          <span>{commentCount}</span>
+        <span>{commentCount}</span>
         </button>
 
         <button
@@ -292,9 +234,7 @@ if (removed) return null;
             alt="좋아요"
             className={`w-5 h-5 ${liked ? "scale-110" : ""}`}
           />
-          <span className={liked ? "text-red-500" : undefined}>
-            {likeCount}
-          </span>
+          <span className={liked ? "text-red-500" : undefined}>{likeCount}</span>
         </button>
       </div>
 
@@ -316,12 +256,8 @@ if (removed) return null;
                     className="h-6 w-6 rounded-full bg-gray-200"
                     alt="프로필"
                   />
-                  <span className="font-medium">
-                    {c.nickname ?? c.member?.nickname}
-                  </span>
-                  <span className="text-gray-400">
-                    @{c.username ?? c.member?.username}
-                  </span>
+                  <span className="font-medium">{c.nickname ?? c.member?.nickname}</span>
+                  <span className="text-gray-400">@{c.username ?? c.member?.username}</span>
                   <span className="ml-auto text-gray-400">{c.createdAt}</span>
                 </div>
                 <div className="mt-2 text-body1 text-gray-900">{c.content}</div>
@@ -334,11 +270,7 @@ if (removed) return null;
       {!!isSavedList && (
         <div className="mt-4 flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
-            <img
-              src="/images/MemoPlusIcon.svg"
-              alt="메모 추가"
-              className="w-4 h-4"
-            />
+            <img src="/images/MemoPlusIcon.svg" alt="메모 추가" className="w-4 h-4" />
             <input
               type="text"
               placeholder={t.AddNote}
@@ -373,13 +305,9 @@ if (removed) return null;
         <div className="h-9 w-9 rounded-md bg-gray-200" />
         <div className="text-body1 text-gray-700">
           <span className="mr-2 text-gray-500">#{correction.diaryId}</span>
-          <span className="font-medium">
-            {correction.diaryTitle || t.Untitled}
-          </span>
+          <span className="font-medium">{correction.diaryTitle || t.Untitled}</span>
         </div>
-        <div className="ml-auto text-caption text-gray-500">
-          {correction.createdAt ?? ""}
-        </div>
+        <div className="ml-auto text-caption text-gray-500">{correction.createdAt ?? ""}</div>
       </div>
 
       {/* 좋아요 취소 모달 */}

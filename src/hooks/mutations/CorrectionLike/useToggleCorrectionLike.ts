@@ -1,15 +1,27 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { CorrectionLikeResponseDTO } from "../../../utils/types/correctionLike";
 import { postCorrectionLike } from "../../../apis/correctionLikes";
+import { QUERY_KEY } from "../../../constants/key";
 
-// liked는 더 이상 필요 없으므로 Optional 로 둡니다.
-// - toggleLike({ correctionId })  OK
-// - toggleLike({ correctionId, liked })  OK (기존 호출부도 그대로 동작)
 type Vars = { correctionId: number; liked?: boolean };
 
+type ToggleLikeResult = {
+  correctionId: number;
+  memberId: number;
+  likeCount: number;
+  liked: boolean;
+};
+
 export const useToggleCorrectionLike = () => {
-  return useMutation<CorrectionLikeResponseDTO, unknown, Vars>({
-    // 서버는 POST 하나로 토글 ⇒ correctionId만 사용
-    mutationFn: async ({ correctionId }) => postCorrectionLike(correctionId),
+  const qc = useQueryClient();
+  return useMutation<ToggleLikeResult, unknown, Vars>({
+    mutationFn: async ({ correctionId }) => {
+      const dto: CorrectionLikeResponseDTO = await postCorrectionLike(correctionId);
+      return dto.result; 
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.providedCorrections] });
+      qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
+    },
   });
 };
