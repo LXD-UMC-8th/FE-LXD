@@ -1,4 +1,3 @@
-// src/components/Friends/FriendListPanel.tsx
 import { useEffect, useState } from "react";
 import SearchBar from "./SearchBar";
 import FriendItem, { pickProfileImage } from "./FriendItem";
@@ -24,7 +23,7 @@ export interface Friend {
   isFriend: boolean;
 }
 
-// ✅ 응답 키가 달라도 안전하게 받도록 선택지 추가
+
 export interface FriendSearchItem {
   memberId: number;
   username: string;
@@ -32,7 +31,7 @@ export interface FriendSearchItem {
   profileImageUrl?: string | null;
   profileImage?: string | null;
   profileUrl?: string | null;
-  profileImg?: string | null; // ✅ 백엔드 스펙 대응 (/members/profile 등)
+  profileImg?: string | null;
 }
 
 interface FriendListPanelProps {
@@ -71,12 +70,12 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
     fetch();
   }, [debouncedSearch]);
 
-  // 초기 로드: 최근검색 불러오기 + 이미지 비어있는 항목 메타 백필
+  
   useEffect(() => {
     const items = getRecentSearchesWithMeta();
     setRecentSearches(items);
 
-    // 이미지 없는 항목을 서버 재조회로 보정 (한 번만)
+    
     (async () => {
       const need = items.filter((it) => !it.image);
       if (need.length === 0) return;
@@ -102,12 +101,12 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
     })();
   }, []);
 
-  // ✅ username만 있는 경우도 서버에서 정보 조회
+  // username만 있는 경우도 서버에서 정보 조회
   const handleSelectFriend = async (username: string, userInfo?: FriendSearchItem) => {
     // 검색 결과에서 온 경우
     if (userInfo) {
       const img = userInfo.profileImg || pickProfileImage(userInfo);
-      addRecentSearch(username, img, userInfo.nickname); // ✅ 이미지/닉네임 저장
+      addRecentSearch(username, img, userInfo.nickname); 
       setRecentSearches(getRecentSearchesWithMeta());
 
       const friend: Friend = {
@@ -121,7 +120,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
       return;
     }
 
-    // 최근 검색에서 온 경우 → 서버 재조회
+    
     try {
       const data = await searchFriends(username);
       const found: FriendSearchItem | undefined = data.result.members.contents.find(
@@ -134,7 +133,7 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
       }
 
       const img = found.profileImg || pickProfileImage(found);
-      addRecentSearch(found.username, img, found.nickname); // ✅ 메타 갱신
+      addRecentSearch(found.username, img, found.nickname); 
       setRecentSearches(getRecentSearchesWithMeta());
 
       const friend: Friend = {
@@ -188,7 +187,6 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
                   key={friend.username}
                   name={friend.nickname}
                   username={friend.username}
-                  // ✅ 검색 결과: 서버가 주는 profileImg 우선 사용, 없으면 보정
                   image={friend.profileImg || pickProfileImage(friend)}
                   onClick={() => handleSelectFriend(friend.username, friend)}
                   isSelected={selectedUsername === friend.username}
@@ -200,9 +198,9 @@ const FriendListPanel = ({ onSelect, selectedUsername }: FriendListPanelProps) =
                   key={item.username}
                   name={item.name ?? item.username}
                   username={item.username}
-                  // ✅ 저장된 이미지 그대로 표시 (없으면 빈 문자열 → 컴포넌트에서 기본아바타)
+                  //  저장된 이미지 그대로 표시 (없으면 빈 문자열 → 컴포넌트에서 기본아바타)
                   image={item.image ?? ""}
-                  onClick={() => handleSelectFriend(item.username)} // ✅ 재조회 트리거
+                  onClick={() => handleSelectFriend(item.username)} 
                   isSelected={selectedUsername === item.username}
                   showDelete
                   onDelete={() => handleRemoveRecent(item.username)}
