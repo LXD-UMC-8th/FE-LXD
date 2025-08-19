@@ -69,13 +69,16 @@ const CalendarModal = () => {
       <Calendar
         className="border-radius-lg "
         formatDay={(_locale, date) => date.getDate().toString()}
-        formatMonthYear={(_locale, date) =>
-          `${date.getFullYear()} ${date
+        formatMonthYear={(_locale, date) => {
+          if (language === "KO") {
+            return `${date.getFullYear()} ${date.getMonth() + 1}월`;
+          }
+          return `${date.getFullYear()} ${date
             .toLocaleString("default", {
               month: "short",
             })
-            .toUpperCase()}`
-        }
+            .toUpperCase()}`;
+        }}
         formatShortWeekday={(_locale, date) =>
           [
             t.Sunday,

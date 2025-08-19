@@ -82,7 +82,7 @@ const DiaryHeaderButton = ({
               isRequesting(DiaryHeaderProps.username ?? "")) && (
               <div className="flex gap-3 bg-blue-200 rounded-2xl p-3">
                 <img src="/images/requestingIcon.svg" alt="Pending" />
-                <p className="text-blue-500">PENDING</p>
+                  <p className="text-blue-500">{t.pending}</p>
               </div>
             )}
           </div>
