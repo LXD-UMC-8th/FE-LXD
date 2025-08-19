@@ -35,8 +35,8 @@ const LikesTab = () => {
   return (
     <div className="flex flex-col w-260 mb-10">
       {data?.pages.flatMap((page) =>
-        page.result.diaries
-          .filter((diary) => diary.visibility !== "PRIVATE")
+        page.result.contents
+          .filter((contents) => contents.visibility !== "PRIVATE")
           .map((data, _idx) => (
             <CommonComponentInDiaryNFeed
               key={data.diaryId}

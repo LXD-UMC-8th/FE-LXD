@@ -72,10 +72,10 @@ const ExploreTab = () => {
         />
       </div>
       {data?.pages.flatMap((page) =>
-        page.result.diaries
+        page.result.contents
           .filter(
-            (diary: diaries) =>
-              diary.language === lang && diary.visibility !== "PRIVATE"
+            (contents: diaries) =>
+              contents.language === lang && contents.visibility !== "PRIVATE"
           )
           .map((d: diaries) => (
             <div

@@ -29,16 +29,16 @@ const DiaryLikesTab = () => {
   return (
     <div className="w-260 mb-10">
       {data?.pages.flatMap((page) =>
-        page.result.diaries
-          .filter((diary: diaries) => diary.isLiked)
-          .map((diary: diaries, idx: number) => (
+        page.result.contents
+          .filter((contents: diaries) => contents.isLiked)
+          .map((contents: diaries, idx: number) => (
             <CommonComponentInDiaryNFeed
-              key={diary.diaryId}
-              props={diary}
+              key={contents.diaryId}
+              props={contents}
               pageResult={page.result}
               idx={idx}
             />
-          )),
+          ))
       )}
       {isFetching && (
         <div>

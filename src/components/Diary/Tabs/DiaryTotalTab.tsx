@@ -29,14 +29,14 @@ const DiaryTotalTab = () => {
   return (
     <div className="w-260 mb-10">
       {data?.pages.flatMap((page) =>
-        page.result.diaries.map((data: diaries, idx: number) => (
+        page.result.contents.map((data: diaries, idx: number) => (
           <CommonComponentInDiaryNFeed
             key={data.diaryId}
             props={data}
             pageResult={page.result}
             idx={idx}
           />
-        )),
+        ))
       )}
       {isFetching && (
         <div>
