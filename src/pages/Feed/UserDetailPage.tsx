@@ -63,7 +63,7 @@ const UserDetailPage = () => {
         {/* <CommonComponentInDiaryNFeed/> */}
         <div className="mt-15">
           {data?.pages.flatMap((page) =>
-            page.result.diaries.map((data, _idx) => (
+            page.result.contents.map((data, _idx) => (
               <CommonComponentInDiaryNFeed
                 key={data.diaryId}
                 props={data}
