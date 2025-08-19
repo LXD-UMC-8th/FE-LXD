@@ -321,7 +321,7 @@ export const translate: Record<
     notificationHeader: "Notifications",
     allReadInNotification: "Mark all as read",
     notificationButtonText1: "Accept",
-    notificationButtonText2: "Delete",
+    notificationButtonText2: "Refuse",
     Diaries: "Entries",
     SeeMore: "See More",
     Diary: "Entry",

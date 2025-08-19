@@ -2,7 +2,7 @@ import Avatar from "../Common/Avatar";
 import type { NotificationContentProps } from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { postFriendAccept, postFriendRefuse } from "../../apis/friend";
+import { postFriendAccept, patchFriendRefuse } from "../../apis/friend";
 import { useNavigate } from "react-router-dom";
 
 const NotificationContent = ({
@@ -19,17 +19,20 @@ const NotificationContent = ({
     const requesterId = notifications.redirectUrl?.split("/members/")[1];
     if (requesterId) {
       postFriendAccept(Number(requesterId));
+      navigate(`/friendslist`, { state: { select: 1 } });
     }
   };
   const handleRefuseFriend = () => {
     // notifications.redirectUrl에서 memberId 추출
     const requesterId = notifications.redirectUrl?.split("/members/")[1];
+    console.log("requesterId", requesterId, typeof Number(requesterId));
     if (requesterId) {
-      postFriendRefuse(Number(requesterId));
+      patchFriendRefuse(Number(requesterId));
     }
   };
 
   const navigate = useNavigate();
+
   const navigateToEvent = () => {
     if (notifications.redirectUrl?.startsWith("/diaries")) {
       const diaryId = notifications.redirectUrl

@@ -7,7 +7,7 @@ import useFriendship from "../../hooks/queries/useFriendship";
 import {
   postFriendRequest,
   postFriendAccept,
-  postFriendRefuse,
+  patchFriendRefuse,
 } from "../../apis/friend";
 import { useFriendCounts } from "../../context/FriendCountsContext";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 
 interface ProfileModalProps {
   user: {
-    memberId: number;            // ✅ 반드시 필요 (useFriendship 대상)
+    memberId: number; // ✅ 반드시 필요 (useFriendship 대상)
     name: string;
     username: string;
     profileImage?: string;
@@ -24,7 +24,7 @@ interface ProfileModalProps {
     isRequesting?: boolean;
   };
   onClose: () => void;
-  onUnfriendClick: () => void;   // 친구 상태일 때 “친구” 버튼 클릭 시 모달(상위에서 처리)
+  onUnfriendClick: () => void; // 친구 상태일 때 “친구” 버튼 클릭 시 모달(상위에서 처리)
   onSendRequestClick: () => void; // 요청 보낸 뒤 알림/토스트 등 상위 처리
 }
 
@@ -54,12 +54,12 @@ const ProfileModal = ({
     isLoading
       ? "loading"
       : state
-        ? state
-        : user.isFriend
-          ? "friend"
-          : user.isRequesting
-            ? "pending"
-            : "none";
+      ? state
+      : user.isFriend
+      ? "friend"
+      : user.isRequesting
+      ? "pending"
+      : "none";
 
   // 요청 보내기
   const handleSendRequest = async () => {
@@ -108,7 +108,7 @@ const ProfileModal = ({
     if (busy) return;
     setBusy(true);
     try {
-      await postFriendRefuse(user.memberId);
+      await patchFriendRefuse(user.memberId);
       // 요청 -1
       decRequests(1);
       await refetchAll();
@@ -123,17 +123,15 @@ const ProfileModal = ({
     navigate(`/diaries/member/${user.memberId}`); // ✅ 라우팅
   };
 
-
-
   return (
     <div
-    className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="profile-modal-title"
-  >
-    {/* ✅ ref를 실제 모달 컨테이너에 달기 */}
-    <div ref={modalRef} className="bg-white rounded-xl shadow-2xl w-96 p-6">
+      className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="profile-modal-title"
+    >
+      {/* ✅ ref를 실제 모달 컨테이너에 달기 */}
+      <div ref={modalRef} className="bg-white rounded-xl shadow-2xl w-96 p-6">
         {/* 상단 */}
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-4">
@@ -143,7 +141,9 @@ const ProfileModal = ({
               size="w-20 h-20"
             />
             <div>
-              <div className="text-xl font-semibold text-gray-900">{user.name}</div>
+              <div className="text-xl font-semibold text-gray-900">
+                {user.name}
+              </div>
               <div className="text-sm text-gray-500">@{user.username}</div>
             </div>
           </div>
@@ -180,10 +180,13 @@ const ProfileModal = ({
                 disabled
                 className="min-w-[144px] py-2 rounded-lg bg-[#EDF3FE] text-[#618BFD] text-sm font-medium cursor-not-allowed flex items-center justify-center gap-2"
               >
-                <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+                <img
+                  src="/images/requestingIcon.svg"
+                  alt="요청중"
+                  className="w-5 h-5"
+                />
                 {t.pendingLabel}
               </button>
-              
             </>
           ) : mergedState === "incoming" ? (
             // 받은 요청(수락/거절)
@@ -215,9 +218,10 @@ const ProfileModal = ({
           )}
 
           {/* 다이어리 보기 (별도 라우팅 연결 시 교체) */}
-          <button 
-          onClick={handleViewDiary}
-          className="min-w-[144px] py-2 rounded-lg bg-gray-100 text-sm text-gray-700 font-medium hover:bg-gray-200 cursor-pointer">
+          <button
+            onClick={handleViewDiary}
+            className="min-w-[144px] py-2 rounded-lg bg-gray-100 text-sm text-gray-700 font-medium hover:bg-gray-200 cursor-pointer"
+          >
             {t.viewDiaryButton}
           </button>
         </div>

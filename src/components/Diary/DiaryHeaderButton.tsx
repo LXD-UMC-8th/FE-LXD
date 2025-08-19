@@ -36,8 +36,6 @@ const DiaryHeaderButton = ({
 
       // Optionally: do nothing, UI already updated
     } catch (err: any) {
-      console.error("❌ 친구 요청 실패: ", err);
-
       // Revert optimistic update if it fails
       setRequestingUsernames((prev) => prev.filter((u) => u !== username));
       if (err?.response?.status !== 409) {

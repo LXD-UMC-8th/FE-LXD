@@ -23,6 +23,7 @@ const NavBar = () => {
   >();
   const [_hasAnyRead, setHasAnyRead] = useState(false);
   const [onChangeSetting, setOnChangeSetting] = useState<boolean>(false);
+  const [totalElements, setTotalElements] = useState<number>(0);
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   useEffect(() => {
@@ -63,12 +64,11 @@ const NavBar = () => {
   useEffect(() => {
     const checkReadStatus = async () => {
       const data = await getNotifications(1, 1);
-      const TotalData = await getNotifications(1, data.result.totalElements);
-      console.log("TotalData: ", TotalData);
-      const result = data.result.contents.every(
+      setTotalElements(data.result.totalElements);
+      const TotalData = await getNotifications(1, totalElements);
+      const result = TotalData.result.contents?.every(
         (note: NotificationContentProps) => note.read === true
       );
-      console.log("result value", result);
       setHasAnyRead(result);
     };
 
@@ -93,7 +93,8 @@ const NavBar = () => {
               )
             }
           >
-            {!_hasAnyRead ? (
+            {/* 알림 아이콘 25.08.20 알람이 전혀 없을 때 빨간 점이 뜨는 bug있음. */}
+            {!_hasAnyRead && !totalElements ? (
               <img
                 src="/images/NotificationAlertIcon.svg"
                 alt={t.alertImage}

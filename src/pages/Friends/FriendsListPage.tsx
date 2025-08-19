@@ -8,10 +8,13 @@ import type {
   FriendRequestListResponseDTO,
 } from "../../utils/types/friend";
 import { FriendCountsProvider } from "../../context/FriendCountsContext"; // ✅ 추가
+import { useLocation } from "react-router";
 
 const FriendsListPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
+
+  const location = useLocation();
 
   const [friendCount, setFriendCount] = useState<number>(0);
   const [requestsCount, setRequestsCount] = useState<number>(0);
@@ -55,7 +58,11 @@ const FriendsListPage = () => {
       value={{ friendCount, requestsCount, setFriendCount, setRequestsCount }}
     >
       <div className="bg-gray-100 mx-10">
-        <ModalWithTabs key={language} tabvalue={tabvalue} />
+        <ModalWithTabs
+          key={language}
+          tabvalue={tabvalue}
+          select={location.state?.select}
+        />
       </div>
     </FriendCountsProvider>
   );
