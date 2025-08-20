@@ -1,34 +1,120 @@
 const RECENT_SEARCH_KEY = "recentSearches";
 
-// 최근 검색 목록 가져오기
-export const getRecentSearches = (): string[] => {
-  const saved = localStorage.getItem(RECENT_SEARCH_KEY);
-  return saved ? JSON.parse(saved) : [];
-};
+export interface RecentSearch {
+  username: string;
+  image?: string | null; 
+  name?: string;         
+}
 
-// 최근 검색 추가
-export const addRecentSearch = (username: string) => {
-  let searches = getRecentSearches();
 
-  // 중복 제거 후 맨 앞에 추가
-  searches = searches.filter((item) => item !== username);
-  searches.unshift(username);
-
-  // 최대 10개까지만 저장
-  if (searches.length > 10) {
-    searches = searches.slice(0, 10);
+function saveRaw(items: RecentSearch[]) {
+  try {
+    localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(items));
+  } catch (e) {
+    console.warn("recentSearches 저장 실패:", e);
   }
+}
 
-  localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(searches));
+
+function readRaw(): RecentSearch[] {
+  try {
+    const raw = localStorage.getItem(RECENT_SEARCH_KEY);
+    if (!raw) return [];
+
+    const parsed = JSON.parse(raw);
+
+    
+    if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === "object") {
+      const normalized: RecentSearch[] = parsed
+        .map((v: any) => ({
+          username: String(v?.username ?? ""),
+          
+          image:
+            v?.image ??
+            v?.profileImg ??
+            v?.profileImage ??
+            v?.profileImageUrl ??
+            v?.profileUrl ??
+            null,
+          name: v?.name ?? v?.nickname ?? undefined,
+        }))
+        .filter((v) => v.username);
+
+     
+      saveRaw(normalized);
+      return normalized;
+    }
+
+    
+    if (Array.isArray(parsed) && (parsed.length === 0 || typeof parsed[0] === "string")) {
+      const migrated: RecentSearch[] = (parsed as string[]).map((username) => ({ username }));
+      saveRaw(migrated);
+      return migrated;
+    }
+
+    
+    return [];
+  } catch (e) {
+    console.warn("recentSearches 파싱 실패:", e);
+    return [];
+  }
+}
+
+
+export const getRecentSearches = (): string[] => {
+  return readRaw().map((item) => item.username);
 };
 
-// 특정 검색어 삭제
+
+export const getRecentSearchesWithMeta = (): RecentSearch[] => {
+  return readRaw();
+};
+
+
+export const addRecentSearch = (username: string, image?: string | null, name?: string) => {
+  if (!username) return;
+
+  let items = readRaw();
+
+  
+  items = items.filter((it) => it.username !== username);
+
+  
+  items.unshift({ username, image: image ?? null, name });
+
+
+  if (items.length > 10) items = items.slice(0, 10);
+
+  saveRaw(items);
+};
+
+
+export const updateRecentSearchMeta = (
+  username: string,
+  image?: string | null,
+  name?: string,
+) => {
+  if (!username) return;
+  const items = readRaw();
+  const idx = items.findIndex((it) => it.username === username);
+  if (idx === -1) return;
+
+  items[idx] = {
+    ...items[idx],
+    image: image ?? items[idx].image ?? null,
+    name: name ?? items[idx].name,
+  };
+
+  saveRaw(items);
+};
+
+
 export const removeRecentSearch = (username: string) => {
-  const updated = getRecentSearches().filter((item) => item !== username);
-  localStorage.setItem(RECENT_SEARCH_KEY, JSON.stringify(updated));
+  const items = readRaw().filter((it) => it.username !== username);
+  saveRaw(items);
 };
 
-// 전체 삭제
+
 export const clearRecentSearches = () => {
   localStorage.removeItem(RECENT_SEARCH_KEY);
 };
