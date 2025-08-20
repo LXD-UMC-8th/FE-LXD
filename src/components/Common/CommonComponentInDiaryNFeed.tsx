@@ -138,7 +138,7 @@ const CommonComponentInDiaryNFeed = ({
         <div>
           {isFeedTab ? (
             <div className="flex items-center gap-3" onClick={handleNavigateUserDetail}>
-              <Avatar src={props.profileImg} alt={props.writerUsername} size="w-9 h-9" />
+              <Avatar src={props.writerProfileImg} alt={props.writerUsername} size="w-9 h-9" />
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-black">
