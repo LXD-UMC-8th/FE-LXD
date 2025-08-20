@@ -9,16 +9,17 @@ import { translate } from "../../../context/translate";
 const ProvidedCorrectionTab = () => {
   const { language } = useLanguage();
   const t = translate[language];
+
   const {
-    data, // SavedCorrectionItem[]
+    data,              
     fetchNextPage,
     hasNextPage,
     isFetching,
-    status, // 'pending' | 'success' | 'error'
+    status,           
     error,
   } = useProvidedCorrections();
 
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({ rootMargin: "200px" });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetching) {
@@ -26,7 +27,11 @@ const ProvidedCorrectionTab = () => {
     }
   }, [inView, hasNextPage, isFetching, fetchNextPage]);
 
-  if (isFetching) return <LoadingModal />;
+  const list = data ?? [];
+  const isInitialLoading = status === "pending" && list.length === 0;
+
+  if (isInitialLoading) return <LoadingModal />;
+
   if (status === "error") {
     return (
       <div className="p-4 text-red-500">
@@ -35,7 +40,6 @@ const ProvidedCorrectionTab = () => {
       </div>
     );
   }
-  const list = data ?? [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -45,8 +49,8 @@ const ProvidedCorrectionTab = () => {
         </div>
       )}
 
-      {list.map((item, _idx) => (
-        <CorrectionComponent key={_idx} correction={item} />
+      {list.map((item) => (
+        <CorrectionComponent key={item.correctionId} correction={item} />
       ))}
 
       {/* 무한스크롤 트리거 */}
