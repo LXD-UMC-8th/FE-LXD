@@ -217,16 +217,18 @@ export const translate: Record<
     CompleteLeave: string;
     sureLeave: string;
     donotrenderprofile: string;
+    pending: string;
   }
 > = {
   [Language.ENGLISH]: {
-    donotrenderprofile:"Failed to load profile.",
+    pending: "PENDING",
+    donotrenderprofile: "Failed to load profile.",
     ToLeave: "To leave",
     CompleteLeave: "Complete Leave",
     sureLeave: "Are you sure you want to leave the account?",
-    putInNick:"put in your nickname",
+    putInNick: "put in your nickname",
     changeProfile: "Your profile has been modified.",
-        errorduringedit: "An error occurred while editing.",
+    errorduringedit: "An error occurred while editing.",
     notProfileResponse: "No profile information found.",
     EditMemo: "Edit Memo",
     SaveMemo: "Save Memo",
@@ -319,7 +321,7 @@ export const translate: Record<
     notificationHeader: "Notifications",
     allReadInNotification: "Mark all as read",
     notificationButtonText1: "Accept",
-    notificationButtonText2: "Delete",
+    notificationButtonText2: "Refuse",
     Diaries: "Entries",
     SeeMore: "See More",
     Diary: "Entry",
@@ -338,8 +340,8 @@ export const translate: Record<
     settingTitle: "Settings",
     SaveChange: "Save Changes",
     setLanguage: "Language Setting",
-    nativeLanguage: "Native Language",
-    studyLanguage: "Study Language",
+    nativeLanguage: "Native",
+    studyLanguage: "Learning",
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
     profileEdit: "Edit Profile",
@@ -406,9 +408,11 @@ export const translate: Record<
     DeleteCommentAlert: "Are you sure you want to delete the comments?",
     DeleteReplyAlert: "Are you sure you want to delete the reply?",
     FirstComment: "Leave your first comment.",
-    AddNote:"Add note",
-    DeleteLikeAlert: "If you unlike this entry, it will be removed from your “Feed - Likes”. Are you sure you want to unlike it?",
-    DeleteLikeAlert1: "If you cancel 'Like', the correction will be removed from 'Like'.",
+    AddNote: "Add note",
+    DeleteLikeAlert:
+      "If you unlike this entry, it will be removed from your “Feed - Likes”. Are you sure you want to unlike it?",
+    DeleteLikeAlert1:
+      "If you cancel 'Like', the correction will be removed from 'Like'.",
     Cancle: "Unlike",
     SaveMemoFail: "Failed to save the memo.",
     SaveMemoFail1: "You can only add notes in the 'Saved Calibration'.",
@@ -440,13 +444,14 @@ export const translate: Record<
     selectFile: "Browse",
     selectFilePlaceholder: "Select a file",
     imgSize: "Please upload an image file up to 500MG.",
-    LeaveNoti:"Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
+    LeaveNoti:
+      "Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
     Unlike: "Unlike",
-    saving:"Saving..."
-
+    saving: "Saving...",
   },
   [Language.KOREAN]: {
-    saving:"저장 중..",
+    pending: "요청중",
+    saving: "저장 중..",
     changeProfile: "프로필이 수정되었습니다.",
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
     OnlyCanAddInSavedCorrection: "‘저장한 교정’에서만 메모를 추가할 수 있어요.",
@@ -496,7 +501,7 @@ export const translate: Record<
     FailToDeleteMemo: "메모 삭제에 실패했습니다.",
     nickname: "닉네임",
     AddMemo: "메모 추가",
-    putInNick:"닉네임을 입력해주세요.",
+    putInNick: "닉네임을 입력해주세요.",
     nicknamePlaceholder: "닉네임을 입력해주세요",
     nicknameConditionToast: "최대 20자",
     primaryLang: "모국어 / 주사용 언어",
@@ -527,7 +532,8 @@ export const translate: Record<
     visibility_PRIVATE: "비공개",
     commentPermission_PUBLIC: "전체허용",
     commentPermission_FRIEND: "친구허용",
-    LeaveNoti:"계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다.",
+    LeaveNoti:
+      "계정을 탈퇴하시겠습니까? 탈퇴 시, 계정은 삭제되며 정보는 복구되지 않습니다.",
     commentPermission_PRIVATE: "비허용",
     enrollButtonText: "등록하기",
     refreshButtonText: "새로고침",
@@ -550,7 +556,7 @@ export const translate: Record<
     CountFriend: "명",
     ContentNotification: "새로운 알림이 없습니다",
     ToLeave: "탈퇴하기",
-    CompleteLeave:"탈퇴가 완료되었습니다.",
+    CompleteLeave: "탈퇴가 완료되었습니다.",
     LoadingNotification: "알림을 불러오는 중...",
     EditDiary: "수정하기",
     DeleteDiary: "삭제하기",
@@ -630,7 +636,8 @@ export const translate: Record<
     DeleteReplyAlert: "답글을 삭제하시겠습니까?",
     FirstComment: "첫 댓글을 남겨보세요.",
     AddNote: "메모 추가하기",
-    DeleteLikeAlert: "'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
+    DeleteLikeAlert:
+      "'좋아요' 취소 시 해당 교정이 '좋아요' 목록에서 삭제됩니다. 정말 취소하시겠습니까?",
     DeleteLikeAlert1: "'좋아요' 취소 시 해당 교정이 '좋아요'에서 제거됩니다.",
     Cancle: "취소하기",
     SaveMemoFail: "메모 저장에 실패했어요.",

@@ -15,8 +15,6 @@ export const axiosInstance = axios.create({
   baseURL: (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, ""),
 });
 
-let refreshPromise: Promise<string | null> | null = null;
-
 // Utility functions to access localStorage directly
 export const getLocalStorageItem = (key: string): string | null => {
   const raw = localStorage.getItem(key);
@@ -60,80 +58,21 @@ axiosInstance.interceptors.response.use(
     if (
       error.response &&
       error.response.status === 401 &&
-      error.response.data?.code === "AUTH4301" &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      window.location.pathname !== "/home"
     ) {
-      //여기 부분의 주소는 swagger문서에 따라 바뀔 예정임
-      //refreshToken이 만료됙거나 유효하지 않은 경우 로그아웃을 진행하고 로그인 페이지로 리다이렉트함.
-      if (originalRequest.url === "/auth/reissue") {
-        removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
-        removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
-        window.location.href = "/login";
-        return Promise.reject(error);
-      }
-
-      originalRequest._retry = true;
-
-      //refreshPromise가 이미 존재하는 경우임
-      if (!refreshPromise) {
-        refreshPromise = (async () => {
-          const refreshToken = getLocalStorageItem(
-            LOCAL_STORAGE_KEY.refreshToken
-          );
-          if (!refreshToken) return null;
-
-          const reissueData = await postReissue(refreshToken);
-
-          if (
-            !reissueData ||
-            !reissueData.result ||
-            !reissueData.result.accessToken ||
-            !reissueData.result.refreshToken
-          ) {
-            return null;
-          }
-
-          setLocalStorageItem(
-            LOCAL_STORAGE_KEY.accessToken,
-            reissueData.result.accessToken
-          );
-          setLocalStorageItem(
-            LOCAL_STORAGE_KEY.refreshToken,
-            reissueData.result.refreshToken
-          );
-
-          return reissueData.result.accessToken;
-        })()
-          //refreshToken이 없을 경우 토큰을 모두 지워준 후에 다시 LoginPage로 redirect함.
-          .catch(() => {
-            removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
-            removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
-            window.location.href = "/login";
-            return null;
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
-      }
-
-      return refreshPromise.then((newAccessToken) => {
-        if (newAccessToken) {
-          originalRequest.headers = originalRequest.headers || {};
-          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axiosInstance(originalRequest);
-        }
-        return Promise.reject(error);
-      });
+      removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
+      removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
+      window.location.href = "/home";
+      return Promise.reject(error);
     }
-
-    return Promise.reject(error);
   }
 );
 
 initActivityListeners();
 
 setInterval(() => {
-  const isActive = wasRecentlyActive(20);
+  const isActive = wasRecentlyActive(30);
   if (isActive) {
     try {
       const refreshToken = getLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
@@ -168,4 +107,4 @@ setInterval(() => {
   } else {
     console.log("⏳ Skipped token refresh — user inactive");
   }
-}, 55 * 60 * 1000);
+}, 50 * 60 * 1000);

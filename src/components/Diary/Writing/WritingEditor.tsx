@@ -181,7 +181,8 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         handlers: {
           image: imageHandler,
         },
-        // imageDrop: true, // Enable image drop support
+        imageDrop: true, // Enable image drop support
+        imageResize: { modules: ["Resize", "DisplaySize"] },
       },
     }),
     [imageHandler]

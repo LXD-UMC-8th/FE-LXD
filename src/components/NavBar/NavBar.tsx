@@ -26,29 +26,32 @@ const NavBar = () => {
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   useEffect(() => {
-    let es: EventSource | null = null;
+    console.log("Setting up SSE");
 
-    const setupSSE = () => {
-      if (es) {
-        es.onerror = (error) => {
-          if (error.type === "error") {
-            es = getSubscribeToNotifications();
-          }
-        };
-        es.close();
-      }
-      es = getSubscribeToNotifications();
+    const es = getSubscribeToNotifications();
+    es.addEventListener("notification", (event) => {
+      console.log("📨 새 알림 도착:", event);
+      // 알림 UI 업데이트 등
+    });
+
+    es.onmessage = (event) => {
+      console.log("SSE message:", event.data);
+      setOnChangeSetting((prev) => !prev);
     };
 
-    setupSSE(); // run on mount
+    es.onopen = () => {
+      console.log("SSE connection opened");
+      console.log("readyState (onopen):", es.readyState);
+    };
 
-    const intervalId = setInterval(() => {
-      setupSSE();
-    }, 60 * 1000);
+    es.onerror = (error) => {
+      console.error("SSE error:", error);
+    };
+
+    console.log("readyState:", es.readyState); // this line happens too early, before it's open
 
     return () => {
-      if (es) es.close();
-      clearInterval(intervalId);
+      es.close();
     };
   }, []);
 
@@ -60,40 +63,50 @@ const NavBar = () => {
 
   useEffect(() => {
     const checkReadStatus = async () => {
-      const data = await getNotifications(1, 100);
-      console.log("list of data", data);
-      const result = data.result.contents.some(
-        (note: NotificationContentProps) => note.read
+      const TotalData = await getNotifications(1, 30);
+      const result = TotalData.result.contents?.every(
+        (note: NotificationContentProps) => note.read === true
       );
+      console.log("TotalData", result);
       setHasAnyRead(result);
     };
 
     checkReadStatus();
-  }, [onChangeSetting]);
+  }, [onChangeSetting, _hasAnyRead]);
 
   return (
     <>
       <div className="h-14 bg-white border-b border-gray-300 flex items-center justify-between px-6">
         {/* 로고 */}
         <NavLink to="/feed" className="flex items-center gap-2 cursor-pointer">
-          <img src="/images/LXD_logo.svg" alt="LXD 로고" className="w-7 h-7" />
+          <img src="/images/LXD_logo.svg" alt="LXD" className="w-7 h-7" />
           <img src="/images/LXDTitleIcon.svg" alt="LXD" className="w-9 h-4" />
         </NavLink>
 
         {/* 알림 + 프로필 */}
         <div className="flex items-center gap-5">
           <div
-            onClick={() =>
+            onClick={() => {
               setIsModalOpen(
                 isModalOpen === "notifications" ? false : "notifications"
-              )
-            }
+              );
+              setOnChangeSetting((onChangeSetting) => !onChangeSetting);
+            }}
           >
-            <img
-              src="/images/NoticeIcon.svg"
-              alt={t.alertImage}
-              className="w-7 h-7 cursor-pointer"
-            />
+            {/* 알림 아이콘 25.08.20 알람이 전혀 없을 때 빨간 점이 뜨는 bug있음. */}
+            {!_hasAnyRead ? (
+              <img
+                src="/images/NotificationAlertIcon.svg"
+                alt={t.alertImage}
+                className="w-7 h-7 cursor-pointer"
+              />
+            ) : (
+              <img
+                src="/images/NoticeIcon.svg"
+                alt={t.alertImage}
+                className="w-7 h-7 cursor-pointer"
+              />
+            )}
           </div>
           <div
             className="flex items-center gap-2"
@@ -119,8 +132,8 @@ const NavBar = () => {
       {isModalOpen === "notifications" && (
         <div ref={modalRef} className="absolute top-full right-20 z-10 mt-2">
           <Notification
-            onChangeSetting={onChangeSetting}
-            setOnChangeSetting={setOnChangeSetting}
+            onChangeSetting={_hasAnyRead}
+            setOnChangeSetting={setHasAnyRead}
           />
         </div>
       )}

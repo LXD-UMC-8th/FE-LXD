@@ -40,11 +40,11 @@ export const postFriendAccept = async (
 };
 
 // 친구 요청 거절
-export const postFriendRefuse = async (
+export const patchFriendRefuse = async (
   requesterId?: number
 ): Promise<FriendRefuseResponseDTO | undefined> => {
   try {
-    const { data } = await axiosInstance.post<FriendRefuseResponseDTO>(
+    const { data } = await axiosInstance.patch<FriendRefuseResponseDTO>(
       "/friends/refuse",
       { requesterId: requesterId }
     );
