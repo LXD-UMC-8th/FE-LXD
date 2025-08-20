@@ -18,21 +18,34 @@ import SettingsPage from "./pages/Settings/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
 import ProvideCorrections from "./components/Diary/ProvideCorrections";
-import SignupFlow from "./pages/Login/SignupFlow";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailPage from "./pages/Feed/UserDetailPage";
 import "react-calendar/dist/Calendar.css";
+import SignupFlowLayout from "./pages/Login/SignupFlowLayout";
+import SignupPage from "./pages/Login/SignupPage";
+import ProfilePage from "./pages/Login/ProfilePage";
+import ChangePWPage from "./pages/Login/ChangePWPage";
+import GoogleRedirectPage from "./pages/Login/GoogleRedirectPage";
 
 const publicRoutes: RouteObject[] = [
   {
     path: "/home",
     element: <HomeLayout />,
-    // errorElement: <ErrorPage />,
+    errorElement: <NotFoundPage />,
     children: [
       { index: true, element: <LoginPage /> },
-      { path: "signup/*", element: <SignupFlow /> },
+      {
+        path: "signup/*",
+        element: <SignupFlowLayout />,
+        children: [
+          { index: true, element: <SignupPage /> },
+          { path: "profile", element: <ProfilePage /> },
+          { path: "change-pw", element: <ChangePWPage /> },
+        ],
+      },
+      { path: "google-redirect", element: <GoogleRedirectPage /> },
     ],
   },
 ];

@@ -1,5 +1,5 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
-import type { SignupFlowProps } from "../pages/Login/SignupFlow";
+import type { SignupFlowProps } from "../pages/Login/SignupFlowLayout";
 import type {
   MemberLanguageResponseDTO,
   MemberProfileRequest,
@@ -51,7 +51,6 @@ export const postSignup = async (
     nickname: userInfo.nickname,
     nativeLanguage: userInfo.nativeLanguage,
     studyLanguage: userInfo.studyLanguage,
-    loginType: "LOCAL",
   };
   // JSON 데이터는 Blob으로 추가
   formData.append(

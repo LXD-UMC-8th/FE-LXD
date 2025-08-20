@@ -5,13 +5,13 @@ import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import type { SignupFlowProps } from "./SignupFlow";
+import type { SignupFlowProps } from "./SignupFlowLayout";
 import {
   isEmailValid,
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import { useSearchParams } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import { getEmail, postEmailVerificationinPWRequest } from "../../apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
@@ -19,12 +19,16 @@ import { patchMemberPassword } from "../../apis/members";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
 
-interface ChangePWPageProps {
-  userInfo: SignupFlowProps;
-  setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-}
+// interface ChangePWPageProps {
+//   userInfo: SignupFlowProps;
+//   setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+// }
 
-const ChangePWPage = ({ userInfo, setUserInfo }: ChangePWPageProps) => {
+const ChangePWPage = () => {
+  const { userInfo, setUserInfo } = useOutletContext<{
+    userInfo: SignupFlowProps;
+    setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+  }>();
   const [hasVerifiedByToken, setHasVerifiedByToken] = useState(false); // 이메일 토큰 인증 시도 여부 상태관리
   const [emailVerified, setEmailVerified] = useState(false); // 이메일 최종 인증 여부 상태관리
   const [emailTouched, setEmailTouched] = useState(false); // 이메일 인풋 눌렀는지 상태관리

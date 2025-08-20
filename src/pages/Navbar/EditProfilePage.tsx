@@ -27,7 +27,7 @@ type EditProfileState = {
 };
 
 const EditProfilePage = () => {
-  const [_userInfo, setUserInfo] = useState<EditProfileState>({
+  const [userInfo, setUserInfo] = useState<EditProfileState>({
     id: "",
     email: "",
     password: "**********",
@@ -37,7 +37,7 @@ const EditProfilePage = () => {
     profileImgPreview: null,
     profileImgAction: "keep",
   });
-  const [_objectURL, setObjectURL] = useState<string | null>(null);
+  const [objectURL, setObjectURL] = useState<string | null>(null);
   const [showModal, setSHowModal] = useState(false); // 탈퇴하기 모달
   const navigate = useNavigate();
   const qc = useQueryClient();
@@ -61,20 +61,20 @@ const EditProfilePage = () => {
   const { mutate: _saveProfile, isPending: _isSaving } = useMutation({
     mutationFn: () =>
       patchMemberProfile({
-        nickname: _userInfo.nickname.trim(),
+        nickname: userInfo.nickname.trim(),
         profileImg:
-          _userInfo.profileImgAction === "upload"
-            ? _userInfo.profileImgFile
+          userInfo.profileImgAction === "upload"
+            ? userInfo.profileImgFile
             : null,
-        removeProfileImg: _userInfo.profileImgAction === "remove",
+        removeProfileImg: userInfo.profileImgAction === "remove",
       }),
     onSuccess: (_res) => {
       qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
       alert(t.changeProfile);
 
       // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
-      if (_objectURL) {
-        URL.revokeObjectURL(_objectURL);
+      if (objectURL) {
+        URL.revokeObjectURL(objectURL);
         setObjectURL(null);
       }
       setUserInfo((prev) => ({
@@ -105,36 +105,36 @@ const EditProfilePage = () => {
   // 미리보기 URL 정리
   useEffect(() => {
     return () => {
-      if (_objectURL) URL.revokeObjectURL(_objectURL);
+      if (objectURL) URL.revokeObjectURL(objectURL);
     };
-  }, [_objectURL]);
+  }, [objectURL]);
 
   // 화면에 보여줄 이미지: 새 미리보기 > 서버 URL > 기본 플레이스홀더
   const _displayImage = useMemo(() => {
-    if (_userInfo.profileImgAction === "upload") {
-      return _userInfo.profileImgPreview ?? "";
+    if (userInfo.profileImgAction === "upload") {
+      return userInfo.profileImgPreview ?? "";
     }
-    if (_userInfo.profileImgAction === "remove") {
+    if (userInfo.profileImgAction === "remove") {
       return "";
     }
-    return _userInfo.profileImgUrl ?? "";
+    return userInfo.profileImgUrl ?? "";
   }, [
-    _userInfo.profileImgAction,
-    _userInfo.profileImgPreview,
-    _userInfo.profileImgUrl,
+    userInfo.profileImgAction,
+    userInfo.profileImgPreview,
+    userInfo.profileImgUrl,
   ]);
 
   // 파일명: 업로드 중이면 파일명, 아니면 서버에서 추출
   const _serverFilename = useMemo(
-    () => extractFilenameFromUrl(_userInfo.profileImgUrl),
-    [_userInfo.profileImgUrl]
+    () => extractFilenameFromUrl(userInfo.profileImgUrl),
+    [userInfo.profileImgUrl]
   );
   const _profileName =
-    _userInfo.profileImgAction === "upload"
-      ? _userInfo.profileImgFile?.name ?? ""
+    userInfo.profileImgAction === "upload"
+      ? userInfo.profileImgFile?.name ?? ""
       : _serverFilename;
 
-  if (isLoading || !_userInfo) return <LoadingModal />;
+  if (isLoading || !userInfo) return <LoadingModal />;
   if (isError) {
     const msg = error instanceof Error ? error.message : t.undefinedErrorOccur;
     return (
@@ -151,8 +151,8 @@ const EditProfilePage = () => {
   const _handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const _file = e.target.files?.[0] ?? null;
 
-    if (_objectURL) {
-      URL.revokeObjectURL(_objectURL);
+    if (objectURL) {
+      URL.revokeObjectURL(objectURL);
       setObjectURL(null);
     }
 
@@ -175,8 +175,8 @@ const EditProfilePage = () => {
   };
 
   const _handleRemoveImage = () => {
-    if (_objectURL) {
-      URL.revokeObjectURL(_objectURL);
+    if (objectURL) {
+      URL.revokeObjectURL(objectURL);
       setObjectURL(null);
     }
     setUserInfo((prev) => ({
@@ -194,17 +194,17 @@ const EditProfilePage = () => {
   const hadServerImg = Boolean(data?.result.profileImg);
 
   const profileChanged =
-    _userInfo.profileImgAction === "upload" ||
-    (_userInfo.profileImgAction === "remove" && hadServerImg);
+    userInfo.profileImgAction === "upload" ||
+    (userInfo.profileImgAction === "remove" && hadServerImg);
 
   const _isModified =
-    _userInfo.nickname.trim() !== (data?.result.nickname ?? "") ||
+    userInfo.nickname.trim() !== (data?.result.nickname ?? "") ||
     profileChanged;
 
   const _handleSaveChanges = (e: React.FormEvent) => {
     e.preventDefault();
     if (!_isModified) return;
-    if (_userInfo.nickname.trim().length === 0) {
+    if (userInfo.nickname.trim().length === 0) {
       alert(t.putInNick);
       return;
     }
@@ -223,9 +223,9 @@ const EditProfilePage = () => {
       <div className="space-y-3">
         <section className="flex w-[775px]">
           <AccountInfo
-            _id={_userInfo.id}
-            _email={_userInfo.email}
-            _password={_userInfo.password}
+            _id={userInfo.id}
+            _email={userInfo.email}
+            _password={userInfo.password}
             _onChangePw={_handleChangePw}
           />
         </section>
@@ -236,7 +236,7 @@ const EditProfilePage = () => {
             _profileName={_profileName}
             _onImageChange={_handleImageChange}
             _onRemoveImage={_handleRemoveImage}
-            _nickname={_userInfo.nickname}
+            _nickname={userInfo.nickname}
             _onNicknameChange={_handleNicknameChange}
           />
         </section>

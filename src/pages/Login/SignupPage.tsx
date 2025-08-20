@@ -4,25 +4,30 @@ import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import {
   isEmailValid,
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import type { SignupFlowProps } from "./SignupFlow";
+import type { SignupFlowProps } from "./SignupFlowLayout";
 import ToSModal from "../../components/Login/ToSModal";
 import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
 
-interface SignupPageProps {
-  userInfo: SignupFlowProps;
-  setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-}
+// interface SignupPageProps {
+//   userInfo: SignupFlowProps;
+//   setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+// }
 
-const SignupPage = ({ userInfo, setUserInfo }: SignupPageProps) => {
+const SignupPage = () => {
+  const { userInfo, setUserInfo } = useOutletContext<{
+    userInfo: SignupFlowProps;
+    setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+  }>();
+  
   const [hasVerifiedByToken, setHasVerifiedByToken] = useState(false); // 이메일 토큰 인증 시도 여부 상태관리
   const [emailVerified, setEmailVerified] = useState(false); // 이메일 최종 인증 여부 상태관리
   const [emailTouched, setEmailTouched] = useState<boolean>(false); // 이메일 인풋 눌렀는지 상태관리
