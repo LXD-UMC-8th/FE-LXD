@@ -107,4 +107,4 @@ setInterval(() => {
   } else {
     console.log("⏳ Skipped token refresh — user inactive");
   }
-}, 55 * 60 * 1000);
+}, 50 * 60 * 1000);
