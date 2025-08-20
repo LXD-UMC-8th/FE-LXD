@@ -321,3 +321,22 @@ body {
 .no-holiday-colors .react-calendar__month-view__days__day--weekend {
   color: inherit;
 }
+
+/* quill editor css */
+.ql-align-center img {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ql-align-left img {
+  display: inline-block;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ql-align-right img {
+  display: inline-block;
+  margin-left: auto;
+  margin-right: 0;
+}
