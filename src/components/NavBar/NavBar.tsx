@@ -94,7 +94,7 @@ const NavBar = () => {
             }
           >
             {/* 알림 아이콘 25.08.20 알람이 전혀 없을 때 빨간 점이 뜨는 bug있음. */}
-            {!_hasAnyRead && !totalElements ? (
+            {!_hasAnyRead && totalElements ? (
               <img
                 src="/images/NotificationAlertIcon.svg"
                 alt={t.alertImage}
