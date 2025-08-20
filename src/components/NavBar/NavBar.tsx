@@ -23,35 +23,28 @@ const NavBar = () => {
   >();
   const [_hasAnyRead, setHasAnyRead] = useState(false);
   const [onChangeSetting, setOnChangeSetting] = useState<boolean>(false);
-  const [totalElements, setTotalElements] = useState<number>(0);
   useOutsideClick(modalRef, () => setIsModalOpen(false));
 
   useEffect(() => {
-    let es: EventSource | null = null;
-
-    const setupSSE = () => {
-      if (es) {
-        es.onerror = (error) => {
-          if (error.type === "error") {
-            es = getSubscribeToNotifications();
-          }
-        };
-        es.close();
-      }
-      es = getSubscribeToNotifications();
-      setOnChangeSetting((prev) => !prev);
-      console.log("es data in Navbar:", es);
+    console.log("Setting up SSE");
+    const es = getSubscribeToNotifications();
+    console.log("es object:", es);
+    es.onopen = () => {
+      console.log("SSE connection opened");
+      console.log("readyState (onopen):", es.readyState);
     };
 
-    setupSSE(); // run on mount
+    es.onmessage = (event) => {
+      console.log("SSE message:", event.data);
+      setOnChangeSetting((prev) => !prev);
+    };
 
-    const intervalId = setInterval(() => {
-      setupSSE();
-    }, 44 * 1000);
+    es.onerror = (error) => {
+      console.error("SSE error:", error);
+    };
 
     return () => {
-      if (es) es.close();
-      clearInterval(intervalId);
+      es.close();
     };
   }, []);
 
@@ -63,17 +56,16 @@ const NavBar = () => {
 
   useEffect(() => {
     const checkReadStatus = async () => {
-      const data = await getNotifications(1, 1);
-      setTotalElements(data.result.totalElements);
-      const TotalData = await getNotifications(1, totalElements);
+      const TotalData = await getNotifications(1, 30);
       const result = TotalData.result.contents?.every(
         (note: NotificationContentProps) => note.read === true
       );
+      console.log("TotalData", result);
       setHasAnyRead(result);
     };
 
     checkReadStatus();
-  }, [onChangeSetting]);
+  }, [onChangeSetting, _hasAnyRead]);
 
   return (
     <>
@@ -87,14 +79,15 @@ const NavBar = () => {
         {/* 알림 + 프로필 */}
         <div className="flex items-center gap-5">
           <div
-            onClick={() =>
+            onClick={() => {
               setIsModalOpen(
                 isModalOpen === "notifications" ? false : "notifications"
-              )
-            }
+              );
+              setOnChangeSetting((onChangeSetting) => !onChangeSetting);
+            }}
           >
             {/* 알림 아이콘 25.08.20 알람이 전혀 없을 때 빨간 점이 뜨는 bug있음. */}
-            {!_hasAnyRead && totalElements ? (
+            {!_hasAnyRead ? (
               <img
                 src="/images/NotificationAlertIcon.svg"
                 alt={t.alertImage}
@@ -132,8 +125,8 @@ const NavBar = () => {
       {isModalOpen === "notifications" && (
         <div ref={modalRef} className="absolute top-full right-20 z-10 mt-2">
           <Notification
-            onChangeSetting={onChangeSetting}
-            setOnChangeSetting={setOnChangeSetting}
+            onChangeSetting={_hasAnyRead}
+            setOnChangeSetting={setHasAnyRead}
           />
         </div>
       )}

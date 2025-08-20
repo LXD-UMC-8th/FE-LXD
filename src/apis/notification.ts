@@ -27,6 +27,7 @@ export function getSubscribeToNotifications() {
       Authorization: `Bearer ${token}`,
       "Content-Type": "text/event-stream",
       Accept: "text/event-stream",
+      Connection: "keep-alive",
     },
   });
   return es;
