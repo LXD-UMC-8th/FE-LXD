@@ -30,11 +30,12 @@ const CalendarModal = () => {
         year: current.getFullYear(),
         month: current.getMonth() + 1,
       },
+      {
+        year: current.getFullYear(),
+        month: current.getMonth() + 2,
+      },
     ];
   }, [activeStartDate]);
-
-  console.log("this is CalendarModal");
-  console.log("dates to request", _datesToRequest);
 
   useEffect(() => {
     Promise.all(_datesToRequest.map(getDiaryStats))

@@ -27,21 +27,28 @@ const NavBar = () => {
 
   useEffect(() => {
     console.log("Setting up SSE");
+
     const es = getSubscribeToNotifications();
-    console.log("es object:", es);
-    es.onopen = () => {
-      console.log("SSE connection opened");
-      console.log("readyState (onopen):", es.readyState);
-    };
+    es.addEventListener("notification", (event) => {
+      console.log("📨 새 알림 도착:", event);
+      // 알림 UI 업데이트 등
+    });
 
     es.onmessage = (event) => {
       console.log("SSE message:", event.data);
       setOnChangeSetting((prev) => !prev);
     };
 
+    es.onopen = () => {
+      console.log("SSE connection opened");
+      console.log("readyState (onopen):", es.readyState);
+    };
+
     es.onerror = (error) => {
       console.error("SSE error:", error);
     };
+
+    console.log("readyState:", es.readyState); // this line happens too early, before it's open
 
     return () => {
       es.close();

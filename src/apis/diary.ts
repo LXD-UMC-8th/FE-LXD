@@ -66,7 +66,6 @@ export const getDiaryStats = async (
     const { data } = await axiosInstance.get("/diaries/stats", {
       params: body,
     });
-    console.log("getDiaryStats response data:", data);
     return data;
   } catch (e) {
     console.log("Error fetching diary stats:", e);
@@ -122,19 +121,13 @@ export const getDiaryDetail = async (
 };
 
 export const getMyDiaries = async (page: number) => {
-  try {
-    const { data } = await axiosInstance.get("/diaries/my", {
-      params: {
-        page,
-        size: 4,
-      },
-    });
-    console.log("getMyDiaries response data:", data);
-    return data;
-  } catch (error) {
-    console.error("Error fetching my /diaries:", error);
-    throw error;
-  }
+  const { data } = await axiosInstance.get("/diaries/my", {
+    params: {
+      page,
+      size: 4,
+    },
+  });
+  return data;
 };
 
 export const getMyLikesDiary = async (page: number) => {
@@ -145,7 +138,6 @@ export const getMyLikesDiary = async (page: number) => {
         size: 4,
       },
     });
-    console.log("getMyLikesDiary response data:", data);
     return data;
   } catch (error) {
     console.error("Error fetching my liked /diaries:", error);
