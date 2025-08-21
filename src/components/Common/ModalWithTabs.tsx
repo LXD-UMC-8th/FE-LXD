@@ -8,11 +8,12 @@ type Tabvalue = {
 };
 interface ModalWithTabsProps {
   tabvalue: Tabvalue[];
+  select?: number;
 }
 
-const ModalWithTabs = ({ tabvalue }: ModalWithTabsProps) => {
+const ModalWithTabs = ({ tabvalue, select }: ModalWithTabsProps) => {
   const [activeTab, setActiveTab] = useState<string | undefined>(
-    tabvalue[0].title
+    select ? tabvalue[select].title : tabvalue[0].title
   );
 
   const renderTab = (value: string, title: string, count?: number) => (

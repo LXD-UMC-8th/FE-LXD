@@ -4,7 +4,7 @@ import RequestSkeleton from "../Skeleton/RequestSkeleton";
 import {
   getFriendRequests,
   postFriendAccept,
-  postFriendRefuse,
+  patchFriendRefuse,
   patchFriendCancel,
 } from "../../../apis/friend";
 import type { FriendRequestListResponseDTO } from "../../../utils/types/friend";
@@ -54,7 +54,7 @@ const RequestTab = () => {
   const handleAccept = async (memberId: number) => {
     try {
       await postFriendAccept(memberId);
-      incFriend(1); 
+      incFriend(1);
       decRequests(1);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
@@ -66,7 +66,7 @@ const RequestTab = () => {
 
   const handleRefuse = async (memberId: number) => {
     try {
-      await postFriendRefuse(memberId);
+      await patchFriendRefuse(memberId);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
@@ -87,7 +87,7 @@ const RequestTab = () => {
     }
   };
 
-    const receivedCountLabel = t.requestsCountLabel.replace(
+  const receivedCountLabel = t.requestsCountLabel.replace(
     "{count}",
     String(isLoading ? 0 : receivedRequests.length)
   );
