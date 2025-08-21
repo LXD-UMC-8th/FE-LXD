@@ -5,21 +5,20 @@ import PrevButton from "../../components/Common/PrevButton";
 import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import TitleHeader from "../../components/Common/TitleHeader";
 import { isIdValid, isNicknameValid } from "../../utils/validate";
-import type { SignupFlowProps } from "./SignupFlow";
 import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
+import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
 
-interface ProfilePageProps {
-  userInfo: SignupFlowProps;
-  setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-}
-
-const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
+const ProfilePage = () => {
+  const { userInfo, setUserInfo } = useOutletContext<{
+    userInfo: SignupFlowProps;
+    setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
+  }>();
   const [idTouched, setIdTouched] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [nicknameTouched, setNicknameTouched] = useState(false);
@@ -147,6 +146,7 @@ const ProfilePage = ({ userInfo, setUserInfo }: ProfilePageProps) => {
       if (response.isSuccess) {
         console.log("회원가입 성공", response.result.member);
         alert(t.signupSuccessAlert);
+        localStorage.removeItem("googleSignupUserInfo");
         navigate("/home");
       } else {
         alert(response.message);
