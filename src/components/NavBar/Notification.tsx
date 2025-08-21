@@ -40,6 +40,7 @@ const Notification = ({ setOnChangeSetting }: NotificationProps) => {
   const handleReadAll = () => {
     patchReadAllNotifications(data?.pages[0].result.totalElements as number);
     setIsRender((prev) => !prev);
+    setOnChangeSetting((prev) => !prev);
   };
 
   return (
@@ -49,7 +50,9 @@ const Notification = ({ setOnChangeSetting }: NotificationProps) => {
           <h1 className="font-bold text-xl">{t.notificationHeader}</h1>
           <button
             className="white cursor-pointer border border-gray-500 px-3 py-1 rounded hover:bg-gray-200 transition-colors"
-            onClick={handleReadAll}
+            onClick={() => {
+              handleReadAll();
+            }}
           >
             {t.allReadInNotification}
           </button>

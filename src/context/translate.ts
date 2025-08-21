@@ -217,6 +217,7 @@ export const translate: Record<
     CompleteLeave: string;
     sureLeave: string;
     donotrenderprofile: string;
+    pending: string;
 
     ToSPPHeader: string;
     ToSPPSubHeader: string;
@@ -252,6 +253,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    pending: "PENDING",
     donotrenderprofile: "Failed to load profile.",
     ToLeave: "To leave",
     CompleteLeave: "Complete Leave",
@@ -351,7 +353,7 @@ export const translate: Record<
     notificationHeader: "Notifications",
     allReadInNotification: "Mark all as read",
     notificationButtonText1: "Accept",
-    notificationButtonText2: "Delete",
+    notificationButtonText2: "Refuse",
     Diaries: "Entries",
     SeeMore: "See More",
     Diary: "Entry",
@@ -370,8 +372,8 @@ export const translate: Record<
     settingTitle: "Settings",
     SaveChange: "Save Changes",
     setLanguage: "Language Setting",
-    nativeLanguage: "Native Language",
-    studyLanguage: "Study Language",
+    nativeLanguage: "Native",
+    studyLanguage: "Learning",
     systemLanguage: "System Language",
     SidebarFeed: "Feed",
     profileEdit: "Edit Profile",
@@ -536,7 +538,9 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
     SupplementaryTitle: `Effective as of: August 2025`,
     SupplementaryBody: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
   },
+
   [Language.KOREAN]: {
+    pending: "요청중",
     saving: "저장 중..",
     changeProfile: "프로필이 수정되었습니다.",
     PlzEnterInContent: "메모 내용을 입력해 주세요.",
