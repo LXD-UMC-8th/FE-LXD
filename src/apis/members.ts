@@ -51,6 +51,7 @@ export const postSignup = async (
     nickname: userInfo.nickname,
     nativeLanguage: userInfo.nativeLanguage,
     studyLanguage: userInfo.studyLanguage,
+    loginType: userInfo.loginType
   };
   // JSON 데이터는 Blob으로 추가
   formData.append(

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
-import LoadingModal from "../../components/Common/LoadingModal";
 
 const GoogleRedirectPage = () => {
   const [_authCode, setAuthCode] = useState<string | null>(null);
@@ -67,7 +66,7 @@ const GoogleRedirectPage = () => {
     })();
   }, []);
 
-  return <LoadingModal />;
+  return <div>Loading...</div>;
 };
 
 export default GoogleRedirectPage;

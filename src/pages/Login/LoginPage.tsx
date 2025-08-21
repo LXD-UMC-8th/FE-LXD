@@ -114,8 +114,8 @@ const LoginPage = () => {
   const GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
   const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
   const REDIRECT_URI = import.meta.env.DEV
-    ? "http://localhost:5173/feed"
-    : "https://lxd-fe.netlify.app/feed";
+    ? "http://localhost:5173/home/google-redirect"
+    : "https://lxd-fe.netlify.app/home/google-redirect";
 
   const handleGoogleLogin = () => {
     console.log("구글 로그인 요청");
@@ -126,7 +126,6 @@ const LoginPage = () => {
       scope: "openid email profile",
       access_type: "offline",
       prompt: "consent",
-      // PKCE 안 씀: code_challenge / code_challenge_method 절대 넣지 않음
     });
     window.location.href = `${GOOGLE_AUTH_URL}?${params.toString()}`;
   };
