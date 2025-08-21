@@ -250,6 +250,35 @@ export const translate: Record<
     TosBody_13: string;
     SupplementaryTitle: string;
     SupplementaryBody: string;
+
+    PPHeader: string;
+    PPTitle_1: string;
+    PPBody_1: string;
+    PPTitle_2: string;
+    PPBody_2: string;
+    PPTitle_3: string;
+    PPBody_3: string;
+    PPTitle_4: string;
+    PPBody_4: string;
+    PPTitle_5: string;
+    PPBody_5: string;
+    PPTitle_6: string;
+    PPBody_6: string;
+    PPTitle_7: string;
+    PPBody_7: string;
+    PPTitle_8: string;
+    PPBody_8: string;
+    PPTitle_9: string;
+    PPBody_9: string;
+    PPTitle_10: string;
+    PPBody_10: string;
+    PPTitle_11: string;
+    PPBody_11: string;
+    PPTitle_12: string;
+    PPBody_12: string;
+    PPTitle_13: string;
+    PPBody_13: string;
+    accept: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -291,7 +320,7 @@ export const translate: Record<
     beforeVerify: "Verify",
     afterVerify: "Verified",
     comfirmPassword: "Confirm Password",
-    TosAgreed: "I agree to the Terms of Service and Privacy Policy",
+    TosAgreed: "I agree to the Terms of Service and Privacy Policy.",
     nextButton: "Next",
     emailVerifiedToast: "Your email has verified",
     emailErrorToast: "Cannot send verification email to that address",
@@ -481,10 +510,10 @@ export const translate: Record<
     Unlike: "Unlike",
     saving: "Saving...",
 
-    ToSPPHeader: "Terms of Service and Privacy Policy",
-    ToSPPSubHeader:
-      "Initial use of the LXD service requires a one-time consent to the Terms of Service and to the collection of personal information.",
-    TosHeader: "[Required] I agree to the Terms of Service.",
+    ToSPPHeader: "Terms of Service and Privacy Policy Agreement",
+    ToSPPSubHeader: `To use the LXD service, you must agree to the Terms of Use and the collection of 
+      personal information once upon first use.`,
+    TosHeader: "[Required] I have read and agree to the Terms of Service.",
     TosTitle_1: "1. Purpose",
     TosBody_1: `These Terms govern your access to and use of the LXD platform, including all features, services, and content available through the Service.`,
     TosTitle_2: "2. Definitions",
@@ -537,6 +566,66 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
     TosBody_13: `If you have questions about these Terms, please contact us at: [creativej4u@gmail.com]`,
     SupplementaryTitle: `Effective as of: August 2025`,
     SupplementaryBody: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
+
+    PPHeader: "[Required] I have read and agree to the Privacy Policy.",
+    PPTitle_1: `1. Information We Collect`,
+    PPBody_1: ` We collect the following information when you register or use our Service:
+- Required Information: Email address, Username and password, Display name (nickname), Legal name, Nationality, Native language, Learning language(s)
+- Optional Information: Profile photo
+- How we collect:
+1. Direct input from users during registration or use
+2. We do not currently use automatic collection tools (e.g., cookies, logs); such features may be added later and will be reflected in this policy accordingly.`,
+    PPTitle_2: `2. Purpose of Data Use`,
+    PPBody_2: `We use personal information for the following purposes:
+- To identify and authdenticate users
+- To provide and manage the Service
+- To link user activity (e.g., posts, comments)
+- (Optional and upon consent) For future marketing or promotional purposes — users will be informed and asked for separate consent before such use is implemented`,
+    PPTitle_3: `3. Data Retention and Deletion`,
+    PPBody_3: `- Personal information is deleted without undue delay after a user deletes their account.
+- We may retain information for a certain period if required by applicable laws.
+- Specific retention periods will be detailed in this Policy as they are confirmed through operational policy.`,
+    PPTitle_4: `4. Third-Party Sharing`,
+    PPBody_4: `We do not share your personal information with third parties, except in the following cases:
+- When you have given prior explicit consent
+- When required by law or legal authorities
+- When minimal necessary data must be provided to a service provider (e.g., for hosting or email delivery)
+- When otherwise permitted by applicable laws`,
+    PPTitle_5: `5. Delegation of Processing (Subprocessors)`,
+    PPBody_5: `To ensure smooth operation of the Service, we outsource certain data processing tasks to trusted third-party providers under strict confidentiality agreements:
+1. Email Delivery
+    - Gmail SMTP, SendGrid
+2. Service Hosting & Infrastructure
+    - Amazon Web Services (EC2, RDS, S3, Route53), nginx
+3. Temporary Data Storage
+    - Redis
+Note: We do not currently use log analytics tools. Should that change, we will update this Policy accordingly.`,
+    PPTitle_6: `6. Use of Cookies`,
+    PPBody_6: `- At present, cookies are not actively used for tracking personal data.
+- Cookies may be used to maintain login sessions.
+- A cookie policy will be introduced and disclosed if tracking cookies or analytics tools are implemented in the future.`,
+    PPTitle_7: `7. Data Protection Measures`,
+    PPBody_7: `We take reasonable technical and administrative measures to protect your data, including encryption of passwords and access control.
+Your personal information is handled with the utmost care and in compliance with applicable security regulations.`,
+    PPTitle_8: `8. Children's Privacy`,
+    PPBody_8: `The Service is intended for users of all ages; however, in accordance with international standards such as COPPA and GDPR-K:
+- Users under the age of 14 may be required to obtain verifiable parental or guardian consent before using the Service.`,
+    PPTitle_9: `9. User Rights: Access, Modification, and Deletion`,
+    PPBody_9: `You may access, modify, or delete your personal information at any time through your account settings.
+Upon account deletion, your personal data will be removed promptly unless otherwise required by law.`,
+    PPTitle_10: `10. Cross-Border Data Transfers`,
+    PPBody_10: `As our Service is operated globally, your personal data may be processed in countries outside your country of residence. We will take reasonable steps to ensure that your data is treated securely and in accordance with this Privacy Policy and applicable laws.`,
+    PPTitle_11: `11. Legal Basis (GDPR Note)`,
+    PPBody_11: `If you are located in the European Economic Area (EEA), we process your personal data only when we have a legal basis to do so, including:
+- Consent
+- Contractual necessity
+- Compliance with a legal obligation
+- Legitimate interests (e.g., service improvement, abuse prevention)`,
+    PPTitle_12: `12. Contact Information`,
+    PPBody_12: `If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us at: [creativej4u@gmail.com]`,
+    PPTitle_13: `13. Changes to This Policy`,
+    PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
+    accept: "Accept",
   },
 
   [Language.KOREAN]: {
@@ -824,6 +913,59 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
     SupplementaryTitle: `부칙`,
     SupplementaryBody: `본 약관은 2025년 8월부터 적용됩니다.`,
 
-    //PPHeader: "[필수] 개인정보처리방침에 동의합니다.",
+    PPHeader: "[필수] 개인정보처리방침에 동의합니다.",
+    PPTitle_1: `제1조 (개인정보의 수집 항목 및 방법)`,
+    PPBody_1: ` 1. 운영팀은 회원가입 시 아래의 개인정보를 수집합니다.
+                  - 필수항목: 이메일 주소, 아이디, 비밀번호, 닉네임, 성명, 국적, 모국어, 학습 언어 
+                  - 선택항목: 프로필 사진
+                  2. 개인정보는 사용자가 직접 입력한 방식으로 수집됩니다.
+                  3. 자동 수집 항목(예: 쿠키, 로그 등)은 현재 명확히 사용되고 있지 않으며, 추후 도입될 경우 본 방침에 추가됩니다.`,
+    PPTitle_2: `제2조 (개인정보의 이용 목적)`,
+    PPBody_2: `수집한 개인정보는 다음의 목적을 위해 사용됩니다:
+                   - 회원 식별 및 인증 
+                   - 서비스 제공 및 이용자 관리 
+                   - 게시글/댓글 등 사용자 활동 연동 
+                   - (선택 동의 시) 마케팅 및 광고 목적의 활용이 향후 추가될 수 있습니다.
+                  해당 목적이 도입될 경우, 사전 고지 및 동의를 별도로 받을 예정입니다.`,
+    PPTitle_3: `제3조 (개인정보의 보유 및 이용 기간)`,
+    PPBody_3: `회원의 개인정보는 회원 탈퇴 후 일정 기간이 지난 후 지체 없이 삭제됩니다. 단, 관련 법령에 따라 보존이 필요한 경우에는 해당 기간 동안 보관될 수 있습니다. 구체적인 보유 기간은 추후 서비스 운영 정책에 따라 정해지며, 정책 확정 시 본 방침에 추가됩니다.`,
+    PPTitle_4: `제4조 (개인정보의 제3자 제공)`,
+    PPBody_4: `운영팀은 원칙적으로 이용자의 개인정보를 수집 및 이용 목적 범위 내에서만 처리하며, 이용자의 사전 동의 없이 제3자에게 제공하지 않습니다. 다만, 다음 각 호의 경우에는 예외로 합니다. 
+                  1. 이용자가 사전에 제3자 제공에 동의한 경우
+                  2. 다른 법률에 특별한 규정이 있는 경우
+                  3. 수사기관이나 법원의 요청이 있는 경우로서, 관련 법령에 따라 제공이 허용되는 경우
+                  4. 서비스 제공에 필요한 범위 내에서 최소한의 개인정보가 불가피하게 제공되는 경우 (예: 서비스 운영을 위한 위탁 업무 수행 시)`,
+    PPTitle_5: `제5조 (개인정보의 처리 위탁)`,
+    PPBody_5: `운영팀은 서비스의 원활한 제공을 위하여 다음과 같이 개인정보 처리 업무의 일부를 외부 업체에 위탁하고 있습니다. 
+    위탁받은 업체는 운영팀의 지시에 따라 업무를 수행하며, 개인정보를 저장하거나 별도로 활용하지 않습니다.
+                  1. 이메일 발송 업무 
+                  - 위탁 대상: Gmail SMTP, SendGrid 
+                  2. 서비스 호스팅 및 인프라 운영 
+                   - 위탁 대상: Amazon Web Services (EC2, RDS, S3, Route53), nginx 
+                  3. 일시적 데이터 저장 
+                   - 위탁 대상: Redis 
+                  ※ 현재 로그 수집 및 분석 시스템은 도입되지 않았으며, 추후 해당 기능이 도입되는 경우 변경 사항은 본 방침에 반영하여 고지합니다.`,
+    PPTitle_6: `제6조 (쿠키의 사용)`,
+    PPBody_6: `현재 쿠키를 통한 개인정보 추적 및 분석은 명확히 사용되지 않고 있으며, 로그인 유지 등에 쿠키가 사용될 수 있습니다. 추후 쿠키 사용 정책이 도입될 경우 본 방침에 반영하여 고지합니다.`,
+    PPTitle_7: `제7조 (개인정보 보호를 위한 조치)`,
+    PPBody_7: `운영팀은 개인정보 보호를 위해 적절한 보안 조치를 취하고
+                  있으며, 비밀번호는 암호화되어 저장됩니다.`,
+    PPTitle_8: `제8조 (미성년자의 개인정보 보호)`,
+    PPBody_8: `LXD는 원칙적으로 전 연령 이용을 허용하나, 법적 요건에 따라 만
+                  14세 미만 사용자의 경우 법정대리인의 동의를 요청할 수
+                  있습니다.`,
+    PPTitle_9: `제9조 (개인정보 열람 및 삭제)`,
+    PPBody_9: `회원은 언제든지 자신의 개인정보를 열람, 수정, 삭제할 수
+                  있으며, 탈퇴 요청 시 모든 정보는 즉시 삭제됩니다.`,
+    PPTitle_10: `* 개인정보 관련 문의`,
+    PPBody_10: `본 개인정보처리방침에 대한 문의사항이 있을 경우 아래 이메일로 연락 주시기 바랍니다.
+                  이메일: [creativej4u@gmail.com]`,
+    PPTitle_11: ``,
+    PPBody_11: ``,
+    PPTitle_12: ``,
+    PPBody_12: ``,
+    PPTitle_13: ``,
+    PPBody_13: ``,
+    accept: "확인",
   },
 };
