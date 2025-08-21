@@ -12,12 +12,7 @@ import { postSignup } from "../../apis/members";
 import { getCheckDuplicatedID } from "../../apis/members";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
-import type { SignupFlowProps } from "./SignupFlowLayout";
-
-// interface ProfilePageProps {
-//   userInfo: SignupFlowProps;
-//   setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-// }
+import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
 
 const ProfilePage = () => {
   const { userInfo, setUserInfo } = useOutletContext<{
@@ -32,10 +27,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const { language } = useHomeLanguage();
   const t = translate[language];
-
-  useEffect(() => {
-    console.log("[ProfilePage] userInfo:", userInfo);
-  }, [userInfo]);
 
   const handleIDCheck = async () => {
     setIdTouched(true);

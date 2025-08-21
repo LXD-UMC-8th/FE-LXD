@@ -11,7 +11,7 @@ import {
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import type { SignupFlowProps } from "./SignupFlowLayout";
+import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
 import ToSModal from "../../components/Login/ToSModal";
 import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";

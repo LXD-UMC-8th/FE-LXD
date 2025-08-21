@@ -23,7 +23,7 @@ import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailPage from "./pages/Feed/UserDetailPage";
 import "react-calendar/dist/Calendar.css";
-import SignupFlowLayout from "./pages/Login/SignupFlowLayout";
+import SignupFlowLayout from "./layouts/SignupFlowLayout";
 import SignupPage from "./pages/Login/SignupPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import ChangePWPage from "./pages/Login/ChangePWPage";

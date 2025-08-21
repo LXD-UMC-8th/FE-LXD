@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { HomeLanguageProvider } from "../../context/HomeLanguageProvider";
-import { getLocalStorageItem } from "../../apis/axios";
+import { HomeLanguageProvider } from "../context/HomeLanguageProvider";
+import { getLocalStorageItem } from "../apis/axios";
 
 export interface SignupFlowProps {
   email: string;

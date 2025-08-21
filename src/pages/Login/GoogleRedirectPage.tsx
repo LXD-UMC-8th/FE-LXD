@@ -12,7 +12,6 @@ const GoogleRedirectPage = () => {
 
     if (!code) return;
     setAuthCode(code);
-    console.log("[Google OAuth] code:", code);
 
     const cleanUrl = window.location.pathname;
     window.history.replaceState({}, "", cleanUrl);
@@ -28,7 +27,6 @@ const GoogleRedirectPage = () => {
 
           localStorage.setItem("accessToken", accessToken);
           localStorage.setItem("refreshToken", refreshToken);
-          console.log(" 구글 로그인 성공:", { isNewMember });
 
           if (isNewMember) {
             // 신규회원: ProfilePage로 이동

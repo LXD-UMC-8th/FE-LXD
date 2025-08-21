@@ -1,5 +1,5 @@
 // 회원정보 (회원가입, 수정, 탈퇴, 조회 등)
-import type { SignupFlowProps } from "../pages/Login/SignupFlowLayout";
+import type { SignupFlowProps } from "../layouts/SignupFlowLayout";
 import type {
   MemberLanguageResponseDTO,
   MemberProfileRequest,

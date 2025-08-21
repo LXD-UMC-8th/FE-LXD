@@ -5,7 +5,7 @@ import FormInput from "../../components/Login/FormInput";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
-import type { SignupFlowProps } from "./SignupFlowLayout";
+import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
 import {
   isEmailValid,
   isPasswordMatch,
