@@ -322,6 +322,31 @@ body {
   color: inherit;
 }
 
+/* index.css */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.7); /* gray-500 */
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(107,114,128,0.7) transparent;
+}
+
+/* index.css */
+.scrollbar-outside {
+  padding-right: 0.5rem;    /* 본문 오른쪽 여백 */
+  margin-right: -0.5rem;    /* 스크롤바를 바깥으로 밀어냄 */
+}
+
 /* quill editor css */
 .ql-align-center img {
   display: inline-block;
@@ -340,3 +365,4 @@ body {
   margin-left: auto;
   margin-right: 0;
 }
+

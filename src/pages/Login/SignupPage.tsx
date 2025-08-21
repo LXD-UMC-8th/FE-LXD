@@ -124,6 +124,10 @@ const SignupPage = () => {
   const handleCloseTosModal = () => {
     setIsToSOpen(false);
   };
+  const handleCheckTosModal = () => {
+    setUserInfo((prev) => ({ ...prev, isPrivacy: true }));
+    setIsToSOpen(false);
+  };
 
   const isAllValid = useCallback(() => {
     const _isEmailValid = isEmailValid(userInfo.email) && emailVerified;
@@ -306,7 +310,13 @@ const SignupPage = () => {
                 {t.TosAgreed}
               </span>
             </div>
-            {isToSOpen && <ToSModal onClose={handleCloseTosModal} />}
+            {isToSOpen && (
+              <ToSModal
+                open={isToSOpen}
+                onClose={handleCloseTosModal}
+                onConfirm={handleCheckTosModal}
+              />
+            )}
           </div>
 
           <SignupButton

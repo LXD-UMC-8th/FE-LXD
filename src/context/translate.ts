@@ -218,6 +218,67 @@ export const translate: Record<
     sureLeave: string;
     donotrenderprofile: string;
     pending: string;
+
+    ToSPPHeader: string;
+    ToSPPSubHeader: string;
+    TosHeader: string;
+    TosTitle_1: string;
+    TosBody_1: string;
+    TosTitle_2: string;
+    TosBody_2: string;
+    TosTitle_3: string;
+    TosBody_3: string;
+    TosTitle_4: string;
+    TosBody_4: string;
+    TosTitle_5: string;
+    TosBody_5: string;
+    TosTitle_6: string;
+    TosBody_6: string;
+    TosTitle_7: string;
+    TosBody_7: string;
+    TosTitle_8: string;
+    TosBody_8: string;
+    TosTitle_9: string;
+    TosBody_9: string;
+    TosTitle_10: string;
+    TosBody_10: string;
+    TosTitle_11: string;
+    TosBody_11: string;
+    TosTitle_12: string;
+    TosBody_12: string;
+    TosTitle_13: string;
+    TosBody_13: string;
+    SupplementaryTitle: string;
+    SupplementaryBody: string;
+
+    PPHeader: string;
+    PPTitle_1: string;
+    PPBody_1: string;
+    PPTitle_2: string;
+    PPBody_2: string;
+    PPTitle_3: string;
+    PPBody_3: string;
+    PPTitle_4: string;
+    PPBody_4: string;
+    PPTitle_5: string;
+    PPBody_5: string;
+    PPTitle_6: string;
+    PPBody_6: string;
+    PPTitle_7: string;
+    PPBody_7: string;
+    PPTitle_8: string;
+    PPBody_8: string;
+    PPTitle_9: string;
+    PPBody_9: string;
+    PPTitle_10: string;
+    PPBody_10: string;
+    PPTitle_11: string;
+    PPBody_11: string;
+    PPTitle_12: string;
+    PPBody_12: string;
+    PPTitle_13: string;
+    PPBody_13: string;
+    accept: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -259,7 +320,7 @@ export const translate: Record<
     beforeVerify: "Verify",
     afterVerify: "Verified",
     comfirmPassword: "Confirm Password",
-    TosAgreed: "I agree to the Terms of Service and Privacy Policy",
+    TosAgreed: "I agree to the Terms of Service and Privacy Policy.",
     nextButton: "Next",
     emailVerifiedToast: "Your email has verified",
     emailErrorToast: "Cannot send verification email to that address",
@@ -448,7 +509,125 @@ export const translate: Record<
       "Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
     Unlike: "Unlike",
     saving: "Saving...",
+
+    ToSPPHeader: "Terms of Service and Privacy Policy Agreement",
+    ToSPPSubHeader: `To use the LXD service, you must agree to the Terms of Use and the collection of 
+      personal information once upon first use.`,
+    TosHeader: "[Required] I have read and agree to the Terms of Service.",
+    TosTitle_1: "1. Purpose",
+    TosBody_1: `These Terms govern your access to and use of the LXD platform, including all features, services, and content available through the Service.`,
+    TosTitle_2: "2. Definitions",
+    TosBody_2: `- "Content" means all materials posted or submitted by a Member, including diary entries, comments, images, and other data.
+    - "Friend Request" refers to a function that enables users to interact and connect within the Service.`,
+    TosTitle_3: `3. Eligibility`,
+    TosBody_3: `- The Service is intended for individuals aged 14 years or older.
+- You may register using a valid email address or a third-party account (e.g., Google).
+- You are responsible for providing accurate and truthful information during registration.`,
+    TosTitle_4: `4. Modification of Terms`,
+    TosBody_4: `We reserve the right to modify these Terms at any time. If we make material changes, we will notify you through the Service or by other appropriate means. Continued use of the Service after changes have been posted constitutes your acceptance of the revised Terms.`,
+    TosTitle_5: `5. Use of the Service`,
+    TosBody_5: `- The Service allows users to write diary entries, comment, like, and send friend requests.
+- We may modify, suspend, or discontinue any aspect of the Service at any time, with reasonable prior notice where feasible.`,
+    TosTitle_6: `6. User Content and Management`,
+    TosBody_6: `- You retain ownership of your content.
+- You may edit or delete your content, except in certain cases where removal may affect the integrity of the learning history or collaborative features. In such cases, you may contact us to request deletion.
+- We reserve the right to remove content or restrict accounts without notice if we believe the content violates these Terms or applicable law.`,
+    TosTitle_7: `7. User Responsibilities`,
+    TosBody_7: `By using the Service, you agree to:
+- Comply with all applicable laws and regulations.
+- Not harm, harass, or disrupt other users or the operation of the Service.
+- Not upload or distribute content that is unlawful, harmful, defamatory, obscene, or infringes on intellectual property rights.`,
+    TosTitle_8: `8. Restricted Activities`,
+    TosBody_8: `We may suspend or terminate your access if your actions include but are not limited to:
+- Violating public order, morality, or laws
+- Engaging in criminal or fraudulent activity
+- Impersonating others or misusing credentials
+- Sending spam or unauthorized advertising
+- Hacking or spreading malware
+- Infringing on others' intellectual property
+- Any behavior deemed inappropriate by us`,
+    TosTitle_9: `9. Intellectual Property`,
+    TosBody_9: `- You retain copyright over your submitted content.
+- By using the Service, you grant us a non-exclusive, royalty-free, worldwide license to use, reproduce, display, and distribute your content for service operation and promotional purposes.
+- You are solely responsible for ensuring that your content does not violate any third-party rights.`,
+    TosTitle_10: `10. Disclaimers`,
+    TosBody_10: `- The Service is provided **“as is” and “as available”**, without warranties of any kind.
+- We do not guarantee uninterrupted or error-free operation.
+- We are not responsible for user interactions, the accuracy of content, or any damages arising from your use of the Service.
+- You are responsible for maintaining the confidentiality of your account and password.
+- If you violate these Terms and cause us damage, you agree to indemnify and hold us harmless.`,
+    TosTitle_11: `11. Governing Law and Jurisdiction`,
+    TosBody_11: `These Terms are governed by the laws of the Republic of Korea, unless local mandatory consumer protection laws in your country of residence provide otherwise.
+In the event of a dispute, the competent court in the Republic of Korea shall have jurisdiction, unless otherwise required by applicable law.`,
+    TosTitle_12: `12. Additional Terms`,
+    TosBody_12: `- If any part of these Terms is found to be invalid or unenforceable, the remaining sections will remain in full force and effect.
+- You must explicitly agree to these Terms to use the Service. If you do not agree, please do not use the Service.`,
+    TosTitle_13: `Need Help?`,
+    TosBody_13: `If you have questions about these Terms, please contact us at: [creativej4u@gmail.com]`,
+    SupplementaryTitle: `Effective as of: August 2025`,
+    SupplementaryBody: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
+
+    PPHeader: "[Required] I have read and agree to the Privacy Policy.",
+    PPTitle_1: `1. Information We Collect`,
+    PPBody_1: ` We collect the following information when you register or use our Service:
+- Required Information: Email address, Username and password, Display name (nickname), Legal name, Nationality, Native language, Learning language(s)
+- Optional Information: Profile photo
+- How we collect:
+1. Direct input from users during registration or use
+2. We do not currently use automatic collection tools (e.g., cookies, logs); such features may be added later and will be reflected in this policy accordingly.`,
+    PPTitle_2: `2. Purpose of Data Use`,
+    PPBody_2: `We use personal information for the following purposes:
+- To identify and authdenticate users
+- To provide and manage the Service
+- To link user activity (e.g., posts, comments)
+- (Optional and upon consent) For future marketing or promotional purposes — users will be informed and asked for separate consent before such use is implemented`,
+    PPTitle_3: `3. Data Retention and Deletion`,
+    PPBody_3: `- Personal information is deleted without undue delay after a user deletes their account.
+- We may retain information for a certain period if required by applicable laws.
+- Specific retention periods will be detailed in this Policy as they are confirmed through operational policy.`,
+    PPTitle_4: `4. Third-Party Sharing`,
+    PPBody_4: `We do not share your personal information with third parties, except in the following cases:
+- When you have given prior explicit consent
+- When required by law or legal authorities
+- When minimal necessary data must be provided to a service provider (e.g., for hosting or email delivery)
+- When otherwise permitted by applicable laws`,
+    PPTitle_5: `5. Delegation of Processing (Subprocessors)`,
+    PPBody_5: `To ensure smooth operation of the Service, we outsource certain data processing tasks to trusted third-party providers under strict confidentiality agreements:
+1. Email Delivery
+    - Gmail SMTP, SendGrid
+2. Service Hosting & Infrastructure
+    - Amazon Web Services (EC2, RDS, S3, Route53), nginx
+3. Temporary Data Storage
+    - Redis
+Note: We do not currently use log analytics tools. Should that change, we will update this Policy accordingly.`,
+    PPTitle_6: `6. Use of Cookies`,
+    PPBody_6: `- At present, cookies are not actively used for tracking personal data.
+- Cookies may be used to maintain login sessions.
+- A cookie policy will be introduced and disclosed if tracking cookies or analytics tools are implemented in the future.`,
+    PPTitle_7: `7. Data Protection Measures`,
+    PPBody_7: `We take reasonable technical and administrative measures to protect your data, including encryption of passwords and access control.
+Your personal information is handled with the utmost care and in compliance with applicable security regulations.`,
+    PPTitle_8: `8. Children's Privacy`,
+    PPBody_8: `The Service is intended for users of all ages; however, in accordance with international standards such as COPPA and GDPR-K:
+- Users under the age of 14 may be required to obtain verifiable parental or guardian consent before using the Service.`,
+    PPTitle_9: `9. User Rights: Access, Modification, and Deletion`,
+    PPBody_9: `You may access, modify, or delete your personal information at any time through your account settings.
+Upon account deletion, your personal data will be removed promptly unless otherwise required by law.`,
+    PPTitle_10: `10. Cross-Border Data Transfers`,
+    PPBody_10: `As our Service is operated globally, your personal data may be processed in countries outside your country of residence. We will take reasonable steps to ensure that your data is treated securely and in accordance with this Privacy Policy and applicable laws.`,
+    PPTitle_11: `11. Legal Basis (GDPR Note)`,
+    PPBody_11: `If you are located in the European Economic Area (EEA), we process your personal data only when we have a legal basis to do so, including:
+- Consent
+- Contractual necessity
+- Compliance with a legal obligation
+- Legitimate interests (e.g., service improvement, abuse prevention)`,
+    PPTitle_12: `12. Contact Information`,
+    PPBody_12: `If you have any questions about this Privacy Policy or wish to exercise your rights, please contact us at: [creativej4u@gmail.com]`,
+    PPTitle_13: `13. Changes to This Policy`,
+    PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
+    accept: "Accept",
   },
+
   [Language.KOREAN]: {
     pending: "요청중",
     saving: "저장 중..",
@@ -673,5 +852,120 @@ export const translate: Record<
     selectFilePlaceholder: "파일을 선택해주세요",
     imgSize: "최대 500MB의 이미지 파일을 업로드 해주세요.",
     Unlike: "취소하기",
+
+    ToSPPHeader: "이용약관 및 개인정보 수집 동의",
+    ToSPPSubHeader:
+      "LXD 서비스 이용을 위한 최초 1회의 약관 동의와 개인정보 수집에 대한 동의가 필요합니다.",
+    TosHeader: "[필수] 이용약관에 동의합니다.",
+    TosTitle_1: "제1조 (목적)",
+    TosBody_1: `본 약관은 팀 LXD(이하 '운영팀')가 제공하는 웹사이트 “LXD (Language Xchange Diary)”(이하 '서비스')의 이용 조건 및 절차, 이용자와 운영팀 간의 권리, 의무 및 책임사항 및 기타 필요한 사항을 규정함을 목적으로 합니다.`,
+    TosTitle_2: "제2조 (용어의 정의)",
+    TosBody_2: `1. "회원"이란 본 약관에 따라 서비스에 가입하여 이용하는 자를 말합니다.
+    2. "게시물"이란 회원이 서비스에 작성한 글, 댓글, 이미지 등 모든 콘텐츠를 의미합니다.
+    3. "친구신청"이란 회원 간의 상호 교류를 위해 요청하는 기능을 말합니다.`,
+    TosTitle_3: `제3조 (약관의 효력 및 변경)`,
+    TosBody_3: `1. 본 약관은 서비스 화면에 게시하거나 기타의 방법으로 공지함으로써 효력이 발생합니다. 
+    2. 운영팀은 필요 시 약관을 변경할 수 있으며, 변경된 약관은 서비스 내 공지함으로써 효력을 가집니다.`,
+    TosTitle_4: `제4조 (약관 외 준칙)`,
+    TosBody_4: `본 약관에 명시되지 않은 사항이 전기통신기본법, 전기통신사업법,
+                  정보통신촉진법, ‘전자상거래등에서의 소비자 보호에 관한 법률’,
+                  ‘약관의 규제에관한법률’, ‘전자거래기본법’, ‘전자서명법’,
+                  ‘정보통신망 이용촉진등에 관한 법률’, ‘소비자보호법’ 등 기타
+                  관계 법령에 규정되어 있을 경우에는 그 규정을 따르도록 합니다.`,
+    TosTitle_5: `제5조 (회원가입)`,
+    TosBody_5: `1. 회원가입은 만 14세 이상의 개인만 가능합니다.
+     2. 회원은 본인의 이메일 또는 구글 계정을 통해 가입할 수 있으며, 언제든 탈퇴할 수 있습니다. 
+                  3. 회원은 정확한 정보를 제공해야 하며, 허위 정보 제공으로 인한 책임은 본인에게 있습니다.`,
+    TosTitle_6: `제6조 (서비스의 제공)`,
+    TosBody_6: `1. 서비스는 일기 작성, 댓글, 좋아요, 친구 신청 등의 기능을 제공합니다.
+    2. 운영팀은 서비스의 일부 또는 전부를 변경, 중단할 수 있으며, 이 경우 사전에 공지합니다.`,
+    TosTitle_7: `제7조 (게시물의 관리)`,
+    TosBody_7: `1. 회원이 작성한 게시물은 원칙적으로 회원이 직접 수정 또는 삭제할 수 있습니다. 단, 서비스의 성격상 일부 콘텐츠는 서비스 기록의 일관성과 학습 목적을 위해 사용자가 직접 삭제할 수 없습니다. 해당 콘텐츠의 삭제를 원할 경우, 운영팀에 별도 요청을 통해 처리할 수 있습니다. 
+                  2. 운영팀은 게시물이 제9조에 해당한다고 판단되는 경우에 사전 통보 없이 게시물을 삭제하거나 회원 이용을 제한할 수 있습니다.`,
+    TosTitle_8: `제8조 (회원의 의무)`,
+    TosBody_8: `1. 회원은 본 약관 및 관련 법령을 준수해야 합니다. 
+    2. 회원은 서비스 이용 시 타인에게 피해를 주지 않아야 하며, 서비스의 정상적 운영을 방해해서는 안 됩니다.`,
+    TosTitle_9: `제9조 (이용제한)`,
+    TosBody_9: `본 사이트 이용 및 행위가 다음 각 항에 해당하는 경우 운영팀은 해당 회원의 이용을 제한할 수 있습니다.
+                   - 공공질서 및 미풍양속, 기타 사회질서를 해하는 경우
+                   - 범죄행위를 목적으로 하거나 기타 범죄행위와 관련된다고 객관적으로 인정되는 경우 
+                   - 타인의 명예를 손상시키거나 타인의 서비스 이용을 현저히 저해하는 경우 
+                   - 타인의 의사에 반하는 내용이나 광고성 정보 등을 지속적으로 전송하는 경우
+                    - 해킹 및 컴퓨터 바이러스 유포 등으로 서비스의 건전한 운영을 저해하는 경우 
+                   - 다른 회원 또는 제3자의 지적재산권을 침해하거나 지적재산권자가 지적 재산권의 침해를 주장할 수 있다고 판단되는 경우
+                    - 타인의 이메일, 아이디 및 비밀번호를 도용한 경우
+                    - 기타 관계 법령에 위배되는 경우 및 운영팀이 회원으로서 부적당하다고 판단한 경우`,
+    TosTitle_10: `제10조 (면책조항)`,
+    TosBody_10: `1. 운영팀은 천재지변, 기술적 문제 등으로 인한 서비스 중단에 대해 책임을 지지 않습니다. 
+                  2. 운영팀은 회원간 또는 회원과 제3자간의 상호작용이나 게시물에 대한 책임을 지지 않습니다. 
+                  3. 운영팀은 회원이 게시판에 게재한 정보, 자료, 내용 등에 관하여 사실의 정확성, 신뢰도 등에 어떠한 책임도 부담하지 않으며 회원은 본인의 책임 아래 본 사이트를 이용해야 합니다.
+                  4. 회원이 게시 또는 전송한 자료 등에 관하여 손해가 발생하거나 자료의 취사선택, 기타 무료로 제공되는 서비스 이용과 관련해 어떠한 불이익이 발생하더라도 이에 대한 모든 책임은 회원에게 있습니다.
+                  5. 이메일과 비밀번호의 관리 및 이용자의 부주의로 인하여 발생되는 손해 또는 제3자에 의한 부정사용 등에 대한 책임은 회원에게 있습니다. 
+                  6. 회원이 본 약관의 규정을 위반함으로써 운영팀에 손해가 발생하는 경우 이 약관을 위반한 회원은 운영팀에 발생한 모든 손해를 배상해야 하며 동 손해로부터 운영팀을 면책시켜야 합니다.`,
+    TosTitle_11: `제11조 (지적재산권)`,
+    TosBody_11: `1. 회원이 서비스에 작성한 게시물의 저작권은 작성자에게 있으며, 운영팀은 서비스 운영 및 홍보 목적으로 이를 사용할 수 있습니다.
+                  2. 단, 이용자는 자신이 작성한 콘텐츠가 타인의 권리를 침해하지 않도록 주의해야 합니다.`,
+    TosTitle_12: `제12조 (준거법 및 재판관할)`,
+    TosBody_12: `본 약관은 대한민국 법을 따릅니다.`,
+    TosTitle_13: `제13조 (연락처)`,
+    TosBody_13: `서비스 관련 문의는 아래 이메일로 연락 주시기 바랍니다.
+                  이메일: [creativej4u@gmail.com]`,
+    SupplementaryTitle: `부칙`,
+    SupplementaryBody: `본 약관은 2025년 8월부터 적용됩니다.`,
+
+    PPHeader: "[필수] 개인정보처리방침에 동의합니다.",
+    PPTitle_1: `제1조 (개인정보의 수집 항목 및 방법)`,
+    PPBody_1: ` 1. 운영팀은 회원가입 시 아래의 개인정보를 수집합니다.
+                  - 필수항목: 이메일 주소, 아이디, 비밀번호, 닉네임, 성명, 국적, 모국어, 학습 언어 
+                  - 선택항목: 프로필 사진
+                  2. 개인정보는 사용자가 직접 입력한 방식으로 수집됩니다.
+                  3. 자동 수집 항목(예: 쿠키, 로그 등)은 현재 명확히 사용되고 있지 않으며, 추후 도입될 경우 본 방침에 추가됩니다.`,
+    PPTitle_2: `제2조 (개인정보의 이용 목적)`,
+    PPBody_2: `수집한 개인정보는 다음의 목적을 위해 사용됩니다:
+                   - 회원 식별 및 인증 
+                   - 서비스 제공 및 이용자 관리 
+                   - 게시글/댓글 등 사용자 활동 연동 
+                   - (선택 동의 시) 마케팅 및 광고 목적의 활용이 향후 추가될 수 있습니다.
+                  해당 목적이 도입될 경우, 사전 고지 및 동의를 별도로 받을 예정입니다.`,
+    PPTitle_3: `제3조 (개인정보의 보유 및 이용 기간)`,
+    PPBody_3: `회원의 개인정보는 회원 탈퇴 후 일정 기간이 지난 후 지체 없이 삭제됩니다. 단, 관련 법령에 따라 보존이 필요한 경우에는 해당 기간 동안 보관될 수 있습니다. 구체적인 보유 기간은 추후 서비스 운영 정책에 따라 정해지며, 정책 확정 시 본 방침에 추가됩니다.`,
+    PPTitle_4: `제4조 (개인정보의 제3자 제공)`,
+    PPBody_4: `운영팀은 원칙적으로 이용자의 개인정보를 수집 및 이용 목적 범위 내에서만 처리하며, 이용자의 사전 동의 없이 제3자에게 제공하지 않습니다. 다만, 다음 각 호의 경우에는 예외로 합니다. 
+                  1. 이용자가 사전에 제3자 제공에 동의한 경우
+                  2. 다른 법률에 특별한 규정이 있는 경우
+                  3. 수사기관이나 법원의 요청이 있는 경우로서, 관련 법령에 따라 제공이 허용되는 경우
+                  4. 서비스 제공에 필요한 범위 내에서 최소한의 개인정보가 불가피하게 제공되는 경우 (예: 서비스 운영을 위한 위탁 업무 수행 시)`,
+    PPTitle_5: `제5조 (개인정보의 처리 위탁)`,
+    PPBody_5: `운영팀은 서비스의 원활한 제공을 위하여 다음과 같이 개인정보 처리 업무의 일부를 외부 업체에 위탁하고 있습니다. 
+    위탁받은 업체는 운영팀의 지시에 따라 업무를 수행하며, 개인정보를 저장하거나 별도로 활용하지 않습니다.
+                  1. 이메일 발송 업무 
+                  - 위탁 대상: Gmail SMTP, SendGrid 
+                  2. 서비스 호스팅 및 인프라 운영 
+                   - 위탁 대상: Amazon Web Services (EC2, RDS, S3, Route53), nginx 
+                  3. 일시적 데이터 저장 
+                   - 위탁 대상: Redis 
+                  ※ 현재 로그 수집 및 분석 시스템은 도입되지 않았으며, 추후 해당 기능이 도입되는 경우 변경 사항은 본 방침에 반영하여 고지합니다.`,
+    PPTitle_6: `제6조 (쿠키의 사용)`,
+    PPBody_6: `현재 쿠키를 통한 개인정보 추적 및 분석은 명확히 사용되지 않고 있으며, 로그인 유지 등에 쿠키가 사용될 수 있습니다. 추후 쿠키 사용 정책이 도입될 경우 본 방침에 반영하여 고지합니다.`,
+    PPTitle_7: `제7조 (개인정보 보호를 위한 조치)`,
+    PPBody_7: `운영팀은 개인정보 보호를 위해 적절한 보안 조치를 취하고
+                  있으며, 비밀번호는 암호화되어 저장됩니다.`,
+    PPTitle_8: `제8조 (미성년자의 개인정보 보호)`,
+    PPBody_8: `LXD는 원칙적으로 전 연령 이용을 허용하나, 법적 요건에 따라 만
+                  14세 미만 사용자의 경우 법정대리인의 동의를 요청할 수
+                  있습니다.`,
+    PPTitle_9: `제9조 (개인정보 열람 및 삭제)`,
+    PPBody_9: `회원은 언제든지 자신의 개인정보를 열람, 수정, 삭제할 수
+                  있으며, 탈퇴 요청 시 모든 정보는 즉시 삭제됩니다.`,
+    PPTitle_10: `* 개인정보 관련 문의`,
+    PPBody_10: `본 개인정보처리방침에 대한 문의사항이 있을 경우 아래 이메일로 연락 주시기 바랍니다.
+                  이메일: [creativej4u@gmail.com]`,
+    PPTitle_11: ``,
+    PPBody_11: ``,
+    PPTitle_12: ``,
+    PPBody_12: ``,
+    PPTitle_13: ``,
+    PPBody_13: ``,
+    accept: "확인",
   },
 };
