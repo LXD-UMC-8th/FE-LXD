@@ -46,7 +46,7 @@ export const usePostLike = ({ targetType, targetId }: Params) => {
             ...page,
             result: {
               ...page.result,
-              diaries: page.result.diaries.map((d: diaries) => {
+              diaries: page.result.contents.map((d: diaries) => {
                 if (d.diaryId === targetId && typeof d.likeCount === "number") {
                   const nextLiked = !d.isLiked;
                   const nextCount = nextLiked

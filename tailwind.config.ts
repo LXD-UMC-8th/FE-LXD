@@ -1,7 +1,9 @@
 // tailwind.config.ts
+import type { Config } from "tailwindcss";
+import scrollbar from "tailwind-scrollbar";
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  safelist: [/^react-calendar/, /^heat-/],
   theme: {
     extend: {
       screens: {
@@ -12,5 +14,5 @@ export default {
       },
     },
   },
-  plugins: [],
-};
+  plugins: [scrollbar({ nocompatible: true })],
+} satisfies Config;

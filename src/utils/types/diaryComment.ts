@@ -33,11 +33,8 @@ export type DiaryCommentGetRequestDTO = {
 
 export type GetDiaryCommentDTO = {
     totalElements: number;
-    parentTotalElements: number;
     page: number;
     size: number;
-    totalPages: number;
-    pageItemCount: number;
     hasNext: boolean;
     contents: DiaryCommentDTO[];
 }

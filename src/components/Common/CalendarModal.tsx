@@ -30,11 +30,12 @@ const CalendarModal = () => {
         year: current.getFullYear(),
         month: current.getMonth() + 1,
       },
+      {
+        year: current.getFullYear(),
+        month: current.getMonth() + 2,
+      },
     ];
   }, [activeStartDate]);
-
-  console.log("this is CalendarModal");
-  console.log("dates to request", _datesToRequest);
 
   useEffect(() => {
     Promise.all(_datesToRequest.map(getDiaryStats))
@@ -69,13 +70,16 @@ const CalendarModal = () => {
       <Calendar
         className="border-radius-lg "
         formatDay={(_locale, date) => date.getDate().toString()}
-        formatMonthYear={(_locale, date) =>
-          `${date.getFullYear()} ${date
+        formatMonthYear={(_locale, date) => {
+          if (language === "KO") {
+            return `${date.getFullYear()} ${date.getMonth() + 1}월`;
+          }
+          return `${date.getFullYear()} ${date
             .toLocaleString("default", {
               month: "short",
             })
-            .toUpperCase()}`
-        }
+            .toUpperCase()}`;
+        }}
         formatShortWeekday={(_locale, date) =>
           [
             t.Sunday,

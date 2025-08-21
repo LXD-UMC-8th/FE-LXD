@@ -2,8 +2,6 @@ import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
 import { translate } from "../../../context/translate";
 import { useLanguage } from "../../../context/LanguageProvider";
-// import { useLanguage } from "../../../context/LanguageProvider";
-// import { translate } from "../../../context/translate";
 
 interface ProfileInfoProps {
   _profilePreview: string | null;
@@ -23,14 +21,12 @@ const ProfileInfo = ({
   _onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  // const { language } = useLanguage();
-  // const t = translate[language];
+  const { language } = useLanguage();
+  const t = translate[language];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     _onImageChange(e);
   };
-  const { language } = useLanguage();
-  const t = translate[language];
 
   return (
     <div className="flex flex-col w-full rounded-md pt-7 pb-7 pl-10 pr-10 bg-white space-y-7">
@@ -49,7 +45,11 @@ const ProfileInfo = ({
                   alt="프로필 이미지"
                   className="w-full h-full object-cover"
                 />
-              ) : null}
+              ) : <img
+                  src="/images/profileimage.svg"
+                  alt="기본 프로필 이미지"
+                  className="w-full h-full object-cover"
+                />}
             </div>
             {_profilePreview && (
               <button

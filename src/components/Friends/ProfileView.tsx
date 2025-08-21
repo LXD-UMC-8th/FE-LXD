@@ -28,12 +28,12 @@ interface ProfileViewProps {
     username: string;
     image?: string;
     isFriend: boolean; // (호환용) 훅 결과가 우선
-    id: number;        // ✅ 서버 memberId와 동일
+    id: number; // ✅ 서버 memberId와 동일
   };
   onClose: () => void;
   onUnfriendClick: () => void; // (구버전 호환용)
   onAvatarClick: () => void;
-  isRequesting: boolean;       // (호환용)
+  isRequesting: boolean; // (호환용)
   onSendRequestClick: () => void;
 }
 
@@ -61,16 +61,18 @@ const ProfileView = ({
   const { mutateAsync: unfriend } = useUnfriend();
 
   // 훅 결과 우선, 프롭은 폴백
-  const mergedState =
-    isLoading
-      ? "loading"
-      : state === "friend" || state === "pending" || state === "incoming" || state === "none"
-      ? state
-      : user.isFriend
-      ? "friend"
-      : isRequesting
-      ? "pending"
-      : "none";
+  const mergedState = isLoading
+    ? "loading"
+    : state === "friend" ||
+      state === "pending" ||
+      state === "incoming" ||
+      state === "none"
+    ? state
+    : user.isFriend
+    ? "friend"
+    : isRequesting
+    ? "pending"
+    : "none";
 
   useEffect(() => {
     if (user?.username) addRecentSearch(user.username);
@@ -109,7 +111,7 @@ const ProfileView = ({
   });
 
   const items: diaries[] = useMemo(
-    () => diaryPages?.pages.flatMap((p) => p?.result?.diaries ?? []) ?? [],
+    () => diaryPages?.pages.flatMap((p) => p?.result?.contents ?? []) ?? [],
     [diaryPages]
   );
 
@@ -151,7 +153,8 @@ const ProfileView = ({
   const recentTitle = language === "KO" ? "최근 일기" : "Recent diaries";
   const viewMoreLabel = language === "KO" ? "더보기" : "View more";
   const cannotLoad =
-    t.CannotLoadList ?? (language === "KO" ? "목록을 불러올 수 없어요." : "Cannot load list.");
+    t.CannotLoadList ??
+    (language === "KO" ? "목록을 불러올 수 없어요." : "Cannot load list.");
 
   return (
     <div className="flex flex-col w-full h-full bg-white rounded-2xl shadow overflow-hidden">
@@ -170,7 +173,10 @@ const ProfileView = ({
             <div className="text-base text-gray-500">@{user.username}</div>
           </div>
         </div>
-        <button className="text-gray-400 hover:text-gray-600 cursor-pointer" onClick={onClose}>
+        <button
+          className="text-gray-400 hover:text-gray-600 cursor-pointer"
+          onClick={onClose}
+        >
           <X size={24} />
         </button>
       </div>
@@ -178,7 +184,10 @@ const ProfileView = ({
       {/* 액션 버튼 */}
       <div className="px-8 mb-6 flex gap-4">
         {mergedState === "loading" ? (
-          <button className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400" disabled>
+          <button
+            className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-400"
+            disabled
+          >
             {t.loadingLabel}
           </button>
         ) : mergedState === "friend" ? (
@@ -194,7 +203,11 @@ const ProfileView = ({
             disabled
             className="flex-1 py-3 rounded-xl bg-[#EDF3FE] text-[#618BFD] text-base font-semibold cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <img src="/images/requestingIcon.svg" alt="요청중" className="w-5 h-5" />
+            <img
+              src="/images/requestingIcon.svg"
+              alt="요청중"
+              className="w-5 h-5"
+            />
             {t.pendingLabel}
           </button>
         ) : mergedState === "incoming" ? (
@@ -231,7 +244,9 @@ const ProfileView = ({
         <div className="mx-auto w-full max-w-[640px]">
           {/* 헤더 */}
           <div className="flex items-center justify-between border-t border-gray-100 pt-4 mb-3">
-            <h3 className="text-base font-semibold text-gray-900">{recentTitle}</h3>
+            <h3 className="text-base font-semibold text-gray-900">
+              {recentTitle}
+            </h3>
             <button
               onClick={handleViewDiaryList}
               className="text-sm text-[#4170FE] hover:underline cursor-pointer"
@@ -256,7 +271,11 @@ const ProfileView = ({
                   
                 "
               >
-                <CommonComponentInDiaryNFeed props={d} variant="friendPreview" rounded={true} />
+                <CommonComponentInDiaryNFeed
+                  props={d}
+                  variant="friendPreview"
+                  rounded={true}
+                />
               </div>
             ))}
 

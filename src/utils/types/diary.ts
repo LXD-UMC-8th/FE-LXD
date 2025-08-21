@@ -129,7 +129,7 @@ export type diaries = {
 };
 
 export type getDiariesResult = {
-  diaries: diaries[];
+  contents: diaries[];
   page: number;
   size: number;
   hasNext: boolean;

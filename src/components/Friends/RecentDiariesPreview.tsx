@@ -46,7 +46,7 @@ const RecentDiariesPreview = ({ memberId }: Props) => {
   };
 
   const items: diaries[] =
-    data?.pages.flatMap((p) => p?.result?.diaries ?? []) ?? [];
+    data?.pages.flatMap((p) => p?.result?.contents ?? []) ?? [];
 
   // 안전 라벨 (번역키 없이)
   const recentTitle = language === "KO" ? "최근 일기" : "Recent diaries";

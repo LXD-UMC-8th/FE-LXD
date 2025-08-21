@@ -35,13 +35,13 @@ const FeedFriendTab = () => {
   return (
     <div className="w-260 mb-10">
       {data?.pages.flatMap((page) =>
-        page.result.diaries
-          .filter((diary: diaries) => diary.visibility !== "PRIVATE")
+        page.result.contents
+          .filter((contents: diaries) => contents.visibility !== "PRIVATE")
           .map((data: diaries) => (
             <CommonComponentInDiaryNFeed key={data.diaryId} props={data} />
           ))
       )}
-      {data?.pages[0].result.diaries.length === 0 &&
+      {data?.pages[0].result.contents.length === 0 &&
         !data.pages[0].result.hasNext && (
           <div className="text-grey-500 text-center mt-4">{t.FriendFeedX}</div>
         )}
