@@ -237,8 +237,8 @@ const DiaryDetailPage = () => {
   if (isDiaryPending) return <LoadingModal />;
 
   return (
-    <div className="flex justify-center items-start mx-auto px-6 pt-6">
-      <div className="w-full max-w-[750px]">
+    <div className="flex justify-start items-start w-full max mx-auto px-6 pt-6 gap-6">
+      <div className="flex-1 min-w-0">
         {/* 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
