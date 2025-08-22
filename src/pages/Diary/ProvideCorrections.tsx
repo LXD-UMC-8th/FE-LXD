@@ -1,23 +1,22 @@
 import { useEffect, useState, useRef, type SyntheticEvent } from "react";
 import { flushSync } from "react-dom";
-import PrevButton from "../Common/PrevButton";
-import TitleHeader from "../Common/TitleHeader";
-import DiaryContent from "./DiaryContent";
+
 import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import LoadingModal from "../Common/LoadingModal";
+
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { ContentsDTO } from "../../utils/types/correction";
-import CorrectionsInDiaryDetail from "./CorrectionsInDiaryDetail";
-import CorrectionModal from "./CorrectionModal";
+import PrevButton from "../../components/Common/PrevButton";
+import TitleHeader from "../../components/Common/TitleHeader";
+import DiaryContent from "../../components/Diary/DiaryContent";
+import CorrectionModal from "../../components/Diary/CorrectionModal";
+import LoadingModal from "../../components/Common/LoadingModal";
+import CorrectionsInDiaryDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 
-type PassedState = {
-  stats?: { commentCount?: number; likeCount?: number; correctCount?: number };
-  meta?: { diaryId?: number };
-};
+
 
 type OptimisticContents = ContentsDTO & { _optimistic?: boolean };
 
@@ -28,8 +27,6 @@ const ProvideCorrections = () => {
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
   const navigate = useNavigate();
-  const location = useLocation();
-  const passed = (location.state ?? {}) as PassedState;
 
   const editedInputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -245,10 +242,6 @@ const ProvideCorrections = () => {
     );
   };
 
-  const commentCount = passed.stats?.commentCount ?? 0;
-  const likeCount = passed.stats?.likeCount ?? 0;
-  const correctCount = passed.stats?.correctCount ?? 0;
-
   return (
     <div
       className="flex justify-center items-start mx-auto px-6 sm:px-40 pt-6 relative"
@@ -271,23 +264,7 @@ const ProvideCorrections = () => {
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
           <div ref={contentAreaRef}>
-            <DiaryContent
-              title={diary?.title ?? ""}
-              lang={diary?.language ?? ""}
-              visibility={diary?.visibility ?? ""}
-              profileImg={diary?.profileImg ?? "/images/profileImage.svg"}
-              content={diary?.content}
-              writerNickname={diary?.writerNickName}
-              writerUsername={diary?.writerUserName}
-              stats={[
-                { label: String(commentCount), icon: "/images/CommonComponentIcon/CommentIcon.svg", alt: "댓글" },
-                { label: String(likeCount), icon: "/images/CommonComponentIcon/LikeIcon.svg", alt: "좋아요" },
-                { label: String(correctCount), icon: "/images/CommonComponentIcon/CorrectIcon.svg", alt: "교정" },
-              ]}
-              diaryId={diary?.diaryId ?? 0}
-              createdAt={diary?.createdAt ?? ""}
-              {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-            />
+            {diary && <DiaryContent props={diary} />}
           </div>
         </div>
       </div>

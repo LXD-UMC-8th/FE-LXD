@@ -19,9 +19,7 @@ export function useWritingSubmit() {
       localStorage.removeItem("title");
       localStorage.removeItem("content");
       localStorage.removeItem("thumbImg");
-      console.log("writing submit successful");
-      console.log(data);
-      navigate(`/feed/${data.result.diaryId}`);
+      navigate(`/mydiary/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
       console.error("Writing submission failed:", err);
@@ -36,7 +34,11 @@ export const useUpdateDiary = () => {
     mutationKey: ["UpdateDiary"],
     mutationFn: (body: DiaryUploadRequestDTO) => updateDiary(body),
     onSuccess: (data) => {
-      navigate(`/feed/${data.result.diaryId}`);
+      localStorage.removeItem("style");
+      localStorage.removeItem("title");
+      localStorage.removeItem("content");
+      localStorage.removeItem("thumbImg");
+      navigate(`/mydiary/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
       console.error("Writing update failed:", err);

@@ -14,7 +14,10 @@ import { useDeleteDiaryComments } from "../../hooks/mutations/DiaryComment/useDe
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import type { DiaryCommentDTO, DiaryCommentGetResponseDTO } from "../../utils/types/diaryComment";
+import type {
+  DiaryCommentDTO,
+  DiaryCommentGetResponseDTO,
+} from "../../utils/types/diaryComment";
 import CommentItem from "../../components/Diary/CommentItem";
 
 const DiaryDetailPage = () => {
@@ -23,6 +26,7 @@ const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
+  const isMyDiaryTab = location.pathname.startsWith("/mydiary");
 
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
@@ -83,7 +87,8 @@ const DiaryDetailPage = () => {
   } = useGetDiaryComments();
 
   // 일기 댓글 작성 (댓글 + 답글)
-  const { mutate: postDiaryComment, isPending: isPostingComment } = usePostDiaryComments();
+  const { mutate: postDiaryComment, isPending: isPostingComment } =
+    usePostDiaryComments();
 
   // 일기 댓글 작성
   const { mutate: deleteDiaryComment } = useDeleteDiaryComments();
@@ -132,8 +137,8 @@ const DiaryDetailPage = () => {
     return (
       <div>
         <div>
-          잘못된 접근입니다.
-          <button onClick={() => navigate("/feed")}>피드로 돌아가기</button>
+          {t.WrongAccess}
+          <button onClick={() => navigate("/feed")}>{t.GoBackToFeed}</button>
         </div>
       </div>
     );
@@ -223,6 +228,11 @@ const DiaryDetailPage = () => {
     );
   };
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const focusTextarea = () => {
+    textareaRef.current?.focus();
+  };
+
   // 로딩
   if (isDiaryPending) return <LoadingModal />;
 
@@ -232,56 +242,32 @@ const DiaryDetailPage = () => {
         {/* 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
-          <button
-            onClick={_handleCorrectionsClick}
-            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 
-            font-pretendard font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
-          >
-            <img
-              src="/images/correctionpencil.svg"
-              alt="교정 아이콘"
-              className="w-[20px] h-[21px] group-hover:hidden"
-            />
-            <img
-              src="/images/CorrectHover.svg"
-              alt="교정 아이콘 hover"
-              className="w-[20px] h-[21px] hidden group-hover:block transition-300"
-            />
-            {t.CorrectButton}
-          </button>
+          {!isMyDiaryTab && (
+            <button
+              onClick={_handleCorrectionsClick}
+              className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
+            >
+              <img
+                src="/images/correctionpencil.svg"
+                alt="correction"
+                className="w-[20px] h-[21px] group-hover:hidden"
+              />
+              <img
+                src="/images/CorrectHover.svg"
+                alt="correction hover"
+                className="w-[20px] h-[21px] hidden group-hover:block transition-300"
+              />
+              {t.CorrectButton}
+            </button>
+          )}
         </div>
 
         <div className="bg-white p-8 rounded-[10px]">
           {diary && (
             <DiaryContent
-              title={diary.title}
-              lang={diary.language}
-              visibility={diary.visibility}
-              content={diary.content}
-              profileImg={diary.profileImg}
-              writerUsername={diary.writerUserName}
-              writerNickname={diary.writerNickName}
-              stats={[
-                {
-                  label: String(stableTotal),
-                  icon: "/images/CommonComponentIcon/CommentIcon.svg",
-                  alt: "댓글",
-                },
-                {
-                  label: String(diary.likeCount ?? 0),
-                  icon: "/images/CommonComponentIcon/LikeIcon.svg",
-                  alt: "좋아요",
-                },
-                {
-                  label: String(diary.correctCount ?? 0),
-                  icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-                  alt: "교정",
-                },
-              ]}
-              diaryId={diary.diaryId}
-              createdAt={diary.createdAt ?? ""}
+              props={diary}
               {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              writerId={diary.writerId}
+              focusTextarea={focusTextarea}
             />
           )}
 
@@ -301,6 +287,7 @@ const DiaryDetailPage = () => {
             {/* 최상위 댓글 입력창 */}
             <div className="mb-5 relative">
               <textarea
+                ref={textareaRef}
                 placeholder={t.CommentPlaceholder}
                 className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
                 rows={3}
@@ -357,7 +344,7 @@ const DiaryDetailPage = () => {
                 disabled={uiPage === 0 || isCommentsPending}
                 className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                <img src="/images/CommentsPrevButton.svg" />
+                <img alt="PrevImg" src="/images/CommentsPrevButton.svg" />
               </button>
 
               {(() => {
@@ -379,7 +366,9 @@ const DiaryDetailPage = () => {
                     onClick={() => goToUiPage(p)}
                     disabled={isCommentsPending}
                     className={`px-3 py-1 rounded cursor-pointer ${
-                      p === uiPage ? "bg-gray-200 text-black" : "hover:bg-gray-50"
+                      p === uiPage
+                        ? "bg-gray-200 text-black"
+                        : "hover:bg-gray-50"
                     }`}
                   >
                     {p + 1}
@@ -392,7 +381,7 @@ const DiaryDetailPage = () => {
                 disabled={uiPage >= totalPages - 1 || isCommentsPending}
                 className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                <img src="/images/CommentsNextButton.svg" />
+                <img alt="NextImg" src="/images/CommentsNextButton.svg" />
               </button>
             </div>
           </div>
@@ -402,15 +391,24 @@ const DiaryDetailPage = () => {
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
         <div className="flex items-center gap-2">
-          <img alt="correction image" src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+          <img
+            alt="correction image"
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
+          <p className="text-subhead3 font-semibold py-3">
+            {t.CorrectionsInDiary}
+          </p>
         </div>
 
         {isCorrectionsPending && <LoadingModal />}
 
         {(correctionData?.result?.corrections?.contents ?? []).map(
           (correction: ContentsDTO) => (
-            <CorrectionsInFeedDetail key={correction.correctionId} props={correction} />
+            <CorrectionsInFeedDetail
+              key={correction.correctionId}
+              props={correction}
+            />
           )
         )}
       </div>
