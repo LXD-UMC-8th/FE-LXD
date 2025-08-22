@@ -3,7 +3,7 @@ import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
 import DiaryContent from "../../components/Diary/DiaryContent";
 import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -12,11 +12,6 @@ import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { ContentsDTO } from "../../utils/types/correction";
 import CorrectionsInDiaryDetail from "../../components/Diary/CorrectionsInDiaryDetail";
 
-type PassedState = {
-  stats?: { commentCount?: number; likeCount?: number; correctCount?: number };
-  meta?: { diaryId?: number };
-};
-
 const ProvideCorrections = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -24,8 +19,6 @@ const ProvideCorrections = () => {
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
   const navigate = useNavigate();
-  const location = useLocation();
-  const passed = (location.state ?? {}) as PassedState;
 
   const [selectedText, setSelectedText] = useState("");
   const [showModal, setShowModal] = useState(false);

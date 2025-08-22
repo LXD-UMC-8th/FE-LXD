@@ -50,7 +50,7 @@ const DiaryContent = ({
   focusTextarea,
 }: {
   props: DiaryContentProps;
-  focusTextarea: () => void;
+  focusTextarea?: () => void;
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -114,7 +114,7 @@ const DiaryContent = ({
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
-        focusTextarea();
+        if (focusTextarea) focusTextarea();
         break;
       case 1:
         isLiked
