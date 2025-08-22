@@ -3,6 +3,9 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    uploadFailed: string;
+    maxImages: string;
+    maxOneImage: string;
     logoutAlert: string;
     post: string;
     posting: string;
@@ -289,6 +292,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    maxOneImage: "You can only add one image at a time.",
     posting: "Posting...",
     GoBackToFeed: "Go back to feed",
     WrongAccess: "Invalid access.",
@@ -640,9 +644,14 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     NoComments: "No comments yet.",
     post: "Post",
     logoutAlert: "You have been logged out.",
+    maxImages: "You can add a maximum of 5 images.",
+    uploadFailed: "The image is too large or the format is incorrect.",
   },
 
   [Language.KOREAN]: {
+    uploadFailed:"사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
+    maxImages: "이미지는 최대 5개까지 추가할 수 있습니다.",
+    maxOneImage: "이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.",
     post: "등록",
     posting: "등록중...",
     GoBackToFeed: "피드로 돌아가기",

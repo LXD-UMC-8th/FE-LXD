@@ -2,6 +2,8 @@ import { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
 
 const MAX_IMAGES = 5;
 
@@ -11,6 +13,9 @@ interface WritingEditorProps {
 }
 
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
+  const { language } = useLanguage();
+  const t = translate[language];
+
   const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
@@ -40,11 +45,11 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
       if (files) {
         const fileList = Array.from(files);
         if (files.length > 1) {
-          alert(`이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.`);
+          alert(t.maxOneImage);
           return;
         }
         if (fileList.length + currentImageCount > MAX_IMAGES) {
-          alert(`이미지는 최대 ${MAX_IMAGES}개까지만 추가할 수 있습니다.`);
+          alert(t.maxImages);
           return;
         }
         // const editorRange = editor.getSelection(true);
@@ -158,9 +163,8 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
               }
               console.log("thumbImage", localStorage.getItem("thumbImg"));
             })
-            .catch((err) => {
-              console.error("Upload failed", err.response || err);
-              alert("Upload failed—check console for details.");
+            .catch(() => {
+              alert(t.uploadFailed);
               const range = editor.getSelection(true)!;
               editor.deleteText(range.index - 1, 1);
             });

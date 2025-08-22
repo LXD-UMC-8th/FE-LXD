@@ -9,7 +9,7 @@ import type {
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export async function getNotifications(pageParam: number, size: number) {
-  console.log("fetchNotifications called");
+  
   const res = await axiosInstance.get("/notifications", {
     params: {
       page: pageParam,

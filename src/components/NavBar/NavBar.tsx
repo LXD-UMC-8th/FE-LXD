@@ -84,7 +84,7 @@ const NavBar = () => {
       const result = TotalData.result.contents?.every(
         (note: NotificationContentProps) => note.read === true
       );
-      console.log("TotalData", result);
+
       setHasAnyRead(result);
     };
 
