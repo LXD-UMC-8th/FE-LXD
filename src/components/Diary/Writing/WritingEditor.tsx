@@ -1,9 +1,11 @@
 import { useMemo, useRef, useCallback, useEffect } from "react";
-import ReactQuill from "react-quill-new";
+import ReactQuill, { Quill } from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import { ImageResize } from "quill-image-resize-module-ts";
+Quill.register("modules/imageResize", ImageResize);
 
 const MAX_IMAGES = 5;
 
@@ -204,6 +206,18 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
       onClick={handleWrapperClick}
       data-role="diary-content"
     >
+      <style>{`
+    /* Make images responsive inside the editor while preserving aspect ratio */
+    .custom-quill-editor .ql-editor img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Optional: avoid layout breaks with long content */
+    .custom-quill-editor .ql-editor {
+      overflow-wrap: anywhere;
+    }
+  `}</style>
       <ReactQuill
         ref={quillRef}
         className="custom-quill-editor w-full mb-10 h-auto min-h-150 bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] border-none"

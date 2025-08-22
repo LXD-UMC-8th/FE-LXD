@@ -27,7 +27,7 @@ const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
-  const isMyDiaryTab = location.pathname.startsWith("/mydiary");
+  
 
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
