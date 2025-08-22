@@ -11,7 +11,7 @@ export type NotificationContentProps = {
   buttonField?: boolean;
 };
 
-type part = { type: string; value: string };
+export type part = { type: string; value: string };
 
 export type getNotificationsResponseContent = {
   totalElements: number;

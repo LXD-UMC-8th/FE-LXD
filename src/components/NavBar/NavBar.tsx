@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { data, NavLink } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import NavProfileModal from "./NavProfileModal";
 import Notification from "./Notification";
@@ -32,6 +32,23 @@ const NavBar = () => {
     es.addEventListener("notification", (event) => {
       console.log("📨 새 알림 도착:", event);
       // 알림 UI 업데이트 등
+    });
+    es.addEventListener("read", (event) => {
+      console.log("📨 알림 읽음:", event);
+      setOnChangeSetting((prev) => !prev);
+    });
+
+    es.addEventListener("connect", (event) => {
+      console.log("📨 SSE 연결 성공:", event);
+    });
+
+    es.addEventListener("notification-created", (event) => {
+      console.log("📨 새 알림:", event);
+    });
+
+    es.addEventListener("notification-deleted", (event) => {
+      console.log("📨 알림 삭제됨:", event);
+      setOnChangeSetting((prev) => !prev);
     });
 
     es.onmessage = (event) => {
