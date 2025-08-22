@@ -1,9 +1,13 @@
 import Avatar from "../Common/Avatar";
-import type { NotificationContentProps } from "../../utils/types/notification";
+import type {
+  NotificationContentProps,
+  part,
+} from "../../utils/types/notification";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { postFriendAccept, patchFriendRefuse } from "../../apis/friend";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const NotificationContent = ({
   notifications,
@@ -13,6 +17,7 @@ const NotificationContent = ({
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
+  const [makeNewNotification, setMakeNewNotification] = useState<part[]>();
 
   const handleAcceptFriend = () => {
     // notifications.redirectUrl에서 memberId 추출
@@ -20,15 +25,30 @@ const NotificationContent = ({
     if (requesterId) {
       postFriendAccept(Number(requesterId));
       navigate(`/friendslist`, { state: { select: 1 } });
+      window.location.reload();
     }
+    setMakeNewNotification(
+      notifications.messageParts
+        ? [
+            {
+              ...notifications.messageParts[0],
+              type: "text",
+              value:
+                language === "KO"
+                  ? "친구 요청을 수락했습니다."
+                  : "'s friend request has been accepted.",
+            },
+          ]
+        : undefined
+    );
   };
   const handleRefuseFriend = () => {
     // notifications.redirectUrl에서 memberId 추출
     const requesterId = notifications.redirectUrl?.split("/members/")[1];
-    console.log("requesterId", requesterId, typeof Number(requesterId));
     if (requesterId) {
       patchFriendRefuse(Number(requesterId));
     }
+    window.location.reload(); 
   };
 
   const navigate = useNavigate();
@@ -41,11 +61,12 @@ const NotificationContent = ({
       navigate(`/feed/${diaryId}`);
     }
   };
+
   return (
     <div
       className={`${
         notifications.read ? "bg-gray-200" : "bg-white"
-      } w-115 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
+      } w-112 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
       role="link"
       onClick={navigateToEvent}
     >
@@ -55,17 +76,30 @@ const NotificationContent = ({
       <div>
         <div className="flex">
           <p className="text-sm">
-            {notifications.messageParts.map((part, idx) => {
-              if (part.type === "bold") {
-                return (
-                  <span key={idx} className="font-bold">
-                    {part.value}
-                  </span>
-                );
-              } else {
-                return <span key={idx}>{part.value}</span>;
-              }
-            })}
+            {makeNewNotification &&
+              makeNewNotification.map((part, idx) => {
+                if (part.type === "bold") {
+                  return (
+                    <span key={idx} className="font-bold">
+                      {part.value}
+                    </span>
+                  );
+                } else {
+                  return <span key={idx}>{part.value}</span>;
+                }
+              })}
+            {!makeNewNotification &&
+              notifications.messageParts.map((part, idx) => {
+                if (part.type === "bold") {
+                  return (
+                    <span key={idx} className="font-bold">
+                      {part.value}
+                    </span>
+                  );
+                } else {
+                  return <span key={idx}>{part.value}</span>;
+                }
+              })}
             <span className="text-gray-500">
               &nbsp;&nbsp;&nbsp; {notifications.createdAt}
             </span>

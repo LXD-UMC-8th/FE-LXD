@@ -1,4 +1,3 @@
-// src/components/Friends/Tabs/FindTab.tsx
 import { useState } from "react";
 import FriendListPanel from "../FriendListPanel";
 import ProfileView from "../ProfileView";
@@ -8,12 +7,13 @@ import { addRecentSearch } from "../../../utils/types/recentSearch";
 import { postFriendRequest } from "../../../apis/friend";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
+import axios from "axios";
 
 interface Friend {
   id: number;            // 서버 memberId에 해당
   name: string;
   username: string;
-  image?: string | null; // ✅ null 허용 (FriendListPanel과 호환)
+  image?: string | null; 
   isFriend: boolean;
 }
 
@@ -31,13 +31,19 @@ const FindTab = () => {
 
   const handleSendRequest = async (username: string, memberId: number) => {
     let successOrAlreadySent = false;
+
     try {
+      
       await postFriendRequest({ receiverId: memberId });
       successOrAlreadySent = true;
-    } catch (err: any) {
-      console.error("❌ 친구 요청 실패: ", err);
-      if (err?.response?.status === 409) successOrAlreadySent = true;
-      else alert(t.friendRequestFailed);
+    } catch (err: unknown) {
+      
+      if (axios.isAxiosError(err) && err.response?.status === 409) {//409 에러 떠도 Axios가 Promise를 reject 해서 콘솔이 찍히는거임!
+        successOrAlreadySent = true;
+      } else {
+        console.error("❌ 친구 요청 실패:", err);
+        alert(t.friendRequestFailed);
+      }
     }
 
     if (successOrAlreadySent) {
@@ -82,7 +88,7 @@ const FindTab = () => {
               id: selectedUser.id,
               name: selectedUser.name,
               username: selectedUser.username,
-              image: selectedUser.image ?? undefined, // ✅ null → undefined 정규화
+              image: selectedUser.image ?? undefined, 
               isFriend: selectedUser.isFriend,
             }}
             onClose={onClearSelection}
@@ -98,7 +104,7 @@ const FindTab = () => {
             <img
               src="/images/findtabpic.svg"
               alt="find friends"
-              className="w-[250000px] max-w-full mb-6 rounded-xl"  // ✅ 오타 수정
+              className="w-[25000px] max-w-full mb-6 rounded-xl"  
             />
             <p className="text-xl font-semibold text-black">
               {t.findFriendsHeadline}

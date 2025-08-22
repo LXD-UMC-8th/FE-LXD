@@ -6,6 +6,7 @@ import { useLanguage } from "../../context/LanguageProvider";
 import { useEffect, useMemo, useState } from "react";
 import { getDiaryMySummary } from "../../apis/diary";
 import type { DiarySummary } from "../../utils/types/diary";
+import PrevButton from "../../components/Common/PrevButton";
 const DiaryPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -28,6 +29,9 @@ const DiaryPage = () => {
   return (
     <div className="bg-gray-100 flex flex-cols gap-10 justify-between ml-10">
       <div>
+        <div className="px-5">
+          <PrevButton navigateURL={-1} />
+        </div>
         {_isDiarySummary && <DiaryHeader DiaryHeaderProps={_isDiarySummary} />}
         {/*다이어리 밑 내용 추가 구분선*/}
         <ModalWithTabs key={language} tabvalue={tabvalue} />

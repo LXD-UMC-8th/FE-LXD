@@ -17,7 +17,7 @@ import EditProfilePage from "./pages/Navbar/EditProfilePage";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
-import ProvideCorrections from "./components/Diary/ProvideCorrections";
+import ProvideCorrections from "./pages/Diary/ProvideCorrections";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -30,6 +30,8 @@ import ChangePWPage from "./pages/Login/ChangePWPage";
 import GoogleRedirectPage from "./pages/Login/GoogleRedirectPage";
 import ChangePWinEditProfilePage from "./pages/Navbar/ChangePWinEditProfilePage";
 import EditProfileLayout from "./layouts/EditProfileLayout";
+import { LanguageProvider } from "./context/LanguageProvider";
+
 
 const publicRoutes: RouteObject[] = [
   {
@@ -77,6 +79,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/mydiary",
         element: <DiaryPage />,
+      },
+      {
+        path: "/mydiary/feed/:diaryId",
+        element: <DiaryDetailPage />,
       },
       {
         path: "/mydiary/edit/:diaryId",
@@ -129,8 +135,10 @@ function App() {
   return (
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <LanguageProvider>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </LanguageProvider>
       </QueryClientProvider>
     </div>
   );

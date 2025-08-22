@@ -16,6 +16,6 @@ export const cleanupActivityListeners = () => {
   window.removeEventListener("click", updateActivity);
 };
 
-export const wasRecentlyActive = (minutes = 5): boolean => {
+export const wasRecentlyActive = (minutes = 55): boolean => {
   return Date.now() - lastActive <= minutes * 60 * 1000;
 };

@@ -60,7 +60,9 @@ const DiaryHeaderButton = ({
           <div className="w-auto inline-flex z-10 rounded-[8px] font-bold text-white p-3 flex flex-row gap-3 items-center justify-center">
             {DiaryHeaderProps.relation === "FRIEND" && (
               <div className="flex bg-blue-200 p-3 rounded-2xl">
-                <p className="text-blue-500">{DiaryHeaderProps.relation}</p>
+                <p className="text-blue-500">
+                  {language === "KO" ? "친구" : DiaryHeaderProps.relation}
+                </p>
               </div>
             )}
             {DiaryHeaderProps.relation !== "FRIEND" &&
@@ -80,7 +82,7 @@ const DiaryHeaderButton = ({
               isRequesting(DiaryHeaderProps.username ?? "")) && (
               <div className="flex gap-3 bg-blue-200 rounded-2xl p-3">
                 <img src="/images/requestingIcon.svg" alt="Pending" />
-                  <p className="text-blue-500">{t.pending}</p>
+                <p className="text-blue-500">{t.pending}</p>
               </div>
             )}
           </div>
