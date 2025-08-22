@@ -45,10 +45,10 @@ const NotificationContent = ({
   const handleRefuseFriend = () => {
     // notifications.redirectUrl에서 memberId 추출
     const requesterId = notifications.redirectUrl?.split("/members/")[1];
-    console.log("requesterId", requesterId, typeof Number(requesterId));
     if (requesterId) {
       patchFriendRefuse(Number(requesterId));
     }
+    window.location.reload(); 
   };
 
   const navigate = useNavigate();
@@ -60,9 +60,7 @@ const NotificationContent = ({
         .split("/")[0];
       navigate(`/feed/${diaryId}`);
     }
-    
   };
-
 
   return (
     <div

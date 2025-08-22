@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { data, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import NavProfileModal from "./NavProfileModal";
 import Notification from "./Notification";

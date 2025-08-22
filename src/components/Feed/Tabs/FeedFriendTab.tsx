@@ -58,7 +58,6 @@ const FeedFriendTab = () => {
       if (!isFetching && hasNextPage) {
         fetchNextPage();
       }
-      console.log("Fetching next page of friends' diaries:", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 

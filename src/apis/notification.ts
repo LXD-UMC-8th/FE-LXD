@@ -16,7 +16,6 @@ export async function getNotifications(pageParam: number, size: number) {
       size,
     },
   });
-  console.log("fetchNotifications response:", res.data);
   return res.data;
 }
 

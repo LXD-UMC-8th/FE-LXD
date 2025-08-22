@@ -72,9 +72,9 @@ const Notification = ({ setOnChangeSetting }: NotificationProps) => {
                     patchRedirectNotification({ notificationId: note.id });
                     setOnChangeSetting((onChangeSetting) => !onChangeSetting);
                   }}
+                  key={_idx}
                 >
                   <NotificationContent
-                    key={_idx}
                     notifications={note}
                     onClick={() => setIsRender((prev) => !prev)}
                   />
