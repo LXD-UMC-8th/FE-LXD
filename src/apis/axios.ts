@@ -1,5 +1,5 @@
 // axios.ts
-import axios, { type InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
 import { postReissue } from "./auth";
 import {
@@ -40,9 +40,18 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
     if (accessToken) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      const headers = AxiosHeaders.from(config.headers);
+      headers.set("Authorization", `Bearer ${accessToken}`);
+      config.headers = headers;
     }
+
+    // FormData면 Content-Type 강제 제거 (boundary는 브라우저가 넣음)
+    if (config.data instanceof FormData) {
+      const headers = AxiosHeaders.from(config.headers);
+      headers.delete("Content-Type");
+      config.headers = headers;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -66,6 +75,7 @@ axiosInstance.interceptors.response.use(
       window.location.href = "/home";
       return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );
 

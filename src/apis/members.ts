@@ -127,18 +127,15 @@ export const patchMemberProfile = async ({
   try {
     const formData = new FormData();
 
-    // const jsonData = {
-    //   nickname,
-    //   ...(removeProfileImg ? { removeProfileImg: true } : {}),
-    // };
-    // formData.append(
-    //   "data",
-    //   new Blob([JSON.stringify(jsonData)], { type: "application/json" })
-    // );
-    const dataPart = new Blob([JSON.stringify({ nickname })], {
-      type: "application/json",
-    });
-    formData.append("data", dataPart);
+    formData.append(
+      "data",
+      new Blob([JSON.stringify({ nickname })], { type: "application/json" })
+    );
+
+    // const dataPart = new Blob([JSON.stringify({ nickname })], {
+    //   type: "application/json",
+    // });
+    // formData.append("data", dataPart);
 
     // 파일이 있을 때에만 append!
     if (profileImg instanceof File) {

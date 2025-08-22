@@ -583,7 +583,7 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
 2. We do not currently use automatic collection tools (e.g., cookies, logs); such features may be added later and will be reflected in this policy accordingly.`,
     PPTitle_2: `2. Purpose of Data Use`,
     PPBody_2: `We use personal information for the following purposes:
-- To identify and authdenticate users
+- To identify and authenticate users
 - To provide and manage the Service
 - To link user activity (e.g., posts, comments)
 - (Optional and upon consent) For future marketing or promotional purposes — users will be informed and asked for separate consent before such use is implemented`,
@@ -705,7 +705,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     loginErrorAlert: "로그인 중 오류가 발생하였습니다. 다시 시도해주세요.",
     emailLinkSuccessAlert:
       "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요.",
-    emailLinkErrorAlert: "인증 메일 발송 중 오류 발생. 다시 시도해주세요.",
+    emailLinkErrorAlert:
+      "인증 메일 발송 중 오류가 발생하였습니다. 다시 시도해주세요.",
     emailVerifySuccessAlert: "인증되었습니다.",
     emailVerifyErrorAlert:
       "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
