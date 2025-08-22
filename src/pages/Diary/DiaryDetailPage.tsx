@@ -160,7 +160,7 @@ const DiaryDetailPage = () => {
     );
   };
 
-  // 댓글 + 답글 작성
+  // 댓글 + 답글 삭제
   const _handleDeleteComment = (commentId: number) => {
     deleteDiaryComment(
       { diaryId: parsedDiaryId, commentId },

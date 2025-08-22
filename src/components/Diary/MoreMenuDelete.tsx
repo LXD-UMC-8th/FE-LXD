@@ -28,7 +28,10 @@ const MoreMenuDelete: React.FC<Props> = ({
   const isMenuOpen = openMenuId === targetId;
 
   return (
-    <div className="relative" ref={isMenuOpen ? menuWrapperRef : null}>
+    <div 
+      className="relative" 
+      ref={isMenuOpen ? menuWrapperRef : null}
+    >
       <img
         src={iconSrc}
         className="w-5 h-5 cursor-pointer"
@@ -47,6 +50,7 @@ const MoreMenuDelete: React.FC<Props> = ({
             className="min-w-[96px] h-9 bg-white border border-gray-300 rounded-[5px] text-body2 text-alert px-3 
                        cursor-pointer shadow-md hover:bg-gray-100"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               if (!confirm(confirmText)) return;
               setOpenMenuId(null);
