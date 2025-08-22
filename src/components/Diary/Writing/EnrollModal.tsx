@@ -20,7 +20,7 @@ const EnrollModal = ({
   _titleName,
   _editorRawContent,
   _style,
-  thumbImg,
+
 }: EnrollModalProps) => {
   const { diaryId } = useParams<{ diaryId: string }>();
   console.log("EnrollModal diaryId & diaryType:", diaryId, typeof diaryId);
@@ -56,7 +56,7 @@ const EnrollModal = ({
     if (window.location.href.includes("writing")) {
       postDiaryUpload({
         title: _titleName.trim(),
-        content: JSON.stringify(_editorRawContent),
+        content: _editorRawContent,
         style,
         visibility,
         commentPermission,
@@ -67,11 +67,11 @@ const EnrollModal = ({
       updateDiary({
         diaryId: Number(diaryId),
         title: _titleName.trim(),
-        content: JSON.stringify(_editorRawContent),
+        content: _editorRawContent,
         visibility,
         commentPermission,
         language,
-        thumbImg: thumbImg ?? "",
+        thumbImg: localStorage.getItem("thumbImg") ?? "",
       });
     }
   };

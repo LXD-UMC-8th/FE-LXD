@@ -32,7 +32,7 @@ export type DiaryUploadResult = {
   commentCount: number;
   likeCount: number;
   correctCount: number;
-  content?: string;
+  content: string;
   thumbnailUrl?: string;
   thumbnail?: string;
   thumbImg?: string;
