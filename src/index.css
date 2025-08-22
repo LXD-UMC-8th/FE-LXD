@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @import "react-calendar/dist/Calendar.css";
-@import "react-quill/dist/quill.snow.css";
+@import "react-quill-new/dist/quill.snow.css";
 
 html,
 body {
@@ -338,13 +338,13 @@ body {
 /* Firefox */
 .scrollbar-thin {
   scrollbar-width: thin;
-  scrollbar-color: rgba(107,114,128,0.7) transparent;
+  scrollbar-color: rgba(107, 114, 128, 0.7) transparent;
 }
 
 /* index.css */
 .scrollbar-outside {
-  padding-right: 0.5rem;    /* 본문 오른쪽 여백 */
-  margin-right: -0.5rem;    /* 스크롤바를 바깥으로 밀어냄 */
+  padding-right: 0.5rem; /* 본문 오른쪽 여백 */
+  margin-right: -0.5rem; /* 스크롤바를 바깥으로 밀어냄 */
 }
 
 /* quill editor css */
@@ -366,3 +366,12 @@ body {
   margin-right: 0;
 }
 
+.ql-editor ol.ql-list {
+  list-style-type: decimal !important;
+}
+.ql-editor ol.ql-list.ql-bullet {
+  list-style-type: disc !important;
+}
+.ql-editor ul.ql-list {
+  list-style-type: disc !important;
+}

@@ -1,6 +1,6 @@
 import { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactQuill from "react-quill-new";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
 
 const MAX_IMAGES = 5;
@@ -140,7 +140,6 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
           };
           reader.readAsDataURL(file);
 
-          //2개 이상 한 번에 업데이트 하면 등록되지 않음 << 이거 에러 해결해주기
           const fd = new FormData();
           fd.append("image", file);
           postDiaryImage(fd)
@@ -151,15 +150,13 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
               editor.deleteText(range.index - 1, 1);
               editor.insertEmbed(range.index - 1, "image", url);
               editor.setSelection(range.index, 0);
-              console.log(
-                "range.index:",
-                range.index,
-                "currentImageCount:",
-                currentImageCount
-              );
-              if (range.index === 1 && currentImageCount === 0) {
-                localStorage.setItem("thumbImg", url);
+
+              if (range.index === 1) {
+                localStorage.getItem("thumbImg")
+                  ? localStorage.removeItem("thumbImg")
+                  : localStorage.setItem("thumbImg", url);
               }
+              console.log("thumbImage", localStorage.getItem("thumbImg"));
             })
             .catch((err) => {
               console.error("Upload failed", err.response || err);
@@ -193,13 +190,30 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
     [imageHandler]
   );
 
+  const formats = useMemo(
+    () => [
+      "header",
+      "bold",
+      "italic",
+      "underline",
+      "strike",
+      "list",
+      "bullet",
+      "ordered",
+      "image",
+      "color",
+      "align",
+    ],
+    []
+  );
+
   const handleWrapperClick = () => {
     quillRef.current?.focus();
   };
 
   return (
     <div
-      className="h-full border-none hover:cursor-text focus:cursor-text [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
+      className="h-full border-none hover:cursor-text focus:cursor-text"
       onClick={handleWrapperClick}
       data-role="diary-content"
     >
@@ -210,6 +224,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         onChange={onChange}
         modules={modules}
         theme="snow"
+        formats={formats}
       />
     </div>
   );

@@ -19,8 +19,6 @@ export function useWritingSubmit() {
       localStorage.removeItem("title");
       localStorage.removeItem("content");
       localStorage.removeItem("thumbImg");
-      console.log("writing submit successful");
-      console.log(data);
       navigate(`/mydiary/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
@@ -36,6 +34,10 @@ export const useUpdateDiary = () => {
     mutationKey: ["UpdateDiary"],
     mutationFn: (body: DiaryUploadRequestDTO) => updateDiary(body),
     onSuccess: (data) => {
+      localStorage.removeItem("style");
+      localStorage.removeItem("title");
+      localStorage.removeItem("content");
+      localStorage.removeItem("thumbImg");
       navigate(`/feed/${data.result.diaryId}`);
     },
     onError: (err) => {

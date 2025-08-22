@@ -7,24 +7,25 @@ import { useState, useEffect } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { getDiaryRandomQuestion } from "../../apis/diary";
+import { getDiaryRandomQuestion, getDiaryMySummary } from "../../apis/diary";
+import { getMemberLanguage } from "../../apis/members";
 import useDebounce from "../../hooks/queries/useDebounce";
 
-  // Decode a JSON-escaped HTML string like "\"<p class=\\\"ql-align-right\\\">...\""
-  const decodeOnce = (raw?: string | null) => {
-    if (!raw) return "";
-    try {
-      const parsed = JSON.parse(raw);
-      if (typeof parsed === "string") return parsed;
-    } catch {
-      // not a JSON string literal; return as-is
-    }
-    return raw;
-  };
+// Decode a JSON-escaped HTML string like "\"<p class=\\\"ql-align-right\\\">...\""
+const decodeOnce = (raw?: string | null) => {
+  if (!raw) return "";
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === "string") return parsed;
+  } catch {
+    // not a JSON string literal; return as-is
+  }
+  return raw;
+};
 
-  // Normalize HTML for Quill: encode <img src> URLs so spaces don't break loading
-  const normalizeHtmlForQuill = (html: string) =>
-    html.replace(/src="([^"]+)"/g, (_m, url) => `src="${encodeURI(url)}"`);
+// Normalize HTML for Quill: encode <img src> URLs so spaces don't break loading
+const normalizeHtmlForQuill = (html: string) =>
+  html.replace(/src="([^"]+)"/g, (_m, url) => `src="${encodeURI(url)}"`);
 
 const WritingPage = () => {
   const { language } = useLanguage();
@@ -77,12 +78,18 @@ const WritingPage = () => {
 
   const _handleRefresh = () => {
     localStorage.setItem("title", "");
-    getDiaryRandomQuestion({ language }).then((data) => {
-      console.log("새로운 질문:", data);
-      setTitleName(data.result.content);
-      localStorage.setItem("title", data.result.content);
+    getMemberLanguage().then((data) => {
+      if (data && data.result.studyLanguage) {
+        getDiaryRandomQuestion({ language: data.result.studyLanguage }).then(
+          (questionData) => {
+            setTitleName(questionData.result.content);
+            localStorage.setItem("title", questionData.result.content);
+          }
+        );
+      }
     });
   };
+
   if (_style === "QUESTION" || _style === "질문글") {
   }
 

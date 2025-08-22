@@ -72,7 +72,8 @@ axiosInstance.interceptors.response.use(
 initActivityListeners();
 
 setInterval(() => {
-  const isActive = wasRecentlyActive(30);
+  const isActive = wasRecentlyActive();
+
   if (isActive) {
     try {
       const refreshToken = getLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
