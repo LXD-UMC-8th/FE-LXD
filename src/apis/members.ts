@@ -123,26 +123,29 @@ export const getMemberProfile = async () => {
 export const patchMemberProfile = async ({
   nickname,
   profileImg,
+  removeProfileImg,
 }: MemberProfileRequest) => {
   try {
-    const formData1 = new FormData();
-    const formData2 = new FormData();
+    const formData = new FormData();
 
-    formData1.append(
+    const jsonData = {
+      nickname,
+      ...(removeProfileImg ? { removeProfileImg: true } : {}),
+    };
+    formData.append(
       "data",
-      new Blob([JSON.stringify({ nickname })], { type: "application/json" })
+      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
     );
 
-    // 파일이 있을 때에만 append!
-    if (profileImg instanceof File) {
-      formData2.append("profileImg", profileImg);
+    if (!removeProfileImg && profileImg instanceof File) {
+      formData.append("profileImg", profileImg);
     }
 
     const response = await axiosInstance.patch<MemberProfileResponseDTO>(
       "/members/profile",
-      { params: { formData1, formData2 } }
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
     );
-    console.log(response.data.result);
     return response.data;
   } catch (err) {
     console.log("patchMemberProfile error:", err);
