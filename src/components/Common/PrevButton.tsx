@@ -1,5 +1,5 @@
 import prevvector from "../../../public/images/prevvector.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface PrevButtonProps {
   navigateURL: string | number;
@@ -7,12 +7,16 @@ interface PrevButtonProps {
 
 const PrevButton = ({ navigateURL }: PrevButtonProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavigate = () => {
     if (typeof navigateURL === "number") {
-      navigate(navigateURL); // 예: -1
+      navigate(navigateURL);
     } else {
-      navigate(navigateURL); // 예: "/feed"
+      navigate({
+        pathname: navigateURL,
+        search: location.search,
+      });
     }
   };
 

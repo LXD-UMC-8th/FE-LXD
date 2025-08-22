@@ -4,32 +4,29 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import { useEffect, useState } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getDiaryDetail, getExploreDiaries } from "../../../apis/diary";
-import type {
-  diaries,
-  getDiariesResponseDTO,
-} from "../../../utils/types/diary";
+import type { diaries, getDiariesResponseDTO } from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { QUERY_KEY } from "../../../constants/key";
 
 const ExploreTab = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const { language } = useLanguage();
   const t = translate[language];
+
   const titleKorean = "한국어";
   const titleEnglish = "English";
   const [lang, setLang] = useState<string>("KO");
+
   const handleLangChange = (value: string) => {
-    if (value === titleKorean) {
-      setLang("KO");
-    } else if (value === titleEnglish) {
-      setLang("ENG");
-    }
+    if (value === titleKorean) setLang("KO");
+    else if (value === titleEnglish) setLang("ENG");
   };
 
   const { data, isFetching, fetchNextPage, hasNextPage, isError } =
@@ -48,7 +45,7 @@ const ExploreTab = () => {
   useEffect(() => {
     if (inView) {
       if (!isFetching && hasNextPage) fetchNextPage();
-      console.log("Fetching next page of friends' diaries:", data);
+      console.log("Fetching next page of explore diaries:", data);
     }
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
@@ -59,7 +56,10 @@ const ExploreTab = () => {
       staleTime: 30_000,
     });
 
-    navigate(`/feed/${diaryId}`);
+    navigate({
+      pathname: `/feed/${diaryId}`,
+      search: location.search,
+    });
   };
 
   return (
@@ -71,11 +71,11 @@ const ExploreTab = () => {
           onClick={handleLangChange}
         />
       </div>
+
       {data?.pages.flatMap((page) =>
         page.result.contents
           .filter(
-            (contents: diaries) =>
-              contents.language === lang && contents.visibility !== "PRIVATE"
+            (d: diaries) => d.language === lang && d.visibility !== "PRIVATE"
           )
           .map((d: diaries) => (
             <div
@@ -91,15 +91,18 @@ const ExploreTab = () => {
             </div>
           ))
       )}
+
       {isFetching && (
         <div>
           <CommonComponentSkeleton />
           <CommonComponentSkeleton />
         </div>
       )}
+
       {isError && (
         <div className="text-grey-500 text-center mt-4">{t.CannotLoadList}</div>
       )}
+
       <div ref={ref}></div>
     </div>
   );
