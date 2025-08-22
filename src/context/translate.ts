@@ -3,6 +3,12 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    uploadFailed: string;
+    maxImages: string;
+    maxOneImage: string;
+    logoutAlert: string;
+    post: string;
+    posting: string;
     GoBackToFeed: string;
     WrongAccess: string;
     changeProfile: string;
@@ -290,6 +296,8 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    maxOneImage: "You can only add one image at a time.",
+    posting: "Posting...",
     GoBackToFeed: "Go back to feed",
     WrongAccess: "Invalid access.",
     DeleteConfirm: "Are you sure you want to delete this?",
@@ -640,11 +648,21 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
     PleaseEnterReason: "Please enter a description (reason).",
     NoComments: "No comments yet.",
+    post: "Post",
+    logoutAlert: "You have been logged out.",
+    maxImages: "You can add a maximum of 5 images.",
+    uploadFailed: "The image is too large or the format is incorrect.",
     postmemo: "Post",
     editmemo: "Edit",
+
   },
 
   [Language.KOREAN]: {
+    uploadFailed:"사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
+    maxImages: "이미지는 최대 5개까지 추가할 수 있습니다.",
+    maxOneImage: "이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.",
+    post: "등록",
+    posting: "등록중...",
     GoBackToFeed: "피드로 돌아가기",
     WrongAccess: "잘못된 접근입니다.",
     DeleteConfirm: "정말 삭제하시겠습니까?",
@@ -990,6 +1008,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
     PleaseEnterReason: "설명(이유)을 입력해주세요",
     NoComments: "댓글이 없습니다.",
+
+    logoutAlert: "로그아웃이 완료되었습니다.",
     postmemo: "저장하기",
     editmemo: "수정하기",
   },

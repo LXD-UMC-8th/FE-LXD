@@ -9,14 +9,13 @@ import type {
 const API = import.meta.env.VITE_API_BASE_URL;
 
 export async function getNotifications(pageParam: number, size: number) {
-  console.log("fetchNotifications called");
+  
   const res = await axiosInstance.get("/notifications", {
     params: {
       page: pageParam,
       size,
     },
   });
-  console.log("fetchNotifications response:", res.data);
   return res.data;
 }
 
@@ -37,10 +36,6 @@ export async function patchReadAllNotifications(
   totalElements: number
 ): Promise<patchReadAllNotificationResponseDTO> {
   try {
-    console.log(
-      "patchReadAllNotifications called with totalElements:",
-      totalElements
-    );
     const { data } =
       await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
         "/notifications/read-all",

@@ -48,9 +48,14 @@ interface DiaryContentProps {
 const DiaryContent = ({
   props,
   focusTextarea,
+  isMyDiary,
 }: {
   props: DiaryContentProps;
   focusTextarea?: () => void;
+  isMyDiary?: {
+    writerNickname: string;
+    writerUsername: string;
+  };
 }) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -60,7 +65,11 @@ const DiaryContent = ({
 
   // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
-  const canEdit = isMyDiaryTab || cameFromMyDiary;
+  const canEdit =
+    isMyDiaryTab ||
+    cameFromMyDiary ||
+    (isMyDiary?.writerUsername === props.writerUsername &&
+      isMyDiary?.writerNickname === props.writerNickname);
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -160,6 +169,7 @@ const DiaryContent = ({
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpen((prev) => !prev);
+              console.log("더보기 아이콘 클릭");
             }}
             alt="더보기 아이콘"
           />

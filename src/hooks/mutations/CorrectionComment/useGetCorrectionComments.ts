@@ -12,11 +12,11 @@ export const useGetCorrectionComments = () => {
     CorrectionCommentGetRequestDTO
   >({
     mutationFn: getCorrectionComments,
-    onSuccess: (data) => {
-      console.log("교정 댓글 목록 불러오기 성공", data);
+    onSuccess: () => {
+    
     },
-    onError: (error) => {
-      console.log("교정 댓글 불러오기 실패", error.message);
+    onError: () => {
+      
     },
   });
 };

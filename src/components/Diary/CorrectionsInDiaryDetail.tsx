@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
 import type { ContentsDTO } from "../../utils/types/correction";
-import {
-  useGetCorrectionComments,
-} from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
-import {
-  usePostCorrectionComment,
-} from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
+import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
+import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -56,21 +52,22 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   } = useGetCorrectionComments();
 
   // POST 래핑 훅
-  const { mutate: postComment, isPending: posting } = usePostCorrectionComment();
+  const { mutate: postComment, isPending: posting } =
+    usePostCorrectionComment();
 
   // ✅ 서버에서 받은 댓글 배열 (키: contents)
   const comments: CorrectionCommentDTO[] = useMemo(
     () =>
-      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result?.contents ??
-        []) as CorrectionCommentDTO[],
+      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result
+        ?.contents ?? []) as CorrectionCommentDTO[],
     [listData]
   );
 
   // ✅ 총 댓글 수: 서버 totalElements > props.commentCount > 0
   const total: number = useMemo(() => {
-    const totalFromServer =
-      (listData as CorrectionCommentGetResponseDTO | undefined)?.result
-        ?.totalElements;
+    const totalFromServer = (
+      listData as CorrectionCommentGetResponseDTO | undefined
+    )?.result?.totalElements;
     if (typeof totalFromServer === "number") return totalFromServer;
     if (typeof props.commentCount === "number") return props.commentCount;
     return 0;
@@ -238,7 +235,9 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                     createdAt={c.createdAt}
                   />
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
+                    <p className="text-body2 whitespace-pre-wrap">
+                      {c.content}
+                    </p>
                   </div>
                   <div className="border-t border-gray-200 my-2" />
                 </li>
@@ -267,7 +266,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               disabled={posting || !commentText.trim()}
               className="w-12 text-caption bg-black rounded-[5px] text-white cursor-pointer hover:scale-105 duration-300 disabled:opacity-60 disabled:hover:scale-100"
             >
-              {posting ? "등록중" : "등록"}
+              {posting ? t.posting : t.post}
             </button>
           </div>
         </div>
