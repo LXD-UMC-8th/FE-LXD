@@ -97,9 +97,9 @@ const CommonComponentInDiaryNFeed = ({
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
-        navigate(`/feed/${props.diaryId}`, {
-          state: isMyDiaryTab ? { from: "mydiary" } : undefined,
-        });
+        // navigate(`/feed/${props.diaryId}`, {
+        //   state: isMyDiaryTab ? { from: "mydiary" } : undefined,
+        // });
         break;
       case 1:
         isLiked
