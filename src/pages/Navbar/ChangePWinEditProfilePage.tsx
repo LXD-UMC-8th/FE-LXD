@@ -17,7 +17,6 @@ import {
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
 
 const ChangePWinEditProfilePage = () => {
   const { language } = useLanguage();

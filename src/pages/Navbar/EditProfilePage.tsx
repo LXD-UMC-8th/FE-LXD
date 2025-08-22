@@ -90,6 +90,7 @@ const EditProfilePage = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
       alert(t.changeProfile);
+      window.location.reload();
 
       if (objectURL) {
         URL.revokeObjectURL(objectURL);

@@ -125,28 +125,25 @@ export const patchMemberProfile = async ({
   profileImg,
 }: MemberProfileRequest) => {
   try {
-    const formData = new FormData();
+    const formData1 = new FormData();
+    const formData2 = new FormData();
 
-    formData.append(
+    formData1.append(
       "data",
       new Blob([JSON.stringify({ nickname })], { type: "application/json" })
     );
 
-    // const dataPart = new Blob([JSON.stringify({ nickname })], {
-    //   type: "application/json",
-    // });
-    // formData.append("data", dataPart);
-
     // 파일이 있을 때에만 append!
     if (profileImg instanceof File) {
-      formData.append("profileImg", profileImg);
+      formData2.append("profileImg", profileImg);
     }
 
-    const { data } = await axiosInstance.patch<MemberProfileResponseDTO>(
+    const response = await axiosInstance.patch<MemberProfileResponseDTO>(
       "/members/profile",
-      formData
+      { params: { formData1, formData2 } }
     );
-    return data;
+    console.log(response.data.result);
+    return response.data;
   } catch (err) {
     console.log("patchMemberProfile error:", err);
   }

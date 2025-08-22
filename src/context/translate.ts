@@ -285,6 +285,9 @@ export const translate: Record<
     ENGToSBody_0: string;
     ENGPPTitle_0: string;
     ENGPPBody_0: string;
+    idError: string;
+    changePWsuccessAlert: string;
+    changePWErrorAlert: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -365,6 +368,9 @@ export const translate: Record<
     emailVerifyErrorAlert: "Verification Error. Please try it again.",
     signupSuccessAlert: "Signup Complete! You can now log in to your account.",
     signupErrorAlert: "Signup Error. Please try it again.",
+    changePWsuccessAlert: "Change Password Complete.",
+    changePWErrorAlert: "Change Password Error. Please try it again.",
+
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -638,6 +644,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     ENGToSBody_0: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
     ENGPPTitle_0: "Effective Date: August 2025",
     ENGPPBody_0: `This Privacy Policy explains how Team LXD ("we", "us", "our") collects, uses, and protects your personal information when you use LXD (Language Xchange Diary) (the “Service”). By using our Service, you agree to this Privacy Policy.`,
+    idError: "Id Error. Please try it again.",
   },
 
   [Language.KOREAN]: {
@@ -710,6 +717,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     emailVerifySuccessAlert: "인증되었습니다.",
     emailVerifyErrorAlert:
       "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
+    idError: "아이디 확인 중 오류가 발생했습니다",
     signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
     signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",
@@ -984,5 +992,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     ENGToSBody_0: "",
     ENGPPTitle_0: "",
     ENGPPBody_0: "",
+    changePWsuccessAlert: "비밀번호가 성공적으로 변경되었습니다.",
+    changePWErrorAlert: "비밀번호 변경 중 오류가 발생했습니다.",
   },
 };

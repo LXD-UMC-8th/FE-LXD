@@ -19,11 +19,6 @@ import { patchMemberPassword } from "../../apis/members";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
 
-// interface ChangePWPageProps {
-//   userInfo: SignupFlowProps;
-//   setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-// }
-
 const ChangePWPage = () => {
   const { userInfo, setUserInfo } = useOutletContext<{
     userInfo: SignupFlowProps;
@@ -43,7 +38,7 @@ const ChangePWPage = () => {
       patchMemberPassword(payload),
     onSuccess: (data) => {
       if (data.isSuccess) {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
+        alert(t.changePWsuccessAlert);
         console.log("비밀번호 변경 성공:", data);
       } else {
         alert(data.message || "비밀번호 변경에 실패했습니다.");
@@ -51,7 +46,7 @@ const ChangePWPage = () => {
     },
     onError: (error) => {
       console.error("비밀번호 변경 중 오류 발생:", error);
-      alert("비밀번호 변경 중 오류가 발생했습니다.");
+      alert(t.changePWErrorAlert);
     },
   });
 
