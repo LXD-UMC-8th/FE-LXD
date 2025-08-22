@@ -285,6 +285,8 @@ export const translate: Record<
     PleaseEnterCorrectedSentence: string;
     PleaseEnterReason: string;
     NoComments: string;
+    postmemo: string;
+    editmemo: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -638,6 +640,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
     PleaseEnterReason: "Please enter a description (reason).",
     NoComments: "No comments yet.",
+    postmemo: "Post",
+    editmemo: "Edit",
   },
 
   [Language.KOREAN]: {
@@ -986,5 +990,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
     PleaseEnterReason: "설명(이유)을 입력해주세요",
     NoComments: "댓글이 없습니다.",
+    postmemo: "저장하기",
+    editmemo: "수정하기",
   },
 };
