@@ -90,10 +90,6 @@ export const useLikeDiaryComment = () => {
       return { snapshots };
     },
 
-    onError: (_err, _vars, ctx) => {
-      ctx?.snapshots?.forEach(([key, oldData]) => queryClient.setQueryData(key, oldData));
-    },
-
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["diaryComments"] });
     },
