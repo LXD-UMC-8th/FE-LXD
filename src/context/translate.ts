@@ -288,7 +288,11 @@ export const translate: Record<
     PPTitle_13: string;
     PPBody_13: string;
     accept: string;
+    PleaseEnterCorrectedSentence: string;
+    PleaseEnterReason: string;
     NoComments: string;
+    postmemo: string;
+    editmemo: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -641,11 +645,16 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: `13. Changes to This Policy`,
     PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
     accept: "Accept",
+    PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
+    PleaseEnterReason: "Please enter a description (reason).",
     NoComments: "No comments yet.",
     post: "Post",
     logoutAlert: "You have been logged out.",
     maxImages: "You can add a maximum of 5 images.",
     uploadFailed: "The image is too large or the format is incorrect.",
+    postmemo: "Post",
+    editmemo: "Edit",
+
   },
 
   [Language.KOREAN]: {
@@ -996,7 +1005,12 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: ``,
     PPBody_13: ``,
     accept: "확인",
+    PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
+    PleaseEnterReason: "설명(이유)을 입력해주세요",
     NoComments: "댓글이 없습니다.",
+
     logoutAlert: "로그아웃이 완료되었습니다.",
+    postmemo: "저장하기",
+    editmemo: "수정하기",
   },
 };

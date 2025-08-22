@@ -349,7 +349,7 @@ const CorrectionComponent = ({ correction }: Props) => {
               <div key={c.commentId} className="border-t border-gray-200 pt-3">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <img
-                    src={c.profileImage ?? c.member?.profileImageUrl}
+                    src={c.profileImage ?? c.member?.profileImageUrl ?? "/images/profileImage.svg"}
                     className="h-6 w-6 rounded-full bg-gray-200"
                     alt="프로필"
                   />
@@ -382,7 +382,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             disabled={isSaving || !isDirty}
             className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
           >
-            {baselineRef.current ? "수정하기" : "저장하기"}
+            {baselineRef.current ? t.editmemo : t.postmemo}
           </button>
 
           <button
