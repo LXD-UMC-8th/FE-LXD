@@ -235,7 +235,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               {comments.map((c) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
                   <div
-                    onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
                     className="cursor-pointer"
                   >
                     <ProfileComponent
