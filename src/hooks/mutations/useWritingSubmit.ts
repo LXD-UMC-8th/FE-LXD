@@ -38,7 +38,7 @@ export const useUpdateDiary = () => {
       localStorage.removeItem("title");
       localStorage.removeItem("content");
       localStorage.removeItem("thumbImg");
-      navigate(`/feed/${data.result.diaryId}`);
+      navigate(`/mydiary/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
       console.error("Writing update failed:", err);

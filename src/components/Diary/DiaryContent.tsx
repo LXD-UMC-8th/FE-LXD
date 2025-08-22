@@ -1,21 +1,19 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useDecodedHtmlToReact } from "../../hooks/useDecodedHtmlToReact";
 import "react-quill-new/dist/quill.snow.css";
-import type ReactQuill from "react-quill-new";
 import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 
 interface DiaryContentProps {
   title?: string;
   lang?: string;
   visibility: string;
-  content: string;
+  content: string | undefined;
   profileImg?: string;
   writerUsername?: string;
   writerNickname?: string;

@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import QuestionTitle from "../../components/Diary/Writing/QuestionTitle";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-import { getDiaryRandomQuestion, getDiaryMySummary } from "../../apis/diary";
+import { getDiaryRandomQuestion } from "../../apis/diary";
 import { getMemberLanguage } from "../../apis/members";
 import useDebounce from "../../hooks/queries/useDebounce";
 
