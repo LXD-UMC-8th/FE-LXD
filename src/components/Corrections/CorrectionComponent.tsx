@@ -382,7 +382,7 @@ const CorrectionComponent = ({ correction }: Props) => {
             disabled={isSaving || !isDirty}
             className="rounded-md bg-primary-500 px-4 py-2 text-body1 font-semibold text-white hover:bg-blue-600 disabled:opacity-60 cursor-pointer"
           >
-            {baselineRef.current ? "수정하기" : "저장하기"}
+            {baselineRef.current ? t.editmemo : t.postmemo}
           </button>
 
           <button

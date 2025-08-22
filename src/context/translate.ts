@@ -283,6 +283,8 @@ export const translate: Record<
     PPBody_13: string;
     accept: string;
     NoComments: string;
+    postmemo: string;
+    editmemo: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -634,6 +636,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
     accept: "Accept",
     NoComments: "No comments yet.",
+    postmemo: "Post",
+    editmemo: "Edit",
   },
 
   [Language.KOREAN]: {
@@ -980,5 +984,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPBody_13: ``,
     accept: "확인",
     NoComments: "댓글이 없습니다.",
+    postmemo: "저장하기",
+    editmemo: "수정하기",
   },
 };
