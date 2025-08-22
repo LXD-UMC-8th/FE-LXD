@@ -3,6 +3,7 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    logoutAlert: string;
     post: string;
     posting: string;
     GoBackToFeed: string;
@@ -638,6 +639,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     accept: "Accept",
     NoComments: "No comments yet.",
     post: "Post",
+    logoutAlert: "You have been logged out.",
   },
 
   [Language.KOREAN]: {
@@ -986,5 +988,6 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPBody_13: ``,
     accept: "확인",
     NoComments: "댓글이 없습니다.",
+    logoutAlert: "로그아웃이 완료되었습니다.",
   },
 };

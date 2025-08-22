@@ -19,6 +19,7 @@ import type {
   DiaryCommentGetResponseDTO,
 } from "../../utils/types/diaryComment";
 import CommentItem from "../../components/Diary/CommentItem";
+import { getDiaryMySummary } from "../../apis/diary";
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
@@ -228,6 +229,20 @@ const DiaryDetailPage = () => {
     );
   };
 
+  const [isMyDiary, setIsMyDiary] = useState<{
+    writerNickname: string;
+    writerUsername: string;
+  }>({ writerNickname: "", writerUsername: "" });
+
+  useEffect(() => {
+    getDiaryMySummary().then((res) => {
+      setIsMyDiary({
+        writerNickname: res.result.nickname ?? "",
+        writerUsername: res.result.username ?? "",
+      });
+    });
+  }, []);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const focusTextarea = () => {
     textareaRef.current?.focus();
@@ -236,13 +251,18 @@ const DiaryDetailPage = () => {
   // 로딩
   if (isDiaryPending) return <LoadingModal />;
 
+
+
   return (
     <div className="flex justify-center items-start mx-auto px-6 pt-6">
       <div className="w-full max-w-[750px]">
         {/* 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
-          {!isMyDiaryTab && (
+          {!(
+            diary?.writerNickName === isMyDiary.writerNickname &&
+            diary?.writerUserName === isMyDiary.writerUsername
+          ) && (
             <button
               onClick={_handleCorrectionsClick}
               className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
