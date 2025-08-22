@@ -7,6 +7,7 @@ import type {
   CheckDuplicatedIDResponseDTO,
   ChangePasswordRequestDTO,
   ChangePasswordResponseDTO,
+  DeleteProfileImgResponseDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
@@ -124,29 +125,26 @@ export const getMemberProfile = async () => {
 export const patchMemberProfile = async ({
   nickname,
   profileImg,
-  removeProfileImg,
 }: MemberProfileRequest) => {
   try {
-    const formData = new FormData();
+    const formData1 = new FormData();
+    const formData2 = new FormData();
 
-    const jsonData = {
-      nickname,
-      ...(removeProfileImg ? { removeProfileImg: true } : {}),
-    };
-    formData.append(
+    formData1.append(
       "data",
-      new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+      new Blob([JSON.stringify({ nickname })], { type: "application/json" })
     );
 
-    if (!removeProfileImg && profileImg instanceof File) {
-      formData.append("profileImg", profileImg);
+    // 파일이 있을 때에만 append!
+    if (profileImg instanceof File) {
+      formData2.append("profileImg", profileImg);
     }
 
     const response = await axiosInstance.patch<MemberProfileResponseDTO>(
       "/members/profile",
-      formData,
-      { headers: { "Content-Type": "multipart/form-data" } }
+      { params: { formData1, formData2 } }
     );
+    console.log(response.data.result);
     return response.data;
   } catch (err) {
     console.log("patchMemberProfile error:", err);
@@ -164,3 +162,17 @@ export const patchMemberPassword = async (
   );
   return response.data;
 };
+
+// 프로필 이미지 삭제 API
+export const deleteMemberProfileImage =
+  async (): Promise<DeleteProfileImgResponseDTO> => {
+    try {
+      const { data } = await axiosInstance.delete<DeleteProfileImgResponseDTO>(
+        "/members/profile-image"
+      );
+      return data;
+    } catch (error) {
+      console.error("deleteMemberProfileImage error", error);
+      throw error;
+    }
+  };

@@ -28,7 +28,10 @@ import SignupPage from "./pages/Login/SignupPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import ChangePWPage from "./pages/Login/ChangePWPage";
 import GoogleRedirectPage from "./pages/Login/GoogleRedirectPage";
+import ChangePWinEditProfilePage from "./pages/Navbar/ChangePWinEditProfilePage";
+import EditProfileLayout from "./layouts/EditProfileLayout";
 import { LanguageProvider } from "./context/LanguageProvider";
+
 
 const publicRoutes: RouteObject[] = [
   {
@@ -102,8 +105,13 @@ const protectedRoutes: RouteObject[] = [
 
       {
         path: "/editprofile",
-        element: <EditProfilePage />,
+        element: <EditProfileLayout />,
+        children: [
+          { index: true, element: <EditProfilePage /> },
+          { path: "change-pw", element: <ChangePWinEditProfilePage /> },
+        ],
       },
+
       {
         path: "/settings",
         element: <SettingsPage />,

@@ -1,25 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
+import FormInput from "../../components/Login/FormInput";
 import PrevButton from "../../components/Common/PrevButton";
 import TitleHeader from "../../components/Common/TitleHeader";
-import FormInput from "../../components/Login/FormInput";
+import { useLanguage } from "../../context/LanguageProvider";
+import { translate } from "../../context/translate";
 import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
-import TopLangOptionsButton from "../../components/Login/TopLangOptionsButton";
+import { useCallback, useEffect, useState } from "react";
 import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
+import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { patchMemberPassword } from "../../apis/members";
+import type { ChangePasswordRequestDTO } from "../../utils/types/member";
+import { getEmail, postEmailVerificationinPWRequest } from "../../apis/auth";
 import {
   isEmailValid,
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import { useOutletContext, useSearchParams } from "react-router-dom";
-import { getEmail, postEmailVerificationinPWRequest } from "../../apis/auth";
-import { useMutation } from "@tanstack/react-query";
-import type { ChangePasswordRequestDTO } from "../../utils/types/member";
-import { patchMemberPassword } from "../../apis/members";
-import { useHomeLanguage } from "../../context/HomeLanguageProvider";
-import { translate } from "../../context/translate";
 
-const ChangePWPage = () => {
+const ChangePWinEditProfilePage = () => {
+  const { language } = useLanguage();
+  const t = translate[language];
   const { userInfo, setUserInfo } = useOutletContext<{
     userInfo: SignupFlowProps;
     setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
@@ -30,15 +31,13 @@ const ChangePWPage = () => {
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [searchParams] = useSearchParams();
-  const { language } = useHomeLanguage();
-  const t = translate[language];
 
   const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
       patchMemberPassword(payload),
     onSuccess: (data) => {
       if (data.isSuccess) {
-        alert(t.changePWsuccessAlert);
+        alert("비밀번호가 성공적으로 변경되었습니다.");
         console.log("비밀번호 변경 성공:", data);
       } else {
         alert(data.message || "비밀번호 변경에 실패했습니다.");
@@ -46,7 +45,7 @@ const ChangePWPage = () => {
     },
     onError: (error) => {
       console.error("비밀번호 변경 중 오류 발생:", error);
-      alert(t.changePWErrorAlert);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
     },
   });
 
@@ -189,13 +188,12 @@ const ChangePWPage = () => {
 
   return (
     <div
-      className="flex flex-col min-h-screen
+      className="flex flex-col min-h-screen 
     items-center justify-center px-4"
     >
-      <TopLangOptionsButton />
       <div className="w-[545px] items-left space-y-11">
         <section className="h-[110px] space-y-12">
-          <PrevButton navigateURL="/home" />
+          <PrevButton navigateURL="/editprofile" />
           <TitleHeader title="비밀번호 변경" />
         </section>
 
@@ -299,4 +297,4 @@ const ChangePWPage = () => {
   );
 };
 
-export default ChangePWPage;
+export default ChangePWinEditProfilePage;

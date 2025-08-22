@@ -68,6 +68,15 @@ const ToSModal = ({ open, onClose, onConfirm }: TosModalProps) => {
             <div className="flex bg-gray-200 w-130 rounded-xl px-10 py-5 w-full">
               {/* 이용약관 */}
               <div className="max-h-40 overflow-y-auto scrollbar-thin scrollbar-outside pr-2">
+                <p className="mb-4 text-subhead3 font-semibold text-gray-700">
+                  {t.LXDToS}
+                </p>
+                <p className="mb-1 text-body1 font-semibold text-gray-700">
+                  {t.ENGToSTitle_0}
+                </p>
+                <p className="mb-4 text-body2 text-gray-700 whitespace-pre-line">
+                  {t.ENGToSBody_0}
+                </p>
                 <p className="mb-1 text-body1 font-semibold text-gray-700">
                   {t.TosTitle_1}
                 </p>
@@ -176,6 +185,15 @@ const ToSModal = ({ open, onClose, onConfirm }: TosModalProps) => {
             <div className="flex bg-gray-200 w-130 rounded-xl px-10 py-5 w-full">
               {/* 개인정보처리방침 */}
               <div className="max-h-40 overflow-y-auto scrollbar-thin scrollbar-outside pr-2">
+                <p className="mb-4 text-subhead3 font-semibold text-gray-700">
+                  {t.LXDPP}
+                </p>
+                <p className="mb-1 text-body1 font-semibold text-gray-700">
+                  {t.ENGPPTitle_0}
+                </p>
+                <p className="mb-4 text-body2 text-gray-700 whitespace-pre-line">
+                  {t.ENGPPBody_0}
+                </p>
                 <p className="mb-1 text-body1 font-semibold text-gray-700">
                   {t.PPTitle_1}
                 </p>
@@ -215,11 +233,15 @@ const ToSModal = ({ open, onClose, onConfirm }: TosModalProps) => {
                 <p className="mb-1 text-body1 font-semibold text-gray-700">
                   {t.PPTitle_7}
                 </p>
-                <p className="mb-4 text-body2 text-gray-700">{t.PPBody_7}</p>
+                <p className="mb-4 text-body2 text-gray-700 whitespace-pre-line">
+                  {t.PPBody_7}
+                </p>
                 <p className="mb-1 text-body1 font-semibold text-gray-700">
                   {t.PPTitle_8}
                 </p>
-                <p className="mb-4 text-body2 text-gray-700">{t.PPBody_8}</p>
+                <p className="mb-4 text-body2 text-gray-700 whitespace-pre-line">
+                  {t.PPBody_8}
+                </p>
                 <p className="mb-1 text-body1 font-semibold text-gray-700">
                   {t.PPTitle_9}
                 </p>

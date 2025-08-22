@@ -4,10 +4,14 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
-import { getMemberProfile, patchMemberProfile } from "../../apis/members";
+import {
+  deleteMemberProfileImage,
+  getMemberProfile,
+  patchMemberProfile,
+} from "../../apis/members";
 import type { MemberProfileResponseDTO } from "../../utils/types/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import LoadingModal from "../../components/Common/LoadingModal";
+//import LoadingModal from "../../components/Common/LoadingModal";
 import { extractFilenameFromUrl } from "../../utils/profileFile";
 import { QUERY_KEY } from "../../constants/key";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -45,34 +49,49 @@ const EditProfilePage = () => {
   const t = translate[language];
 
   // 프로필 조회
-  const { data, isLoading, isError, error } =
-    useQuery<MemberProfileResponseDTO>({
-      queryKey: [QUERY_KEY.member, QUERY_KEY.profile],
-      queryFn: async () => {
-        const response = await getMemberProfile();
-        if (!response) throw new Error(t.notProfileResponse);
-        if (!response.isSuccess)
-          throw new Error(response.message || t.notProfileResponse);
-        return response;
-      },
-    });
+  const { data } = useQuery<MemberProfileResponseDTO>({
+    queryKey: [QUERY_KEY.member, QUERY_KEY.profile],
+    queryFn: async () => {
+      const response = await getMemberProfile();
+      if (!response) throw new Error(t.notProfileResponse);
+      if (!response.isSuccess)
+        throw new Error(response.message || t.notProfileResponse);
+      return response;
+    },
+  });
 
   // 저장 뮤테이션
-  const { mutate: _saveProfile, isPending: _isSaving } = useMutation({
-    mutationFn: () =>
-      patchMemberProfile({
-        nickname: userInfo.nickname.trim(),
-        profileImg:
-          userInfo.profileImgAction === "upload"
-            ? userInfo.profileImgFile
-            : null,
-        removeProfileImg: userInfo.profileImgAction === "remove",
-      }),
-    onSuccess: (_res) => {
+  const { mutate: saveProfile, isPending: isSaving } = useMutation({
+    mutationFn: async () => {
+      const nextNickname = userInfo.nickname.trim();
+      const prevNickname = data?.result.nickname ?? "";
+
+      const needDelete = userInfo.profileImgAction === "remove" && hadServerImg;
+      const needUpload = userInfo.profileImgAction === "upload";
+      const needNickUpd = nextNickname !== prevNickname;
+
+      // 1) 이미지 삭제(필요한 경우에만)
+      if (needDelete) {
+        await deleteMemberProfileImage();
+      }
+
+      // 2) 닉네임 변경이나 업로드가 있으면 patch
+      if (needUpload || needNickUpd) {
+        const res = await patchMemberProfile({
+          nickname: nextNickname,
+          profileImg: needUpload ? userInfo.profileImgFile : null, // 업로드만 전송
+        });
+
+        if (!res?.isSuccess) {
+          throw new Error(res?.message || "프로필 저장 실패");
+        }
+      }
+    },
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
       alert(t.changeProfile);
+      window.location.reload();
 
-      // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
       if (objectURL) {
         URL.revokeObjectURL(objectURL);
         setObjectURL(null);
@@ -81,6 +100,7 @@ const EditProfilePage = () => {
         ...prev,
         profileImgFile: null,
         profileImgPreview: null,
+        profileImgAction: "keep",
       }));
     },
     onError: () => {
@@ -102,6 +122,10 @@ const EditProfilePage = () => {
     }));
   }, [data]);
 
+  const handleChangePw = () => {
+    navigate("change-pw");
+  };
+
   // 미리보기 URL 정리
   useEffect(() => {
     return () => {
@@ -110,14 +134,14 @@ const EditProfilePage = () => {
   }, [objectURL]);
 
   // 화면에 보여줄 이미지: 새 미리보기 > 서버 URL > 기본 플레이스홀더
-  const _displayImage = useMemo(() => {
+  const displayImage: string | undefined = useMemo(() => {
     if (userInfo.profileImgAction === "upload") {
-      return userInfo.profileImgPreview ?? "";
+      return userInfo.profileImgPreview ?? undefined;
     }
     if (userInfo.profileImgAction === "remove") {
-      return "";
+      return undefined;
     }
-    return userInfo.profileImgUrl ?? "";
+    return userInfo.profileImgUrl ?? undefined;
   }, [
     userInfo.profileImgAction,
     userInfo.profileImgPreview,
@@ -125,43 +149,34 @@ const EditProfilePage = () => {
   ]);
 
   // 파일명: 업로드 중이면 파일명, 아니면 서버에서 추출
-  const _serverFilename = useMemo(
+  const serverFilename = useMemo(
     () => extractFilenameFromUrl(userInfo.profileImgUrl),
     [userInfo.profileImgUrl]
   );
-  const _profileName =
-    userInfo.profileImgAction === "upload"
-      ? userInfo.profileImgFile?.name ?? ""
-      : _serverFilename;
+  const profileName = useMemo(() => {
+    if (userInfo.profileImgAction === "upload") {
+      return userInfo.profileImgFile?.name ?? "";
+    }
+    if (userInfo.profileImgAction === "remove") {
+      return "";
+    }
+    return serverFilename;
+  }, [userInfo.profileImgAction, userInfo.profileImgFile, serverFilename]);
 
-  if (isLoading || !userInfo) return <LoadingModal />;
-  if (isError) {
-    const msg = error instanceof Error ? error.message : t.undefinedErrorOccur;
-    return (
-      <div className="p-6">
-        {t.donotrenderprofile}: {msg}
-      </div>
-    );
-  }
-
-  const _handleChangePw = () => {
-    navigate("/home/signup/change-pw");
-  };
-
-  const _handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const _file = e.target.files?.[0] ?? null;
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] ?? null;
 
     if (objectURL) {
       URL.revokeObjectURL(objectURL);
       setObjectURL(null);
     }
 
-    if (_file) {
-      const url = URL.createObjectURL(_file);
+    if (file) {
+      const url = URL.createObjectURL(file);
       setObjectURL(url);
       setUserInfo((prev) => ({
         ...prev,
-        profileImgFile: _file,
+        profileImgFile: file,
         profileImgPreview: url,
         profileImgAction: "upload",
       }));
@@ -174,7 +189,7 @@ const EditProfilePage = () => {
     }
   };
 
-  const _handleRemoveImage = () => {
+  const handleRemoveImage = () => {
     if (objectURL) {
       URL.revokeObjectURL(objectURL);
       setObjectURL(null);
@@ -183,11 +198,12 @@ const EditProfilePage = () => {
       ...prev,
       profileImgFile: null,
       profileImgPreview: null,
+      profileImgUrl: "",
       profileImgAction: "remove",
     }));
   };
 
-  const _handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInfo((prev) => ({ ...prev, nickname: e.target.value }));
   };
 
@@ -197,18 +213,30 @@ const EditProfilePage = () => {
     userInfo.profileImgAction === "upload" ||
     (userInfo.profileImgAction === "remove" && hadServerImg);
 
-  const _isModified =
+  const isModified =
     userInfo.nickname.trim() !== (data?.result.nickname ?? "") ||
     profileChanged;
 
-  const _handleSaveChanges = (e: React.FormEvent) => {
+  const handleSaveChanges = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!_isModified) return;
+    if (!isModified) return;
     if (userInfo.nickname.trim().length === 0) {
       alert(t.putInNick);
       return;
     }
-    _saveProfile();
+    saveProfile();
+    // console.log(
+    //   "action:",
+    //   userInfo.profileImgAction,
+    //   "preview:",
+    //   userInfo.profileImgPreview,
+    //   "url:",
+    //   userInfo.profileImgUrl,
+    //   "display:",
+    //   displayImage,
+    //   "name:",
+    //   profileName
+    // );
   };
 
   return (
@@ -223,21 +251,21 @@ const EditProfilePage = () => {
       <div className="space-y-3">
         <section className="flex w-[775px]">
           <AccountInfo
-            _id={userInfo.id}
-            _email={userInfo.email}
-            _password={userInfo.password}
-            _onChangePw={_handleChangePw}
+            id={userInfo.id}
+            email={userInfo.email}
+            password={userInfo.password}
+            onChangePw={handleChangePw}
           />
         </section>
 
         <section className="flex w-[775px]">
           <ProfileInfo
-            _profilePreview={_displayImage}
-            _profileName={_profileName}
-            _onImageChange={_handleImageChange}
-            _onRemoveImage={_handleRemoveImage}
-            _nickname={userInfo.nickname}
-            _onNicknameChange={_handleNicknameChange}
+            profilePreview={displayImage}
+            profileName={profileName}
+            onImageChange={handleImageChange}
+            onRemoveImage={handleRemoveImage}
+            nickname={userInfo.nickname}
+            onNicknameChange={handleNicknameChange}
           />
         </section>
       </div>
@@ -251,16 +279,16 @@ const EditProfilePage = () => {
         </button>
 
         <button
-          onClick={_handleSaveChanges}
-          disabled={!_isModified || _isSaving}
+          onClick={handleSaveChanges}
+          disabled={!isModified || isSaving}
           className={`px-8 py-5 rounded-md text-subhead3 font-medium
             ${
-              _isModified && !_isSaving
+              isModified && !isSaving
                 ? "bg-primary-500 text-white cursor-pointer"
                 : "bg-gray-300 text-gray-600"
             }`}
         >
-          {_isSaving ? t.Loading : t.SaveChange}
+          {isSaving ? t.Loading : t.SaveChange}
         </button>
       </section>
 
