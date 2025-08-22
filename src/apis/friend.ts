@@ -92,32 +92,28 @@ export const searchFriends = async (
 };
 
 /* ============ 삭제 ============ */
-
-// A) friendId로만 삭제 (DELETE /friends/{friendId})
-export const deleteFriend = async (friendId: number): Promise<boolean> => {
-  try {
-    const res = await axiosInstance.delete(`/friends/${friendId}`, {
-      // 어떤 상태코드도 reject하지 않게 하고 코드로 판정
-      validateStatus: () => true,
-    });
-    const s = res?.status;
-    return s === 200 || s === 204 || s === 404; // 404 = 이미 삭제됨
-  } catch (err: any) {
-    const s = err?.response?.status;
-    if (s != null) return s === 200 || s === 204 || s === 404;
-    console.error("deleteFriend error:", err);
-    return false;
+// src/apis/friend.ts
+// src/apis/friend.ts
+export const deleteFriend = async (friendId: number) => {
+  const res = await axiosInstance.delete(`/friends/${friendId}`, {
+    validateStatus: () => true,
+  });
+  // 스웨거 기준: 200만 성공
+  const ok = res.status === 200;
+  if (!ok) {
+    console.error("❌ deleteFriend failed", { status: res.status, data: res.data, friendId });
+  } else {
+    console.log("✅ deleteFriend ok", { status: res.status, data: res.data, friendId });
   }
+  return { ok, status: res.status, data: res.data };
 };
 
-// B) 스마트 삭제: friendId 없으면 호출하지 않음(= false)
-export const deleteFriendSmart = async (p: {
-  friendId?: number;
-  memberId: number; // 형식만 유지, 실제 호출엔 사용 안 함
-}): Promise<boolean> => {
-  if (typeof p.friendId === "number") {
-    return deleteFriend(p.friendId);
-  }
-  // 서버가 memberId 삭제를 지원하지 않음 → 실패 처리
-  return false;
+// (캐시 회피용) 목록 조회 헬퍼: no-cache 헤더 + 더미 파라미터
+export const getFriendsNoCache = async (page = 1, size = 10) => {
+  const res = await axiosInstance.get("/friends", {
+    params: { page, size, _: Date.now() },               // cache-bust
+    headers: { "Cache-Control": "no-cache" },            // 프록시/브라우저 캐시 회피
+    validateStatus: () => true,
+  });
+  return res.data;
 };

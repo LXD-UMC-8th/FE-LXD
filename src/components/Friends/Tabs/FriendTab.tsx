@@ -1,15 +1,13 @@
+// src/components/Friends/Tabs/FriendTab.tsx
 import { useState, useEffect } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
 import AlertModal from "../../Common/AlertModal";
-import { getFriends, deleteFriendSmart } from "../../../apis/friend";
+import { getFriends, deleteFriend } from "../../../apis/friend";
 import type { FriendListResponseDTO } from "../../../utils/types/friend";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
 import { useFriendCounts } from "../../../context/FriendCountsContext";
-
-type RawFriend = FriendListResponseDTO["result"]["friends"]["contents"][number];
-type FriendItem = RawFriend & { friendId?: number };
 
 const FriendTab = () => {
   const { decFriend } = useFriendCounts();
@@ -17,31 +15,23 @@ const FriendTab = () => {
   const t = translate[language];
 
   const [isLoading, setIsLoading] = useState(true);
-  const [friendList, setFriendList] = useState<FriendItem[]>([]);
+  const [friendList, setFriendList] = useState<
+    FriendListResponseDTO["result"]["friends"]["contents"]
+  >([]);
+
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
 
-  const selectedUser = friendList.find((u) => u.username === selectedUsername) || null;
+  const selectedUser =
+    friendList.find((u) => u.username === selectedUsername) || null;
 
-  // 관계 ID 후보를 정규화(실제 응답에 없으면 undefined)
-  const normalizeFriendId = (u: any): number | undefined =>
-    u?.friendId ?? u?.id ?? u?.friendshipId ?? u?.relationId ?? u?.friendsId ?? undefined;
-
-  // 친구 목록 불러오기
+  // 📌 목록 불러오기
   useEffect(() => {
     const fetchFriends = async () => {
-      setIsLoading(true);
       try {
         const data = await getFriends(1, 10);
-        const contents = (data?.result?.friends?.contents ?? []) as RawFriend[];
-
-        const normalized = contents.map((u) => ({
-          ...u,
-          friendId: normalizeFriendId(u),
-        }));
-
-        setFriendList(normalized);
+        setFriendList(data?.result?.friends?.contents || []);
       } catch (err) {
         console.error("❌ 친구 목록 불러오기 실패:", err);
         setFriendList([]);
@@ -57,8 +47,11 @@ const FriendTab = () => {
     setShowProfileModal(true);
   };
 
-  // ✅ 버튼은 항상 반응하도록: guard 제거
-  const onFriendButtonClick = (user: { id: string; name: string; username: string }) => {
+  const onFriendButtonClick = (user: {
+    id: string;
+    name: string;
+    username: string;
+  }) => {
     setSelectedUsername(user.username);
     setShowConfirmModal(true);
   };
@@ -69,35 +62,32 @@ const FriendTab = () => {
     setSelectedUsername(null);
   };
 
-  // ✅ 실제 삭제 실행 시점에 friendId 없는 경우 안내하고 중단
+  // ✅ 친구 삭제 (friendId = memberId)
   const onConfirmDelete = async () => {
     if (!selectedUser) return;
 
-    if (typeof selectedUser.friendId !== "number") {
-      console.warn("🟠 friendId가 없어 삭제할 수 없습니다. 서버가 목록에 관계 ID를 내려줘야 합니다.", selectedUser);
-      // 필요 시 사용자 토스트/알림:
-      alert("삭제 권한이 없거나 서버에서 거부되었습니다.");
+    try {
+      const res = await deleteFriend(selectedUser.memberId); // memberId = friendId
+      if (!res) {
+        alert("친구 삭제에 실패했습니다.");
+        return;
+      }
+
+      // 성공 시 UI 반영
+      setFriendList((prev) =>
+        prev.filter((f) => f.username !== selectedUser.username)
+      );
+      decFriend(1);
+      alert(t?.unfriendDoneToast2 ?? "친구를 삭제했습니다.");
       onCloseConfirmModal();
-      return;
+    } catch (error) {
+      console.error("❌ 친구 삭제 요청 실패:", error);
+      alert("친구 삭제에 실패했습니다.");
     }
-
-    const ok = await deleteFriendSmart({
-      friendId: selectedUser.friendId,  // friendId만 사용
-      memberId: selectedUser.memberId,  // 현재 서버에선 사용되지 않음(형식상)
-    });
-
-    if (!ok) {
-      console.warn("🟠 삭제 실패: 서버에서 거부되었습니다.");
-      // alert(t.unfriendFailedToast ?? "삭제 권한이 없거나 서버에서 거부되었습니다.");
-      return;
-    }
-
-    decFriend(1);
-    setFriendList((prev) => prev.filter((f) => f.username !== selectedUser.username));
-    onCloseConfirmModal();
   };
 
   const onSendRequestClick = () => {
+    console.log("📨 친구 요청 보냄:", selectedUser);
     setShowProfileModal(false);
   };
 
@@ -121,7 +111,7 @@ const FriendTab = () => {
             name: selectedUser.nickname,
             username: selectedUser.username,
             profileImage: selectedUser.profileImg,
-            memberId: selectedUser.memberId,
+            memberId: selectedUser.memberId, // friendId로 사용
             isFriend: true,
           }}
           onClose={() => setShowProfileModal(false)}
@@ -139,7 +129,7 @@ const FriendTab = () => {
           onConfirm={onConfirmDelete}
           title={t.unfriendConfirmTitle.replace("{name}", selectedUser.nickname)}
           confirmText={t.unfriendConfirmAction2}
-          alertMessage={t.unfriendDoneToast2}
+          alertMessage={undefined as any}
         />
       )}
     </div>

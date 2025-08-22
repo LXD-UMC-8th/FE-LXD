@@ -19,8 +19,6 @@ interface Props {
   correction: SavedCorrectionItem;
 }
 
-const pick = (obj: any, keys: string[]) =>
-  keys.map((k) => obj?.[k]).find((v) => v !== undefined && v !== null);
 
 const pickDeep = (obj: any, paths: string[][]) => {
   for (const path of paths) {
