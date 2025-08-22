@@ -680,6 +680,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
     addPhoto: "사진 추가",
     profileEdit: "프로필 편집",
+
     id: "아이디",
     idPlaceholder: "아이디를 입력해주세요",
     idCheck: "중복확인",

@@ -89,6 +89,7 @@ const CommonComponentInDiaryNFeed = ({
   const handleDelete = () => {
     if (window.confirm(t.ConfirmDelete)) {
       deleteMutation?.mutate();
+      window.location.reload();
     }
   };
 

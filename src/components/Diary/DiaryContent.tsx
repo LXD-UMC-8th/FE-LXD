@@ -164,15 +164,7 @@ const DiaryContent = ({
       <div className="border-t border-gray-200 my-5" />
 
       {/* 본문 */}
-      <div className="select-text">
-        <div
-          ref={contentRootRef}
-          data-role="diary-content"
-          className="quill-editor ql-indent-1 [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
-        >
-          {content}
-        </div>
-      </div>
+
       <div className="select-text">
         <div
           ref={contentRootRef}
