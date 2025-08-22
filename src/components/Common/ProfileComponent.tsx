@@ -1,28 +1,42 @@
-import type { member } from "../../utils/types/correction";
+import type { member as Member } from "../../utils/types/correction";
 import Avatar from "./Avatar";
+
+type Props = {
+  member?: Member | null;
+  createdAt?: string;
+  className?: string;
+};
 
 const ProfileComponent = ({
   member,
-  createdAt,
-}: {
-  member: member;
-  createdAt: string;
-}) => {
+  createdAt = "",
+  className = "",
+}: Props) => {
   return (
-    <div className="flex gap-2">
+    <div className={`flex gap-2 items-center ${className}`}>
       {/* 프로필 이미지 */}
-      <Avatar src={member.profileImageUrl}/>
+      <Avatar src={member?.profileImageUrl} />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col min-w-0">
         {/* 사용자 이름 + 아이디 */}
-        <div className="flex gap-2 text-body2">
-          <div className="font-semibold text-black">{member.nickname}</div>
-          <div className="w-px h-5 bg-gray-500" />
-          <div className="text-gray-600">{member.username}</div>
+        <div className="flex gap-2 items-center text-body2 min-w-0">
+          <div className="font-semibold text-black truncate">
+            {member?.nickname ?? "User"}
+          </div>
+          {member?.username && (
+            <>
+              <div className="w-px h-5 bg-gray-500" />
+              <div className="text-gray-600 truncate">{member.username}</div>
+            </>
+          )}
         </div>
 
         {/* 날짜 */}
-        <div className="text-[12px] text-gray-500 mt-1">{createdAt}</div>
+        {createdAt && (
+          <div className="text-[12px] text-gray-500 mt-1 truncate">
+            {createdAt}
+          </div>
+        )}
       </div>
     </div>
   );
