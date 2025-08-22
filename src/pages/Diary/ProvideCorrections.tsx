@@ -1,12 +1,10 @@
 import { useEffect, useState, useRef, type SyntheticEvent } from "react";
 import { flushSync } from "react-dom";
-
 import { usePostCorrection } from "../../hooks/mutations/usePostCorrection";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetDiaryDetail } from "../../hooks/mutations/useGetDiaryDetail";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
-
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { ContentsDTO } from "../../utils/types/correction";
 import PrevButton from "../../components/Common/PrevButton";
@@ -15,8 +13,6 @@ import DiaryContent from "../../components/Diary/DiaryContent";
 import CorrectionModal from "../../components/Diary/CorrectionModal";
 import LoadingModal from "../../components/Common/LoadingModal";
 import CorrectionsInDiaryDetail from "../../components/Diary/CorrectionsInDiaryDetail";
-
-
 
 type OptimisticContents = ContentsDTO & { _optimistic?: boolean };
 
@@ -34,7 +30,7 @@ const ProvideCorrections = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [description, setDescription] = useState("");
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0});
 
   const containerRef = useRef<HTMLDivElement>(null);
   const contentAreaRef = useRef<HTMLDivElement>(null);

@@ -284,6 +284,7 @@ export const translate: Record<
     accept: string;
     PleaseEnterCorrectedSentence: string;
     PleaseEnterReason: string;
+    NoComments: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -636,6 +637,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     accept: "Accept",
     PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
     PleaseEnterReason: "Please enter a description (reason).",
+    NoComments: "No comments yet.",
   },
 
   [Language.KOREAN]: {
@@ -983,5 +985,6 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     accept: "확인",
     PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
     PleaseEnterReason: "설명(이유)을 입력해주세요",
+    NoComments: "댓글이 없습니다.",
   },
 };

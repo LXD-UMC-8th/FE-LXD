@@ -1,109 +1,119 @@
+// src/apis/friend.ts
 import type {
   FriendReceiverId,
   FriendAcceptResponseDTO,
   FriendRefuseResponseDTO,
   FriendRequestResponseDTO,
   FriendCancelResponseDTO,
-  FriendDeleteResponseDTO,
   FriendListResponseDTO,
   FriendRequestListResponseDTO,
   FriendSearchResponseDTO,
 } from "../utils/types/friend";
 import { axiosInstance } from "./axios";
 
-// 친구 요청 보내기
+/* ============ 친구요청 관련 ============ */
+
+// 409(이미 요청됨)도 성공처럼 처리해 콘솔 에러 안 뜨게
 export const postFriendRequest = async (
   body: FriendReceiverId
-): Promise<FriendRequestResponseDTO> => {
-  const { data } = await axiosInstance.post<FriendRequestResponseDTO>(
+): Promise<FriendRequestResponseDTO | undefined> => {
+  const res = await axiosInstance.post<FriendRequestResponseDTO>(
     "/friends/request",
-    body
+    body,
+    { validateStatus: (s) => (s >= 200 && s < 300) || s === 409 }
   );
-  return data;
+  return res?.data;
 };
 
-// 친구 요청 수락
 export const postFriendAccept = async (
   requesterId: number
 ): Promise<FriendAcceptResponseDTO | undefined> => {
-  //requesterId가 없고 /member/{number}로 된 형태를 보완하기 위해 코드 조정
   try {
-    const { data } = await axiosInstance.post<FriendAcceptResponseDTO>(
+    const res = await axiosInstance.post<FriendAcceptResponseDTO>(
       "/friends/accept",
-      { requesterId: requesterId }
+      { requesterId }
     );
-
-    return data;
+    return res?.data;
   } catch (error) {
     console.error("Error accepting friend request:", error);
   }
 };
 
-// 친구 요청 거절
 export const patchFriendRefuse = async (
   requesterId?: number
 ): Promise<FriendRefuseResponseDTO | undefined> => {
   try {
-    const { data } = await axiosInstance.patch<FriendRefuseResponseDTO>(
+    const res = await axiosInstance.patch<FriendRefuseResponseDTO>(
       "/friends/refuse",
-      { requesterId: requesterId }
+      { requesterId }
     );
-
-    return data;
+    return res?.data;
   } catch (error) {
     console.error("Error refusing friend request:", error);
   }
 };
 
-// 친구 요청 취소
 export const patchFriendCancel = async (
   body: FriendReceiverId
-): Promise<FriendCancelResponseDTO> => {
-  const { data } = await axiosInstance.patch<FriendCancelResponseDTO>(
+): Promise<FriendCancelResponseDTO | undefined> => {
+  const res = await axiosInstance.patch<FriendCancelResponseDTO>(
     "/friends/cancel",
     body
   );
-  return data;
+  return res?.data;
 };
 
-// 친구 목록 조회 (페이지네이션 지원)
+/* ============ 목록/검색 ============ */
+
 export const getFriends = async (
   page = 1,
   size = 10
 ): Promise<FriendListResponseDTO> => {
-  const { data } = await axiosInstance.get<FriendListResponseDTO>(`/friends`, {
+  const res = await axiosInstance.get<FriendListResponseDTO>("/friends", {
     params: { page, size },
   });
-  return data;
+  return res.data;
 };
 
-// 친구 요청 목록 조회
-export const getFriendRequests =
-  async (): Promise<FriendRequestListResponseDTO> => {
-    const { data } = await axiosInstance.get<FriendRequestListResponseDTO>(
-      "/friends/requests"
-    );
-    return data;
-  };
-
-// 친구 삭제
-export const deleteFriend = async (
-  friendId: number
-): Promise<FriendDeleteResponseDTO> => {
-  const { data } = await axiosInstance.delete<FriendDeleteResponseDTO>(
-    `/friends/${friendId}`
-  );
-  return data;
+export const getFriendRequests = async (): Promise<FriendRequestListResponseDTO> => {
+  const res = await axiosInstance.get<FriendRequestListResponseDTO>("/friends/requests");
+  return res.data;
 };
 
-// 친구 검색 API
 export const searchFriends = async (
   query: string,
   page = 1,
   size = 10
 ): Promise<FriendSearchResponseDTO> => {
-  const { data } = await axiosInstance.get(`/friends/search`, {
+  const res = await axiosInstance.get<FriendSearchResponseDTO>("/friends/search", {
     params: { query, page, size },
   });
-  return data;
+  return res.data;
+};
+
+/* ============ 삭제 ============ */
+// src/apis/friend.ts
+// src/apis/friend.ts
+export const deleteFriend = async (friendId: number) => {
+  const res = await axiosInstance.delete(`/friends/${friendId}`, {
+    validateStatus: () => true,
+  });
+  // 스웨거 기준: 200만 성공
+  const ok = res.status === 200;
+  if (!ok) {
+    console.error("❌ deleteFriend failed", { status: res.status, data: res.data, friendId });
+  } else {
+    console.log("✅ deleteFriend ok", { status: res.status, data: res.data, friendId });
+  }
+  return { ok, status: res.status, data: res.data };
+};
+
+// (캐시 회피용) 목록 조회 헬퍼: no-cache 헤더 + 더미 파라미터
+export const getFriendsNoCache = async (page = 1, size = 10) => {
+  const res = await axiosInstance.get("/friends", {
+    params: { page, size, _: Date.now() },               // cache-bust
+    headers: { "Cache-Control": "no-cache" },            // 프록시/브라우저 캐시 회피
+    validateStatus: () => true,
+  });
+  return res.data;
 };
