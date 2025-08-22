@@ -190,23 +190,6 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
     [imageHandler]
   );
 
-  const formats = useMemo(
-    () => [
-      "header",
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "list",
-      "bullet",
-      "ordered",
-      "image",
-      "color",
-      "align",
-    ],
-    []
-  );
-
   const handleWrapperClick = () => {
     quillRef.current?.focus();
   };
@@ -224,7 +207,6 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         onChange={onChange}
         modules={modules}
         theme="snow"
-        formats={formats}
       />
     </div>
   );

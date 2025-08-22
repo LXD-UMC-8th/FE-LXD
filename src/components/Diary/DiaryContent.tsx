@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -7,6 +7,9 @@ import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useDecodedHtmlToReact } from "../../hooks/useDecodedHtmlToReact";
+import "react-quill-new/dist/quill.snow.css";
+import type ReactQuill from "react-quill-new";
+import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 
 interface DiaryContentProps {
   title?: string;
@@ -77,8 +80,7 @@ const DiaryContent = ({
       deleteMutation.mutate();
     }
   };
-
-  const realContent = useDecodedHtmlToReact(content);
+  const replaceContent = normalizeQuillHtml(content);
 
   const displayUsername = writerUsername ?? writerUserName ?? "";
   const displayNickname = writerNickname ?? writerNickName ?? "";
@@ -168,10 +170,18 @@ const DiaryContent = ({
         <div
           ref={contentRootRef}
           data-role="diary-content"
-          className="[&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
+          className="quill-editor ql-indent-1 [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
         >
-          {realContent}
+          {content}
         </div>
+      </div>
+      <div className="select-text">
+        <div
+          ref={contentRootRef}
+          data-role="diary-content"
+          className="quill-editor ql-indent-2 [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
+          dangerouslySetInnerHTML={{ __html: replaceContent }}
+        />
       </div>
 
       <div className="border-t border-gray-200 my-5" />

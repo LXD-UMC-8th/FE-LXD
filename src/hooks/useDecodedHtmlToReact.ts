@@ -60,7 +60,7 @@ export function useDecodedHtmlToReact(raw: string | null): ReactNode {
     const safe = DOMPurify.sanitize(decoded, {
       ALLOWED_TAGS,
       ALLOWED_ATTR,
-      ALLOW_DATA_ATTR: false,
+      ALLOW_DATA_ATTR: true,
       ALLOWED_URI_REGEXP,
       USE_PROFILES: { html: true },
     });

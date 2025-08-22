@@ -11,7 +11,7 @@ import CommonComponentSkeleton from "../../components/Common/CommonComponentSkel
 import { useInfiniteScroll } from "../../hooks/queries/useInfiniteScroll";
 import { getUserDiaries } from "../../apis/diary";
 import type { getDiariesResponseDTO } from "../../utils/types/diary";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { QUERY_KEY } from "../../constants/key";
 
 const UserDetailPage = () => {
@@ -19,6 +19,7 @@ const UserDetailPage = () => {
   const t = translate[language];
   const { memberId } = useParams<{ memberId: string }>();
   const memberIdNumber = memberId ? parseInt(memberId, 10) : undefined;
+  const navigate = useNavigate();
 
   const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary>({
     profileImg: "",
@@ -34,6 +35,9 @@ const UserDetailPage = () => {
 
   useEffect(() => {
     getUserDiarySummary(memberIdNumber).then((response) => {
+      if (response.result.relation === "SELF") {
+        navigate("/mydiary");
+      }
       setIsDiarySummary(response.result);
     });
   }, []);
