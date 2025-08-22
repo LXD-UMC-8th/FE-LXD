@@ -18,6 +18,7 @@ import type {
   CorrectionCommentGetRequestDTO,
   CorrectionCommentRequestDTO,
 } from "../../utils/types/correctionComment";
+import { useNavigate } from "react-router-dom";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -43,6 +44,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [commentText, setCommentText] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
 
   const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
@@ -160,7 +162,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       {/* 프로필 */}
-      <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      <div 
+        onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
+        className="cursor-pointer"
+      >
+        <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      </div>
 
       {/* 구분선 */}
       <div className="border-t border-gray-200 my-4" />
