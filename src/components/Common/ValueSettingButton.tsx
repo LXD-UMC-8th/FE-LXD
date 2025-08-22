@@ -40,7 +40,7 @@ const ValueSettingButton = ({
           className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title1
-              ? "bg-gray-900 text-blue-50"
+              ? "bg-primary-500 text-primary-50"
               : "bg-gray-300 text-gray-700"
           }
         `}
@@ -53,7 +53,7 @@ const ValueSettingButton = ({
           className={`inline-block px-4 h-10 rounded-[5px] cursor-pointer transition duration-200
           ${
             selected === title2
-              ? "bg-gray-900 text-blue-50"
+              ? "bg-primary-500 text-primary-50"
               : "bg-gray-300 text-gray-700"
           }
         `}
