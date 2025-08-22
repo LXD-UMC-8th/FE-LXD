@@ -14,6 +14,7 @@ import type {
   CorrectionCommentGetRequestDTO,
   CorrectionCommentRequestDTO,
 } from "../../utils/types/correctionComment";
+import { useNavigate } from "react-router-dom";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -39,6 +40,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [commentText, setCommentText] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
 
   const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
@@ -157,7 +159,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       {/* 프로필 */}
-      <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      <div 
+        onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
+        className="cursor-pointer"
+      >
+        <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      </div>
 
       {/* 구분선 */}
       <div className="border-t border-gray-200 my-4" />
@@ -224,16 +231,21 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
-                  <ProfileComponent
-                    member={{
-                      memberId: c.memberId,
-                      username: c.username,
-                      nickname: c.nickname,
-                      // API: profileImage  → UI: profileImageUrl 로 매핑
-                      profileImageUrl: c.profileImage,
-                    }}
-                    createdAt={c.createdAt}
-                  />
+                  <div
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
+                    className="cursor-pointer"
+                  >
+                    <ProfileComponent
+                      member={{
+                        memberId: c.memberId,
+                        username: c.username,
+                        nickname: c.nickname,
+                        // API: profileImage  → UI: profileImageUrl 로 매핑
+                        profileImageUrl: c.profileImage,
+                      }}
+                      createdAt={c.createdAt}
+                    />
+                  </div>
                   <div className="flex-1 ml-2">
                     <p className="text-body2 whitespace-pre-wrap">
                       {c.content}
