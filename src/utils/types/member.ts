@@ -70,3 +70,5 @@ export type ChangePasswordRequestDTO = {
 };
 
 export type ChangePasswordResponseDTO = APIResponse<string>;
+
+export type DeleteProfileImgResponseDTO = APIResponse<string>;

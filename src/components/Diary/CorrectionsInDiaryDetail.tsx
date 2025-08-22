@@ -1,12 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import ProfileComponent from "../Common/ProfileComponent";
 import type { ContentsDTO } from "../../utils/types/correction";
-import {
-  useGetCorrectionComments,
-} from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
-import {
-  usePostCorrectionComment,
-} from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
+import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
+import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -18,6 +14,7 @@ import type {
   CorrectionCommentGetRequestDTO,
   CorrectionCommentRequestDTO,
 } from "../../utils/types/correctionComment";
+import { useNavigate } from "react-router-dom";
 
 type CorrectionsInDiaryDetailProps = {
   props: ContentsDTO;
@@ -43,6 +40,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [commentText, setCommentText] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
 
   const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
@@ -56,21 +54,22 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   } = useGetCorrectionComments();
 
   // POST 래핑 훅
-  const { mutate: postComment, isPending: posting } = usePostCorrectionComment();
+  const { mutate: postComment, isPending: posting } =
+    usePostCorrectionComment();
 
   // ✅ 서버에서 받은 댓글 배열 (키: contents)
   const comments: CorrectionCommentDTO[] = useMemo(
     () =>
-      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result?.contents ??
-        []) as CorrectionCommentDTO[],
+      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result
+        ?.contents ?? []) as CorrectionCommentDTO[],
     [listData]
   );
 
   // ✅ 총 댓글 수: 서버 totalElements > props.commentCount > 0
   const total: number = useMemo(() => {
-    const totalFromServer =
-      (listData as CorrectionCommentGetResponseDTO | undefined)?.result
-        ?.totalElements;
+    const totalFromServer = (
+      listData as CorrectionCommentGetResponseDTO | undefined
+    )?.result?.totalElements;
     if (typeof totalFromServer === "number") return totalFromServer;
     if (typeof props.commentCount === "number") return props.commentCount;
     return 0;
@@ -160,7 +159,12 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       {/* 프로필 */}
-      <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      <div 
+        onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
+        className="cursor-pointer"
+      >
+        <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      </div>
 
       {/* 구분선 */}
       <div className="border-t border-gray-200 my-4" />
@@ -227,18 +231,25 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
-                  <ProfileComponent
-                    member={{
-                      memberId: c.memberId,
-                      username: c.username,
-                      nickname: c.nickname,
-                      // API: profileImage  → UI: profileImageUrl 로 매핑
-                      profileImageUrl: c.profileImage,
-                    }}
-                    createdAt={c.createdAt}
-                  />
+                  <div
+                    onClick={() => navigate(`/diaries/member/${c.memberId}`)}
+                    className="cursor-pointer"
+                  >
+                    <ProfileComponent
+                      member={{
+                        memberId: c.memberId,
+                        username: c.username,
+                        nickname: c.nickname,
+                        // API: profileImage  → UI: profileImageUrl 로 매핑
+                        profileImageUrl: c.profileImage,
+                      }}
+                      createdAt={c.createdAt}
+                    />
+                  </div>
                   <div className="flex-1 ml-2">
-                    <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
+                    <p className="text-body2 whitespace-pre-wrap">
+                      {c.content}
+                    </p>
                   </div>
                   <div className="border-t border-gray-200 my-2" />
                 </li>
@@ -267,7 +278,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               disabled={posting || !commentText.trim()}
               className="w-12 text-caption bg-black rounded-[5px] text-white cursor-pointer hover:scale-105 duration-300 disabled:opacity-60 disabled:hover:scale-100"
             >
-              {posting ? "등록중" : "등록"}
+              {posting ? t.posting : t.post}
             </button>
           </div>
         </div>

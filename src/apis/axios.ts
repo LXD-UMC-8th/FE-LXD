@@ -1,5 +1,5 @@
 // axios.ts
-import axios, { type InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosHeaders, type InternalAxiosRequestConfig } from "axios";
 import { LOCAL_STORAGE_KEY } from "../constants/key";
 import { postReissue } from "./auth";
 import {
@@ -40,9 +40,18 @@ axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = getLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
     if (accessToken) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${accessToken}`;
+      const headers = AxiosHeaders.from(config.headers);
+      headers.set("Authorization", `Bearer ${accessToken}`);
+      config.headers = headers;
     }
+
+    // FormData면 Content-Type 강제 제거 (boundary는 브라우저가 넣음)
+    if (config.data instanceof FormData) {
+      const headers = AxiosHeaders.from(config.headers);
+      headers.delete("Content-Type");
+      config.headers = headers;
+    }
+
     return config;
   },
   (error) => Promise.reject(error)
@@ -53,6 +62,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const { pathname } = window.location;
+
+    // ✅ Skip token refresh on all public auth pages
+    if (pathname.startsWith("/home/")) {
+      // console.log("⏳ Skipped token refresh — on /home/*");
+      return;
+    }
+
     const originalRequest: CustomInternalAxiosRequestConfig = error.config;
 
     if (
@@ -66,13 +83,22 @@ axiosInstance.interceptors.response.use(
       window.location.href = "/home";
       return Promise.reject(error);
     }
+    return Promise.reject(error);
   }
 );
 
 initActivityListeners();
-
 setInterval(() => {
-  const isActive = wasRecentlyActive(30);
+  const { pathname } = window.location;
+
+  // ✅ Skip token refresh on all public auth pages
+  if (pathname === "/home" || pathname.startsWith("/home/")) {
+    // console.log("⏳ Skipped token refresh — on /home/*");
+    return;
+  }
+
+  const isActive = wasRecentlyActive();
+
   if (isActive) {
     try {
       const refreshToken = getLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);

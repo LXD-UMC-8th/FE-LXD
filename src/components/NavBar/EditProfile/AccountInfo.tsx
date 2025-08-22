@@ -2,17 +2,17 @@ import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
 
 interface AccountInfoProps {
-  _id: string;
-  _email: string;
-  _password: string;
-  _onChangePw: () => void;
+  id: string;
+  email: string;
+  password: string;
+  onChangePw: () => void;
 }
 
 const AccountInfo = ({
-  _id,
-  _email,
-  _password,
-  _onChangePw,
+  id,
+  email,
+  password,
+  onChangePw,
 }: AccountInfoProps) => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -23,20 +23,20 @@ const AccountInfo = ({
       <div className="pt-3 text-body1">
         <div className="flex h-11 items-center">
           <div className="w-32 font-medium">{t.id}</div>
-          <div className="pl-4">@{_id}</div>
+          <div className="pl-4">@{id}</div>
         </div>
         <div className="flex h-11 items-center">
           <div className="w-32 font-medium">{t.email}</div>
-          <div className="pl-4">{_email}</div>
+          <div className="pl-4">{email}</div>
         </div>
         <div className="flex h-11 items-center justify-between">
           <div className="flex">
             <div className="w-32 font-medium">{t.password}</div>
-            <span className="pl-4">{"*".repeat(_password.length)}</span>
+            <span className="pl-4">{"*".repeat(password.length)}</span>
           </div>
           <div className="flex">
             <button
-              onClick={_onChangePw}
+              onClick={onChangePw}
               className="px-3 py-3 bg-gray-300 rounded 
               cursor-pointer hover:bg-gray-300"
             >

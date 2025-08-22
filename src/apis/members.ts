@@ -7,6 +7,7 @@ import type {
   CheckDuplicatedIDResponseDTO,
   ChangePasswordRequestDTO,
   ChangePasswordResponseDTO,
+  DeleteProfileImgResponseDTO,
 } from "../utils/types/member";
 import { axiosInstance } from "./axios";
 
@@ -51,7 +52,7 @@ export const postSignup = async (
     nickname: userInfo.nickname,
     nativeLanguage: userInfo.nativeLanguage,
     studyLanguage: userInfo.studyLanguage,
-    loginType: userInfo.loginType
+    loginType: userInfo.loginType,
   };
   // JSON 데이터는 Blob으로 추가
   formData.append(
@@ -100,6 +101,8 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
     const response = await axiosInstance.patch("/members/system-language", {
       systemLanguage,
     });
+    localStorage.removeItem("style");
+    localStorage.removeItem("title");
     return response.data;
   } catch (err) {
     console.log("patchMemberLanguage error:", err);
@@ -162,3 +165,17 @@ export const patchMemberPassword = async (
   );
   return response.data;
 };
+
+// 프로필 이미지 삭제 API
+export const deleteMemberProfileImage =
+  async (): Promise<DeleteProfileImgResponseDTO> => {
+    try {
+      const { data } = await axiosInstance.delete<DeleteProfileImgResponseDTO>(
+        "/members/profile-image"
+      );
+      return data;
+    } catch (error) {
+      console.error("deleteMemberProfileImage error", error);
+      throw error;
+    }
+  };

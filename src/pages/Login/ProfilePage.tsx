@@ -42,7 +42,7 @@ const ProfilePage = () => {
         console.log("이미 사용중인 아이디");
       }
     } catch (error) {
-      alert("아이디 확인 중 오류가 발생했습니다");
+      alert(t.idError);
       console.error("ID 중복 확인 실패:", error);
     }
   };

@@ -111,7 +111,12 @@ export const getDiaryDetail = async (
 ): Promise<DiaryGetResponseDTO> => {
   try {
     const { data } = await axiosInstance.get<DiaryGetResponseDTO>(
-      `/diaries/${diaryId}`
+      `/diaries/${diaryId}`,
+      {
+        headers: {
+          "Content-Type": "text/html",
+        },
+      }
     );
     return data;
   } catch (error) {

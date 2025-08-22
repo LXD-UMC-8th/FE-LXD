@@ -2,30 +2,32 @@ import { useRef } from "react";
 import FormInput from "../../Login/FormInput";
 import { translate } from "../../../context/translate";
 import { useLanguage } from "../../../context/LanguageProvider";
+import Avatar from "../../Common/Avatar";
+import { isNicknameValid } from "../../../utils/validate";
 
 interface ProfileInfoProps {
-  _profilePreview: string | null;
-  _profileName: string | undefined;
-  _onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  _onRemoveImage: () => void;
-  _nickname: string;
-  _onNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  profilePreview?: string | undefined;
+  profileName: string | undefined;
+  onImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onRemoveImage: () => void;
+  nickname: string;
+  onNicknameChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ProfileInfo = ({
-  _profilePreview,
-  _profileName,
-  _onImageChange,
-  _onRemoveImage,
-  _nickname,
-  _onNicknameChange,
+  profilePreview,
+  profileName,
+  onImageChange,
+  onRemoveImage,
+  nickname,
+  onNicknameChange,
 }: ProfileInfoProps) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { language } = useLanguage();
   const t = translate[language];
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    _onImageChange(e);
+    onImageChange(e);
   };
 
   return (
@@ -39,22 +41,24 @@ const ProfileInfo = ({
           {/* 동그라미 */}
           <div className="relative w-30 h-30">
             <div className="w-full h-full rounded-full bg-gray-300 overflow-hidden">
-              {_profilePreview ? (
+              {/* {profilePreview ? (
                 <img
-                  src={_profilePreview}
-                  alt="프로필 이미지"
+                  src={profilePreview}
                   className="w-full h-full object-cover"
                 />
-              ) : <img
+              ) : (
+                <img
                   src="/images/profileimage.svg"
                   alt="기본 프로필 이미지"
                   className="w-full h-full object-cover"
-                />}
+                />
+              )} */}
+              <Avatar size="w-30 h-30" src={profilePreview} />
             </div>
-            {_profilePreview && (
+            {profilePreview && (
               <button
                 type="button"
-                onClick={_onRemoveImage}
+                onClick={onRemoveImage}
                 title="프로필 이미지 삭제"
                 aria-label="프로필 이미지 삭제"
                 className="bg-[url('/images/x_icon.svg')]
@@ -71,9 +75,9 @@ const ProfileInfo = ({
               <div className="flex-1">
                 <input
                   readOnly
-                  value={_profileName ? _profileName : ""}
+                  value={profileName ? profileName : ""}
                   placeholder={
-                    _profileName ? _profileName : t.selectFilePlaceholder
+                    profileName ? profileName : t.selectFilePlaceholder
                   }
                   className="w-full h-14 px-8 py-4 border rounded-md 
               border-gray-300 bg-gray-50 text-gray-500 text-body1 focus:outline-none"
@@ -98,9 +102,7 @@ const ProfileInfo = ({
             </div>
 
             <div className="flex gap-2">
-              <p className="text-gray-600 text-sm">
-                {t.imgSize}
-              </p>
+              <p className="text-gray-600 text-sm">{t.imgSize}</p>
             </div>
           </div>
         </div>
@@ -110,13 +112,20 @@ const ProfileInfo = ({
       <div className="space-y-2">
         <FormInput
           name={t.nickname}
-          placeholder={_nickname ? _nickname : t.nicknamePlaceholder}
-          input={_nickname}
-          onChange={_onNicknameChange}
+          placeholder={nickname ? nickname : t.nicknamePlaceholder}
+          input={nickname}
+          onChange={onNicknameChange}
         />
-        <p className="text-gray-600 text-sm mb-3">
-          {t.nicknameConditionToast}
-        </p>
+
+        {!isNicknameValid(nickname) ? (
+          <span className="text-red-500 text-sm mb-3">
+            {t.nicknameConditionToast}
+          </span>
+        ) : (
+          <span className="text-gray-600 text-sm mb-3">
+            {t.nicknameConditionToast}
+          </span>
+        )}
       </div>
     </div>
   );

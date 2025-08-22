@@ -3,7 +3,16 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    uploadFailed: string;
+    maxImages: string;
+    maxOneImage: string;
+    logoutAlert: string;
+    post: string;
+    posting: string;
+    GoBackToFeed: string;
+    WrongAccess: string;
     changeProfile: string;
+    DeleteConfirm: string;
     CancelLikeInCorrection: string;
     FailToDeleteMemo: string;
     SeeMore: string;
@@ -279,9 +288,28 @@ export const translate: Record<
     PPTitle_13: string;
     PPBody_13: string;
     accept: string;
+    LXDToS: string;
+    LXDPP: string;
+    ENGToSTitle_0: string;
+    ENGToSBody_0: string;
+    ENGPPTitle_0: string;
+    ENGPPBody_0: string;
+    idError: string;
+    changePWsuccessAlert: string;
+    changePWErrorAlert: string;
+    PleaseEnterCorrectedSentence: string;
+    PleaseEnterReason: string;
+    NoComments: string;
+    postmemo: string;
+    editmemo: string;
   }
 > = {
   [Language.ENGLISH]: {
+    maxOneImage: "You can only add one image at a time.",
+    posting: "Posting...",
+    GoBackToFeed: "Go back to feed",
+    WrongAccess: "Invalid access.",
+    DeleteConfirm: "Are you sure you want to delete this?",
     pending: "PENDING",
     donotrenderprofile: "Failed to load profile.",
     ToLeave: "To leave",
@@ -359,6 +387,9 @@ export const translate: Record<
     emailVerifyErrorAlert: "Verification Error. Please try it again.",
     signupSuccessAlert: "Signup Complete! You can now log in to your account.",
     signupErrorAlert: "Signup Error. Please try it again.",
+    changePWsuccessAlert: "Change Password Complete.",
+    changePWErrorAlert: "Change Password Error. Please try it again.",
+
     modaltabtitle_total: "Total",
     modaltabtitle_likes: "Likes",
     titleStyle_FREE: "FREE",
@@ -504,7 +535,7 @@ export const translate: Record<
     profileImg: "Profile Image",
     selectFile: "Browse",
     selectFilePlaceholder: "Select a file",
-    imgSize: "Please upload an image file up to 500MG.",
+    imgSize: "Please upload an image file up to 500MB.",
     LeaveNoti:
       "Are you sure you want to leave the account? Upon leaving, the account will be deleted and the information will not be recovered.",
     Unlike: "Unlike",
@@ -551,7 +582,7 @@ export const translate: Record<
 - By using the Service, you grant us a non-exclusive, royalty-free, worldwide license to use, reproduce, display, and distribute your content for service operation and promotional purposes.
 - You are solely responsible for ensuring that your content does not violate any third-party rights.`,
     TosTitle_10: `10. Disclaimers`,
-    TosBody_10: `- The Service is provided **“as is” and “as available”**, without warranties of any kind.
+    TosBody_10: `- The Service is provided “as is” and “as available”, without warranties of any kind.
 - We do not guarantee uninterrupted or error-free operation.
 - We are not responsible for user interactions, the accuracy of content, or any damages arising from your use of the Service.
 - You are responsible for maintaining the confidentiality of your account and password.
@@ -564,8 +595,8 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
 - You must explicitly agree to these Terms to use the Service. If you do not agree, please do not use the Service.`,
     TosTitle_13: `Need Help?`,
     TosBody_13: `If you have questions about these Terms, please contact us at: [creativej4u@gmail.com]`,
-    SupplementaryTitle: `Effective as of: August 2025`,
-    SupplementaryBody: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
+    SupplementaryTitle: "",
+    SupplementaryBody: "",
 
     PPHeader: "[Required] I have read and agree to the Privacy Policy.",
     PPTitle_1: `1. Information We Collect`,
@@ -577,7 +608,7 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
 2. We do not currently use automatic collection tools (e.g., cookies, logs); such features may be added later and will be reflected in this policy accordingly.`,
     PPTitle_2: `2. Purpose of Data Use`,
     PPBody_2: `We use personal information for the following purposes:
-- To identify and authdenticate users
+- To identify and authenticate users
 - To provide and manage the Service
 - To link user activity (e.g., posts, comments)
 - (Optional and upon consent) For future marketing or promotional purposes — users will be informed and asked for separate consent before such use is implemented`,
@@ -587,10 +618,10 @@ In the event of a dispute, the competent court in the Republic of Korea shall ha
 - Specific retention periods will be detailed in this Policy as they are confirmed through operational policy.`,
     PPTitle_4: `4. Third-Party Sharing`,
     PPBody_4: `We do not share your personal information with third parties, except in the following cases:
-- When you have given prior explicit consent
-- When required by law or legal authorities
-- When minimal necessary data must be provided to a service provider (e.g., for hosting or email delivery)
-- When otherwise permitted by applicable laws`,
+1. When you have given prior explicit consent
+2. When required by law or legal authorities
+3. When minimal necessary data must be provided to a service provider (e.g., for hosting or email delivery)
+4. When otherwise permitted by applicable laws`,
     PPTitle_5: `5. Delegation of Processing (Subprocessors)`,
     PPBody_5: `To ensure smooth operation of the Service, we outsource certain data processing tasks to trusted third-party providers under strict confidentiality agreements:
 1. Email Delivery
@@ -626,9 +657,33 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: `13. Changes to This Policy`,
     PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
     accept: "Accept",
+    LXDToS: "LXD Terms of Service",
+    LXDPP: "LXD Privacy Policy",
+    ENGToSTitle_0: `Effective as of: August 2025`,
+    ENGToSBody_0: `Please read these Terms of Service ("Terms") carefully before using the LXD (Language Xchange Diary) platform ("Service"), operated by Team LXD ("we", "us", or "our"). By accessing or using the Service, you agree to be bound by these Terms.`,
+    ENGPPTitle_0: "Effective Date: August 2025",
+    ENGPPBody_0: `This Privacy Policy explains how Team LXD ("we", "us", "our") collects, uses, and protects your personal information when you use LXD (Language Xchange Diary) (the “Service”). By using our Service, you agree to this Privacy Policy.`,
+    idError: "Id Error. Please try it again.",
+    PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
+    PleaseEnterReason: "Please enter a description (reason).",
+    NoComments: "No comments yet.",
+    post: "Post",
+    logoutAlert: "You have been logged out.",
+    maxImages: "You can add a maximum of 5 images.",
+    uploadFailed: "The image is too large or the format is incorrect.",
+    postmemo: "Post",
+    editmemo: "Edit",
   },
 
   [Language.KOREAN]: {
+    uploadFailed:"사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
+    maxImages: "이미지는 최대 5개까지 추가할 수 있습니다.",
+    maxOneImage: "이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.",
+    post: "등록",
+    posting: "등록중...",
+    GoBackToFeed: "피드로 돌아가기",
+    WrongAccess: "잘못된 접근입니다.",
+    DeleteConfirm: "정말 삭제하시겠습니까?",
     pending: "요청중",
     saving: "저장 중..",
     changeProfile: "프로필이 수정되었습니다.",
@@ -671,6 +726,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
     addPhoto: "사진 추가",
     profileEdit: "프로필 편집",
+
     id: "아이디",
     idPlaceholder: "아이디를 입력해주세요",
     idCheck: "중복확인",
@@ -693,10 +749,12 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     loginErrorAlert: "로그인 중 오류가 발생하였습니다. 다시 시도해주세요.",
     emailLinkSuccessAlert:
       "작성하신 이메일로 인증 링크를 전송하였습니다. 링크를 클릭하여 인증을 완료해주세요.",
-    emailLinkErrorAlert: "인증 메일 발송 중 오류 발생. 다시 시도해주세요.",
+    emailLinkErrorAlert:
+      "인증 메일 발송 중 오류가 발생하였습니다. 다시 시도해주세요.",
     emailVerifySuccessAlert: "인증되었습니다.",
     emailVerifyErrorAlert:
       "인증 처리 중 오류가 발생하였습니다. 다시 시도해주세요.",
+    idError: "아이디 확인 중 오류가 발생했습니다",
     signupSuccessAlert: "회원가입 완료! 이제 계정에 로그인 할 수 있습니다.",
     signupErrorAlert: "회원가입 중 오류가 발생했습니다, 다시 시도해주세요.",
     modaltabtitle_total: "모두",
@@ -925,10 +983,11 @@ Upon account deletion, your personal data will be removed promptly unless otherw
                    - 회원 식별 및 인증 
                    - 서비스 제공 및 이용자 관리 
                    - 게시글/댓글 등 사용자 활동 연동 
-                   - (선택 동의 시) 마케팅 및 광고 목적의 활용이 향후 추가될 수 있습니다.
-                  해당 목적이 도입될 경우, 사전 고지 및 동의를 별도로 받을 예정입니다.`,
+                   - (선택 동의 시) 마케팅 및 광고 목적의 활용이 향후 추가될 수 있습니다. 해당 목적이 도입될 경우, 사전 고지 및 동의를 별도로 받을 예정입니다.`,
     PPTitle_3: `제3조 (개인정보의 보유 및 이용 기간)`,
-    PPBody_3: `회원의 개인정보는 회원 탈퇴 후 일정 기간이 지난 후 지체 없이 삭제됩니다. 단, 관련 법령에 따라 보존이 필요한 경우에는 해당 기간 동안 보관될 수 있습니다. 구체적인 보유 기간은 추후 서비스 운영 정책에 따라 정해지며, 정책 확정 시 본 방침에 추가됩니다.`,
+    PPBody_3: `회원의 개인정보는 회원 탈퇴 후 일정 기간이 지난 후 지체 없이 삭제됩니다.
+    단, 관련 법령에 따라 보존이 필요한 경우에는 해당 기간 동안 보관될 수 있습니다.
+    구체적인 보유 기간은 추후 서비스 운영 정책에 따라 정해지며, 정책 확정 시 본 방침에 추가됩니다.`,
     PPTitle_4: `제4조 (개인정보의 제3자 제공)`,
     PPBody_4: `운영팀은 원칙적으로 이용자의 개인정보를 수집 및 이용 목적 범위 내에서만 처리하며, 이용자의 사전 동의 없이 제3자에게 제공하지 않습니다. 다만, 다음 각 호의 경우에는 예외로 합니다. 
                   1. 이용자가 사전에 제3자 제공에 동의한 경우
@@ -948,12 +1007,9 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_6: `제6조 (쿠키의 사용)`,
     PPBody_6: `현재 쿠키를 통한 개인정보 추적 및 분석은 명확히 사용되지 않고 있으며, 로그인 유지 등에 쿠키가 사용될 수 있습니다. 추후 쿠키 사용 정책이 도입될 경우 본 방침에 반영하여 고지합니다.`,
     PPTitle_7: `제7조 (개인정보 보호를 위한 조치)`,
-    PPBody_7: `운영팀은 개인정보 보호를 위해 적절한 보안 조치를 취하고
-                  있으며, 비밀번호는 암호화되어 저장됩니다.`,
+    PPBody_7: `운영팀은 개인정보 보호를 위해 적절한 보안 조치를 취하고 있으며, 비밀번호는 암호화되어 저장됩니다.`,
     PPTitle_8: `제8조 (미성년자의 개인정보 보호)`,
-    PPBody_8: `LXD는 원칙적으로 전 연령 이용을 허용하나, 법적 요건에 따라 만
-                  14세 미만 사용자의 경우 법정대리인의 동의를 요청할 수
-                  있습니다.`,
+    PPBody_8: `LXD는 원칙적으로 전 연령 이용을 허용하나, 법적 요건에 따라 만 14세 미만 사용자의 경우 법정대리인의 동의를 요청할 수 있습니다.`,
     PPTitle_9: `제9조 (개인정보 열람 및 삭제)`,
     PPBody_9: `회원은 언제든지 자신의 개인정보를 열람, 수정, 삭제할 수
                   있으며, 탈퇴 요청 시 모든 정보는 즉시 삭제됩니다.`,
@@ -967,5 +1023,19 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: ``,
     PPBody_13: ``,
     accept: "확인",
+    LXDToS: "LXD 이용약관",
+    LXDPP: "LXD 개인정보처리방침",
+    ENGToSTitle_0: "",
+    ENGToSBody_0: "",
+    ENGPPTitle_0: "",
+    ENGPPBody_0: "",
+    changePWsuccessAlert: "비밀번호가 성공적으로 변경되었습니다.",
+    changePWErrorAlert: "비밀번호 변경 중 오류가 발생했습니다.",
+    PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
+    PleaseEnterReason: "설명(이유)을 입력해주세요",
+    NoComments: "댓글이 없습니다.",
+    logoutAlert: "로그아웃이 완료되었습니다.",
+    postmemo: "저장하기",
+    editmemo: "수정하기",
   },
 };

@@ -17,11 +17,6 @@ import { getEmail, postEmailVerificationRequest } from "../../apis/auth";
 import { useHomeLanguage } from "../../context/HomeLanguageProvider";
 import { translate } from "../../context/translate";
 
-// interface SignupPageProps {
-//   userInfo: SignupFlowProps;
-//   setUserInfo: React.Dispatch<React.SetStateAction<SignupFlowProps>>;
-// }
-
 const SignupPage = () => {
   const { userInfo, setUserInfo } = useOutletContext<{
     userInfo: SignupFlowProps;
@@ -80,12 +75,6 @@ const SignupPage = () => {
       setHasVerifiedByToken(true);
       setEmailVerified(true);
 
-      // // 인증 성공한 경우에만 부모창에 메세지 전달 + 창 닫기
-      // if (window.opener) {
-      //   window.opener.postMessage({ emailVerified: true, email: verifiedEmail }, "*");
-      //   window.close();
-      // }
-
       console.log("이메일 인증 성공 및 조회 성공", verifiedEmail);
       alert(t.emailVerifySuccessAlert);
     } catch (error) {
@@ -102,7 +91,7 @@ const SignupPage = () => {
         setUserInfo((prev) => ({ ...prev, email: event.data.email }));
         setEmailVerified(true);
         setHasVerifiedByToken(true);
-        alert("이메일 인증이 완료되었습니다!");
+        alert(t.emailVerifySuccessAlert);
       }
     };
 

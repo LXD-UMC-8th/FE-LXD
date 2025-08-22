@@ -20,7 +20,7 @@ export const LanguageContext = createContext<ILanguageContext | undefined>(
 
 export const LanguageProvider = ({ children }: PropsWithChildren) => {
   const [language, setLanguage] = useState<TLanguage>(Language.KOREAN);
-  console.log("Current language:", language);
+
   useEffect(() => {
     const fetchLanguage = async () => {
       try {
