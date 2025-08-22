@@ -1,4 +1,5 @@
-import type { DiaryCommentGetRequestDTO, DiaryCommentGetResponseDTO, DiaryCommentRequestDTO, DiaryCommentResponseDTO, DiaryCommentDeleteRequestDTO, DiaryCommentDeleteResponseDTO } from "../utils/types/diaryComment";
+import type { DiaryCommentGetRequestDTO, DiaryCommentGetResponseDTO, DiaryCommentRequestDTO, DiaryCommentResponseDTO, DiaryCommentDeleteRequestDTO, DiaryCommentDeleteResponseDTO, 
+  DiaryCommentLikeRequestDTO, DiaryCommentLikeResponseDTO } from "../utils/types/diaryComment";
 import { axiosInstance } from "./axios";
 
 export const postDiaryComments = async (
@@ -34,3 +35,14 @@ export const deleteDiaryComments = async (
     );
     return data;
 }
+
+export const likeDiaryComments = async (
+  { commentId }: DiaryCommentLikeRequestDTO
+): Promise<DiaryCommentLikeResponseDTO> => {
+  const { data } = await axiosInstance.post<DiaryCommentLikeResponseDTO>(
+    `/diaries/comments/${commentId}/likes`,
+    {},
+    { headers: { "Content-Type": "application/json"} }
+  );
+  return data;
+};
