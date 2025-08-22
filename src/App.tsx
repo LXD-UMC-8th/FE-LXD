@@ -28,6 +28,7 @@ import SignupPage from "./pages/Login/SignupPage";
 import ProfilePage from "./pages/Login/ProfilePage";
 import ChangePWPage from "./pages/Login/ChangePWPage";
 import GoogleRedirectPage from "./pages/Login/GoogleRedirectPage";
+import { LanguageProvider } from "./context/LanguageProvider";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -122,8 +123,10 @@ function App() {
   return (
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <LanguageProvider>
+          <RouterProvider router={router} />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </LanguageProvider>
       </QueryClientProvider>
     </div>
   );

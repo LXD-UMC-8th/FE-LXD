@@ -1,4 +1,5 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, type SyntheticEvent } from "react";
+import { flushSync } from "react-dom";
 import PrevButton from "../Common/PrevButton";
 import TitleHeader from "../Common/TitleHeader";
 import DiaryContent from "./DiaryContent";
@@ -17,6 +18,8 @@ type PassedState = {
   meta?: { diaryId?: number };
 };
 
+type OptimisticContents = ContentsDTO & { _optimistic?: boolean };
+
 const ProvideCorrections = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -26,6 +29,7 @@ const ProvideCorrections = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const passed = (location.state ?? {}) as PassedState;
+  const editedInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [selectedText, setSelectedText] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -39,28 +43,64 @@ const ProvideCorrections = () => {
   const { mutate: postCorrection } = usePostCorrection();
 
   // 일기 상세 조회
-  const { mutate: fetchDiaryDetail, data: diaryData, isPending: isDiaryPending } =
-    useGetDiaryDetail();
+  const {
+    mutate: fetchDiaryDetail,
+    data: diaryData,
+    isPending: isDiaryPending,
+  } = useGetDiaryDetail();
 
   useEffect(() => {
-    if (hasValidId) {
-      fetchDiaryDetail({ diaryId: parsedDiaryId });
-    }
+    if (hasValidId) fetchDiaryDetail({ diaryId: parsedDiaryId });
   }, [hasValidId, parsedDiaryId, fetchDiaryDetail]);
 
   const diary = diaryData?.result;
 
-  /** 교정 댓글 조회 */
+  // 교정 댓글 조회
   const {
     mutate: fetchCorrections,
     data: correctionData,
     isPending: isCorrectionsPending,
   } = useGetCorrections();
 
+  const didPrimeCorrectionsRef = useRef(false);
   useEffect(() => {
     if (!hasValidId) return;
-    fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+    fetchCorrections(
+      { diaryId: parsedDiaryId, page: 1, size: 10 },
+      {
+        onSuccess: () => {
+          didPrimeCorrectionsRef.current = true;
+        },
+      }
+    );
   }, [hasValidId, parsedDiaryId, fetchCorrections]);
+
+  const [displayCorrections, setDisplayCorrections] = useState<OptimisticContents[]>([]);
+
+  useEffect(() => {
+    const serverList: ContentsDTO[] = correctionData?.result?.corrections?.contents ?? [];
+    if (!serverList.length) return;
+
+    const fp = (x: Pick<ContentsDTO, "original" | "corrected" | "commentText">) =>
+      `${(x.original ?? "").trim()}|${(x.corrected ?? "").trim()}|${(x.commentText ?? "").trim()}`;
+
+    const serverFingerprints = new Set(serverList.map((s) => fp(s)));
+
+    setDisplayCorrections((prev) => {
+      const withoutDupOptimistic = prev.filter(
+        (p) => !(p._optimistic && serverFingerprints.has(fp(p)))
+      );
+
+      const existingIds = new Set(withoutDupOptimistic.map((c) => Number(c.correctionId)));
+
+      const merged: OptimisticContents[] = [...withoutDupOptimistic];
+      for (const s of serverList) {
+        const sid = Number(s.correctionId);
+        if (!existingIds.has(sid)) merged.push(s as OptimisticContents);
+      }
+      return merged;
+    });
+  }, [correctionData]);
 
   useEffect(() => {
     const handleMouseUp = (e: MouseEvent | TouchEvent) => {
@@ -82,36 +122,33 @@ const ProvideCorrections = () => {
         allowed.contains(range.startContainer) &&
         allowed.contains(range.endContainer);
 
-
-      // 본문 밖이거나, 빈 문자열/너무 짧은 선택은 무시
       if (!isInsideContent || !text || text.length < 2) {
         setShowModal(false);
         return;
       }
 
-      // 위치 계산 (containerRef 기준)
-      const rect0 =
+      const rect =
         range.getBoundingClientRect().width || range.getBoundingClientRect().height
           ? range.getBoundingClientRect()
-          : range.getClientRects()[0]; // ✅ 보완
+          : range.getClientRects()[0];
 
-      if (!rect0) return;
+      if (!rect) return;
       const container = containerRef.current;
       if (!container) return;
       const containerRect = container.getBoundingClientRect();
 
-      // 컨테이너 기준 좌표 + 살짝 아래
-      const top = rect0.bottom - containerRect.top + 10;
-      let left = rect0.left - containerRect.left;
+      const top = rect.bottom - containerRect.top + 10;
+      let left = rect.left - containerRect.left;
 
-      // 컨테이너 범위 안으로 클램핑
-      const modalWidth = 450; // 아래 modal width와 동일
+      const modalWidth = 450;
       left = Math.max(8, Math.min(left, containerRect.width - modalWidth - 8));
 
       setModalPosition({ top, left });
       setSelectedText(text);
       setEditedText("");
       setShowModal(true);
+
+      setTimeout(() => editedInputRef.current?.focus(), 0);
     };
 
     document.addEventListener("mouseup", handleMouseUp);
@@ -122,18 +159,85 @@ const ProvideCorrections = () => {
     };
   }, []);
 
-  const handleSubmit = () => {
-    if (!editedText.trim() || !description.trim() || !selectedText.trim()) return;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const clearSelection = () => {
+    const sel = window.getSelection?.();
+    try {
+      sel?.removeAllRanges();
+    } catch {/*empty*/}
+  };
+
+  const handleSubmit = (e?: SyntheticEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    if (isSubmitting) return;
+
+    if (!editedText.trim()) {
+      alert(t.PleaseEnterCorrectedSentence);
+      editedInputRef.current?.focus();
+      return;
+    }
+    if (!description.trim()) {
+      alert(t.PleaseEnterReason);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const tempId = -1 * (Date.now() + Math.floor(Math.random() * 1000));
+    const optimisticItem: OptimisticContents = {
+      correctionId: tempId,
+      original: selectedText,
+      corrected: editedText,
+      commentText: description,
+      createdAt: new Date().toISOString(),
+      likeCount: 0,
+      liked: false,
+      _optimistic: true,
+    } as unknown as OptimisticContents;
+
+    flushSync(() => {
+      setDisplayCorrections((prev) => [...prev, optimisticItem]);
+    });
+    setShowModal(false);
+    setEditedText("");
+    setDescription("");
+    setSelectedText("");
+    clearSelection();
 
     postCorrection(
       {
         diaryId: parsedDiaryId,
-        original: selectedText,
-        corrected: editedText,
-        commentText: description,
+        original: optimisticItem.original,
+        corrected: optimisticItem.corrected,
+        commentText: optimisticItem.commentText,
       },
       {
-        onSuccess: () => setShowModal(false),
+        onSuccess: (res: any) => {
+          const serverItem: ContentsDTO | undefined =
+            res?.result ?? res?.data?.result ?? undefined;
+
+          if (serverItem) {
+            setDisplayCorrections((prev) =>
+              prev.map((c) =>
+                Number(c.correctionId) === tempId
+                  ? ({ ...serverItem, _optimistic: false } as OptimisticContents)
+                  : c
+              )
+            );
+          } else {
+            fetchCorrections({ diaryId: parsedDiaryId, page: 1, size: 10 });
+          }
+        },
+        onError: () => {
+          setDisplayCorrections((prev) =>
+            prev.filter((c) => Number(c.correctionId) !== tempId)
+          );
+        },
+        onSettled: () => {
+          setIsSubmitting(false);
+        },
       }
     );
   };
@@ -153,6 +257,7 @@ const ProvideCorrections = () => {
           <PrevButton navigateURL={-1} />
           <TitleHeader title={t.CorrectButton} />
           <button
+            type="button"
             className="bg-primary-500 text-primary-50 font-medium rounded-[5px] h-[43px] w-[118px] px-1 cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             onClick={() => navigate(-1)}
           >
@@ -167,7 +272,7 @@ const ProvideCorrections = () => {
               title={diary?.title ?? ""}
               lang={diary?.language ?? ""}
               visibility={diary?.visibility ?? ""}
-              profileImg={diary?.profileImg}
+              profileImg={diary?.profileImg ?? "/images/profileImage.svg"}
               content={diary?.content}
               writerNickname={diary?.writerNickName}
               writerUsername={diary?.writerUserName}
@@ -179,8 +284,6 @@ const ProvideCorrections = () => {
               diaryId={diary?.diaryId ?? 0}
               createdAt={diary?.createdAt ?? ""}
               {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              // 만약 DiaryContent가 contentRootRef를 지원한다면 위 래퍼 대신:
-              // contentRootRef={contentAreaRef}
             />
           </div>
         </div>
@@ -190,11 +293,18 @@ const ProvideCorrections = () => {
       {showModal && (
         <div
           id="correction-modal"
+          role="dialog"
+          aria-modal="true"
           className="absolute z-50 w-[450px] h-[330px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
           style={{ top: modalPosition.top, left: modalPosition.left }}
+          onClick={(e) => e.stopPropagation()}
         >
           <button
-            onClick={() => setShowModal(false)}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowModal(false);
+            }}
             className="absolute top-7 right-5 cursor-pointer"
           >
             <img src="/images/DeleteButton.svg" className="w-3 h-3" alt="닫기 버튼" />
@@ -206,16 +316,23 @@ const ProvideCorrections = () => {
           <div className="flex flex-col gap-3">
             {/* 선택된 텍스트 & 수정 입력 영역 */}
             <div className="flex flex-col border border-gray-300 rounded-[10px] p-4 text-body2 gap-2">
-              <div className="font-medium">{selectedText}</div>
+              <div className="font-medium break-words">{selectedText}</div>
 
               <div className="flex items-center">
                 <div className="w-1 h-9 bg-primary-500" />
                 <textarea
+                  ref={editedInputRef}
                   value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
                   className="w-full px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-200 text-primary-500 font-medium bg-primary-50"
                   rows={1}
                   placeholder={t.CorrectSentence}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSubmit(e);
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -228,11 +345,11 @@ const ProvideCorrections = () => {
                 rows={2}
                 placeholder={t.CorrectExp}
                 onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit();
-                }
-              }}
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
               />
             </div>
           </div>
@@ -240,12 +357,15 @@ const ProvideCorrections = () => {
           {/* 등록하기 버튼 */}
           <div className="flex justify-end mt-5">
             <button
-              onClick={handleSubmit}
-              className="group absolute flex items-center gap-2 bg-primary-500 text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
+              type="button"
+              onClick={(e) => handleSubmit(e)}
+              disabled={isSubmitting}
+              aria-busy={isSubmitting}
+              className="group absolute flex items-center gap-2 bg-primary-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
               <img src="/images/correctionpencil.svg" alt="교정 아이콘" className="w-5 h-5 group-hover:hidden" />
               <img src="/images/CorrectHover.svg" alt="교정 아이콘 hover" className="w-5 h-5 hidden group-hover:block transition-300" />
-              {t.CorrectEnroll}
+              {isSubmitting ? (t.Loading ?? "등록 중...") : t.CorrectEnroll}
             </button>
           </div>
         </div>
@@ -258,13 +378,14 @@ const ProvideCorrections = () => {
           <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
         </div>
 
-        {(isDiaryPending || isCorrectionsPending) && <LoadingModal />}
-
-        {(correctionData?.result?.corrections?.contents ?? []).map(
-          (correction: ContentsDTO) => (
-            <CorrectionsInDiaryDetail key={correction.correctionId} props={correction} />
-          )
+        {(isDiaryPending ||
+          (isCorrectionsPending && !didPrimeCorrectionsRef.current && displayCorrections.length === 0)) && (
+          <LoadingModal />
         )}
+
+        {(displayCorrections ?? []).map((correction: OptimisticContents) => (
+          <CorrectionsInDiaryDetail key={Number(correction.correctionId)} props={correction} />
+        ))}
       </div>
     </div>
   );
