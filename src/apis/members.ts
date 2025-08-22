@@ -101,6 +101,8 @@ export const patchMemberLanguage = async (systemLanguage: string) => {
     const response = await axiosInstance.patch("/members/system-language", {
       systemLanguage,
     });
+    localStorage.removeItem("style");
+    localStorage.removeItem("title");
     return response.data;
   } catch (err) {
     console.log("patchMemberLanguage error:", err);

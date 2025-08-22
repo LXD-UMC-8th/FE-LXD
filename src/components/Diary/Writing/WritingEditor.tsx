@@ -1,7 +1,11 @@
-import { useMemo, useRef, useCallback } from "react";
-import ReactQuill from "react-quill-new";
-import "react-quill/dist/quill.snow.css";
+import { useMemo, useRef, useCallback, useEffect } from "react";
+import ReactQuill, { Quill } from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
+import { useLanguage } from "../../../context/LanguageProvider";
+import { translate } from "../../../context/translate";
+import { ImageResize } from "quill-image-resize-module-ts";
+Quill.register("modules/imageResize", ImageResize);
 
 const MAX_IMAGES = 5;
 
@@ -11,7 +15,15 @@ interface WritingEditorProps {
 }
 
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
+  const { language } = useLanguage();
+  const t = translate[language];
+
   const quillRef = useRef<ReactQuill>(null);
+
+  useEffect(() => {
+    const el = quillRef.current?.getEditor()?.root as HTMLElement | undefined;
+    if (el) el.setAttribute("data-role", "diary-content");
+  }, []);
 
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
@@ -19,7 +31,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
 
     const currentImageCount = editor.container.querySelectorAll("img").length;
     if (currentImageCount >= MAX_IMAGES) {
-      alert(`이미지는 최대 ${MAX_IMAGES}개까지만 추가할 수 있습니다.`);
+      alert(t.maxImages);
       return;
     }
 
@@ -35,11 +47,11 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
       if (files) {
         const fileList = Array.from(files);
         if (files.length > 1) {
-          alert(`이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.`);
+          alert(t.maxOneImage);
           return;
         }
         if (fileList.length + currentImageCount > MAX_IMAGES) {
-          alert(`이미지는 최대 ${MAX_IMAGES}개까지만 추가할 수 있습니다.`);
+          alert(t.maxImages);
           return;
         }
         // const editorRange = editor.getSelection(true);
@@ -135,7 +147,6 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
           };
           reader.readAsDataURL(file);
 
-          //2개 이상 한 번에 업데이트 하면 등록되지 않음 << 이거 에러 해결해주기
           const fd = new FormData();
           fd.append("image", file);
           postDiaryImage(fd)
@@ -146,19 +157,16 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
               editor.deleteText(range.index - 1, 1);
               editor.insertEmbed(range.index - 1, "image", url);
               editor.setSelection(range.index, 0);
-              console.log(
-                "range.index:",
-                range.index,
-                "currentImageCount:",
-                currentImageCount
-              );
-              if (range.index === 1 && currentImageCount === 0) {
-                localStorage.setItem("thumbImg", url);
+
+              if (range.index === 1) {
+                localStorage.getItem("thumbImg")
+                  ? localStorage.removeItem("thumbImg")
+                  : localStorage.setItem("thumbImg", url);
               }
+              console.log("thumbImage", localStorage.getItem("thumbImg"));
             })
-            .catch((err) => {
-              console.error("Upload failed", err.response || err);
-              alert("Upload failed—check console for details.");
+            .catch(() => {
+              alert(t.uploadFailed);
               const range = editor.getSelection(true)!;
               editor.deleteText(range.index - 1, 1);
             });
@@ -173,7 +181,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
         container: [
           [{ header: [1, 2, 3, false] }],
           ["bold", "italic", "underline", "strike"],
-          [{ list: "ordered" }, { list: "bullet" }],
+          [/*{ list: "ordered" },*/ { list: "bullet" }],
           ["image"],
           [{ color: [] }],
           [{ align: [] }],
@@ -196,7 +204,20 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
     <div
       className="h-full border-none hover:cursor-text focus:cursor-text"
       onClick={handleWrapperClick}
+      data-role="diary-content"
     >
+      <style>{`
+    /* Make images responsive inside the editor while preserving aspect ratio */
+    .custom-quill-editor .ql-editor img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* Optional: avoid layout breaks with long content */
+    .custom-quill-editor .ql-editor {
+      overflow-wrap: anywhere;
+    }
+  `}</style>
       <ReactQuill
         ref={quillRef}
         className="custom-quill-editor w-full mb-10 h-auto min-h-150 bg-white rounded-[12px] shadow-[0px_4px_10px_rgba(0,0,0,0.1)] border-none"

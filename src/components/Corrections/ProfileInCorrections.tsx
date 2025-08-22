@@ -1,6 +1,5 @@
 import type { CorrectionsMemberDTO } from "../../utils/types/member";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
+import Avatar from "../Common/Avatar";
 
 interface Props {
   member?: CorrectionsMemberDTO;
@@ -8,19 +7,13 @@ interface Props {
 }
 
 const ProfileInCorrections = ({ member, createdAt }: Props) => {
-  const { language } = useLanguage();
-  const t = translate[language];
   return (
     <>
       <div className="flex items-center justify-between gap-1 p-1">
         {/* 왼쪽: 프로필 정보 */}
         <div className="flex items-center gap-2">
           {/* 프로필 사진 */}
-          <img
-            src={member?.profileImageUrl}
-            alt={t.Profile}
-            className="w-9 h-9 rounded-full bg-gray-300"
-          />
+          <Avatar src={member?.profileImageUrl}/>
 
           {/* 사용자 이름 + 아이디 */}
           <div className="flex gap-2 items-center">
