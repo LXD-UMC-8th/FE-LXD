@@ -31,7 +31,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
 
     const currentImageCount = editor.container.querySelectorAll("img").length;
     if (currentImageCount >= MAX_IMAGES) {
-      alert(`이미지는 최대 ${MAX_IMAGES}개까지만 추가할 수 있습니다.`);
+      alert(t.maxImages);
       return;
     }
 
