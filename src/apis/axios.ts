@@ -72,7 +72,7 @@ axiosInstance.interceptors.response.use(
 initActivityListeners();
 
 setInterval(() => {
-  const isActive = wasRecentlyActive(10);
+  const isActive = wasRecentlyActive();
 
   if (isActive) {
     try {
@@ -108,4 +108,4 @@ setInterval(() => {
   } else {
     console.log("⏳ Skipped token refresh — user inactive");
   }
-}, 30 * 60 * 1000);
+}, 50 * 60 * 1000);

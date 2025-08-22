@@ -36,10 +36,6 @@ export async function patchReadAllNotifications(
   totalElements: number
 ): Promise<patchReadAllNotificationResponseDTO> {
   try {
-    console.log(
-      "patchReadAllNotifications called with totalElements:",
-      totalElements
-    );
     const { data } =
       await axiosInstance.patch<patchReadAllNotificationResponseDTO>(
         "/notifications/read-all",

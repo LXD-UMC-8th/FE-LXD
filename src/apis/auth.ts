@@ -82,8 +82,6 @@ export const getEmail = async (token: string): Promise<getEmailResponseDTO> => {
 export const postReissue = async (
   refreshToken: string
 ): Promise<postReissueResponseDTO | undefined> => {
-  removeLocalStorageItem(LOCAL_STORAGE_KEY.accessToken);
-  removeLocalStorageItem(LOCAL_STORAGE_KEY.refreshToken);
   try {
     const { data } = await axiosInstance.post<postReissueResponseDTO>(
       "/auth/reissue",

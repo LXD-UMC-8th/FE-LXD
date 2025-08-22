@@ -3,6 +3,8 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    post: string;
+    posting: string;
     GoBackToFeed: string;
     WrongAccess: string;
     changeProfile: string;
@@ -286,6 +288,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    posting: "Posting...",
     GoBackToFeed: "Go back to feed",
     WrongAccess: "Invalid access.",
     DeleteConfirm: "Are you sure you want to delete this?",
@@ -634,9 +637,12 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
     accept: "Accept",
     NoComments: "No comments yet.",
+    post: "Post",
   },
 
   [Language.KOREAN]: {
+    post: "등록",
+    posting: "등록중...",
     GoBackToFeed: "피드로 돌아가기",
     WrongAccess: "잘못된 접근입니다.",
     DeleteConfirm: "정말 삭제하시겠습니까?",
