@@ -12,6 +12,7 @@ import LoadingModal from "../Common/LoadingModal";
 import { useGetCorrections } from "../../hooks/mutations/useGetCorrections";
 import type { ContentsDTO } from "../../utils/types/correction";
 import CorrectionsInDiaryDetail from "./CorrectionsInDiaryDetail";
+import CorrectionModal from "./CorrectionModal";
 
 type PassedState = {
   stats?: { commentCount?: number; likeCount?: number; correctCount?: number };
@@ -29,6 +30,7 @@ const ProvideCorrections = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const passed = (location.state ?? {}) as PassedState;
+
   const editedInputRef = useRef<HTMLTextAreaElement>(null);
 
   const [selectedText, setSelectedText] = useState("");
@@ -147,8 +149,6 @@ const ProvideCorrections = () => {
       setSelectedText(text);
       setEditedText("");
       setShowModal(true);
-
-      setTimeout(() => editedInputRef.current?.focus(), 0);
     };
 
     document.addEventListener("mouseup", handleMouseUp);
@@ -165,7 +165,9 @@ const ProvideCorrections = () => {
     const sel = window.getSelection?.();
     try {
       sel?.removeAllRanges();
-    } catch {/*empty*/}
+    } catch {
+      /* noop */
+    }
   };
 
   const handleSubmit = (e?: SyntheticEvent) => {
@@ -198,8 +200,9 @@ const ProvideCorrections = () => {
     } as unknown as OptimisticContents;
 
     flushSync(() => {
-      setDisplayCorrections((prev) => [...prev, optimisticItem]);
+      setDisplayCorrections((prev) => [...prev, optimisticItem]); // 아래로 추가
     });
+
     setShowModal(false);
     setEditedText("");
     setDescription("");
@@ -289,87 +292,20 @@ const ProvideCorrections = () => {
         </div>
       </div>
 
-      {/* 모달 */}
-      {showModal && (
-        <div
-          id="correction-modal"
-          role="dialog"
-          aria-modal="true"
-          className="absolute z-50 w-[450px] h-[330px] bg-white border border-gray-300 shadow-xl rounded-[10px] p-5"
-          style={{ top: modalPosition.top, left: modalPosition.left }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowModal(false);
-            }}
-            className="absolute top-7 right-5 cursor-pointer"
-          >
-            <img src="/images/DeleteButton.svg" className="w-3 h-3" alt="닫기 버튼" />
-          </button>
-
-          <h2 className="text-subhead3 font-semibold mb-4">{t.ProvideCorrect}</h2>
-          <div className="border-t border-gray-300 my-4" />
-
-          <div className="flex flex-col gap-3">
-            {/* 선택된 텍스트 & 수정 입력 영역 */}
-            <div className="flex flex-col border border-gray-300 rounded-[10px] p-4 text-body2 gap-2">
-              <div className="font-medium break-words">{selectedText}</div>
-
-              <div className="flex items-center">
-                <div className="w-1 h-9 bg-primary-500" />
-                <textarea
-                  ref={editedInputRef}
-                  value={editedText}
-                  onChange={(e) => setEditedText(e.target.value)}
-                  className="w-full px-3 py-2 text-sm resize-none focus:outline-none focus:ring-1 focus:ring-blue-200 text-primary-500 font-medium bg-primary-50"
-                  rows={1}
-                  placeholder={t.CorrectSentence}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSubmit(e);
-                    }
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="rounded-[10px] bg-gray-200 border border-gray-300 text-gray-900">
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-[10px] px-3 py-3 text-body2 h-15 resize-none focus:outline-none"
-                rows={2}
-                placeholder={t.CorrectExp}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSubmit(e);
-                  }
-                }}
-              />
-            </div>
-          </div>
-
-          {/* 등록하기 버튼 */}
-          <div className="flex justify-end mt-5">
-            <button
-              type="button"
-              onClick={(e) => handleSubmit(e)}
-              disabled={isSubmitting}
-              aria-busy={isSubmitting}
-              className="group absolute flex items-center gap-2 bg-primary-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium px-4 py-3 rounded-[5px] transition cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
-            >
-              <img src="/images/correctionpencil.svg" alt="교정 아이콘" className="w-5 h-5 group-hover:hidden" />
-              <img src="/images/CorrectHover.svg" alt="교정 아이콘 hover" className="w-5 h-5 hidden group-hover:block transition-300" />
-              {isSubmitting ? (t.Loading ?? "등록 중...") : t.CorrectEnroll}
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 모달 (컴포넌트화) */}
+      <CorrectionModal
+        open={showModal}
+        position={modalPosition}
+        selectedText={selectedText}
+        editedText={editedText}
+        description={description}
+        onChangeEditedText={setEditedText}
+        onChangeDescription={setDescription}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        editedInputRef={editedInputRef}
+        t={t}
+      />
 
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3 select-none">
