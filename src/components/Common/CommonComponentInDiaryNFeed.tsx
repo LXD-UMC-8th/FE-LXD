@@ -5,7 +5,7 @@ import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import clsx from "clsx";
-import { useCleanHtml } from "../../hooks/useCleanHtml";
+import { useCleanHtmlRemoveImg } from "../../hooks/useCleanHtmlRemoveImg";
 import type { diaries, getDiariesResult } from "../../utils/types/diary";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import Header from "../Diary/Header";
@@ -26,7 +26,7 @@ interface Props {
 
 const CommonComponentInDiaryNFeed = ({
   props,
-  rounded = false,              // ✅ 기본은 기존처럼 둥글게
+  rounded = false, // ✅ 기본은 기존처럼 둥글게
   variant = "default",
 }: Props) => {
   const { language } = useLanguage();
@@ -57,17 +57,25 @@ const CommonComponentInDiaryNFeed = ({
   const menuRef = useRef<HTMLDivElement | null>(null);
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
-  const content = useCleanHtml(props.contentPreview);
+  const content = useCleanHtmlRemoveImg(
+    props.contentPreview ? props.contentPreview : null
+  );
 
   const stats = [
-    { label: `${props.commentCount}`, icon: "/images/CommonComponentIcon/CommentIcon.svg" },
+    {
+      label: `${props.commentCount}`,
+      icon: "/images/CommonComponentIcon/CommentIcon.svg",
+    },
     {
       label: `${likeCount}`,
       icon: isLiked
         ? "/images/CommonComponentIcon/LikeFullIcon.svg"
         : "/images/CommonComponentIcon/LikeIcon.svg",
     },
-    { label: `${props.correctionCount}`, icon: "/images/CommonComponentIcon/CorrectIcon.svg" },
+    {
+      label: `${props.correctionCount}`,
+      icon: "/images/CommonComponentIcon/CorrectIcon.svg",
+    },
   ];
 
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
@@ -104,7 +112,9 @@ const CommonComponentInDiaryNFeed = ({
       case 1:
         isLiked
           ? setDeleteLikeModal(true)
-          : (likeMutate(), setLikeCount((prev) => prev + 1), setIsLiked((prev) => !prev));
+          : (likeMutate(),
+            setLikeCount((prev) => prev + 1),
+            setIsLiked((prev) => !prev));
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
@@ -127,7 +137,10 @@ const CommonComponentInDiaryNFeed = ({
     borderRadius,
     "relative bg-white cursor-pointer transition-shadow",
     variant === "friendPreview"
-      ? clsx("w-full border border-gray-200 px-5 py-4 hover:shadow-sm", roundedCls)
+      ? clsx(
+          "w-full border border-gray-200 px-5 py-4 hover:shadow-sm",
+          roundedCls
+        )
       : clsx("w-260 shadow px-6 py-5 space-y-4", roundedCls)
   );
 
@@ -137,8 +150,15 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex justify-between items-start">
         <div>
           {isFeedTab ? (
-            <div className="flex items-center gap-3" onClick={handleNavigateUserDetail}>
-              <Avatar src={props.writerProfileImg} alt={props.writerUsername} size="w-9 h-9" />
+            <div
+              className="flex items-center gap-3"
+              onClick={handleNavigateUserDetail}
+            >
+              <Avatar
+                src={props.writerProfileImg}
+                alt={props.writerUsername}
+                size="w-9 h-9"
+              />
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-black">
@@ -149,7 +169,9 @@ const CommonComponentInDiaryNFeed = ({
                     @{props.writerUsername}
                   </span>
                 </div>
-                <span className="text-xs text-gray-400 mt-1">{props.createdAt}</span>
+                <span className="text-xs text-gray-400 mt-1">
+                  {props.createdAt}
+                </span>
               </div>
             </div>
           ) : (
@@ -163,9 +185,7 @@ const CommonComponentInDiaryNFeed = ({
 
         {/* 언어 + 더보기 */}
         <div className="flex items-center gap-3 relative" ref={menuRef}>
-          <span className="text-blue-600 text-sm font-medium">
-            한국어
-          </span>
+          <span className="text-blue-600 text-sm font-medium">한국어</span>
           {isMyDiaryTab && (
             <>
               <img
@@ -208,7 +228,9 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex flex-rows">
         <div className="flex-1 space-y-2">
           <Header props={props} />
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{content}</div>
+          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+            {content}
+          </div>
         </div>
 
         {props.thumbnailUrl && (
@@ -229,7 +251,11 @@ const CommonComponentInDiaryNFeed = ({
               handleIcons(index);
             }}
           >
-            <img src={item.icon} alt={`${item.label} Icon`} className="w-6 h-6 cursor-pointer" />
+            <img
+              src={item.icon}
+              alt={`${item.label} Icon`}
+              className="w-6 h-6 cursor-pointer"
+            />
             <span>{item.label}</span>
           </div>
         ))}

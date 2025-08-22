@@ -4,6 +4,7 @@ export const translate: Record<
   TLanguage,
   {
     changeProfile: string;
+    DeleteConfirm: string;
     CancelLikeInCorrection: string;
     FailToDeleteMemo: string;
     SeeMore: string;
@@ -282,6 +283,7 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    DeleteConfirm: "Are you sure you want to delete this?",
     pending: "PENDING",
     donotrenderprofile: "Failed to load profile.",
     ToLeave: "To leave",
@@ -629,6 +631,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
   },
 
   [Language.KOREAN]: {
+    DeleteConfirm: "정말 삭제하시겠습니까?",
     pending: "요청중",
     saving: "저장 중..",
     changeProfile: "프로필이 수정되었습니다.",

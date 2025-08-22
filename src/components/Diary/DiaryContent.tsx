@@ -1,22 +1,21 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import Avatar from "../Common/Avatar";
-import { useCleanHtml } from "../../hooks/useCleanHtml";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import DOMPurify from "dompurify";
+import { useDecodedHtmlToReact } from "../../hooks/useDecodedHtmlToReact";
 
 interface DiaryContentProps {
   title?: string;
   lang?: string;
   visibility: string;
-  content?: string;
+  content: string;
   profileImg?: string;
   writerUsername?: string;
-  writerNickname?: string; 
+  writerNickname?: string;
   writerUserName?: string;
   writerNickName?: string;
   stats?: { label: string; icon: string; alt: string }[];
@@ -27,18 +26,18 @@ interface DiaryContentProps {
   writerId?: number;
 }
 
-function decodeEscapedHtml(raw?: string | null) {
-  if (!raw) return "";
-  try {
-    // "\"<p>...</p>\"" 같은 문자열을 정상 문자열로 복구
-    const parsed = JSON.parse(raw);
-    if (typeof parsed === "string") return parsed;
-  } catch {
-    /* noop */
-  }
-  // 백슬래시 이스케이프가 남아있는 경우의 최소 복구
-  return raw.replace(/\\"/g, '""');
-}
+// function decodeEscapedHtml(raw?: string | null) {
+//   if (!raw) return "";
+//   try {
+//     // "\"<p>...</p>\"" 같은 문자열을 정상 문자열로 복구
+//     const parsed = JSON.parse(raw);
+//     if (typeof parsed === "string") return parsed;
+//   } catch {
+//     /* noop */
+//   }
+//   // 백슬래시 이스케이프가 남아있는 경우의 최소 복구
+//   return raw.replace(/\\"/g, '""');
+// }
 
 const DiaryContent = ({
   title,
@@ -53,7 +52,6 @@ const DiaryContent = ({
   stats,
   diaryId,
   createdAt,
-  thumbnail,
   contentRootRef,
   writerId,
 }: DiaryContentProps) => {
@@ -71,41 +69,19 @@ const DiaryContent = ({
   const menuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
-  const safeContent = useCleanHtml(content);
-
   const handleEdit = () => navigate(`/mydiary/edit/${diaryId}`);
 
   const deleteMutation = useDeleteDiaryMutation(diaryId as number);
   const handleDelete = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+    if (window.confirm(t.DeleteConfirm)) {
       deleteMutation.mutate();
     }
   };
 
+  const realContent = useDecodedHtmlToReact(content);
+
   const displayUsername = writerUsername ?? writerUserName ?? "";
   const displayNickname = writerNickname ?? writerNickName ?? "";
-
-  const imageSrcs = useMemo(() => {
-    if (!content) return [];
-
-    const decoded = decodeEscapedHtml(content);
-
-    const onlyImgs = DOMPurify.sanitize(decoded, {
-      ALLOWED_TAGS: ["img"],
-      ALLOWED_ATTR: ["src", "srcset", "alt"],
-      FORBID_TAGS: [],
-    });
-
-    if (typeof window === "undefined") return [];
-
-    const doc = new DOMParser().parseFromString(onlyImgs, "text/html");
-    const srcs = Array.from(doc.querySelectorAll("img"))
-      .map((img) => img.getAttribute("src") || "")
-      .filter(Boolean)
-      .slice(0, 5);
-
-    return srcs;
-  }, [content]);
 
   const createdDateOnly = createdAt?.slice(0, 10);
 
@@ -187,33 +163,14 @@ const DiaryContent = ({
 
       <div className="border-t border-gray-200 my-5" />
 
-      {imageSrcs.length > 0 && (
-        <div className="flex flex-col gap-5 mb-4">
-          {imageSrcs.map((src, i) => (
-            <img
-              key={i}
-              src={src}
-              alt={`이미지 ${i + 1}`}
-              className="rounded-[10px] object-cover w-full aspect-[4/3]"
-              loading="lazy"
-              draggable={false}
-            />
-          ))}
-        </div>
-      )}
-
       {/* 본문 */}
       <div className="select-text">
-        {imageSrcs.length === 0 && thumbnail && (
-          <img className="rounded-[10px] mb-4" src={thumbnail} alt="이미지" />
-        )}
-
         <div
           ref={contentRootRef}
           data-role="diary-content"
-          className="[&_img]:hidden"
+          className="[&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
         >
-          {safeContent}
+          {realContent}
         </div>
       </div>
 
@@ -223,7 +180,11 @@ const DiaryContent = ({
       <div className="flex items-center gap-3 text-caption text-gray-700 select-none">
         {stats?.map((item, index) => (
           <div key={index} className="flex gap-1 items-center">
-            <img src={item.icon} alt={`${item.alt} 아이콘`} className="w-5 h-5" />
+            <img
+              src={item.icon}
+              alt={`${item.alt} 아이콘`}
+              className="w-5 h-5"
+            />
             <span className="text-body2">{item.label}</span>
           </div>
         ))}

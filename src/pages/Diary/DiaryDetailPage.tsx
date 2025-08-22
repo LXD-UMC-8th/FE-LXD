@@ -234,17 +234,16 @@ const DiaryDetailPage = () => {
           <PrevButton navigateURL={backURL} />
           <button
             onClick={_handleCorrectionsClick}
-            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 
-            font-pretendard font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
+            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
           >
             <img
               src="/images/correctionpencil.svg"
-              alt="교정 아이콘"
+              alt="correction"
               className="w-[20px] h-[21px] group-hover:hidden"
             />
             <img
               src="/images/CorrectHover.svg"
-              alt="교정 아이콘 hover"
+              alt="correction hover"
               className="w-[20px] h-[21px] hidden group-hover:block transition-300"
             />
             {t.CorrectButton}

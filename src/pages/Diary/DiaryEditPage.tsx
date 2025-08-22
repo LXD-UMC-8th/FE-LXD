@@ -7,7 +7,7 @@ import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { getDiaryDetail } from "../../apis/diary";
-import { useCleanHtml } from "../../hooks/useCleanHtml";
+import { useCleanHtmlRemoveImg } from "../../hooks/useCleanHtmlRemoveImg";
 
 const DiaryEditPage = () => {
   const { diaryId } = useParams();
@@ -28,7 +28,7 @@ const DiaryEditPage = () => {
     });
   }, []);
 
-  useCleanHtml(_editorRawContent);
+  useCleanHtmlRemoveImg(_editorRawContent);
 
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
