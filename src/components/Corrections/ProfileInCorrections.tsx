@@ -1,6 +1,4 @@
 import type { CorrectionsMemberDTO } from "../../utils/types/member";
-import { useLanguage } from "../../context/LanguageProvider";
-import { translate } from "../../context/translate";
 import Avatar from "../Common/Avatar";
 
 interface Props {
@@ -9,8 +7,6 @@ interface Props {
 }
 
 const ProfileInCorrections = ({ member, createdAt }: Props) => {
-  const { language } = useLanguage();
-  const t = translate[language];
   return (
     <>
       <div className="flex items-center justify-between gap-1 p-1">
