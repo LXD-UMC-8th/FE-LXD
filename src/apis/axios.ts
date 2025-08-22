@@ -62,6 +62,14 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const { pathname } = window.location;
+
+    // ✅ Skip token refresh on all public auth pages
+    if (pathname.startsWith("/home/")) {
+      // console.log("⏳ Skipped token refresh — on /home/*");
+      return;
+    }
+
     const originalRequest: CustomInternalAxiosRequestConfig = error.config;
 
     if (
@@ -80,8 +88,15 @@ axiosInstance.interceptors.response.use(
 );
 
 initActivityListeners();
-
 setInterval(() => {
+  const { pathname } = window.location;
+
+  // ✅ Skip token refresh on all public auth pages
+  if (pathname === "/home" || pathname.startsWith("/home/")) {
+    // console.log("⏳ Skipped token refresh — on /home/*");
+    return;
+  }
+
   const isActive = wasRecentlyActive();
 
   if (isActive) {
