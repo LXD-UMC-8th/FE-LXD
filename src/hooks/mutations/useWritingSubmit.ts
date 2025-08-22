@@ -21,7 +21,7 @@ export function useWritingSubmit() {
       localStorage.removeItem("thumbImg");
       console.log("writing submit successful");
       console.log(data);
-      navigate(`/feed/${data.result.diaryId}`);
+      navigate(`/mydiary/feed/${data.result.diaryId}`);
     },
     onError: (err) => {
       console.error("Writing submission failed:", err);

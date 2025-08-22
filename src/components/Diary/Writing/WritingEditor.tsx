@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback } from "react";
+import { useMemo, useRef, useCallback, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill/dist/quill.snow.css";
 import { postDiaryImage } from "../../../apis/diary";
@@ -12,6 +12,11 @@ interface WritingEditorProps {
 
 const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
   const quillRef = useRef<ReactQuill>(null);
+
+  useEffect(() => {
+    const el = quillRef.current?.getEditor()?.root as HTMLElement | undefined;
+    if (el) el.setAttribute("data-role", "diary-content");
+  }, []);
 
   const imageHandler = useCallback(() => {
     const editor = quillRef.current?.getEditor();
@@ -194,8 +199,9 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
 
   return (
     <div
-      className="h-full border-none hover:cursor-text focus:cursor-text"
+      className="h-full border-none hover:cursor-text focus:cursor-text [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
       onClick={handleWrapperClick}
+      data-role="diary-content"
     >
       <ReactQuill
         ref={quillRef}

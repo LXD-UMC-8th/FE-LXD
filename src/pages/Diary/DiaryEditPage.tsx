@@ -7,12 +7,27 @@ import WritingEditor from "../../components/Diary/Writing/WritingEditor";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { getDiaryDetail } from "../../apis/diary";
-import { useCleanHtmlRemoveImg } from "../../hooks/useCleanHtmlRemoveImg";
 
 const DiaryEditPage = () => {
   const { diaryId } = useParams();
   const { language } = useLanguage();
   const t = translate[language];
+
+  // Decode a JSON-escaped HTML string like "\"<p class=\\\"ql-align-right\\\">...\""
+  const decodeOnce = (raw?: string | null) => {
+    if (!raw) return "";
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "string") return parsed;
+    } catch {
+      // not a JSON string literal; return as-is
+    }
+    return raw;
+  };
+
+  // Normalize HTML for Quill: encode <img src> URLs so spaces don't break loading
+  const normalizeHtmlForQuill = (html: string) =>
+    html.replace(/src="([^"]+)"/g, (_m, url) => `src="${encodeURI(url)}"`);
 
   const [_titleName, setTitleName] = useState<string>("");
   const [_editorRawContent, setEditorRawContent] = useState<string>("");
@@ -20,15 +35,16 @@ const DiaryEditPage = () => {
 
   useEffect(() => {
     getDiaryDetail(Number(diaryId)).then((res) => {
-      console.log(res);
       const d = res.result;
-      setEditorRawContent(d.content || "");
+      const decoded = decodeOnce(d.content || "");
+      const normalized = normalizeHtmlForQuill(decoded);
+      setEditorRawContent(normalized);
       setTitleName(d.title || "");
       setThumbImg(d.thumbImg || "");
     });
-  }, []);
+  }, [diaryId]);
 
-  useCleanHtmlRemoveImg(_editorRawContent);
+  console.log("editor content:", _editorRawContent);
 
   const handleEditorChange = (value: string) => {
     setEditorRawContent(value);
@@ -36,7 +52,7 @@ const DiaryEditPage = () => {
 
   return (
     <div className="py-2 bg-gray-100 mx-10">
-      <div className="flex items-center gap-x-6">
+      <div className="flex items-center gap-x-6 mb-6">
         <PrevButton navigateURL="/mydiary" />
         <TitleHeader title={t.EditDiary} />
         <div className="ml-auto mr-6">
@@ -51,10 +67,10 @@ const DiaryEditPage = () => {
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
         <div className="bg-white rounded-[12px] shadow w-full p-5 gap-3">
           <input
-            onChange={(e) => {
-              setTitleName(e.target.value);
-              console.log("Title changed:", e.target.value);
-            }}
+            // onChange={(e) => {
+            //   setTitleName(e.target.value);
+            //   console.log("Title changed:", e.target.value);
+            // }}
             type="text"
             className="w-full bg-gray-200 rounded-md p-3 "
             value={_titleName}
@@ -63,7 +79,7 @@ const DiaryEditPage = () => {
 
         <div className="w-full h-full mt-5">
           <WritingEditor
-            value={_editorRawContent.replace(/"/g, "")}
+            value={_editorRawContent}
             onChange={handleEditorChange}
           />
         </div>

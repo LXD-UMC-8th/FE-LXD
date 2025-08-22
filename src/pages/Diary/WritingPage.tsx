@@ -10,6 +10,22 @@ import { translate } from "../../context/translate";
 import { getDiaryRandomQuestion } from "../../apis/diary";
 import useDebounce from "../../hooks/queries/useDebounce";
 
+  // Decode a JSON-escaped HTML string like "\"<p class=\\\"ql-align-right\\\">...\""
+  const decodeOnce = (raw?: string | null) => {
+    if (!raw) return "";
+    try {
+      const parsed = JSON.parse(raw);
+      if (typeof parsed === "string") return parsed;
+    } catch {
+      // not a JSON string literal; return as-is
+    }
+    return raw;
+  };
+
+  // Normalize HTML for Quill: encode <img src> URLs so spaces don't break loading
+  const normalizeHtmlForQuill = (html: string) =>
+    html.replace(/src="([^"]+)"/g, (_m, url) => `src="${encodeURI(url)}"`);
+
 const WritingPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -31,9 +47,10 @@ const WritingPage = () => {
   }, [_DebounceTitleName]);
 
   //Editor content을 debounce를 이용하여 localStorage에 저장
-  const [_editorRawContent, setEditorRawContent] = useState<string>(
-    () => localStorage.getItem("content") ?? ""
-  );
+  const [_editorRawContent, setEditorRawContent] = useState<string>(() => {
+    const raw = localStorage.getItem("content") ?? "";
+    return normalizeHtmlForQuill(decodeOnce(raw));
+  });
   const _debounceEditorContent = useDebounce(_editorRawContent, 500);
   useEffect(() => {
     localStorage.setItem("content", _debounceEditorContent);

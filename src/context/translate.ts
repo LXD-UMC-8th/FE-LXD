@@ -3,6 +3,8 @@ import { Language, type TLanguage } from "./LanguageProvider";
 export const translate: Record<
   TLanguage,
   {
+    GoBackToFeed: string;
+    WrongAccess: string;
     changeProfile: string;
     DeleteConfirm: string;
     CancelLikeInCorrection: string;
@@ -283,6 +285,8 @@ export const translate: Record<
   }
 > = {
   [Language.ENGLISH]: {
+    GoBackToFeed: "Go back to feed",
+    WrongAccess: "Invalid access.",
     DeleteConfirm: "Are you sure you want to delete this?",
     pending: "PENDING",
     donotrenderprofile: "Failed to load profile.",
@@ -631,6 +635,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
   },
 
   [Language.KOREAN]: {
+    GoBackToFeed: "피드로 돌아가기",
+    WrongAccess: "잘못된 접근입니다.",
     DeleteConfirm: "정말 삭제하시겠습니까?",
     pending: "요청중",
     saving: "저장 중..",

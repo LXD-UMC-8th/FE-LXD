@@ -133,8 +133,8 @@ const DiaryDetailPage = () => {
     return (
       <div>
         <div>
-          잘못된 접근입니다.
-          <button onClick={() => navigate("/feed")}>피드로 돌아가기</button>
+          {t.WrongAccess}
+          <button onClick={() => navigate("/feed")}>{t.GoBackToFeed}</button>
         </div>
       </div>
     );
