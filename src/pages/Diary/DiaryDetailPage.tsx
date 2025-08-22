@@ -245,7 +245,7 @@ const DiaryDetailPage = () => {
           {!isMyDiaryTab && (
             <button
               onClick={_handleCorrectionsClick}
-              className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
+              className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
             >
               <img
                 src="/images/correctionpencil.svg"
