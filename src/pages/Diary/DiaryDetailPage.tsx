@@ -23,6 +23,7 @@ const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
+  const isMyDiaryTab = location.pathname.startsWith("/mydiary");
 
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
@@ -232,22 +233,24 @@ const DiaryDetailPage = () => {
         {/* 뒤로가기 + 교정하기 */}
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
-          <button
-            onClick={_handleCorrectionsClick}
-            className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
-          >
-            <img
-              src="/images/correctionpencil.svg"
-              alt="correction"
-              className="w-[20px] h-[21px] group-hover:hidden"
-            />
-            <img
-              src="/images/CorrectHover.svg"
-              alt="correction hover"
-              className="w-[20px] h-[21px] hidden group-hover:block transition-300"
-            />
-            {t.CorrectButton}
-          </button>
+          {!isMyDiaryTab && (
+            <button
+              onClick={_handleCorrectionsClick}
+              className="group flex items-center justify-center bg-primary-500 text-primary-50 duration-300 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] pr-[20px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe]"
+            >
+              <img
+                src="/images/correctionpencil.svg"
+                alt="correction"
+                className="w-[20px] h-[21px] group-hover:hidden"
+              />
+              <img
+                src="/images/CorrectHover.svg"
+                alt="correction hover"
+                className="w-[20px] h-[21px] hidden group-hover:block transition-300"
+              />
+              {t.CorrectButton}
+            </button>
+          )}
         </div>
 
         <div className="bg-white p-8 rounded-[10px]">
@@ -356,7 +359,7 @@ const DiaryDetailPage = () => {
                 disabled={uiPage === 0 || isCommentsPending}
                 className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                <img src="/images/CommentsPrevButton.svg" />
+                <img alt="PrevImg" src="/images/CommentsPrevButton.svg" />
               </button>
 
               {(() => {
@@ -391,7 +394,7 @@ const DiaryDetailPage = () => {
                 disabled={uiPage >= totalPages - 1 || isCommentsPending}
                 className="px-3 py-1 disabled:opacity-50 cursor-pointer"
               >
-                <img src="/images/CommentsNextButton.svg" />
+                <img alt="NextImg" src="/images/CommentsNextButton.svg" />
               </button>
             </div>
           </div>

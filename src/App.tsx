@@ -17,7 +17,7 @@ import EditProfilePage from "./pages/Navbar/EditProfilePage";
 import SettingsPage from "./pages/Settings/SettingsPage";
 import FeedPage from "./pages/Feed/FeedPage";
 import DiaryDetailPage from "./pages/Diary/DiaryDetailPage";
-import ProvideCorrections from "./components/Diary/ProvideCorrections";
+import ProvideCorrections from "./pages/Diary/ProvideCorrections";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import DiaryEditPage from "./pages/Diary/DiaryEditPage";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -75,6 +75,10 @@ const protectedRoutes: RouteObject[] = [
       {
         path: "/mydiary",
         element: <DiaryPage />,
+      },
+      {
+        path: "/mydiary/feed/:diaryId",
+        element: <DiaryDetailPage />,
       },
       {
         path: "/mydiary/edit/:diaryId",

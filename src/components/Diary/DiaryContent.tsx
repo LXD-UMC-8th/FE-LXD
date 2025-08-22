@@ -137,8 +137,8 @@ const DiaryContent = ({
       {/* 제목 & 상태 */}
       <div className="flex items-center mb-5 no-click no-drag select-none">
         <Header props={{ visibility }} />
-        <h1 className="text-subhead2 font-semibold">{title}</h1>
-        <span className="text-blue-600 text-body2 font-medium ml-auto">
+        <h1 className="flex-1 pr-4 text-subhead2 font-semibold">{title}</h1>
+        <span className="text-blue-600 text-body2 font-medium ml-auto ">
           {lang === "KO" ? "한국어" : "English"}
         </span>
       </div>

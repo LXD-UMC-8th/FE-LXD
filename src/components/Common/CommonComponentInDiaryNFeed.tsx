@@ -81,7 +81,9 @@ const CommonComponentInDiaryNFeed = ({
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
 
   const handleEdit = () => {
-    navigate(`/mydiary/edit/${props.diaryId}`);
+    if (window.location.href.includes("mydiary")) {
+      navigate(`/mydiary/edit/${props.diaryId}`);
+    }
   };
 
   const handleDelete = () => {
@@ -91,6 +93,12 @@ const CommonComponentInDiaryNFeed = ({
   };
 
   const goToDetail = () => {
+    if (isMyDiaryTab) {
+      navigate(`/mydiary/feed/${props.diaryId}`, {
+        state: { from: "mydiary", commentCountFromList: props.commentCount },
+      });
+      return;
+    }
     navigate(`/feed/${props.diaryId}`, {
       state: isMyDiaryTab
         ? { from: "mydiary", commentCountFromList: props.commentCount }

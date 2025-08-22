@@ -45,7 +45,7 @@ const NotificationContent = ({
     <div
       className={`${
         notifications.read ? "bg-gray-200" : "bg-white"
-      } w-115 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
+      } w-112 h-25 flex items-center shadow-[2px_4px_30px_0px_rgba(0,0,0,0.1)] rounded-lg cursor-pointer hover:scale-102 transition-transform`}
       role="link"
       onClick={navigateToEvent}
     >

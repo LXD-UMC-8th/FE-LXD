@@ -11,7 +11,8 @@ export function useCleanHtmlRemoveImg(htmlString: string | null): ReactNode {
     const sanitized = DOMPurify.sanitize(htmlString, {
       FORBID_TAGS: REMOVE_TAGS,
     });
+    const cleaned = sanitized.replace(/^"(.*)"$/, "$1");
 
-    return parse(sanitized);
+    return parse(cleaned);
   }, [htmlString]);
 }
