@@ -8,6 +8,8 @@ import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import "react-quill-new/dist/quill.snow.css";
 import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
+import { usePostLike } from "../../hooks/mutations/usePostLike";
+import AlertModal from "../Common/AlertModal";
 
 interface DiaryContentProps {
   title?: string;
@@ -19,9 +21,12 @@ interface DiaryContentProps {
   writerNickname?: string;
   writerUserName?: string;
   writerNickName?: string;
-  stats?: { label: string; icon: string; alt: string }[];
-  diaryId?: number;
-  createdAt: string;
+  commentCount?: number;
+  likeCount?: number;
+  correctCount?: number;
+  diaryId: number;
+  isLiked?: boolean;
+  createdAt?: string;
   thumbnail?: string;
   contentRootRef?: React.RefObject<HTMLDivElement>;
   writerId?: number;
@@ -41,21 +46,12 @@ interface DiaryContentProps {
 // }
 
 const DiaryContent = ({
-  title,
-  lang,
-  visibility,
-  content,
-  profileImg,
-  writerUsername,
-  writerNickname,
-  writerUserName,
-  writerNickName,
-  stats,
-  diaryId,
-  createdAt,
-  contentRootRef,
-  writerId,
-}: DiaryContentProps) => {
+  props,
+  focusTextarea,
+}: {
+  props: DiaryContentProps;
+  focusTextarea: () => void;
+}) => {
   const { language } = useLanguage();
   const t = translate[language];
   const location = useLocation();
@@ -68,29 +64,89 @@ const DiaryContent = ({
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [DeleteLikeModal, setDeleteLikeModal] = useState<boolean>(false);
+
+  const DeleteLikeModalRef = useRef<HTMLDivElement | null>(null);
+
+  useOutsideClick(DeleteLikeModalRef, () => setDeleteLikeModal(false));
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
-  const handleEdit = () => navigate(`/mydiary/edit/${diaryId}`);
+  const handleEdit = () => navigate(`/mydiary/edit/${props.diaryId}`);
 
-  const deleteMutation = useDeleteDiaryMutation(diaryId as number);
+  const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
   const handleDelete = () => {
     if (window.confirm(t.DeleteConfirm)) {
       deleteMutation.mutate();
     }
   };
-  const replaceContent = normalizeQuillHtml(content);
+  const replaceContent = normalizeQuillHtml(props.content);
 
-  const displayUsername = writerUsername ?? writerUserName ?? "";
-  const displayNickname = writerNickname ?? writerNickName ?? "";
+  const displayUsername = props.writerUsername ?? props.writerUserName ?? "";
+  const displayNickname = props.writerNickname ?? props.writerNickName ?? "";
 
-  const createdDateOnly = createdAt?.slice(0, 10);
+  const createdDateOnly = props.createdAt?.slice(0, 10);
+
+  //좋아요 핸들러를 위한 설정들
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked ?? false);
+  const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
+
+  const stats = [
+    {
+      label: `${props.commentCount}`,
+      icon: "/images/CommonComponentIcon/CommentIcon.svg",
+    },
+    {
+      label: `${likeCount}`,
+      icon: isLiked
+        ? "/images/CommonComponentIcon/LikeFullIcon.svg"
+        : "/images/CommonComponentIcon/LikeIcon.svg",
+    },
+    {
+      label: `${props.correctCount}`,
+      icon: "/images/CommonComponentIcon/CorrectIcon.svg",
+    },
+  ];
+  const { mutate: likeMutate } = usePostLike({
+    targetType: "diaries",
+    targetId: props.diaryId || 0,
+  });
+
+  const handleIcons = (iconIndex: number) => {
+    switch (iconIndex) {
+      case 0:
+        focusTextarea();
+        break;
+      case 1:
+        isLiked
+          ? setDeleteLikeModal(true)
+          : (likeMutate(),
+            setLikeCount((prev) => prev + 1),
+            setIsLiked((prev) => !prev));
+        break;
+      case 2:
+        // 교정 아이콘 클릭 핸들러 (필요 시 구현)
+        navigate(`/feed/${props.diaryId}/corrections`, {
+          state: {
+            stats: {
+              commentCount: props.commentCount,
+              likeCount,
+              correctCount: props.correctCount,
+            },
+            meta: { diaryId: props.diaryId },
+          },
+        });
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <div className="relative">
       <div className="flex items-center justify-between pb-3">
         {/* 다이어리 번호 & 작성 날짜 */}
         <div className="text-subhead4 text-gray-600 font-medium select-none">
-          #{diaryId} · {createdDateOnly}
+          #{props.diaryId} · {createdDateOnly}
         </div>
 
         <div
@@ -136,10 +192,12 @@ const DiaryContent = ({
 
       {/* 제목 & 상태 */}
       <div className="flex items-center mb-5 no-click no-drag select-none">
-        <Header props={{ visibility }} />
-        <h1 className="flex-1 pr-4 text-subhead2 font-semibold">{title}</h1>
+        <Header props={{ visibility: props?.visibility }} />
+        <h1 className="flex-1 pr-4 text-subhead2 font-semibold">
+          {props.title}
+        </h1>
         <span className="text-blue-600 text-body2 font-medium ml-auto ">
-          {lang === "KO" ? "한국어" : "English"}
+          {props.lang === "KO" ? "한국어" : "English"}
         </span>
       </div>
 
@@ -147,10 +205,10 @@ const DiaryContent = ({
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
         <div
           className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${writerId}`)}
+          onClick={() => navigate(`/diaries/member/${props.writerId}`)}
         >
           <Avatar
-            src={profileImg}
+            src={props.profileImg}
             alt={displayNickname}
             size="w-8 h-8"
             className=""
@@ -167,7 +225,7 @@ const DiaryContent = ({
 
       <div className="select-text">
         <div
-          ref={contentRootRef}
+          ref={props.contentRootRef}
           data-role="diary-content"
           className="quill-editor ql-indent-2 [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
           dangerouslySetInnerHTML={{ __html: replaceContent }}
@@ -179,16 +237,37 @@ const DiaryContent = ({
       {/* 하단 통계 */}
       <div className="flex items-center gap-3 text-caption text-gray-700 select-none">
         {stats?.map((item, index) => (
-          <div key={index} className="flex gap-1 items-center">
-            <img
-              src={item.icon}
-              alt={`${item.alt} 아이콘`}
-              className="w-5 h-5"
-            />
+          <div
+            key={index}
+            className="flex gap-1 items-center cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleIcons(index);
+            }}
+          >
+            <img src={item.icon} alt="icons" className="w-6 h-6" />
             <span className="text-body2">{item.label}</span>
           </div>
         ))}
       </div>
+      {DeleteLikeModal && (
+        <AlertModal
+          title={t.ConfirmDeleteFeedLikes}
+          confirmText={t.Unlike}
+          onConfirm={(e) => {
+            e.stopPropagation();
+            setDeleteLikeModal(false);
+            setLikeCount((prev) => Math.max(0, prev - 1));
+            setIsLiked((prev) => !prev);
+            likeMutate();
+          }}
+          onClose={(e) => {
+            e.stopPropagation();
+            setDeleteLikeModal(false);
+          }}
+          alertMessage={t.ConfirmDeleteFeedLikes}
+        />
+      )}
     </div>
   );
 };

@@ -14,7 +14,10 @@ import { useDeleteDiaryComments } from "../../hooks/mutations/DiaryComment/useDe
 import { translate } from "../../context/translate";
 import { useLanguage } from "../../context/LanguageProvider";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import type { DiaryCommentDTO, DiaryCommentGetResponseDTO } from "../../utils/types/diaryComment";
+import type {
+  DiaryCommentDTO,
+  DiaryCommentGetResponseDTO,
+} from "../../utils/types/diaryComment";
 import CommentItem from "../../components/Diary/CommentItem";
 
 const DiaryDetailPage = () => {
@@ -84,7 +87,8 @@ const DiaryDetailPage = () => {
   } = useGetDiaryComments();
 
   // 일기 댓글 작성 (댓글 + 답글)
-  const { mutate: postDiaryComment, isPending: isPostingComment } = usePostDiaryComments();
+  const { mutate: postDiaryComment, isPending: isPostingComment } =
+    usePostDiaryComments();
 
   // 일기 댓글 작성
   const { mutate: deleteDiaryComment } = useDeleteDiaryComments();
@@ -224,6 +228,11 @@ const DiaryDetailPage = () => {
     );
   };
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const focusTextarea = () => {
+    textareaRef.current?.focus();
+  };
+
   // 로딩
   if (isDiaryPending) return <LoadingModal />;
 
@@ -256,34 +265,9 @@ const DiaryDetailPage = () => {
         <div className="bg-white p-8 rounded-[10px]">
           {diary && (
             <DiaryContent
-              title={diary.title}
-              lang={diary.language}
-              visibility={diary.visibility}
-              content={diary.content}
-              profileImg={diary.profileImg}
-              writerUsername={diary.writerUserName}
-              writerNickname={diary.writerNickName}
-              stats={[
-                {
-                  label: String(stableTotal),
-                  icon: "/images/CommonComponentIcon/CommentIcon.svg",
-                  alt: "댓글",
-                },
-                {
-                  label: String(diary.likeCount ?? 0),
-                  icon: "/images/CommonComponentIcon/LikeIcon.svg",
-                  alt: "좋아요",
-                },
-                {
-                  label: String(diary.correctCount ?? 0),
-                  icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-                  alt: "교정",
-                },
-              ]}
-              diaryId={diary.diaryId}
-              createdAt={diary.createdAt ?? ""}
+              props={diary}
               {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              writerId={diary.writerId}
+              focusTextarea={focusTextarea}
             />
           )}
 
@@ -303,6 +287,7 @@ const DiaryDetailPage = () => {
             {/* 최상위 댓글 입력창 */}
             <div className="mb-5 relative">
               <textarea
+                ref={textareaRef}
                 placeholder={t.CommentPlaceholder}
                 className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
                 rows={3}
@@ -381,7 +366,9 @@ const DiaryDetailPage = () => {
                     onClick={() => goToUiPage(p)}
                     disabled={isCommentsPending}
                     className={`px-3 py-1 rounded cursor-pointer ${
-                      p === uiPage ? "bg-gray-200 text-black" : "hover:bg-gray-50"
+                      p === uiPage
+                        ? "bg-gray-200 text-black"
+                        : "hover:bg-gray-50"
                     }`}
                   >
                     {p + 1}
@@ -404,15 +391,24 @@ const DiaryDetailPage = () => {
       {/* 오른쪽 교정 영역 */}
       <div className="flex flex-col px-5 gap-3">
         <div className="flex items-center gap-2">
-          <img alt="correction image" src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+          <img
+            alt="correction image"
+            src="/images/Correct.svg"
+            className="w-5 h-5"
+          />
+          <p className="text-subhead3 font-semibold py-3">
+            {t.CorrectionsInDiary}
+          </p>
         </div>
 
         {isCorrectionsPending && <LoadingModal />}
 
         {(correctionData?.result?.corrections?.contents ?? []).map(
           (correction: ContentsDTO) => (
-            <CorrectionsInFeedDetail key={correction.correctionId} props={correction} />
+            <CorrectionsInFeedDetail
+              key={correction.correctionId}
+              props={correction}
+            />
           )
         )}
       </div>

@@ -142,10 +142,6 @@ const ProvideCorrections = () => {
     );
   };
 
-  const commentCount = passed.stats?.commentCount ?? 0;
-  const likeCount = passed.stats?.likeCount ?? 0;
-  const correctCount = passed.stats?.correctCount ?? 0;
-
   return (
     <div
       className="flex justify-center items-start mx-auto px-6 sm:px-40 pt-6 relative w-270"
@@ -167,37 +163,7 @@ const ProvideCorrections = () => {
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
           <div ref={contentAreaRef}>
-            <DiaryContent
-              title={diary?.title ?? ""}
-              lang={diary?.language ?? ""}
-              visibility={diary?.visibility ?? ""}
-              profileImg={diary?.profileImg}
-              content={diary?.content}
-              writerNickname={diary?.writerNickName}
-              writerUsername={diary?.writerUserName}
-              stats={[
-                {
-                  label: String(commentCount),
-                  icon: "/images/CommonComponentIcon/CommentIcon.svg",
-                  alt: "댓글",
-                },
-                {
-                  label: String(likeCount),
-                  icon: "/images/CommonComponentIcon/LikeIcon.svg",
-                  alt: "좋아요",
-                },
-                {
-                  label: String(correctCount),
-                  icon: "/images/CommonComponentIcon/CorrectIcon.svg",
-                  alt: "교정",
-                },
-              ]}
-              diaryId={diary?.diaryId ?? 0}
-              createdAt={diary?.createdAt ?? ""}
-              {...(diary?.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              // 만약 DiaryContent가 contentRootRef를 지원한다면 위 래퍼 대신:
-              // contentRootRef={contentAreaRef}
-            />
+            {diary && <DiaryContent props={diary} />}
           </div>
         </div>
       </div>
