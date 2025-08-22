@@ -234,16 +234,21 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c) => (
                 <li key={c.commentId} className="flex flex-col gap-2">
-                  <ProfileComponent
-                    member={{
-                      memberId: c.memberId,
-                      username: c.username,
-                      nickname: c.nickname,
-                      // API: profileImage  → UI: profileImageUrl 로 매핑
-                      profileImageUrl: c.profileImage,
-                    }}
-                    createdAt={c.createdAt}
-                  />
+                  <div
+                    onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
+                    className="cursor-pointer"
+                  >
+                    <ProfileComponent
+                      member={{
+                        memberId: c.memberId,
+                        username: c.username,
+                        nickname: c.nickname,
+                        // API: profileImage  → UI: profileImageUrl 로 매핑
+                        profileImageUrl: c.profileImage,
+                      }}
+                      createdAt={c.createdAt}
+                    />
+                  </div>
                   <div className="flex-1 ml-2">
                     <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
                   </div>
