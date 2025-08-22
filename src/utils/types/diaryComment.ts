@@ -55,3 +55,14 @@ export type DiaryCommentDeleteDTO = {
 }
 
 export type DiaryCommentDeleteResponseDTO = APIResponse<DiaryCommentDeleteDTO>
+
+// 일기 댓글 좋아요
+export type DiaryCommentLikeRequestDTO = {
+    commentId: number;
+}
+export type DiaryCommentLikeResponseDTO = APIResponse<{
+    commentId: number;
+    memberId: number;
+    liked: boolean;
+    likeCount: number;
+}>

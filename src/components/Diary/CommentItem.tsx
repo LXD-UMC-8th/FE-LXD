@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { getLocalStorageItem } from "../../apis/axios";
 import ReplyItem from "./ReplyItem";
 import MoreMenuDelete from "./MoreMenuDelete";
+import { useLikeDiaryComment } from "../../hooks/mutations/DiaryComment/useLikeDiaryComment";
 
 interface CommentItemProps {
   comment: any;
@@ -33,19 +35,55 @@ const CommentItem = ({
   const hasReplies = Array.isArray(comment.replies) && comment.replies.length > 0;
   const isOwner = Number(getLocalStorageItem("userId")) === Number(comment.memberId);
 
+  const { mutate: likeComment, isPending } = useLikeDiaryComment();
+
+  const [liked, setLiked] = useState<boolean>(!!comment.liked);
+  const [likeCount, setLikeCount] = useState<number>(Number(comment.likeCount ?? 0));
+
+  useEffect(() => {
+    setLiked(!!comment?.liked);
+    setLikeCount(Number(comment?.likeCount ?? 0));
+  }, [comment?.commentId, comment?.liked, comment?.likeCount]);
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isPending) return;
+
+    const prevLiked = liked;
+    const prevCount = likeCount;
+
+    setLiked(!prevLiked);
+    setLikeCount(Math.max(0, prevCount + (prevLiked ? -1 : 1)));
+
+    likeComment(
+      { commentId: comment.commentId },
+      {
+        onError: () => {
+          setLiked(prevLiked);
+          setLikeCount(prevCount);
+        },
+        onSuccess: (data: any) => {
+          const r = data?.result ?? data;
+          if (r) {
+            if (typeof r.liked !== "undefined") setLiked(!!r.liked);
+            if (typeof r.likeCount !== "undefined") setLikeCount(Math.max(0, Number(r.likeCount)));
+          }
+        },
+      }
+    );
+  };
+
   return (
     <div className="p-4 border-t border-gray-200">
       {/* 작성자 */}
-      <div
-        className="flex items-center gap-3 mb-2"
-      >
+      <div className="flex items-center gap-3 mb-2">
         <div
           className="flex items-center gap-3 mb-2 cursor-pointer"
           onClick={() => navigate(`/diaries/member/${comment.memberId}`)}
         >
           <Avatar src={comment.profileImage} alt="profile" size="w-9 h-9" />
           <span className="font-semibold text-sm">{comment.nickname ?? "사용자"}</span>
-          <div className="w-px h-5 bg-gray-500" />
+          <div className="w-[0.5px] h-5 bg-gray-500" />
           <span className="text-xs text-gray-600">@{comment.username ?? "user"}</span>
         </div>
         <p className="text-caption text-gray-500 ml-auto">{comment.createdAt}</p>
@@ -69,15 +107,30 @@ const CommentItem = ({
       </p>
 
       {/* 답글 수 + 좋아요 */}
-      <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+      <div className="flex items-center gap-3 text-sm text-gray-600 mb-2">
         <div className="flex items-center gap-1">
           <img src="/images/CommonComponentIcon/CommentIcon.svg" className="w-5 h-5" />
           <span>{comment.replyCount ?? comment.replies?.length ?? 0}</span>
         </div>
-        <div className="flex items-center gap-1">
-          <img src="/images/CommonComponentIcon/LikeIcon.svg" className="w-5 h-5" />
-          <span>{comment.likeCount ?? 0}</span>
-        </div>
+
+        <button
+          type="button"
+          className="flex items-center gap-1 disabled:opacity-60"
+          disabled={isPending}
+          aria-pressed={liked}
+          onClick={handleLikeClick}
+        >
+          <img
+            src={
+              liked
+                ? "/images/CommonComponentIcon/LikeFullIcon.svg"
+                : "/images/CommonComponentIcon/LikeIcon.svg"
+            }
+            className="w-5 h-5 cursor-pointer"
+            alt="like"
+          />
+          <span>{likeCount}</span>
+        </button>
       </div>
 
       {/* 답글 리스트 */}

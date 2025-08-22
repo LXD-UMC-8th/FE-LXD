@@ -44,7 +44,8 @@ const MoreMenuDelete: React.FC<Props> = ({
           className={`absolute top-5 ${align === "left" ? "left-2" : "right-2"} z-10`}
         >
           <button
-            className="min-w-[96px] h-9 bg-white border border-gray-300 rounded-[5px] text-body2 text-alert px-3 cursor-pointer shadow-md"
+            className="min-w-[96px] h-9 bg-white border border-gray-300 rounded-[5px] text-body2 text-alert px-3 
+                       cursor-pointer shadow-md hover:bg-gray-100"
             onClick={(e) => {
               e.stopPropagation();
               if (!confirm(confirmText)) return;
