@@ -282,6 +282,8 @@ export const translate: Record<
     PPTitle_13: string;
     PPBody_13: string;
     accept: string;
+    PleaseEnterCorrectedSentence: string;
+    PleaseEnterReason: string;
     NoComments: string;
   }
 > = {
@@ -633,6 +635,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: `13. Changes to This Policy`,
     PPBody_13: `We may update this Privacy Policy from time to time. Significant changes will be notified through the Service. Continued use of the Service after changes have been posted constitutes your acceptance of the updated policy.`,
     accept: "Accept",
+    PleaseEnterCorrectedSentence: "Please enter a corrected sentence.",
+    PleaseEnterReason: "Please enter a description (reason).",
     NoComments: "No comments yet.",
   },
 
@@ -979,6 +983,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     PPTitle_13: ``,
     PPBody_13: ``,
     accept: "확인",
+    PleaseEnterCorrectedSentence: "교정된 문장을 입력해 주세요.",
+    PleaseEnterReason: "설명(이유)을 입력해주세요",
     NoComments: "댓글이 없습니다.",
   },
 };
