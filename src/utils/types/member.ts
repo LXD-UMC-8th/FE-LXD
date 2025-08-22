@@ -60,7 +60,6 @@ export type MemberProfileResponseDTO = APIResponse<MemberProfileDTO>;
 export type MemberProfileRequest = {
   nickname: string;
   profileImg?: File | null;
-  removeProfileImg?: boolean;
 };
 
 export type ChangePasswordRequestDTO = {
@@ -70,3 +69,5 @@ export type ChangePasswordRequestDTO = {
 };
 
 export type ChangePasswordResponseDTO = APIResponse<string>;
+
+export type DeleteProfileImgResponseDTO = APIResponse<string>;

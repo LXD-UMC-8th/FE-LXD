@@ -4,7 +4,11 @@ import TitleHeader from "../../components/Common/TitleHeader";
 import AccountInfo from "../../components/NavBar/EditProfile/AccountInfo";
 import ProfileInfo from "../../components/NavBar/EditProfile/ProfileInfo";
 import AlertModal from "../../components/Common/AlertModal";
-import { getMemberProfile, patchMemberProfile } from "../../apis/members";
+import {
+  deleteMemberProfileImage,
+  getMemberProfile,
+  patchMemberProfile,
+} from "../../apis/members";
 import type { MemberProfileResponseDTO } from "../../utils/types/member";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import LoadingModal from "../../components/Common/LoadingModal";
@@ -59,20 +63,35 @@ const EditProfilePage = () => {
 
   // 저장 뮤테이션
   const { mutate: _saveProfile, isPending: _isSaving } = useMutation({
-    mutationFn: () =>
-      patchMemberProfile({
-        nickname: userInfo.nickname.trim(),
-        profileImg:
-          userInfo.profileImgAction === "upload"
-            ? userInfo.profileImgFile
-            : null,
-        removeProfileImg: userInfo.profileImgAction === "remove",
-      }),
-    onSuccess: (_res) => {
+    mutationFn: async () => {
+      const nextNickname = userInfo.nickname.trim();
+      const prevNickname = data?.result.nickname ?? "";
+
+      const needDelete = userInfo.profileImgAction === "remove" && hadServerImg;
+      const needUpload = userInfo.profileImgAction === "upload";
+      const needNickUpd = nextNickname !== prevNickname;
+
+      // 1) 이미지 삭제(필요한 경우에만)
+      if (needDelete) {
+        await deleteMemberProfileImage();
+      }
+
+      // 2) 닉네임 변경이나 업로드가 있으면 patch
+      if (needUpload || needNickUpd) {
+        const res = await patchMemberProfile({
+          nickname: nextNickname,
+          profileImg: needUpload ? userInfo.profileImgFile : null, // 업로드만 전송
+        });
+
+        if (!res?.isSuccess) {
+          throw new Error(res?.message || "프로필 저장 실패");
+        }
+      }
+    },
+    onSuccess: () => {
       qc.invalidateQueries({ queryKey: [QUERY_KEY.member, QUERY_KEY.profile] });
       alert(t.changeProfile);
 
-      // 미리보기 정리 및 로컬 상태 리셋(파일은 비움, 서버 URL 반영은 query 성공 후 useEffect가 채워줌)
       if (objectURL) {
         URL.revokeObjectURL(objectURL);
         setObjectURL(null);
@@ -81,6 +100,7 @@ const EditProfilePage = () => {
         ...prev,
         profileImgFile: null,
         profileImgPreview: null,
+        profileImgAction: "keep",
       }));
     },
     onError: () => {

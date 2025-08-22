@@ -42,7 +42,7 @@ const ProfileInfo = ({
               {_profilePreview ? (
                 <img
                   src={_profilePreview}
-                  alt="프로필 이미지"
+                  alt="프로필 위미지"
                   className="w-full h-full object-cover"
                 />
               ) : <img
