@@ -97,9 +97,9 @@ const CommonComponentInDiaryNFeed = ({
   const handleIcons = (iconIndex: number) => {
     switch (iconIndex) {
       case 0:
-        navigate(`/feed/${props.diaryId}`, {
-          state: isMyDiaryTab ? { from: "mydiary" } : undefined,
-        });
+        // navigate(`/feed/${props.diaryId}`, {
+        //   state: isMyDiaryTab ? { from: "mydiary" } : undefined,
+        // });
         break;
       case 1:
         isLiked
@@ -163,8 +163,8 @@ const CommonComponentInDiaryNFeed = ({
 
         {/* 언어 + 더보기 */}
         <div className="flex items-center gap-3 relative" ref={menuRef}>
-          <span className="text-blue-600 text-sm font-medium">
-            한국어
+          <span className="text-primary-500 text-body3 font-medium pt-2 pr-2">
+            {props.language==="KO" ? "한국어" : "English"}
           </span>
           {isMyDiaryTab && (
             <>

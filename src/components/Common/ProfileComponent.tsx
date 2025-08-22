@@ -17,7 +17,7 @@ const ProfileComponent: React.FC<Props> = ({
   className = "",
 }) => {
   const imgSrc =
-    member?.profileImageUrl && member.profileImageUrl.trim() !== ""
+    member?.profileImageUrl
       ? member.profileImageUrl
       : FALLBACK_IMG;
 
