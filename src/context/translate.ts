@@ -428,7 +428,7 @@ export const translate: Record<
     FailToDeleteMemo: "Fail to delete memo.",
     CannotLoadList: "Unable to load list.",
     titleRequired: "Please enter a title.",
-    FriendFeedX: "There is not friend's diary.",
+    FriendFeedX: "No diaries from friends.",
     settingTitle: "Settings",
     SaveChange: "Save Changes",
     setLanguage: "Language Setting",
