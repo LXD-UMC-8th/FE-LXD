@@ -25,7 +25,7 @@ export const LanguageProvider = ({ children }: PropsWithChildren) => {
     const fetchLanguage = async () => {
       try {
         const response = await getMemberLanguage();
-        setLanguage(response?.result.systemLanguage as TLanguage);
+        setLanguage(response?.result?.systemLanguage as TLanguage);
       } catch (error) {
         console.error("Error fetching language:", error);
       }
