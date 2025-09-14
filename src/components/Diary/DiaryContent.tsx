@@ -10,6 +10,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import AlertModal from "../Common/AlertModal";
+import { useAuth } from "../../context/AuthProvider";
 
 interface DiaryContentProps {
   title?: string;
@@ -62,14 +63,12 @@ const DiaryContent = ({
   const location = useLocation();
   const navigate = useNavigate();
   const cameFromMyDiary = location.state?.from === "mydiary";
+  const { user } = useAuth();
 
   // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
-  const canEdit =
-    isMyDiaryTab ||
-    cameFromMyDiary ||
-    (isMyDiary?.writerUsername === props.writerUsername &&
-      isMyDiary?.writerNickname === props.writerNickname);
+  const isWriter = user?.username === props.writerUserName;
+  const canEdit = (isMyDiaryTab || cameFromMyDiary) || isWriter;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
