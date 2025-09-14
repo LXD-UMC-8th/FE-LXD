@@ -438,7 +438,7 @@ export const translate: Record<
     SidebarFeed: "Feed",
     profileEdit: "Edit Profile",
     SidebarDiary: "My Diary",
-    SidebarCorrections: "MyCorrections",
+    SidebarCorrections: "My Corrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
     findFriendsHeadline: "Find friends around the world",
