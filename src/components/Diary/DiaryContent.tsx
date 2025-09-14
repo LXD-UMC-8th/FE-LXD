@@ -92,7 +92,8 @@ const DiaryContent = ({
   const replaceContent = normalizeQuillHtml(props.content);
 
   // 일기 신고 로직
-  // const handleAlert..?
+  const [ alertContent, setAlertContent] = useState(false);
+  const [reportReason, setReportReason] = useState("");
 
   const displayUsername = props.writerUsername ?? props.writerUserName ?? "";
   const displayNickname = props.writerNickname ?? props.writerNickName ?? "";
@@ -205,13 +206,25 @@ const DiaryContent = ({
                   className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // 신고 처리 로직
+                    setAlertContent(true);
                   }}
                 >
-                  신고하기 
+                  {t.Alert}
                 </button>
               )}
             </div>
+          )}
+
+          {alertContent && (
+            <AlertModal
+              title={t.ReportContent}
+              onClose={() => setAlertContent(false)}
+              description={t.AlertDescription}
+              confirmText={t.AlertReport}
+              alertMessage="신고가 완료되었습니다."
+              onInputChange={setReportReason}
+              inputValue={reportReason}
+            />
           )}
         </div>
       </div>

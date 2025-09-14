@@ -10,6 +10,8 @@ interface AlertModalProps {
   confirmText: string;
   alertMessage: string;
   onConfirm?: (e?: any) => void;
+  inputValue?: string;
+  onInputChange?: (value: string) => void;
 }
 
 const AlertModal = ({
@@ -18,6 +20,8 @@ const AlertModal = ({
   description,
   confirmText,
   onConfirm,
+  inputValue,
+  onInputChange,
 }: AlertModalProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   useOutsideClick(ref, onClose);
@@ -28,9 +32,7 @@ const AlertModal = ({
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div
         ref={ref}
-        className={`relative bg-white w-130 rounded-xl text-center ${
-          description ? "h-70" : "h-60"
-        }`}
+        className="relative bg-white w-130 rounded-xl text-center h-auto min-h-[240px] max-h-[800px] overflow-y-auto"
       >
         <button
           onClick={onClose}
@@ -38,13 +40,40 @@ const AlertModal = ({
         >
           ✕
         </button>
-        <div className="pt-15 px-5">
-          <p className="text-subhead2 font-bold">{title}</p>
+        <div className="flex flex-col items-center pt-12 pb-8 px-6">
+          <p className="text-subhead2 font-bold text-black">{title}</p>
           {description && (
-            <p className="text-gray-700 text-body1 py-2 px-10">{description}</p>
+            <p className="text-gray-700 text-body1 py-2 px-10 pt-5">{description}</p>
           )}
 
-          <div className={`flex gap-3 px-16 ${description ? "pt-3" : "pt-6"}`}>
+          {/* 콘텐츠 신고 모달 시 텍스트 input */}
+          {onInputChange && (
+            <>
+              <div className="flex flex-col self-start items-start text-body2 text-primary-900 pt-1 pb-2 pl-15">
+                <ul className="flex gap-1 cursor-pointer">
+                  <img src="/images/CheckIcon.svg"/>
+                  {t.ReportContent_1}
+                </ul>
+                <ul className="flex gap-1 cursor-pointer">
+                  <img src="/images/CheckIcon.svg"/>
+                  {t.ReportContent_2}
+                </ul>
+                <ul className="flex gap-1 cursor-pointer">
+                  <img src="/images/CheckIcon.svg"/>
+                  {t.ReportContent_3}
+                </ul>
+              </div>
+              <div className="flex bg-gray-200 w-[400px] h-[50px] rounded-[10px]">
+                <textarea
+                  value={inputValue}
+                  className="w-full h-full text-body1 flex p-3 resize-none focus:outline-none"
+                  onChange={(e) => onInputChange(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+
+          <div className={`flex gap-3 px-16 ${description ? "pt-7" : "pt-6"}`}>
             <button
               onClick={onConfirm}
               className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
