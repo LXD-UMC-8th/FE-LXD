@@ -51,15 +51,15 @@ const AlertModal = ({
             <>
               <div className="flex flex-col self-start items-start text-body2 text-primary-900 pt-1 pb-2 pl-15">
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
                   {t.ReportContent_1}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
                   {t.ReportContent_2}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
                   {t.ReportContent_3}
                 </ul>
               </div>
