@@ -92,7 +92,7 @@ const DiaryContent = ({
   const replaceContent = normalizeQuillHtml(props.content);
 
   // 일기 신고 로직
-  const [ alertContent, setAlertContent] = useState(false);
+  const [alertContent, setAlertContent] = useState(false);
   const [reportReason, setReportReason] = useState("");
 
   const displayUsername = props.writerUsername ?? props.writerUserName ?? "";
