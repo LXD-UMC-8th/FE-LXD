@@ -30,7 +30,7 @@ const ProvideCorrections = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [description, setDescription] = useState("");
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0});
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const contentAreaRef = useRef<HTMLDivElement>(null);
@@ -70,14 +70,21 @@ const ProvideCorrections = () => {
     );
   }, [hasValidId, parsedDiaryId, fetchCorrections]);
 
-  const [displayCorrections, setDisplayCorrections] = useState<OptimisticContents[]>([]);
+  const [displayCorrections, setDisplayCorrections] = useState<
+    OptimisticContents[]
+  >([]);
 
   useEffect(() => {
-    const serverList: ContentsDTO[] = correctionData?.result?.corrections?.contents ?? [];
+    const serverList: ContentsDTO[] =
+      correctionData?.result?.corrections?.contents ?? [];
     if (!serverList.length) return;
 
-    const fp = (x: Pick<ContentsDTO, "original" | "corrected" | "commentText">) =>
-      `${(x.original ?? "").trim()}|${(x.corrected ?? "").trim()}|${(x.commentText ?? "").trim()}`;
+    const fp = (
+      x: Pick<ContentsDTO, "original" | "corrected" | "commentText">
+    ) =>
+      `${(x.original ?? "").trim()}|${(x.corrected ?? "").trim()}|${(
+        x.commentText ?? ""
+      ).trim()}`;
 
     const serverFingerprints = new Set(serverList.map((s) => fp(s)));
 
@@ -86,7 +93,9 @@ const ProvideCorrections = () => {
         (p) => !(p._optimistic && serverFingerprints.has(fp(p)))
       );
 
-      const existingIds = new Set(withoutDupOptimistic.map((c) => Number(c.correctionId)));
+      const existingIds = new Set(
+        withoutDupOptimistic.map((c) => Number(c.correctionId))
+      );
 
       const merged: OptimisticContents[] = [...withoutDupOptimistic];
       for (const s of serverList) {
@@ -123,7 +132,8 @@ const ProvideCorrections = () => {
       }
 
       const rect =
-        range.getBoundingClientRect().width || range.getBoundingClientRect().height
+        range.getBoundingClientRect().width ||
+        range.getBoundingClientRect().height
           ? range.getBoundingClientRect()
           : range.getClientRects()[0];
 
@@ -141,6 +151,7 @@ const ProvideCorrections = () => {
       setModalPosition({ top, left });
       setSelectedText(text);
       setEditedText("");
+      setDescription("");
       setShowModal(true);
     };
 
@@ -218,7 +229,10 @@ const ProvideCorrections = () => {
             setDisplayCorrections((prev) =>
               prev.map((c) =>
                 Number(c.correctionId) === tempId
-                  ? ({ ...serverItem, _optimistic: false } as OptimisticContents)
+                  ? ({
+                      ...serverItem,
+                      _optimistic: false,
+                    } as OptimisticContents)
                   : c
               )
             );
@@ -286,16 +300,21 @@ const ProvideCorrections = () => {
       <div className="flex flex-col px-5 gap-3 select-none">
         <div className="flex items-center gap-2">
           <img src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+          <p className="text-subhead3 font-semibold py-3">
+            {t.CorrectionsInDiary}
+          </p>
         </div>
 
         {(isDiaryPending ||
-          (isCorrectionsPending && !didPrimeCorrectionsRef.current && displayCorrections.length === 0)) && (
-          <LoadingModal />
-        )}
+          (isCorrectionsPending &&
+            !didPrimeCorrectionsRef.current &&
+            displayCorrections.length === 0)) && <LoadingModal />}
 
         {(displayCorrections ?? []).map((correction: OptimisticContents) => (
-          <CorrectionsInDiaryDetail key={Number(correction.correctionId)} props={correction} />
+          <CorrectionsInDiaryDetail
+            key={Number(correction.correctionId)}
+            props={correction}
+          />
         ))}
       </div>
     </div>
