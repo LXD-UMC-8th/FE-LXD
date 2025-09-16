@@ -258,15 +258,15 @@ const ProvideCorrections = () => {
       ref={containerRef}
     >
       <div className="flex-1 min-w-0">
-        {/* 뒤로가기 */}
-        <div className="mb-4 flex items-center gap-3 justify-between select-none">
+        {/* 뒤로가기 + 교정완료 */}
+        <div className="mb-4 flex items-center gap-3 justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <PrevButton navigateURL={-1} />
             <TitleHeader title={t.CorrectButton} />
           </div>
           <button
             type="button"
-            className="bg-primary-500 text-primary-50 text-sm font-bold rounded-[5px] h-[43px] w-[118px] px-1 cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
+            className="group flex items-center justify-center bg-primary-500 text-primary-50 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] transition-colors duration-300"
             onClick={() => navigate(-1)}
           >
             {t.CompleteCorrect}
