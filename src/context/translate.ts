@@ -683,7 +683,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     editmemo: "Edit",
     Alert: "Alert",
     AlertReport: "Report",
-    AlertDescription: "Your report will be sent to the admin team for review. Misuse of the report feature may lead to penalties.",
+    AlertDescription:
+      "Your report will be sent to the admin team for review. Misuse of the report feature may lead to penalties.",
     ReportContent: "Report Content",
     ReportContent_1: "Spam / Advertisement",
     ReportContent_2: "Inappropriate or Offensive Content",
@@ -691,7 +692,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
   },
 
   [Language.KOREAN]: {
-    uploadFailed:"사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
+    uploadFailed: "사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
     maxImages: "이미지는 최대 5개까지 추가할 수 있습니다.",
     maxOneImage: "이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.",
     post: "등록",
@@ -1053,7 +1054,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     editmemo: "수정하기",
     Alert: "신고하기",
     AlertReport: "신고하기",
-    AlertDescription: "신고는 운영팀에 전달되며, 검토 후 필요한 조치가 이루집니다. 허위 신고는 제재를 받을 수 있습니다.",
+    AlertDescription:
+      "신고는 운영팀에 전달되며, 검토 후 필요한 조치가 이루집니다. 허위 신고는 제재를 받을 수 있습니다.",
     ReportContent: "콘텐츠 신고",
     ReportContent_1: "스팸/광고",
     ReportContent_2: "부적절하거나 불쾌한 내용",
