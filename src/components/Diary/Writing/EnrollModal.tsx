@@ -20,7 +20,6 @@ const EnrollModal = ({
   _titleName,
   _editorRawContent,
   _style,
-
 }: EnrollModalProps) => {
   const { diaryId } = useParams<{ diaryId: string }>();
   console.log("EnrollModal diaryId & diaryType:", diaryId, typeof diaryId);
