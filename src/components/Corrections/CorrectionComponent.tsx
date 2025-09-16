@@ -18,6 +18,7 @@ import { translate } from "../../context/translate";
 
 interface Props {
   correction: SavedCorrectionItem;
+  diaryThumbnail?: string; // ✅ 1. 부모에게 받을 diaryThumbnail prop 타입을 추가합니다.
 }
 
 const pickDeep = (obj: any, paths: string[][]) => {
@@ -39,7 +40,8 @@ const makeSnippet = (text?: string, max = 30) => {
   return line.length > max ? line.slice(0, max) + "…" : line;
 };
 
-const CorrectionComponent = ({ correction }: Props) => {
+// ✅ 2. diaryThumbnail prop을 받도록 수정합니다.
+const CorrectionComponent = ({ correction, diaryThumbnail }: Props) => {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translate[language];
@@ -61,13 +63,17 @@ const CorrectionComponent = ({ correction }: Props) => {
         ["diary", "id"], ["targetDiary", "id"], ["target", "id"],
         ["diaryInfo", "id"], ["sourceDiary", "id"], ["post", "id"], ["entry", "id"],
       ]);
-    const diaryThumbnail: string | undefined =
-      c?.diaryInfo?.diaryThumbnail ??
+    
+    // ✅ 3. 부모에게 받은 diaryThumbnail 값을 최우선으로 사용하도록 수정합니다.
+    const diaryThumbnailValue: string | undefined =
+      diaryThumbnail ?? // 1순위: 부모에게서 직접 받은 값
+      c?.diaryInfo?.diaryThumbnail ?? // 2순위: 기존 추측 로직
       c.thumbnail ?? c.thumbnailUrl ?? c.imageUrl ??
       pickDeep(c, [
         ["diary", "thumbnail"], ["diary", "image"], ["targetDiary", "thumbnail"],
         ["post", "thumbnail"], ["post", "imageUrl"],
       ]);
+
     const createdAt: string =
       c.createdAt ?? c.providedAt ?? c.updatedAt ?? c.createdDate ?? c?.diaryInfo?.diaryCreatedAt ?? "";
     const member = c.member ?? c.receiver ?? c.writer ?? c.owner ?? c.author ?? c.user ?? {};
@@ -77,8 +83,9 @@ const CorrectionComponent = ({ correction }: Props) => {
     const savedCorrectionId = c.savedCorrectionId;
 
     return {
-      diaryTitle, diaryId, diaryThumbnail, createdAt, member, original,
+      diaryTitle, diaryId, createdAt, member, original,
       likedFlag, likeCountVal, savedCorrectionId,
+      diaryThumbnail: diaryThumbnailValue, // 최종 썸네일 값 반환
     };
   })();
 
@@ -215,7 +222,6 @@ const CorrectionComponent = ({ correction }: Props) => {
     }
   };
 
-  /** ✅ 페이지 이동 핸들러 */
   const handleNavigate = () => {
     if (normalized.diaryId) {
       navigate(`/feed/${normalized.diaryId}`);
@@ -226,14 +232,10 @@ const CorrectionComponent = ({ correction }: Props) => {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      {/* ✅ 클릭 영역 확장을 위한 래퍼. 클릭 시 handleNavigate 함수를 호출합니다. */}
       <div onClick={handleNavigate} className="cursor-pointer">
-        {/* 상단 프로필/시간 */}
         <div className="mb-3">
           <ProfileInCorrections member={normalized.member} createdAt={normalized.createdAt || ""} />
         </div>
-
-        {/* 제목(있을 때만) */}
         {!!displayTitle && (
           <div className="mt-1">
             <span className="text-primary-600 font-semibold underline">
@@ -241,8 +243,6 @@ const CorrectionComponent = ({ correction }: Props) => {
             </span>
           </div>
         )}
-
-        {/* 본문 */}
         <div className="mt-3 space-y-3">
           {!!normalized.original && (
             <p className="text-body1 text-gray-900">{normalized.original}</p>
@@ -261,7 +261,6 @@ const CorrectionComponent = ({ correction }: Props) => {
         </div>
       </div>
 
-      {/* 액션 버튼들은 클릭 영역에서 제외 */}
       <div className="mt-4 flex items-center justify-end gap-6 text-sm text-gray-500">
         <button
           onClick={toggleReply}
@@ -289,7 +288,6 @@ const CorrectionComponent = ({ correction }: Props) => {
         </button>
       </div>
 
-      {/* ... (댓글, 메모 영역은 이전과 동일) ... */}
       {openReply && (
         <div className="mt-3 space-y-3">
           {listLoading && <LoadingModal />}
@@ -345,12 +343,10 @@ const CorrectionComponent = ({ correction }: Props) => {
 
       <div className="mt-5 border-t border-gray-200" />
 
-      {/* 하단 정보 바 */}
       <div
         className="mt-4 flex cursor-pointer items-center gap-3"
         onClick={handleNavigate}
       >
-        {/* ✅ 수정된 썸네일 렌더링: 이미지가 있으면 img 태그를, 없으면 회색 박스를 렌더링 */}
         {normalized.diaryThumbnail ? (
           <img
             src={normalized.diaryThumbnail}
@@ -372,7 +368,6 @@ const CorrectionComponent = ({ correction }: Props) => {
         <div className="ml-auto text-caption text-gray-500">{normalized.createdAt || ""}</div>
       </div>
 
-      {/* ... (모달 부분은 이전과 동일) ... */}
       {deleteLikeOpen && (
         <AlertModal
           title={t.DeleteLikeAlert}

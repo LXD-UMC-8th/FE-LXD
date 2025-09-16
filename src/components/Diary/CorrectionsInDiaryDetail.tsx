@@ -81,7 +81,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
       const req: CorrectionCommentGetRequestDTO = {
         correctionId: props.correctionId,
         page: 1,
-        size: 10,
+        size: 100,
       };
       fetchComments(req);
     }
@@ -121,7 +121,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           const req: CorrectionCommentGetRequestDTO = {
             correctionId: props.correctionId,
             page: 1,
-            size: 10,
+            size: 100,
           };
           fetchComments(req);
         },
@@ -159,7 +159,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       {/* 프로필 */}
-      <div 
+      <div
         onClick={() => navigate(`/diaries/member/${props.member.memberId}`)}
         className="cursor-pointer"
       >
