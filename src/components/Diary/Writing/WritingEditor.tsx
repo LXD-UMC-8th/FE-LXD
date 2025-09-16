@@ -183,7 +183,7 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
           ["bold", "italic", "underline", "strike"],
           [/*{ list: "ordered" },*/ { list: "bullet" }],
           ["image"],
-          [{ color: [] }],
+          [{ color: [] }, { background: [] }],
           [{ align: [] }],
         ],
         handlers: {

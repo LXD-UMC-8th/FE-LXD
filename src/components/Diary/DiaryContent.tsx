@@ -10,6 +10,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import AlertModal from "../Common/AlertModal";
+import { useAuth } from "../../context/AuthProvider";
 
 interface DiaryContentProps {
   title?: string;
@@ -62,16 +63,14 @@ const DiaryContent = ({
   const location = useLocation();
   const navigate = useNavigate();
   const cameFromMyDiary = location.state?.from === "mydiary";
+  const { user } = useAuth();
 
   // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
-  const canEdit =
-    isMyDiaryTab ||
-    cameFromMyDiary ||
-    (isMyDiary?.writerUsername === props.writerUsername &&
-      isMyDiary?.writerNickname === props.writerNickname);
+  const isWriter = user?.username === props.writerUserName;
+  const canEdit = (isMyDiaryTab || cameFromMyDiary) || isWriter;
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // 더보기 메뉴
   const menuRef = useRef<HTMLDivElement>(null);
   const [DeleteLikeModal, setDeleteLikeModal] = useState<boolean>(false);
 
@@ -80,8 +79,10 @@ const DiaryContent = ({
   useOutsideClick(DeleteLikeModalRef, () => setDeleteLikeModal(false));
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
+  // 일기 수정 로직
   const handleEdit = () => navigate(`/mydiary/edit/${props.diaryId}`);
 
+  // 일기 삭제 로직
   const deleteMutation = useDeleteDiaryMutation(props.diaryId as number);
   const handleDelete = () => {
     if (window.confirm(t.DeleteConfirm)) {
@@ -89,6 +90,10 @@ const DiaryContent = ({
     }
   };
   const replaceContent = normalizeQuillHtml(props.content);
+
+  // 일기 신고 로직
+  const [alertContent, setAlertContent] = useState(false);
+  const [reportReason, setReportReason] = useState("");
 
   const displayUsername = props.writerUsername ?? props.writerUserName ?? "";
   const displayNickname = props.writerNickname ?? props.writerNickName ?? "";
@@ -163,39 +168,63 @@ const DiaryContent = ({
           ref={menuRef}
         >
           {/* 더보기 아이콘 */}
-          <img
+          <img 
             src="/images/more_options.svg"
             className="w-6 h-6 cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpen((prev) => !prev);
-              console.log("더보기 아이콘 클릭");
             }}
             alt="더보기 아이콘"
           />
-
-          {/* 더보기 메뉴: mydiary에서만 */}
-          {canEdit && menuOpen && (
+          {/* 더보기 메뉴 */}
+          {menuOpen && (
             <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
-              <button
-                className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit();
-                }}
-              >
-                {t.EditDiary}
-              </button>
-              <button
-                className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete();
-                }}
-              >
-                {t.DeleteDiary}
-              </button>
+              {isWriter ? (
+                <>
+                  <button
+                    className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEdit();
+                    }}
+                  >
+                    {t.EditDiary}
+                  </button>
+                  <button
+                    className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete();
+                    }}
+                  >
+                    {t.DeleteDiary}
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setAlertContent(true);
+                  }}
+                >
+                  {t.Alert}
+                </button>
+              )}
             </div>
+          )}
+
+          {alertContent && (
+            <AlertModal
+              title={t.ReportContent}
+              onClose={() => setAlertContent(false)}
+              description={t.AlertDescription}
+              confirmText={t.AlertReport}
+              alertMessage="신고가 완료되었습니다."
+              onInputChange={setReportReason}
+              inputValue={reportReason}
+            />
           )}
         </div>
       </div>

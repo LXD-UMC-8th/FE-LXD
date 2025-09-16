@@ -31,6 +31,7 @@ import GoogleRedirectPage from "./pages/Login/GoogleRedirectPage";
 import ChangePWinEditProfilePage from "./pages/Navbar/ChangePWinEditProfilePage";
 import EditProfileLayout from "./layouts/EditProfileLayout";
 import { LanguageProvider } from "./context/LanguageProvider";
+import { AuthProvider } from "./context/AuthProvider";
 
 
 const publicRoutes: RouteObject[] = [
@@ -135,10 +136,12 @@ function App() {
   return (
     <div className="p-0">
       <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
+        <AuthProvider>
+          <LanguageProvider>
           <RouterProvider router={router} />
           <ReactQueryDevtools initialIsOpen={false} />
         </LanguageProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </div>
   );
