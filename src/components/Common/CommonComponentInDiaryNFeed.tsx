@@ -239,7 +239,7 @@ const CommonComponentInDiaryNFeed = ({
       <div className="flex flex-rows">
         <div className="flex-1 space-y-2">
           <Header props={props} />
-          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
+          <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-line break-words [&_*]:break-all [&_*]:whitespace-normal">
             {content}
           </div>
         </div>

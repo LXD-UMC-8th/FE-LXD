@@ -266,6 +266,8 @@ const ProfileView = ({
                 onKeyDown={(e) => e.key === "Enter" && openDiary(d.diaryId)}
                 title={`Open diary ${d.diaryId}`}
                 className="
+                  break-words
+                  [&_a]:break-all
                   rounded-2xl border border-gray-200 bg-white px-5 py-4
                   hover:shadow-sm transition-shadow
                   
