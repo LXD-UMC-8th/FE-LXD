@@ -117,3 +117,26 @@ export const getFriendsNoCache = async (page = 1, size = 10) => {
   });
   return res.data;
 };
+
+// 최근 친구 검색 기록 조회
+export const getRecentFriendSearches = async (limit = 10) => {
+  // API 명세에 응답 타입이 명확하지 않아 any로 처리했습니다. 실제 DTO로 교체해주세요.
+  const res = await axiosInstance.get<any>("/friends/search/recent", {
+    params: { limit },
+  });
+  return res.data;
+};
+
+// 최근 검색 기록 개별 삭제 (username 기반)
+export const deleteRecentSearch = async (username: string) => {
+  const res = await axiosInstance.delete("/friends/search/recent", {
+    params: { query: username },
+  });
+  return res.data;
+};
+
+// 최근 검색 기록 전체 삭제
+export const clearAllRecentSearches = async () => {
+  const res = await axiosInstance.delete("/friends/search/recent/all");
+  return res.data;
+};
