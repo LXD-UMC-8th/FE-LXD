@@ -27,7 +27,6 @@ const DiaryDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { diaryId } = useParams<{ diaryId?: string }>();
-  
 
   const parsedDiaryId = Number(diaryId);
   const hasValidId = diaryId !== undefined && !Number.isNaN(parsedDiaryId);
@@ -91,7 +90,7 @@ const DiaryDetailPage = () => {
   const { mutate: postDiaryComment, isPending: isPostingComment } =
     usePostDiaryComments();
 
-  // 일기 댓글 작성
+  // 일기 댓글 삭제
   const { mutate: deleteDiaryComment } = useDeleteDiaryComments();
 
   const loadCommentsByUiPage = (p: number) => {
@@ -161,6 +160,11 @@ const DiaryDetailPage = () => {
           setCommentText("");
           // 최신이 0페이지(UI)라고 가정
           goToUiPage(0);
+        },
+        onError: (error: any) => {
+          if (error.response?.status === 403) {
+            alert(t.CommentRestricted);
+          }
         },
       }
     );
@@ -250,8 +254,6 @@ const DiaryDetailPage = () => {
 
   // 로딩
   if (isDiaryPending) return <LoadingModal />;
-
-
 
   return (
     <div className="flex justify-start items-start w-full max mx-auto px-6 pt-6 gap-6">
