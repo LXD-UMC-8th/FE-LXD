@@ -311,6 +311,7 @@ export const translate: Record<
     ReportContent_2: string;
     ReportContent_3: string;
     unfriendFailToast: string;
+    DeleteCommentFail: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -690,7 +691,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     ReportContent_1: "Spam / Advertisement",
     ReportContent_2: "Inappropriate or Offensive Content",
     ReportContent_3: "Other (please specify)",
-    unfriendFailToast: "Failed to Unfriend friend."
+    unfriendFailToast: "Failed to Unfriend friend.",
+    DeleteCommentFail: "Failed to delete comment."
   },
 
   [Language.KOREAN]: {
@@ -1062,6 +1064,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     ReportContent_1: "스팸/광고",
     ReportContent_2: "부적절하거나 불쾌한 내용",
     ReportContent_3: "기타(직접입력)",
-    unfriendFailToast : "친구 삭제에 실패했습니다."
+    unfriendFailToast : "친구 삭제에 실패했습니다.",
+    DeleteCommentFail : "댓글 삭제에 실패했습니다."
   },
 };
