@@ -104,3 +104,5 @@ export type Friend = {
   image?: string;
   isFriend: boolean;
 };
+
+
