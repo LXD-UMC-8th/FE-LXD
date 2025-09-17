@@ -1,6 +1,9 @@
+// src/components/Friends/Tabs/RequestTab.tsx
+
 import { useState, useEffect } from "react";
 import Avatar from "../../Common/Avatar";
 import RequestSkeleton from "../Skeleton/RequestSkeleton";
+import ProfileModal from "../ProfileModal"; // ✅ 1. ProfileModal 임포트
 import {
   getFriendRequests,
   postFriendAccept,
@@ -12,44 +15,48 @@ import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
 import { useFriendCounts } from "../../../context/FriendCountsContext";
 
+// ✅ 2. DTO에서 올바른 유저 타입을 직접 추출하여 에러 방지
+type RequestUser =
+  FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"][number];
+
 const RequestTab = () => {
   const { incFriend, decRequests } = useFriendCounts();
   const { language } = useLanguage();
   const t = translate[language];
+
   const [isLoading, setIsLoading] = useState(true);
-  const [receivedRequests, setReceivedRequests] = useState<
-    FriendRequestListResponseDTO["result"]["receivedRequests"]["contents"]
-  >([]);
-  const [sentRequests, setSentRequests] = useState<
-    FriendRequestListResponseDTO["result"]["sentRequests"]["contents"]
-  >([]);
+  const [receivedRequests, setReceivedRequests] = useState<RequestUser[]>([]);
+  const [sentRequests, setSentRequests] = useState<RequestUser[]>([]);
+
+  // ✅ 3. 모달을 제어하기 위한 상태 추가
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<RequestUser | null>(null);
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         const data = await getFriendRequests();
-
-        // Swagger 응답 구조에 맞게 contents 사용
-        setReceivedRequests(
-          Array.isArray(data?.result?.receivedRequests?.contents)
-            ? data.result.receivedRequests.contents
-            : []
-        );
-        setSentRequests(
-          Array.isArray(data?.result?.sentRequests?.contents)
-            ? data.result.sentRequests.contents
-            : []
-        );
+        setReceivedRequests(data?.result?.receivedRequests?.contents ?? []);
+        setSentRequests(data?.result?.sentRequests?.contents ?? []);
       } catch (err) {
         console.error("❌ 친구 요청 목록 불러오기 실패:", err);
-        setReceivedRequests([]);
-        setSentRequests([]);
       } finally {
         setIsLoading(false);
       }
     };
     fetchRequests();
   }, []);
+
+  // ✅ 4. 모달을 열고 닫는 핸들러 함수들
+  const handleUserClick = (user: RequestUser) => {
+    setSelectedUser(user);
+    setShowProfileModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowProfileModal(false);
+    setSelectedUser(null);
+  };
 
   const handleAccept = async (memberId: number) => {
     try {
@@ -67,10 +74,10 @@ const RequestTab = () => {
   const handleRefuse = async (memberId: number) => {
     try {
       await patchFriendRefuse(memberId);
+      decRequests(1);
       setReceivedRequests((prev) =>
         prev.filter((u) => u.memberId !== memberId)
       );
-      decRequests(1);
     } catch (err) {
       console.error("❌ 요청 거절 실패:", err);
     }
@@ -78,7 +85,6 @@ const RequestTab = () => {
 
   const handleCancel = async (receiverId: number) => {
     try {
-      // Swagger에서 body가 { receiverId: number } 형태일 경우 이렇게 보내야 함
       await patchFriendCancel({ receiverId });
       decRequests(1);
       setSentRequests((prev) => prev.filter((u) => u.memberId !== receiverId));
@@ -118,7 +124,11 @@ const RequestTab = () => {
                   key={user.memberId}
                   className="flex flex-col md:flex-row md:items-center justify-between gap-3 md:gap-0 border bg-[#FFFFFF] border-gray-200 rounded-xl px-4 py-3 shadow-sm h-auto"
                 >
-                  <div className="flex items-center gap-3 cursor-pointer">
+                  {/* ✅ 5. 프로필 영역에 onClick 이벤트 추가 */}
+                  <div
+                    className="flex items-center gap-3 cursor-pointer"
+                    onClick={() => handleUserClick(user)}
+                  >
                     <Avatar
                       src={user.profileImg}
                       alt={user.nickname}
@@ -172,7 +182,11 @@ const RequestTab = () => {
                   key={user.memberId}
                   className="flex flex-col md:flex-row md:items-center justify-between bg-[#FFFFFF] gap-3 md:gap-0 border border-gray-200 rounded-xl px-4 py-3 shadow-sm h-auto"
                 >
-                  <div className="flex items-center gap-3 cursor-pointer">
+                  {/* ✅ 5. 프로필 영역에 onClick 이벤트 추가 */}
+                  <div
+                    className="flex items-center gap-3 cursor-pointer"
+                    onClick={() => handleUserClick(user)}
+                  >
                     <Avatar
                       src={user.profileImg}
                       alt={user.nickname}
@@ -212,6 +226,21 @@ const RequestTab = () => {
           )}
         </div>
       </div>
+
+      {/* ✅ 6. ProfileModal을 조건부로 렌더링 */}
+      {showProfileModal && selectedUser && (
+        <ProfileModal
+          user={{
+            memberId: selectedUser.memberId,
+            name: selectedUser.nickname,
+            username: selectedUser.username,
+            profileImage: selectedUser.profileImg,
+          }}
+          onClose={handleCloseModal}
+          onUnfriendClick={handleCloseModal} // 모달 내에서 친구끊기 시 일단 닫기만 처리
+          onSendRequestClick={handleCloseModal} // 모달 내에서 친구요청 시 일단 닫기만 처리
+        />
+      )}
     </div>
   );
 };
