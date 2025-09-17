@@ -20,6 +20,7 @@ import type {
 } from "../../utils/types/diaryComment";
 import CommentItem from "../../components/Diary/CommentItem";
 import { getDiaryMySummary } from "../../apis/diary";
+import { useFriendSet } from "../../hooks/queries/useFriendSet";
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
@@ -92,6 +93,16 @@ const DiaryDetailPage = () => {
 
   // 일기 댓글 삭제
   const { mutate: deleteDiaryComment } = useDeleteDiaryComments();
+
+  // 친구 여부 불러오기
+  const { friendSet } = useFriendSet();
+  const writerId = diaryData?.result?.writerId;
+  const isMyFriend = writerId ? friendSet.has(writerId) : false;
+
+  // 댓글 작성 허용 여부
+  const canWriteComment =
+    diaryData?.result?.commentPermission === "ALL" ||
+    (diaryData?.result?.commentPermission === "FRIENDS" && isMyFriend);
 
   const loadCommentsByUiPage = (p: number) => {
     const apiPage = uiToApi(p);
@@ -295,48 +306,52 @@ const DiaryDetailPage = () => {
 
           {/* 댓글 전체 래퍼 */}
           <div className="mt-10 bg-white rounded-[10px] p-6">
-            <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
-              <img
-                src="/images/commentIcon.svg"
-                alt="댓글 아이콘"
-                className="w-[24px] h-[24px]"
-              />
-              <span>
-                {t.Comment} ({commentTotal})
-              </span>
-            </div>
+            {canWriteComment && (
+              <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
+                <img
+                  src="/images/commentIcon.svg"
+                  alt="댓글 아이콘"
+                  className="w-[24px] h-[24px]"
+                />
+                <span>
+                  {t.Comment} ({commentTotal})
+                </span>
+              </div>
+            )}
 
             {/* 최상위 댓글 입력창 */}
-            <div className="mb-5 relative">
-              <textarea
-                ref={textareaRef}
-                placeholder={t.CommentPlaceholder}
-                className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
-                rows={3}
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    _handleSubmitComment();
-                  }
-                }}
-                disabled={isPostingComment}
-              />
-              <div className="flex justify-end mt-3">
-                <button
-                  onClick={_handleSubmitComment}
-                  disabled={isPostingComment || !commentText.trim()}
-                  className={`absolute bottom-7 right-3 bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
-                    isPostingComment || !commentText.trim()
-                      ? "opacity-50 cursor-not-allowed"
-                      : "hover:bg-gray-800"
-                  }`}
-                >
-                  {t.CommentSubmit}
-                </button>
+            {canWriteComment && (
+              <div className="mb-5 relative">
+                <textarea
+                  ref={textareaRef}
+                  placeholder={t.CommentPlaceholder}
+                  className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
+                  rows={3}
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      _handleSubmitComment();
+                    }
+                  }}
+                  disabled={isPostingComment}
+                />
+                <div className="flex justify-end mt-3">
+                  <button
+                    onClick={_handleSubmitComment}
+                    disabled={isPostingComment || !commentText.trim()}
+                    className={`absolute bottom-7 right-3 bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
+                      isPostingComment || !commentText.trim()
+                        ? "opacity-50 cursor-not-allowed"
+                        : "hover:bg-gray-800"
+                    }`}
+                  >
+                    {t.CommentSubmit}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* 댓글 로딩 */}
             {isCommentsPending && <LoadingModal />}
