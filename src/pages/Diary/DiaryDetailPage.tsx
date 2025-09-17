@@ -21,6 +21,7 @@ import type {
 import CommentItem from "../../components/Diary/CommentItem";
 import { getDiaryMySummary } from "../../apis/diary";
 import { useFriendSet } from "../../hooks/queries/useFriendSet";
+import { useAuth } from "../../context/AuthProvider";
 
 const DiaryDetailPage = () => {
   const { language } = useLanguage();
@@ -94,6 +95,10 @@ const DiaryDetailPage = () => {
   // 일기 댓글 삭제
   const { mutate: deleteDiaryComment } = useDeleteDiaryComments();
 
+  // 글 작성자가 현재 로그인 한 사용자인지 여부 확인
+  const { user } = useAuth();
+  const isWriter = user?.username === diaryData?.result?.writerUserName;
+
   // 친구 여부 불러오기
   const { friendSet } = useFriendSet();
   const writerId = diaryData?.result?.writerId;
@@ -102,7 +107,8 @@ const DiaryDetailPage = () => {
   // 댓글 작성 허용 여부
   const canWriteComment =
     diaryData?.result?.commentPermission === "ALL" ||
-    (diaryData?.result?.commentPermission === "FRIENDS" && isMyFriend);
+    (diaryData?.result?.commentPermission === "FRIENDS" &&
+      (isMyFriend || isWriter));
 
   const loadCommentsByUiPage = (p: number) => {
     const apiPage = uiToApi(p);
@@ -307,120 +313,124 @@ const DiaryDetailPage = () => {
           {/* 댓글 전체 래퍼 */}
           <div className="mt-10 bg-white rounded-[10px] p-6">
             {canWriteComment && (
-              <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
-                <img
-                  src="/images/commentIcon.svg"
-                  alt="댓글 아이콘"
-                  className="w-[24px] h-[24px]"
-                />
-                <span>
-                  {t.Comment} ({commentTotal})
-                </span>
-              </div>
-            )}
+              <>
+                {/* 댓글 헤더 */}
+                <div className="flex items-center gap-2 text-black font-semibold text-[17px] mb-5">
+                  <img
+                    src="/images/commentIcon.svg"
+                    alt="댓글 아이콘"
+                    className="w-[24px] h-[24px]"
+                  />
+                  <span>
+                    {t.Comment} ({commentTotal})
+                  </span>
+                </div>
 
-            {/* 최상위 댓글 입력창 */}
-            {canWriteComment && (
-              <div className="mb-5 relative">
-                <textarea
-                  ref={textareaRef}
-                  placeholder={t.CommentPlaceholder}
-                  className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
-                  rows={3}
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      _handleSubmitComment();
-                    }
-                  }}
-                  disabled={isPostingComment}
-                />
-                <div className="flex justify-end mt-3">
+                {/* 최상위 댓글 입력창 */}
+                <div className="mb-5 relative">
+                  <textarea
+                    ref={textareaRef}
+                    placeholder={t.CommentPlaceholder}
+                    className="w-full text-sm text-gray-800 pr-[80px] bg-gray-50 resize-none border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-1 focus:ring-gray-200"
+                    rows={3}
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        _handleSubmitComment();
+                      }
+                    }}
+                    disabled={isPostingComment}
+                  />
+                  <div className="flex justify-end mt-3">
+                    <button
+                      onClick={_handleSubmitComment}
+                      disabled={isPostingComment || !commentText.trim()}
+                      className={`absolute bottom-7 right-3 bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
+                        isPostingComment || !commentText.trim()
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-gray-800"
+                      }`}
+                    >
+                      {t.CommentSubmit}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 댓글 로딩 */}
+                {isCommentsPending && <LoadingModal />}
+
+                {/* 댓글 리스트 */}
+                {comments.map((c: any) => (
+                  <CommentItem
+                    key={c.commentId}
+                    comment={c}
+                    replyTexts={replyTexts}
+                    onReplyChange={_handleReplyChange}
+                    onReplySubmit={_handleSubmitReply}
+                    onDelete={_handleDeleteComment}
+                    menuWrapperRef={menuWrapperRef}
+                    openMenuId={openMenuId}
+                    setOpenMenuId={setOpenMenuId}
+                    t={t}
+                    isPostingComment={isPostingComment}
+                    navigate={navigate}
+                  />
+                ))}
+
+                {/* 페이지네이션 */}
+                <div className="mt-6 flex items-center justify-center gap-2">
                   <button
-                    onClick={_handleSubmitComment}
-                    disabled={isPostingComment || !commentText.trim()}
-                    className={`absolute bottom-7 right-3 bg-gray-900 text-white text-sm px-4 py-2 rounded-[5px] text-caption font-semibold cursor-pointer ${
-                      isPostingComment || !commentText.trim()
-                        ? "opacity-50 cursor-not-allowed"
-                        : "hover:bg-gray-800"
-                    }`}
+                    onClick={() => goToUiPage(uiPage - 1)}
+                    disabled={uiPage === 0 || isCommentsPending}
+                    className="px-3 py-1 disabled:opacity-50 cursor-pointer"
                   >
-                    {t.CommentSubmit}
+                    <img alt="PrevImg" src="/images/CommentsPrevButton.svg" />
+                  </button>
+
+                  {(() => {
+                    const windowSize = 5;
+                    const start = Math.max(
+                      0,
+                      Math.min(
+                        uiPage - Math.floor(windowSize / 2),
+                        totalPages - windowSize
+                      )
+                    );
+                    const end = Math.min(
+                      totalPages - 1,
+                      start + windowSize - 1
+                    );
+                    const pages: number[] = [];
+                    for (let i = start; i <= end; i++) pages.push(i);
+
+                    return pages.map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => goToUiPage(p)}
+                        disabled={isCommentsPending}
+                        className={`px-3 py-1 rounded cursor-pointer ${
+                          p === uiPage
+                            ? "bg-gray-200 text-black"
+                            : "hover:bg-gray-50"
+                        }`}
+                      >
+                        {p + 1}
+                      </button>
+                    ));
+                  })()}
+
+                  <button
+                    onClick={() => goToUiPage(uiPage + 1)}
+                    disabled={uiPage >= totalPages - 1 || isCommentsPending}
+                    className="px-3 py-1 disabled:opacity-50 cursor-pointer"
+                  >
+                    <img alt="NextImg" src="/images/CommentsNextButton.svg" />
                   </button>
                 </div>
-              </div>
+              </>
             )}
-
-            {/* 댓글 로딩 */}
-            {isCommentsPending && <LoadingModal />}
-
-            {/* 댓글 리스트 */}
-            {comments.map((c: any) => (
-              <CommentItem
-                key={c.commentId}
-                comment={c}
-                replyTexts={replyTexts}
-                onReplyChange={_handleReplyChange}
-                onReplySubmit={_handleSubmitReply}
-                onDelete={_handleDeleteComment}
-                menuWrapperRef={menuWrapperRef}
-                openMenuId={openMenuId}
-                setOpenMenuId={setOpenMenuId}
-                t={t}
-                isPostingComment={isPostingComment}
-                navigate={navigate}
-              />
-            ))}
-
-            {/* 페이지네이션 */}
-            <div className="mt-6 flex items-center justify-center gap-2">
-              <button
-                onClick={() => goToUiPage(uiPage - 1)}
-                disabled={uiPage === 0 || isCommentsPending}
-                className="px-3 py-1 disabled:opacity-50 cursor-pointer"
-              >
-                <img alt="PrevImg" src="/images/CommentsPrevButton.svg" />
-              </button>
-
-              {(() => {
-                const windowSize = 5;
-                const start = Math.max(
-                  0,
-                  Math.min(
-                    uiPage - Math.floor(windowSize / 2),
-                    totalPages - windowSize
-                  )
-                );
-                const end = Math.min(totalPages - 1, start + windowSize - 1);
-                const pages: number[] = [];
-                for (let i = start; i <= end; i++) pages.push(i);
-
-                return pages.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => goToUiPage(p)}
-                    disabled={isCommentsPending}
-                    className={`px-3 py-1 rounded cursor-pointer ${
-                      p === uiPage
-                        ? "bg-gray-200 text-black"
-                        : "hover:bg-gray-50"
-                    }`}
-                  >
-                    {p + 1}
-                  </button>
-                ));
-              })()}
-
-              <button
-                onClick={() => goToUiPage(uiPage + 1)}
-                disabled={uiPage >= totalPages - 1 || isCommentsPending}
-                className="px-3 py-1 disabled:opacity-50 cursor-pointer"
-              >
-                <img alt="NextImg" src="/images/CommentsNextButton.svg" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
