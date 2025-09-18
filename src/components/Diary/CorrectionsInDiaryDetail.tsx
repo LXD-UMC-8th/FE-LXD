@@ -4,17 +4,16 @@ import type { ContentsDTO } from "../../utils/types/correction";
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { usePostCorrectionComment } from "../../hooks/mutations/CorrectionComment/usePostCorrectionComments";
 import LoadingModal from "../Common/LoadingModal";
+import AlertModal from "../Common/AlertModal";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
 import { axiosInstance, getLocalStorageItem } from "../../apis/axios";
 import { useMutation } from "@tanstack/react-query";
-import { deleteCorrectionComment } from "../../apis/correctionComment"; // API 함수 임포트
+import { deleteCorrectionComment } from "../../apis/correctionComment";
 import useOutsideClick from "../../hooks/useOutsideClick";
-
 import type {
   CorrectionCommentDTO,
   CorrectionCommentGetResponseDTO,
-  CorrectionCommentGetRequestDTO,
   CorrectionCommentRequestDTO,
 } from "../../utils/types/correctionComment";
 import { useNavigate } from "react-router-dom";
@@ -24,60 +23,49 @@ type CorrectionsInDiaryDetailProps = {
 };
 
 type CorrectionLikeResponseDTO = {
-  isSuccess: boolean;
-  code: string;
-  message: string;
+  isSuccess: boolean; code: string; message: string;
   result: {
-    correctionId: number;
-    memberId: number;
-    likeCount: number;
-    liked: boolean;
+    correctionId: number; memberId: number; likeCount: number; liked: boolean;
   };
 };
 
-const RED_FILTER =
-  "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
+const RED_FILTER = "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
 
 const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
-  const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
-  const [commentText, setCommentText] = useState("");
   const { language } = useLanguage();
   const t = translate[language];
   const navigate = useNavigate();
 
+  const [openCorrectionReply, setOpenCorrectionReply] = useState(false);
+  const [commentText, setCommentText] = useState("");
   const [liked, setLiked] = useState<boolean>((props as any)?.liked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount ?? 0);
   const [liking, setLiking] = useState(false);
-  
-  // 더보기 메뉴 상태 관리를 위한 state 및 ref 추가
+
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(menuRef, () => setOpenMenuId(null));
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [selectedComment, setSelectedComment] = useState<CorrectionCommentDTO | null>(null);
+  
+  const [isPostingComment, setIsPostingComment] = useState(false);
+
   const {
-    mutate: fetchComments,
-    data: listData,
-    isPending: listLoading,
+    mutate: fetchComments, data: listData, isPending: listLoading,
   } = useGetCorrectionComments();
 
-  const { mutate: postComment, isPending: posting } =
-    usePostCorrectionComment();
+  // ✅ 1. usePostCorrectionComment 훅이 객체를 반환하지 않는 문제를 해결합니다.
+  const postCommentMutate = usePostCorrectionComment();
 
-  // 댓글 삭제를 위한 useMutation 훅 추가
   const { mutate: deleteComment, isPending: isDeleting } = useMutation({
     mutationFn: (commentId: number) =>
-      deleteCorrectionComment({
-        correctionId: props.correctionId,
-        commentId,
-      }),
+      deleteCorrectionComment({ correctionId: props.correctionId, commentId }),
     onSuccess: () => {
-      // 삭제 성공 시 댓글 목록을 다시 불러옵니다.
-      fetchComments({
-        correctionId: props.correctionId,
-        page: 1,
-        size: 100, // 페이지네이션에 맞게 조정
-      });
-      setOpenMenuId(null); // 메뉴 닫기
+      setShowDeleteModal(false);
+      fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
     },
     onError: (err) => {
       console.error("❌ 댓글 삭제 실패:", err);
@@ -86,58 +74,74 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   });
 
   const comments: CorrectionCommentDTO[] = useMemo(
-    () =>
-      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result
-        ?.contents ?? []) as CorrectionCommentDTO[],
+    () => ((listData as CorrectionCommentGetResponseDTO | undefined)?.result?.contents ?? []) as CorrectionCommentDTO[],
     [listData]
   );
 
   const total: number = useMemo(() => {
-    const totalFromServer = (
-      listData as CorrectionCommentGetResponseDTO | undefined
-    )?.result?.totalElements;
-    if (typeof totalFromServer === "number") return totalFromServer;
-    if (typeof props.commentCount === "number") return props.commentCount;
-    return 0;
+    const totalFromServer = (listData as CorrectionCommentGetResponseDTO | undefined)?.result?.totalElements;
+    return typeof totalFromServer === "number" ? totalFromServer : (props.commentCount ?? 0);
   }, [listData, props.commentCount]);
 
   useEffect(() => {
     if (openCorrectionReply) {
-      const req: CorrectionCommentGetRequestDTO = {
-        correctionId: props.correctionId,
-        page: 1,
-        size: 100,
-      };
-      fetchComments(req);
+      fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
     }
   }, [openCorrectionReply, props.correctionId, fetchComments]);
 
   useEffect(() => {
-    if (props?.correctionId && total === 0) { // 댓글 수가 0일 때만 초기 카운트 fetch
-      const req: CorrectionCommentGetRequestDTO = {
-        correctionId: props.correctionId,
-        page: 1,
-        size: 1,
-      };
-      fetchComments(req);
+    if (props?.correctionId && !listData) {
+      fetchComments({ correctionId: props.correctionId, page: 1, size: 1 });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.correctionId]);
+  }, [props.correctionId, listData, fetchComments]);
 
-  const _toggleCorrectionReply = () => {
-    setOpenCorrectionReply((prev) => !prev);
+  const handleOpenDeleteModal = (comment: CorrectionCommentDTO) => {
+    setSelectedComment(comment);
+    setShowDeleteModal(true);
+    setOpenMenuId(null);
   };
+  const handleConfirmDelete = () => {
+    if (selectedComment) deleteComment(selectedComment.commentId);
+  };
+
+  const handleOpenReportModal = (comment: CorrectionCommentDTO) => {
+    setSelectedComment(comment);
+    setShowReportModal(true);
+    setOpenMenuId(null);
+  };
+  const handleConfirmReport = () => {
+    if (!reportReason.trim()) {
+      alert(t.reportReasonPlaceholder);
+      return;
+    }
+    // ✅ 신고 API가 없으므로 UI만 처리합니다.
+    alert(`(UI) 신고가 접수되었습니다.\n사유: ${reportReason}`);
+    setShowReportModal(false);
+    setReportReason("");
+  };
+  
+  const _toggleCorrectionReply = () => setOpenCorrectionReply((prev) => !prev);
 
   const _handleCommentSubmit = () => {
     const content = commentText.trim();
-    if (!content) return;
+    if (!content || isPostingComment) return;
+
+    setIsPostingComment(true);
     const body: CorrectionCommentRequestDTO = { content };
-    postComment(
+    
+    postCommentMutate.mutate(
       { correctionId: String(props.correctionId), ...body },
       {
         onSuccess: () => {
           setCommentText("");
           fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
+        },
+        onError: (err) => {
+          console.error("댓글 작성 실패:", err);
+          alert("댓글 작성에 실패했습니다.");
+        },
+        onSettled: () => {
+          setIsPostingComment(false);
         },
       }
     );
@@ -166,12 +170,6 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     }
   };
 
-  const handleDeleteComment = (commentId: number) => {
-    if (window.confirm(t.DeleteCommentAlert ?? "정말로 댓글을 삭제하시겠습니까?")) {
-      deleteComment(commentId);
-    }
-  };
-
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
       <div onClick={() => navigate(`/diaries/member/${props.member.memberId}`)} className="cursor-pointer">
@@ -181,20 +179,18 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
       <div className="border-t border-gray-200 my-4" />
 
       <div className="flex flex-col gap-2 text-body2">
-        <p className="font-medium">{props.original}</p>
+        <p className="font-medium break-words">{props.original}</p>
         <div className="flex gap-2 items-center">
           <div className="w-1 h-5 bg-[#4170FE]" />
-          <p className="text-[#4170FE] font-medium">{props.corrected}</p>
+          <p className="text-[#4170FE] font-medium break-words">{props.corrected}</p>
         </div>
-        <p>{props.commentText}</p>
+        <p className="break-words">{props.commentText}</p>
       </div>
 
       <div className="flex justify-end items-center text-gray-700 text-body2 gap-2 pt-4">
         <button
           onClick={_toggleCorrectionReply}
-          className={`flex items-center gap-1 cursor-pointer p-1 ${
-            openCorrectionReply ? "bg-gray-300 text-black rounded-[5px]" : ""
-          }`}
+          className="flex items-center gap-1 cursor-pointer p-1"
         >
           <img
             src={openCorrectionReply ? "/images/commentIcon.svg" : "/images/CommonComponentIcon/CommentIcon.svg"}
@@ -231,10 +227,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                 return (
                   <li key={c.commentId} className="flex flex-col gap-2">
                     <div className="flex justify-between items-start">
-                      <div
-                        onClick={() => navigate(`/diaries/member/${c.memberId}`)}
-                        className="flex-1 cursor-pointer"
-                      >
+                      <div onClick={() => navigate(`/diaries/member/${c.memberId}`)} className="flex-1 cursor-pointer min-w-0">
                         <ProfileComponent
                           member={{
                             memberId: c.memberId,
@@ -245,36 +238,40 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                           createdAt={c.createdAt}
                         />
                       </div>
-                      {isOwner && (
-                        <div className="relative flex-shrink-0" ref={menuRef}>
-                          <img
-                            src="/images/more_options.svg"
-                            className="w-5 h-5 cursor-pointer"
-                            alt="더보기"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setOpenMenuId(openMenuId === c.commentId ? null : c.commentId);
-                            }}
-                          />
-                          {openMenuId === c.commentId && (
-                            <div className="absolute top-6 right-0 bg-white border border-gray-300 rounded-md shadow-lg w-24 z-10">
+                      <div className="relative flex-shrink-0" ref={menuRef}>
+                        <img
+                          src="/images/more_options.svg"
+                          className="w-5 h-5 cursor-pointer ml-2"
+                          alt="더보기"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuId(openMenuId === c.commentId ? null : c.commentId);
+                          }}
+                        />
+                        {openMenuId === c.commentId && (
+                          <div className="absolute top-6 right-0 bg-white border border-gray-300 rounded-md shadow-lg w-28 z-10">
+                            {isOwner ? (
                               <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDeleteComment(c.commentId);
-                                }}
+                                onClick={(e) => { e.stopPropagation(); handleOpenDeleteModal(c); }}
                                 disabled={isDeleting}
                                 className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer disabled:opacity-50"
                               >
-                                {t.DeleteDiary ?? "삭제하기"}
+                                {t.DeleteDiary}
                               </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            ) : (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); handleOpenReportModal(c); }}
+                                className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
+                              >
+                                {t.ReportContent }
+                              </button>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex-1 ml-2">
-                      <p className="text-body2 whitespace-pre-wrap">{c.content}</p>
+                      <p className="text-body2 whitespace-pre-wrap break-words">{c.content}</p>
                     </div>
                     <div className="border-t border-gray-200 my-2" />
                   </li>
@@ -282,14 +279,15 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               })}
             </ul>
           )}
+          
           <div className="flex gap-2">
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               placeholder={t.CommentPlaceholder}
-              className="w-45 bg-gray-200 text-sm text-gray-800 resize-none rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-60"
+              className="flex-1 bg-gray-200 text-sm text-gray-800 resize-none rounded-[5px] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-60"
               rows={1}
-              disabled={posting}
+              disabled={isPostingComment}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
@@ -299,13 +297,35 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             />
             <button
               onClick={_handleCommentSubmit}
-              disabled={posting || !commentText.trim()}
+              disabled={isPostingComment || !commentText.trim()}
               className="w-12 text-caption bg-black rounded-[5px] text-white cursor-pointer hover:scale-105 duration-300 disabled:opacity-60 disabled:hover:scale-100"
             >
-              {posting ? t.posting : t.post}
+              {isPostingComment ? (t.posting ) : (t.post )}
             </button>
           </div>
         </div>
+      )}
+      
+      {showDeleteModal && selectedComment && (
+        <AlertModal
+          title={t.DeleteCommentAlert }
+          onClose={() => setShowDeleteModal(false)}
+          confirmText={t.DeleteDiary ?? "삭제"}
+          onConfirm={handleConfirmDelete}
+          alertMessage=""
+        />
+      )}
+      {showReportModal && selectedComment && (
+        <AlertModal
+          title={t.ReportContent }
+          onClose={() => setShowReportModal(false)}
+          description={t.AlertDescription }
+          confirmText={t.AlertReport }
+          onConfirm={handleConfirmReport}
+          onInputChange={setReportReason}
+          inputValue={reportReason}
+          alertMessage=""
+        />
       )}
     </div>
   );

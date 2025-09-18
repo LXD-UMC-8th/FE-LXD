@@ -1,4 +1,4 @@
-import type { CorrectionCommentDeleteResponseDTO, CorrectionCommentDeleteRequestDTO, CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
+import type { CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
 import { axiosInstance } from "./axios";
 
 export const postCorrectionComments = async (
@@ -30,7 +30,7 @@ export const getCorrectionComments = async (
 }
 
 
-// ✅ [추가] 교정 댓글 삭제 API
+//  교정 댓글 삭제 API
 export const deleteCorrectionComment = async ({
   correctionId,
   commentId,
