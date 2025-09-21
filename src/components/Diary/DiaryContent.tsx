@@ -6,7 +6,6 @@ import { translate } from "../../context/translate";
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import Header from "./Header";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import "react-quill-new/dist/quill.snow.css";
 import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import AlertModal from "../Common/AlertModal";
@@ -68,7 +67,7 @@ const DiaryContent = ({
   // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
   const isWriter = user?.username === props.writerUserName;
-  const canEdit = (isMyDiaryTab || cameFromMyDiary) || isWriter;
+  const canEdit = isMyDiaryTab || cameFromMyDiary || isWriter;
 
   const [menuOpen, setMenuOpen] = useState(false); // 더보기 메뉴
   const menuRef = useRef<HTMLDivElement>(null);
@@ -168,7 +167,7 @@ const DiaryContent = ({
           ref={menuRef}
         >
           {/* 더보기 아이콘 */}
-          <img 
+          <img
             src="/images/more_options.svg"
             className="w-6 h-6 cursor-pointer"
             onClick={(e) => {
