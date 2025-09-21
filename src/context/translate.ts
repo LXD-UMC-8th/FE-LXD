@@ -313,6 +313,11 @@ export const translate: Record<
     CompleteAlert: string;
 
     unfriendFailToast: string;
+    DeleteCommentFail: string;
+    reportSuccessAlert: string;
+    reportFailAlert: string;
+    reportReasonPlaceholder: string;
+    reporting: string;
     CommentRestricted: string;
   }
 > = {
@@ -693,6 +698,12 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     ReportContent_1: "Spam / Advertisement",
     ReportContent_2: "Inappropriate or Offensive Content",
     ReportContent_3: "Other (please specify)",
+    unfriendFailToast: "Failed to Unfriend friend.",
+    DeleteCommentFail: "Failed to delete comment.",
+    reportSuccessAlert: "Report submitted successfully.",
+    reportFailAlert: "Failed to submit report.",
+    reportReasonPlaceholder: "Please enter the reason for your report.",
+    reporting: "Reporting...",
     CompleteAlert: "Report submitted successfully.",
     unfriendFailToast: "Failed to Unfriend friend.",
     CommentRestricted: "Comments are not allowed on this diary.",
@@ -1063,10 +1074,16 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     AlertReport: "신고하기",
     AlertDescription:
       "신고는 운영팀에 전달되며, 검토 후 필요한 조치가 이루집니다. 허위 신고는 제재를 받을 수 있습니다.",
-    ReportContent: "콘텐츠 신고",
+    ReportContent: "신고하기",
     ReportContent_1: "스팸/광고",
     ReportContent_2: "부적절하거나 불쾌한 내용",
     ReportContent_3: "기타(직접입력)",
+    unfriendFailToast : "친구 삭제에 실패했습니다.",
+    DeleteCommentFail : "댓글 삭제에 실패했습니다.",
+    reportSuccessAlert : "신고가 성공적으로 접수되었습니다.",
+    reportFailAlert : "신고 접수에 실패했습니다. 다시 시도해주세요.",
+    reportReasonPlaceholder : "신고 사유를 입력해주세요.",
+    reporting : "신고중..."
     CompleteAlert: "신고가 완료되었습니다.",
     unfriendFailToast: "친구 삭제에 실패했습니다.",
     CommentRestricted: "댓글 작성을 허용하지 않는 일기입니다.",

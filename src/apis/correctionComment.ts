@@ -1,4 +1,4 @@
-import type { CorrectionCommentDeleteResponseDTO, CorrectionCommentDeleteRequestDTO, CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
+import type { CorrectionCommentGetRequestDTO, CorrectionCommentGetResponseDTO, CorrectionCommentRequestDTO, CorrectionCommentResponseDTO } from "../utils/types/correctionComment";
 import { axiosInstance } from "./axios";
 
 export const postCorrectionComments = async (
@@ -29,11 +29,17 @@ export const getCorrectionComments = async (
     return data;
 }
 
-export const deleteCorrectionComments = async (
-    { correctionId, commentId }: CorrectionCommentDeleteRequestDTO
-): Promise<CorrectionCommentDeleteResponseDTO> => {
-    const { data } = await axiosInstance.delete<CorrectionCommentDeleteResponseDTO>(
-        `/corrections/${correctionId}/comments/${commentId}`
-    );
-    return data;
-}
+
+//  교정 댓글 삭제 API
+export const deleteCorrectionComment = async ({
+  correctionId,
+  commentId,
+}: {
+  correctionId: number;
+  commentId: number;
+}) => {
+  const res = await axiosInstance.delete(
+    `/corrections/${correctionId}/comments/${commentId}`
+  );
+  return res.data;
+};
