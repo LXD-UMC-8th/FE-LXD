@@ -53,7 +53,7 @@ const GoogleRedirectPage = () => {
             navigate("/home/signup/profile", { replace: true });
           } else {
             // 기존회원: 바로 FeedPage로 이동
-            navigate("/feed", { replace: true });
+            window.location.replace("/feed?tab=friendINfeed");
           }
         } else {
           alert("구글 로그인 실패: " + data.message);
