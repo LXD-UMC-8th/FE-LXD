@@ -97,12 +97,13 @@ const DiaryDetailPage = () => {
 
   // 글 작성자가 현재 로그인 한 사용자인지 여부 확인
   const { user } = useAuth();
-  const isWriter = user?.username === diaryData?.result?.writerUserName;
+  const isWriter =
+    user?.username === diaryData?.result?.memberProfile?.username;
 
   // 친구 여부 불러오기
   const { friendSet } = useFriendSet();
-  const writerId = diaryData?.result?.writerId;
-  const isMyFriend = writerId ? friendSet.has(writerId) : false;
+  const writerId = diaryData?.result?.memberProfile?.nickname;
+  const isMyFriend = writerId ? friendSet.has(Number(writerId)) : false;
 
   // 댓글 작성 허용 여부
   const canWriteComment =
@@ -279,8 +280,8 @@ const DiaryDetailPage = () => {
         <div className="mb-4 flex items-center justify-between">
           <PrevButton navigateURL={backURL} />
           {!(
-            diary?.writerNickName === isMyDiary.writerNickname &&
-            diary?.writerUserName === isMyDiary.writerUsername
+            diary?.memberProfile?.nickname === isMyDiary.writerNickname &&
+            diary?.memberProfile?.username === isMyDiary.writerUsername
           ) && (
             <button
               onClick={_handleCorrectionsClick}
@@ -302,13 +303,7 @@ const DiaryDetailPage = () => {
         </div>
 
         <div className="bg-white p-8 rounded-[10px]">
-          {diary && (
-            <DiaryContent
-              props={diary}
-              {...(diary.thumbnail ? { thumbnail: diary.thumbnail } : {})}
-              focusTextarea={focusTextarea}
-            />
-          )}
+          {diary && <DiaryContent {...diary} focusTextarea={focusTextarea} />}
 
           {/* 댓글 전체 래퍼 */}
           <div className="mt-10 bg-white rounded-[10px] p-6">

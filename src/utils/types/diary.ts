@@ -25,23 +25,24 @@ export type DiaryUploadResult = {
   title: string;
   style?: string;
   language: string;
-  profileImg?: string;
-  writerNickName?: string;
-  writerUserName?: string;
+  memberProfile: DiaryUploadResponsemember;
+
   createdAt?: string;
   commentCount: number;
   likeCount: number;
   correctCount: number;
+
   content: string;
-  thumbnailUrl?: string;
-  thumbnail?: string;
-  thumbImg?: string;
-  contentPreview?: string;
-  correctionCount?: number;
-  isLiked?: boolean;
-  diffHtml?: string;
-  commentPermission?: string;
-  writerId?: number;
+  diffHtml: string;
+  commentPermission: string;
+  thumbnail: string;
+};
+
+export type DiaryUploadResponsemember = {
+  id: number;
+  username: string;
+  nickname: string;
+  profileImage: string;
 };
 
 export type DiaryGetRequestDTO = {
