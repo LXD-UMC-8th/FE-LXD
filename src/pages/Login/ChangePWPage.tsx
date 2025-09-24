@@ -11,7 +11,7 @@ import {
   isPasswordMatch,
   isPasswordValid,
 } from "../../utils/validate";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { getEmail, postEmailVerificationinPWRequest } from "../../apis/auth";
 import { useMutation } from "@tanstack/react-query";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
@@ -32,6 +32,7 @@ const ChangePWPage = () => {
   const [searchParams] = useSearchParams();
   const { language } = useHomeLanguage();
   const t = translate[language];
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
@@ -40,6 +41,7 @@ const ChangePWPage = () => {
       if (data.isSuccess) {
         alert(t.changePWsuccessAlert);
         console.log("비밀번호 변경 성공:", data);
+        navigate("/home");
       } else {
         alert(data.message || "비밀번호 변경에 실패했습니다.");
       }
@@ -127,17 +129,11 @@ const ChangePWPage = () => {
       userInfo.checkPassword
     );
 
-    return (
-      _isEmailValid &&
-      _isPasswordValid &&
-      _isPasswordChecked &&
-      userInfo.isPrivacy
-    );
+    return _isEmailValid && _isPasswordValid && _isPasswordChecked;
   }, [
     userInfo.email,
     userInfo.password,
     userInfo.checkPassword,
-    userInfo.isPrivacy,
     emailVerified,
   ]);
 
