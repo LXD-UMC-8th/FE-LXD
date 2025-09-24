@@ -25,7 +25,7 @@ export type DiaryUploadResult = {
   title: string;
   style?: string;
   language: string;
-  memberProfile: DiaryUploadResponsemember;
+  memberProfile: memberProfile;
 
   createdAt?: string;
   commentCount: number;
@@ -38,7 +38,7 @@ export type DiaryUploadResult = {
   thumbnail: string;
 };
 
-export type DiaryUploadResponsemember = {
+export type memberProfile = {
   id: number;
   username: string;
   nickname: string;
@@ -95,15 +95,13 @@ export type CalendarDiary = {
 export type CalendarDiaryResponseDTO = APIResponse<CalendarDiary[]>;
 
 export type DiarySummary = {
-  profileImg?: string;
-  username?: string;
-  nickname?: string;
+  memberProfile: memberProfile;
   diaryCount: number;
   friendCount: number;
   relation?: string;
-  status?: string;
-  language: string;
   nativeLanguage: string;
+  language: string;
+  status?: string;
 };
 
 export type getDiarySummary = APIResponse<DiarySummary>;
@@ -111,7 +109,7 @@ export type getDiarySummary = APIResponse<DiarySummary>;
 export type getDiariesResponseDTO = APIResponse<getDiariesResult>;
 
 export type diaries = {
-  writerMemberProfile: DiaryUploadResponsemember;
+  writerMemberProfile: memberProfile;
   diaryId?: number;
   createdAt?: string;
   title?: string;

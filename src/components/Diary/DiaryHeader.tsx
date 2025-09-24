@@ -23,15 +23,20 @@ const DiaryHeader = ({
       <div className="h-37 mt-8 rounded-t-[12px] rounded-b-none">
         <div className="grid grid-cols-[1fr_4fr_1fr] px-5">
           <div className="flex justify-start items-center mb-10">
-            <Avatar size="w-30 h-30" src={DiaryHeaderProps?.profileImg} />
+            <Avatar
+              size="w-30 h-30"
+              src={DiaryHeaderProps?.memberProfile.profileImage}
+            />
           </div>
           <div className="pb-2 mt-5 text-xl font-bold grid grid-rows-2 gap-4">
             <TitleHeader
-              title={`${DiaryHeaderProps?.nickname} ${t.diaryOwner}`}
+              title={`${DiaryHeaderProps?.memberProfile.nickname} ${t.diaryOwner}`}
             />
             <div className=" flex text-gray-600">
               <p className="text-[16px] flex gap-3 font-normal">
-                <p className="font-bold">@{DiaryHeaderProps?.username} </p>
+                <p className="font-bold">
+                  @{DiaryHeaderProps?.memberProfile.username}{" "}
+                </p>
                 <p>&middot;</p>
                 <p className="flex">
                   {DiaryHeaderProps?.diaryCount > 1 ? t.Diaries : t.Diary}
