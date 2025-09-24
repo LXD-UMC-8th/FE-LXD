@@ -37,7 +37,7 @@ interface DiaryContentProps extends DiaryUploadResult {
 const DiaryContent = ({
   contentRootRef,
   focusTextarea,
-  isMyDiary,
+  // isMyDiary,
   ...props
 }: DiaryContentProps) => {
   const { language } = useLanguage();
@@ -118,11 +118,11 @@ const DiaryContent = ({
         if (focusTextarea) focusTextarea();
         break;
       case 1:
-        isLiked
-          ? setDeleteLikeModal(true)
-          : (likeMutate(),
-            setLikeCount((prev) => prev + 1),
-            setIsLiked((prev) => !prev));
+        // isLiked
+        //   ? setDeleteLikeModal(true)
+        //   : (likeMutate(),
+        //     setLikeCount((prev) => prev + 1),
+        //     setIsLiked((prev) => !prev));
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
