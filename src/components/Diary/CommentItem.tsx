@@ -32,13 +32,17 @@ const CommentItem = ({
   isPostingComment,
   navigate,
 }: CommentItemProps) => {
-  const hasReplies = Array.isArray(comment.replies) && comment.replies.length > 0;
-  const isOwner = Number(getLocalStorageItem("userId")) === Number(comment.memberId);
+  const hasReplies =
+    Array.isArray(comment.replies) && comment.replies.length > 0;
+  const isOwner =
+    Number(getLocalStorageItem("userId")) === Number(comment.memberId);
 
   const { mutate: likeComment, isPending } = useLikeDiaryComment();
 
   const [liked, setLiked] = useState<boolean>(!!comment.liked);
-  const [likeCount, setLikeCount] = useState<number>(Number(comment.likeCount ?? 0));
+  const [likeCount, setLikeCount] = useState<number>(
+    Number(comment.likeCount ?? 0)
+  );
 
   useEffect(() => {
     setLiked(!!comment?.liked);
@@ -66,7 +70,8 @@ const CommentItem = ({
           const r = data?.result ?? data;
           if (r) {
             if (typeof r.liked !== "undefined") setLiked(!!r.liked);
-            if (typeof r.likeCount !== "undefined") setLikeCount(Math.max(0, Number(r.likeCount)));
+            if (typeof r.likeCount !== "undefined")
+              setLikeCount(Math.max(0, Number(r.likeCount)));
           }
         },
       }
@@ -79,14 +84,26 @@ const CommentItem = ({
       <div className="flex items-center gap-3 mb-2">
         <div
           className="flex items-center gap-3 mb-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${comment.memberId}`)}
+          onClick={() =>
+            navigate(`/diaries/member/${comment.memberProfile.id}`)
+          }
         >
-          <Avatar src={comment.profileImage} alt="profile" size="w-9 h-9" />
-          <span className="font-semibold text-sm">{comment.nickname ?? "사용자"}</span>
+          <Avatar
+            src={comment.memberProfile.profileImage}
+            alt="profile"
+            size="w-9 h-9"
+          />
+          <span className="font-semibold text-sm">
+            {comment.memberProfile.nickname ?? "사용자"}
+          </span>
           <div className="w-[0.5px] h-5 bg-gray-500" />
-          <span className="text-xs text-gray-600">@{comment.username ?? "user"}</span>
+          <span className="text-xs text-gray-600">
+            @{comment.memberProfile.username ?? "user"}
+          </span>
         </div>
-        <p className="text-caption text-gray-500 ml-auto">{comment.createdAt}</p>
+        <p className="text-caption text-gray-500 ml-auto">
+          {comment.createdAt}
+        </p>
 
         <MoreMenuDelete
           targetId={comment.commentId}
@@ -109,7 +126,10 @@ const CommentItem = ({
       {/* 답글 수 + 좋아요 */}
       <div className="flex items-center gap-3 text-sm text-gray-600 mb-2">
         <div className="flex items-center gap-1">
-          <img src="/images/CommonComponentIcon/CommentIcon.svg" className="w-5 h-5" />
+          <img
+            src="/images/CommonComponentIcon/CommentIcon.svg"
+            className="w-5 h-5"
+          />
           <span>{comment.replyCount ?? comment.replies?.length ?? 0}</span>
         </div>
 

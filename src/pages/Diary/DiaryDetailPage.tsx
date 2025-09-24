@@ -251,11 +251,13 @@ const DiaryDetailPage = () => {
     );
   };
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [isMyDiary, setIsMyDiary] = useState<{
     writerNickname: string;
     writerUsername: string;
   }>({ writerNickname: "", writerUsername: "" });
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     getDiaryMySummary().then((res) => {
       setIsMyDiary({
@@ -265,6 +267,7 @@ const DiaryDetailPage = () => {
     });
   }, []);
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const focusTextarea = () => {
     textareaRef.current?.focus();

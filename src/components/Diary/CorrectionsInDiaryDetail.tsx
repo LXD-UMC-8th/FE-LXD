@@ -259,23 +259,19 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c) => {
                 const isOwner =
-                  Number(getLocalStorageItem("userId")) === Number(c.memberId);
+                  Number(getLocalStorageItem("userId")) ===
+                  Number(c.memberProfile.id);
                 return (
                   <li key={c.commentId} className="flex flex-col gap-2">
                     <div className="flex justify-between items-start">
                       <div
                         onClick={() =>
-                          navigate(`/diaries/member/${c.memberId}`)
+                          navigate(`/diaries/member/${c.memberProfile.id}`)
                         }
                         className="flex-1 cursor-pointer min-w-0"
                       >
                         <ProfileComponent
-                          member={{
-                            memberId: c.memberId,
-                            username: c.username,
-                            nickname: c.nickname,
-                            profileImageUrl: c.profileImage,
-                          }}
+                          member={{ ...c.memberProfile }}
                           createdAt={c.createdAt}
                         />
                       </div>

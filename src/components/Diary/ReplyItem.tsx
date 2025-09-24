@@ -25,11 +25,14 @@ const ReplyItem = ({
   t,
   navigate,
 }: ReplyItemProps) => {
-  const isOwner = Number(getLocalStorageItem("userId")) === Number(reply.memberId);
+  const isOwner =
+    Number(getLocalStorageItem("userId")) === Number(reply.memberId);
   const { mutate: likeComment, isPending } = useLikeDiaryComment();
 
   const [liked, setLiked] = useState<boolean>(!!reply.liked);
-  const [likeCount, setLikeCount] = useState<number>(Number(reply.likeCount ?? 0));
+  const [likeCount, setLikeCount] = useState<number>(
+    Number(reply.likeCount ?? 0)
+  );
 
   useEffect(() => {
     setLiked(!!reply?.liked);
@@ -57,7 +60,8 @@ const ReplyItem = ({
           const r = data?.result ?? data;
           if (r) {
             if (typeof r.liked !== "undefined") setLiked(!!r.liked);
-            if (typeof r.likeCount !== "undefined") setLikeCount(Math.max(0, Number(r.likeCount)));
+            if (typeof r.likeCount !== "undefined")
+              setLikeCount(Math.max(0, Number(r.likeCount)));
           }
         },
       }
@@ -70,12 +74,20 @@ const ReplyItem = ({
       <div className="flex items-center gap-3 mb-2">
         <div
           className="flex items-center gap-3 mb-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${reply.memberId}`)}
+          onClick={() => navigate(`/diaries/member/${reply.memberProfile.id}`)}
         >
-          <Avatar src={reply.profileImage} alt="profile" size="w-8 h-8" />
-          <span className="text-sm font-semibold">{reply.nickname ?? "사용자"}</span>
+          <Avatar
+            src={reply.memberProfile.profileImage}
+            alt="profile"
+            size="w-8 h-8"
+          />
+          <span className="text-sm font-semibold">
+            {reply.memberProfile.nickname ?? "사용자"}
+          </span>
           <div className="w-[0.5px] h-5 bg-gray-500" />
-          <span className="text-xs text-gray-600">@{reply.username ?? "user"}</span>
+          <span className="text-xs text-gray-600">
+            @{reply.memberProfile.username ?? "user"}
+          </span>
         </div>
         <span className="ml-auto text-xs text-gray-500">{reply.createdAt}</span>
 
@@ -92,7 +104,9 @@ const ReplyItem = ({
         />
       </div>
 
-      <p className="text-sm whitespace-pre-line">{reply.content ?? reply.commentText}</p>
+      <p className="text-sm whitespace-pre-line">
+        {reply.content ?? reply.commentText}
+      </p>
 
       <div className="flex items-center gap-1">
         <button

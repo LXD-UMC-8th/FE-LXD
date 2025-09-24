@@ -23,9 +23,12 @@ const UserDetailPage = () => {
   const navigate = useNavigate();
 
   const [_isDiarySummary, setIsDiarySummary] = useState<DiarySummary>({
-    profileImg: "",
-    username: "",
-    nickname: "",
+    memberProfile: {
+      id: 0,
+      username: "",
+      nickname: "",
+      profileImage: "",
+    },
     diaryCount: 0,
     friendCount: 0,
     relation: "",
