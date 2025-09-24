@@ -60,13 +60,13 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   const [isPostingComment, setIsPostingComment] = useState(false);
 
+  // 댓글 가져옴
   const {
     mutate: fetchComments,
     data: listData,
     isPending: listLoading,
   } = useGetCorrectionComments();
 
-  // ✅ 1. usePostCorrectionComment 훅이 객체를 반환하지 않는 문제를 해결합니다.
   const postCommentMutate = usePostCorrectionComment();
 
   const { mutate: deleteComment, isPending: isDeleting } = useMutation({
@@ -78,7 +78,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     },
     onError: (err) => {
       console.error("❌ 댓글 삭제 실패:", err);
-      alert(t.DeleteCommentFail ?? "댓글 삭제에 실패했습니다.");
+      alert(t.DeleteCommentFail);
     },
   });
 
@@ -106,7 +106,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   useEffect(() => {
     if (props?.correctionId && !listData) {
-      fetchComments({ correctionId: props.correctionId, page: 1, size: 1 });
+      fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
     }
   }, [props.correctionId, listData, fetchComments]);
 
