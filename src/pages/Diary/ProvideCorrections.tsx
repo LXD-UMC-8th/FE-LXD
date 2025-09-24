@@ -275,9 +275,7 @@ const ProvideCorrections = () => {
 
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
-          <div ref={contentAreaRef}>
-            {diary && <DiaryContent props={diary} />}
-          </div>
+          <div ref={contentAreaRef}>{diary && <DiaryContent {...diary} />}</div>
         </div>
       </div>
 

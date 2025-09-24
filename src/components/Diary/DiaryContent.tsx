@@ -10,26 +10,15 @@ import { normalizeQuillHtml } from "../../hooks/useQuillListsFix";
 import { usePostLike } from "../../hooks/mutations/usePostLike";
 import AlertModal from "../Common/AlertModal";
 import { useAuth } from "../../context/AuthProvider";
+import type { DiaryUploadResult } from "../../utils/types/diary";
 
-interface DiaryContentProps {
-  title?: string;
-  lang?: string;
-  visibility: string;
-  content: string | undefined;
-  profileImg?: string;
-  writerUsername?: string;
-  writerNickname?: string;
-  writerUserName?: string;
-  writerNickName?: string;
-  commentCount?: number;
-  likeCount?: number;
-  correctCount?: number;
-  diaryId: number;
-  isLiked?: boolean;
-  createdAt?: string;
-  thumbnail?: string;
+interface DiaryContentProps extends DiaryUploadResult {
+  focusTextarea?: () => void;
+  isMyDiary?: {
+    writerNickname: string;
+    writerUsername: string;
+  };
   contentRootRef?: React.RefObject<HTMLDivElement>;
-  writerId?: number;
 }
 
 // function decodeEscapedHtml(raw?: string | null) {
@@ -46,28 +35,29 @@ interface DiaryContentProps {
 // }
 
 const DiaryContent = ({
-  props,
+  contentRootRef,
   focusTextarea,
-  isMyDiary,
-}: {
-  props: DiaryContentProps;
-  focusTextarea?: () => void;
-  isMyDiary?: {
-    writerNickname: string;
-    writerUsername: string;
-  };
-}) => {
+  // isMyDiary,
+  ...props
+}: DiaryContentProps) => {
   const { language } = useLanguage();
   const t = translate[language];
   const location = useLocation();
   const navigate = useNavigate();
-  const cameFromMyDiary = location.state?.from === "mydiary";
   const { user } = useAuth();
 
-  // 경로가 /mydiary 또는 /mydiary/xxx로 시작하면 true
+  // 작성자 정보
+  const writer = props.memberProfile;
+  const displayUsername = writer?.username ?? "";
+  const displayNickname = writer?.nickname ?? "";
+  const profileImg = writer?.profileImage ?? "";
+  const writerId = props.memberProfile?.id;
+
+  // 작성자 여부
   const isMyDiaryTab = location.pathname.startsWith("/mydiary");
-  const isWriter = user?.username === props.writerUserName;
-  const canEdit = isMyDiaryTab || cameFromMyDiary || isWriter;
+  const isWriter = user?.username === writer?.username;
+  const canEdit =
+    isMyDiaryTab || location.state?.from === "mydiary" || isWriter;
 
   const [menuOpen, setMenuOpen] = useState(false); // 더보기 메뉴
   const menuRef = useRef<HTMLDivElement>(null);
@@ -94,13 +84,11 @@ const DiaryContent = ({
   const [alertContent, setAlertContent] = useState(false);
   const [reportReason, setReportReason] = useState("");
 
-  const displayUsername = props.writerUsername ?? props.writerUserName ?? "";
-  const displayNickname = props.writerNickname ?? props.writerNickName ?? "";
-
   const createdDateOnly = props.createdAt?.slice(0, 10);
 
   //좋아요 핸들러를 위한 설정들
-  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked ?? false);
+  const [isLiked, setIsLiked] = useState<boolean>();
+  // props.result.isLiked ?? false
   const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
 
   const stats = [
@@ -130,11 +118,11 @@ const DiaryContent = ({
         if (focusTextarea) focusTextarea();
         break;
       case 1:
-        isLiked
-          ? setDeleteLikeModal(true)
-          : (likeMutate(),
-            setLikeCount((prev) => prev + 1),
-            setIsLiked((prev) => !prev));
+        // isLiked
+        //   ? setDeleteLikeModal(true)
+        //   : (likeMutate(),
+        //     setLikeCount((prev) => prev + 1),
+        //     setIsLiked((prev) => !prev));
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
@@ -235,7 +223,7 @@ const DiaryContent = ({
           {props.title}
         </h1>
         <span className="text-blue-600 text-body2 font-medium ml-auto ">
-          {props.lang === "KO" ? "한국어" : "English"}
+          {props.language === "KO" ? "한국어" : "English"}
         </span>
       </div>
 
@@ -243,10 +231,10 @@ const DiaryContent = ({
       <div className="flex justify-between items-center text-sm text-gray-600 mb-4 select-none">
         <div
           className="flex items-center gap-2 cursor-pointer"
-          onClick={() => navigate(`/diaries/member/${props.writerId}`)}
+          onClick={() => navigate(`/diaries/member/${writerId}`)}
         >
           <Avatar
-            src={props.profileImg}
+            src={profileImg}
             alt={displayNickname}
             size="w-8 h-8"
             className=""
@@ -263,7 +251,7 @@ const DiaryContent = ({
 
       <div className="select-text">
         <div
-          ref={props.contentRootRef}
+          ref={contentRootRef}
           data-role="diary-content"
           className="quill-editor ql-indent-2 [&_img]:max-w-full [&_img]:h-auto [&_img]:my-2 [&_.ql-align-right]:text-right [&_.ql-align-center]:text-center"
           dangerouslySetInnerHTML={{ __html: replaceContent }}
