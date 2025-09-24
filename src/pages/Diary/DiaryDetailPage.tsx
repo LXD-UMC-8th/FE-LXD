@@ -97,12 +97,11 @@ const DiaryDetailPage = () => {
 
   // 글 작성자가 현재 로그인 한 사용자인지 여부 확인
   const { user } = useAuth();
-  const isWriter =
-    user?.username === diaryData?.result?.memberProfile?.username;
+  const isWriter = user?.memberId === diaryData?.result?.memberProfile?.id;
 
   // 친구 여부 불러오기
   const { friendSet } = useFriendSet();
-  const writerId = diaryData?.result?.memberProfile?.nickname;
+  const writerId = diaryData?.result?.memberProfile?.id;
   const isMyFriend = writerId ? friendSet.has(Number(writerId)) : false;
 
   // 댓글 작성 허용 여부
@@ -252,17 +251,17 @@ const DiaryDetailPage = () => {
   };
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [isMyDiary, setIsMyDiary] = useState<{
-    writerNickname: string;
-    writerUsername: string;
-  }>({ writerNickname: "", writerUsername: "" });
+  const [isMyDiary, setIsMyDiary] = useState({
+    writerNickname: "",
+    writerUsername: "",
+  });
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     getDiaryMySummary().then((res) => {
       setIsMyDiary({
-        writerNickname: res.result.nickname ?? "",
-        writerUsername: res.result.username ?? "",
+        writerNickname: res.result.memberProfile.nickname ?? "",
+        writerUsername: res.result.memberProfile.username ?? "",
       });
     });
   }, []);
