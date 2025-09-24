@@ -119,11 +119,11 @@ const CommonComponentInDiaryNFeed = ({
         // });
         break;
       case 1:
-        isLiked
-          ? setDeleteLikeModal(true)
-          : (likeMutate(),
-            setLikeCount((prev) => prev + 1),
-            setIsLiked((prev) => !prev));
+        // isLiked
+        //   ? setDeleteLikeModal(true)
+        //   : (likeMutate(),
+        //     setLikeCount((prev) => prev + 1),
+        //     setIsLiked((prev) => !prev));
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
@@ -135,7 +135,7 @@ const CommonComponentInDiaryNFeed = ({
 
   const handleNavigateUserDetail = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    navigate(`/diaries/member/${props.writerId}`);
+    navigate(`/diaries/member/${props.writerMemberProfile.id}`);
   };
 
   /** ✅ 둥근 모서리 토글 */
@@ -164,18 +164,18 @@ const CommonComponentInDiaryNFeed = ({
               onClick={handleNavigateUserDetail}
             >
               <Avatar
-                src={props.writerProfileImg}
-                alt={props.writerUsername}
+                src={props.writerMemberProfile.profileImage}
+                alt={props.writerMemberProfile.nickname}
                 size="w-9 h-9"
               />
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-semibold text-black">
-                    {props.writerNickname}
+                    {props.writerMemberProfile.nickname}
                   </span>
                   <div className="w-px h-4 bg-gray-500" />
                   <span className="text-xs text-gray-500">
-                    @{props.writerUsername}
+                    @{props.writerMemberProfile.username}
                   </span>
                 </div>
                 <span className="text-xs text-gray-400 mt-1">
@@ -195,7 +195,7 @@ const CommonComponentInDiaryNFeed = ({
         {/* 언어 + 더보기 */}
         <div className="flex items-center gap-3 relative" ref={menuRef}>
           <span className="text-primary-500 text-body3 font-medium pt-2 pr-2">
-            {props.language==="KO" ? "한국어" : "English"}
+            {props.language === "KO" ? "한국어" : "English"}
           </span>
           {isMyDiaryTab && (
             <>

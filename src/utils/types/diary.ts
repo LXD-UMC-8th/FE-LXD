@@ -111,6 +111,7 @@ export type getDiarySummary = APIResponse<DiarySummary>;
 export type getDiariesResponseDTO = APIResponse<getDiariesResult>;
 
 export type diaries = {
+  writerMemberProfile: DiaryUploadResponsemember;
   diaryId?: number;
   createdAt?: string;
   title?: string;
@@ -122,11 +123,6 @@ export type diaries = {
   contentPreview?: string;
   language?: string;
   isLiked?: boolean;
-  writerUsername?: string;
-  writerNickname?: string;
-  writerProfileImg?: string;
-  profileImg?: string;
-  writerId?: number;
 };
 
 export type getDiariesResult = {
