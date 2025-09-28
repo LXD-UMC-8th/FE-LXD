@@ -13,10 +13,10 @@ const mapToUI = (c: CorrectionCommentDTO): UICorrectionComment => ({
   content: c.content,
   createdAt: c.createdAt,
   member: {
-    memberId: c.memberId,
-    username: c.username,
-    nickname: c.nickname,
-    profileImageUrl: c.profileImage,
+    memberId: c.memberProfile.id,
+    username: c.memberProfile.username,
+    nickname: c.memberProfile.nickname,
+    profileImageUrl: c.memberProfile.profileImage,
   },
 });
 
@@ -48,6 +48,5 @@ export function useCorrectionComments(
     },
     select: (data) =>
       data.pages.flatMap((p) => (p.result.contents ?? []).map(mapToUI)),
-
   });
 }

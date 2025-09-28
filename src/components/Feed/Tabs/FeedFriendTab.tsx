@@ -37,7 +37,7 @@ const FeedFriendTab = () => {
     if (vis === "PRIVATE") return false;
     // FRIENDS
     if (vis === "FRIENDS") {
-      const writerId = item.writerId ?? null;
+      const writerId = item.writerMemberProfile.id ?? null;
       if (!isLoggedIn || writerId == null) return false;
       return friendSet.has(writerId);
     }
@@ -83,9 +83,7 @@ const FeedFriendTab = () => {
       )}
 
       {isError && (
-        <div className="text-grey-500 text-center mt-4">
-          {t.CannotLoadList}
-        </div>
+        <div className="text-grey-500 text-center mt-4">{t.CannotLoadList}</div>
       )}
 
       <div ref={ref} aria-hidden />

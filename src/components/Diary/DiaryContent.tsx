@@ -167,7 +167,7 @@ const DiaryContent = ({
           {/* 더보기 메뉴 */}
           {menuOpen && (
             <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
-              {isWriter ? (
+              {canEdit ? (
                 <>
                   <button
                     className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
@@ -218,7 +218,12 @@ const DiaryContent = ({
 
       {/* 제목 & 상태 */}
       <div className="flex items-center mb-5 no-click no-drag select-none">
-        <Header props={{ visibility: props?.visibility }} />
+        <Header
+          props={{
+            visibility: props?.visibility,
+            writerMemberProfile: props.memberProfile,
+          }}
+        />
         <h1 className="flex-1 pr-4 text-subhead2 font-semibold">
           {props.title}
         </h1>
