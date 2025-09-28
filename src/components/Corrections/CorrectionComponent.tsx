@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import ProfileInCorrections from "./ProfileInCorrections";
 import AlertModal from "../Common/AlertModal";
 import LoadingModal from "../Common/LoadingModal";
+import { useNavigate } from "react-router-dom";
 
 import { useGetCorrectionComments } from "../../hooks/mutations/CorrectionComment/useGetCorrectionComments";
 import { useToggleCorrectionLike } from "../../hooks/mutations/CorrectionLike/useToggleCorrectionLike";
@@ -17,8 +18,8 @@ import { translate } from "../../context/translate";
 
 interface Props {
   correction: SavedCorrectionItem;
+  diaryThumbnail?: string; // ✅ 1. 부모에게 받을 diaryThumbnail prop 타입을 추가합니다.
 }
-
 
 const pickDeep = (obj: any, paths: string[][]) => {
   for (const path of paths) {
@@ -39,103 +40,80 @@ const makeSnippet = (text?: string, max = 30) => {
   return line.length > max ? line.slice(0, max) + "…" : line;
 };
 
-const CorrectionComponent = ({ correction }: Props) => {
-  /** ---------- i18n ---------- */
+// ✅ 2. diaryThumbnail prop을 받도록 수정합니다.
+const CorrectionComponent = ({ correction, diaryThumbnail }: Props) => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translate[language];
 
-  /** ---------- 정규화 ---------- */
   const normalized = (() => {
     const c: any = correction;
-
-    // ✅ 제공 탭 스키마: diaryInfo.diaryTitle / diaryInfo.diaryId / diaryInfo.diaryCreatedAt
     const diaryTitle: string =
       c?.diaryInfo?.diaryTitle ??
       c.diaryTitle ?? c.title ??
       pickDeep(c, [
-        ["diary", "title"],
-        ["targetDiary", "title"],
-        ["target", "title"],
-        ["diaryInfo", "title"],
-        ["sourceDiary", "title"],
-        ["post", "title"],
-        ["entry", "title"],
-        ["content", "title"],
+        ["diary", "title"], ["targetDiary", "title"], ["target", "title"],
+        ["diaryInfo", "title"], ["sourceDiary", "title"], ["post", "title"],
+        ["entry", "title"], ["content", "title"],
       ]) ?? "";
-
     const diaryId: number | string | undefined =
       c?.diaryInfo?.diaryId ??
       c.diaryId ?? c.postId ?? c.entryId ??
       pickDeep(c, [
-        ["diary", "id"],
-        ["targetDiary", "id"],
-        ["target", "id"],
-        ["diaryInfo", "id"],
-        ["sourceDiary", "id"],
-        ["post", "id"],
-        ["entry", "id"],
+        ["diary", "id"], ["targetDiary", "id"], ["target", "id"],
+        ["diaryInfo", "id"], ["sourceDiary", "id"], ["post", "id"], ["entry", "id"],
+      ]);
+    
+    // ✅ 3. 부모에게 받은 diaryThumbnail 값을 최우선으로 사용하도록 수정합니다.
+    const diaryThumbnailValue: string | undefined =
+      diaryThumbnail ?? // 1순위: 부모에게서 직접 받은 값
+      c?.diaryInfo?.diaryThumbnail ?? // 2순위: 기존 추측 로직
+      c.thumbnail ?? c.thumbnailUrl ?? c.imageUrl ??
+      pickDeep(c, [
+        ["diary", "thumbnail"], ["diary", "image"], ["targetDiary", "thumbnail"],
+        ["post", "thumbnail"], ["post", "imageUrl"],
       ]);
 
     const createdAt: string =
       c.createdAt ?? c.providedAt ?? c.updatedAt ?? c.createdDate ?? c?.diaryInfo?.diaryCreatedAt ?? "";
-
-    const member =
-      c.member ?? c.receiver ?? c.writer ?? c.owner ?? c.author ?? c.user ?? {};
-
-    // 본문 원문 키 통일(제공 탭은 originalText 로 옴)
+    const member = c.member ?? c.receiver ?? c.writer ?? c.owner ?? c.author ?? c.user ?? {};
     const original: string | undefined = c.original ?? c.originalText;
-
-    // 좋아요 관련
     const likedFlag = Boolean(c.liked ?? c.isLiked ?? c.hasLiked);
     const likeCountVal = typeof c.likeCount === "number" ? c.likeCount : (c.likes ?? 0);
-
     const savedCorrectionId = c.savedCorrectionId;
 
     return {
-      diaryTitle,
-      diaryId,
-      createdAt,
-      member,
-      original,
-      likedFlag,
-      likeCountVal,
-      savedCorrectionId,
+      diaryTitle, diaryId, createdAt, member, original,
+      likedFlag, likeCountVal, savedCorrectionId,
+      diaryThumbnail: diaryThumbnailValue, // 최종 썸네일 값 반환
     };
   })();
 
-  // 제목 표시용: 서버 제목이 없으면 본문/수정문/코멘트 첫줄 스니펫 사용
+  // (이하 다른 로직들은 변경사항 없습니다)
   const displayTitle =
     normalized.diaryTitle ||
     makeSnippet(normalized.original) ||
     makeSnippet((correction as any).corrected) ||
     makeSnippet((correction as any).commentText) ||
     "";
-
-  /** ---------- 기본 값/ID ---------- */
   const correctionId = (correction as any).correctionId;
   const savedId = normalized.savedCorrectionId;
   const isSavedList = !!savedId;
-
-  /** ---------- 좋아요 ---------- */
   const initiallyLiked = isSavedList ? true : normalized.likedFlag;
   const [liked, setLiked] = useState<boolean>(initiallyLiked);
   const [likeCount, setLikeCount] = useState<number>(normalized.likeCountVal);
   const [liking, setLiking] = useState(false);
   const [deleteLikeOpen, setDeleteLikeOpen] = useState(false);
   const [removed, setRemoved] = useState(false);
-
   const qc = useQueryClient();
   const { mutateAsync: toggleLike } = useToggleCorrectionLike();
-
   const onClickLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (liking || removed) return;
-
     if (isSavedList && liked) {
       setDeleteLikeOpen(true);
       return;
     }
-
     setLiking(true);
     try {
       const res: any = await toggleLike({ correctionId });
@@ -146,44 +124,34 @@ const CorrectionComponent = ({ correction }: Props) => {
           : nextLiked
           ? likeCount + 1
           : Math.max(0, likeCount - 1);
-
       setLiked(nextLiked);
       setLikeCount(nextCount);
-
       qc.invalidateQueries({ queryKey: [QUERY_KEY.providedCorrections] });
     } finally {
       setLiking(false);
     }
   };
-
   const confirmUnlike = async (e?: React.MouseEvent) => {
     e?.stopPropagation?.();
     if (liking || removed) return;
-
     setDeleteLikeOpen(false);
     setLiking(true);
     try {
-      const res: any = await toggleLike({ correctionId }); // 서버 토글(=취소)
+      const res: any = await toggleLike({ correctionId });
       const nextLiked = Boolean(res?.liked);
       const nextCount =
         typeof res?.likeCount === "number" ? res.likeCount : Math.max(0, likeCount - 1);
-
       setLiked(nextLiked);
       setLikeCount(nextCount);
-
       if (isSavedList) setRemoved(true);
       qc.invalidateQueries({ queryKey: [QUERY_KEY.savedCorrections] });
     } finally {
       setLiking(false);
     }
   };
-
-  /** ---------- 댓글 ---------- */
   const [openReply, setOpenReply] = useState(false);
   const [commentCount, setCommentCount] = useState<number>((correction as any).commentCount ?? 0);
-
   const { mutate: fetchComments, data: listData, isPending: listLoading } = useGetCorrectionComments();
-
   const comments = useMemo(() => {
     const r: any = listData?.result;
     if (!r) return [];
@@ -191,18 +159,15 @@ const CorrectionComponent = ({ correction }: Props) => {
     if (Array.isArray(r.contents)) return r.contents;
     return [];
   }, [listData]);
-
   const toggleReply = () => {
     const next = !openReply;
     setOpenReply(next);
     if (next) fetchComments({ correctionId, page: 1, size: 20 });
   };
-
   useEffect(() => {
     const total = (listData as any)?.result?.totalElements;
     if (typeof total === "number") setCommentCount(total);
   }, [listData]);
-
   const primedRef = useRef(false);
   useEffect(() => {
     if (primedRef.current) return;
@@ -218,28 +183,20 @@ const CorrectionComponent = ({ correction }: Props) => {
           setCommentCount(total);
           primedRef.current = true;
         },
-        onError: () => {
-          primedRef.current = true;
-        },
+        onError: () => { primedRef.current = true; },
       }
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctionId]);
-
-  /** ---------- 메모(저장 탭에서만) ---------- */
   const baselineRef = useRef<string>((correction as any).memo ?? "");
   const [memoText, setMemoText] = useState<string>(baselineRef.current);
   const isDirty = memoText !== baselineRef.current;
-
   const { mutateAsync: upsertMemo, isPending: isSaving } = useUpsertSavedMemo();
   const { mutateAsync: removeMemo, isPending: isDeleting } = useDeleteSavedMemo();
-
   const handleSaveMemo = async () => {
     if (!isSavedList) return alert(t.SaveMemoFail1);
     const trimmed = memoText.trim();
     if (!trimmed) return alert(t.PlzEnterInContent ?? "메모 내용을 입력해 주세요.");
     if (!isDirty) return;
-
     try {
       await upsertMemo({
         savedCorrectionId: Number(savedId),
@@ -253,7 +210,6 @@ const CorrectionComponent = ({ correction }: Props) => {
       alert(t.SaveMemoFail ?? "메모 저장에 실패했습니다.");
     }
   };
-
   const handleDeleteMemo = async () => {
     if (!isSavedList) return;
     try {
@@ -266,47 +222,45 @@ const CorrectionComponent = ({ correction }: Props) => {
     }
   };
 
-  /** ---------- 제거된 카드면 렌더 스킵 ---------- */
+  const handleNavigate = () => {
+    if (normalized.diaryId) {
+      navigate(`/feed/${normalized.diaryId}`);
+    }
+  };
+
   if (removed) return null;
 
-  /** ---------- 렌더 ---------- */
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      {/* 상단 프로필/시간 */}
-      <div className="mb-3">
-        <ProfileInCorrections member={normalized.member} createdAt={normalized.createdAt || ""} />
-      </div>
-
-      {/* 제목(있을 때만) */}
-      {!!displayTitle && (
-        <div className="mt-1">
-          <span className="text-primary-600 font-semibold underline cursor-pointer">
-            {displayTitle}
-          </span>
+      <div onClick={handleNavigate} className="cursor-pointer">
+        <div className="mb-3">
+          <ProfileInCorrections member={normalized.member} createdAt={normalized.createdAt || ""} />
         </div>
-      )}
-
-      {/* 본문 */}
-      <div className="mt-3 space-y-3">
-        {!!normalized.original && (
-          <p className="text-body1 text-gray-900">{normalized.original}</p>
-        )}
-
-        {!!(correction as any).corrected && (
-          <div className="flex gap-2">
-            <div className="w-1.5 rounded bg-primary-500 mt-1" />
-            <p className="text-body1 font-semibold text-primary-600">
-              {(correction as any).corrected}
-            </p>
+        {!!displayTitle && (
+          <div className="mt-1">
+            <span className="text-primary-600 font-semibold underline">
+              {displayTitle}
+            </span>
           </div>
         )}
-
-        {!!(correction as any).commentText && (
-          <p className="text-body2 text-gray-700">{(correction as any).commentText}</p>
-        )}
+        <div className="mt-3 space-y-3">
+          {!!normalized.original && (
+            <p className="text-body1 text-gray-900">{normalized.original}</p>
+          )}
+          {!!(correction as any).corrected && (
+            <div className="flex gap-2">
+              <div className="w-1.5 rounded bg-primary-500 mt-1" />
+              <p className="text-body1 font-semibold text-primary-600">
+                {(correction as any).corrected}
+              </p>
+            </div>
+          )}
+          {!!(correction as any).commentText && (
+            <p className="text-body2 text-gray-700">{(correction as any).commentText}</p>
+          )}
+        </div>
       </div>
 
-      {/* 액션 */}
       <div className="mt-4 flex items-center justify-end gap-6 text-sm text-gray-500">
         <button
           onClick={toggleReply}
@@ -319,7 +273,6 @@ const CorrectionComponent = ({ correction }: Props) => {
           />
           <span>{commentCount}</span>
         </button>
-
         <button
           onClick={onClickLike}
           disabled={liking}
@@ -335,15 +288,12 @@ const CorrectionComponent = ({ correction }: Props) => {
         </button>
       </div>
 
-      {/* 댓글 리스트 */}
       {openReply && (
         <div className="mt-3 space-y-3">
           {listLoading && <LoadingModal />}
-
           {!listLoading && comments.length === 0 && (
             <div className="text-sm text-gray-400">{t.NoComments ?? "댓글이 없습니다."}</div>
           )}
-
           {!listLoading &&
             comments.map((c: any) => (
               <div key={c.commentId} className="border-t border-gray-200 pt-3">
@@ -362,8 +312,6 @@ const CorrectionComponent = ({ correction }: Props) => {
             ))}
         </div>
       )}
-
-      {/* 저장 탭에서만 메모 입력 */}
       {!!isSavedList && (
         <div className="mt-4 flex items-center gap-2">
           <div className="flex-1 flex items-center gap-2 rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
@@ -376,7 +324,6 @@ const CorrectionComponent = ({ correction }: Props) => {
               onChange={(e) => setMemoText(e.target.value)}
             />
           </div>
-
           <button
             onClick={handleSaveMemo}
             disabled={isSaving || !isDirty}
@@ -384,7 +331,6 @@ const CorrectionComponent = ({ correction }: Props) => {
           >
             {baselineRef.current ? t.editmemo : t.postmemo}
           </button>
-
           <button
             onClick={handleDeleteMemo}
             disabled={isDeleting || !baselineRef.current}
@@ -397,9 +343,20 @@ const CorrectionComponent = ({ correction }: Props) => {
 
       <div className="mt-5 border-t border-gray-200" />
 
-      {/* 하단 정보 바 */}
-      <div className="mt-4 flex items-center gap-3">
-        <div className="h-9 w-9 rounded-md bg-gray-200" />
+      <div
+        className="mt-4 flex cursor-pointer items-center gap-3"
+        onClick={handleNavigate}
+      >
+        {normalized.diaryThumbnail ? (
+          <img
+            src={normalized.diaryThumbnail}
+            alt={displayTitle || "게시물 썸네일"}
+            className="h-9 w-9 rounded-md bg-gray-200 object-cover"
+          />
+        ) : (
+          <div className="h-9 w-9 rounded-md bg-gray-200" />
+        )}
+
         <div className="text-body1 text-gray-700">
           {(normalized.diaryId ?? correctionId) != null && (
             <span className="mr-2 text-gray-500">
@@ -411,7 +368,6 @@ const CorrectionComponent = ({ correction }: Props) => {
         <div className="ml-auto text-caption text-gray-500">{normalized.createdAt || ""}</div>
       </div>
 
-      {/* 좋아요 취소 모달 */}
       {deleteLikeOpen && (
         <AlertModal
           title={t.DeleteLikeAlert}

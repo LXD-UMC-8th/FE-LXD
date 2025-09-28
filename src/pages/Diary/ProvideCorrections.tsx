@@ -30,7 +30,7 @@ const ProvideCorrections = () => {
   const [showModal, setShowModal] = useState(false);
   const [editedText, setEditedText] = useState("");
   const [description, setDescription] = useState("");
-  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0});
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const contentAreaRef = useRef<HTMLDivElement>(null);
@@ -70,14 +70,21 @@ const ProvideCorrections = () => {
     );
   }, [hasValidId, parsedDiaryId, fetchCorrections]);
 
-  const [displayCorrections, setDisplayCorrections] = useState<OptimisticContents[]>([]);
+  const [displayCorrections, setDisplayCorrections] = useState<
+    OptimisticContents[]
+  >([]);
 
   useEffect(() => {
-    const serverList: ContentsDTO[] = correctionData?.result?.corrections?.contents ?? [];
+    const serverList: ContentsDTO[] =
+      correctionData?.result?.corrections?.contents ?? [];
     if (!serverList.length) return;
 
-    const fp = (x: Pick<ContentsDTO, "original" | "corrected" | "commentText">) =>
-      `${(x.original ?? "").trim()}|${(x.corrected ?? "").trim()}|${(x.commentText ?? "").trim()}`;
+    const fp = (
+      x: Pick<ContentsDTO, "original" | "corrected" | "commentText">
+    ) =>
+      `${(x.original ?? "").trim()}|${(x.corrected ?? "").trim()}|${(
+        x.commentText ?? ""
+      ).trim()}`;
 
     const serverFingerprints = new Set(serverList.map((s) => fp(s)));
 
@@ -86,7 +93,9 @@ const ProvideCorrections = () => {
         (p) => !(p._optimistic && serverFingerprints.has(fp(p)))
       );
 
-      const existingIds = new Set(withoutDupOptimistic.map((c) => Number(c.correctionId)));
+      const existingIds = new Set(
+        withoutDupOptimistic.map((c) => Number(c.correctionId))
+      );
 
       const merged: OptimisticContents[] = [...withoutDupOptimistic];
       for (const s of serverList) {
@@ -123,7 +132,8 @@ const ProvideCorrections = () => {
       }
 
       const rect =
-        range.getBoundingClientRect().width || range.getBoundingClientRect().height
+        range.getBoundingClientRect().width ||
+        range.getBoundingClientRect().height
           ? range.getBoundingClientRect()
           : range.getClientRects()[0];
 
@@ -141,6 +151,7 @@ const ProvideCorrections = () => {
       setModalPosition({ top, left });
       setSelectedText(text);
       setEditedText("");
+      setDescription("");
       setShowModal(true);
     };
 
@@ -218,7 +229,10 @@ const ProvideCorrections = () => {
             setDisplayCorrections((prev) =>
               prev.map((c) =>
                 Number(c.correctionId) === tempId
-                  ? ({ ...serverItem, _optimistic: false } as OptimisticContents)
+                  ? ({
+                      ...serverItem,
+                      _optimistic: false,
+                    } as OptimisticContents)
                   : c
               )
             );
@@ -244,15 +258,15 @@ const ProvideCorrections = () => {
       ref={containerRef}
     >
       <div className="flex-1 min-w-0">
-        {/* 뒤로가기 */}
-        <div className="mb-4 flex items-center gap-3 justify-between select-none">
+        {/* 뒤로가기 + 교정완료 */}
+        <div className="mb-4 flex items-center gap-3 justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <PrevButton navigateURL={-1} />
             <TitleHeader title={t.CorrectButton} />
           </div>
           <button
             type="button"
-            className="bg-primary-500 text-primary-50 text-sm font-bold rounded-[5px] h-[43px] w-[118px] px-1 cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] duration-300"
+            className="group flex items-center justify-center bg-primary-500 text-primary-50 font-bold text-sm h-[43px] w-[118px] rounded-[5px] px-[12px] gap-[10px] cursor-pointer hover:bg-[#CFDFFF] hover:text-[#4170fe] transition-colors duration-300"
             onClick={() => navigate(-1)}
           >
             {t.CompleteCorrect}
@@ -261,9 +275,7 @@ const ProvideCorrections = () => {
 
         {/* 본문 */}
         <div className="bg-white p-8 rounded-[10px]">
-          <div ref={contentAreaRef}>
-            {diary && <DiaryContent props={diary} />}
-          </div>
+          <div ref={contentAreaRef}>{diary && <DiaryContent {...diary} />}</div>
         </div>
       </div>
 
@@ -286,16 +298,21 @@ const ProvideCorrections = () => {
       <div className="flex flex-col px-5 gap-3 select-none">
         <div className="flex items-center gap-2">
           <img src="/images/Correct.svg" className="w-5 h-5" />
-          <p className="text-subhead3 font-semibold py-3">{t.CorrectionsInDiary}</p>
+          <p className="text-subhead3 font-semibold py-3">
+            {t.CorrectionsInDiary}
+          </p>
         </div>
 
         {(isDiaryPending ||
-          (isCorrectionsPending && !didPrimeCorrectionsRef.current && displayCorrections.length === 0)) && (
-          <LoadingModal />
-        )}
+          (isCorrectionsPending &&
+            !didPrimeCorrectionsRef.current &&
+            displayCorrections.length === 0)) && <LoadingModal />}
 
         {(displayCorrections ?? []).map((correction: OptimisticContents) => (
-          <CorrectionsInDiaryDetail key={Number(correction.correctionId)} props={correction} />
+          <CorrectionsInDiaryDetail
+            key={Number(correction.correctionId)}
+            props={correction}
+          />
         ))}
       </div>
     </div>

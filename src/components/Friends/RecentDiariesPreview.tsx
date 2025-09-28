@@ -1,4 +1,3 @@
-// src/components/Friends/RecentDiariesPreview.tsx
 import { useEffect } from "react";
 import CommonComponentSkeleton from "../Common/CommonComponentSkeleton";
 import CommonComponentInDiaryNFeed from "../Common/CommonComponentInDiaryNFeed";
@@ -48,7 +47,6 @@ const RecentDiariesPreview = ({ memberId }: Props) => {
   const items: diaries[] =
     data?.pages.flatMap((p) => p?.result?.contents ?? []) ?? [];
 
-  // 안전 라벨 (번역키 없이)
   const recentTitle = language === "KO" ? "최근 일기" : "Recent diaries";
   const viewMoreLabel = language === "KO" ? "더보기" : "View more";
   const cannotLoad =
@@ -68,7 +66,7 @@ const RecentDiariesPreview = ({ memberId }: Props) => {
         </button>
       </div>
 
-      {/* 리스트 래퍼: 폭 제한 → 피그마 느낌으로 슬림하게 */}
+      {/* 리스트 래퍼 */}
       <div className="w-full max-w-[680px] space-y-3">
         {items.map((d) => (
           <div
@@ -79,6 +77,8 @@ const RecentDiariesPreview = ({ memberId }: Props) => {
             onKeyDown={(e) => e.key === "Enter" && openDiary(d.diaryId)}
             title={`Open diary ${d.diaryId}`}
             className="
+              break-words /* ✅ 글자 넘어감(overflow) 방지 */
+              [&_a]:break-all
               rounded-2xl border border-gray-200 bg-white px-5 py-4
               hover:shadow-sm transition-shadow
               /* 내부 공용 컴포넌트 자식 이미지 사이즈/라운드 보정 */
@@ -100,7 +100,6 @@ const RecentDiariesPreview = ({ memberId }: Props) => {
           <div className="text-gray-500 text-sm mt-2">{cannotLoad}</div>
         )}
 
-        {/* 무한 스크롤 센티넬 */}
         <div ref={ref} />
       </div>
     </section>

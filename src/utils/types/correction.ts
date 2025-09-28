@@ -1,4 +1,5 @@
 import type { APIResponse } from "./APIresponse";
+import type { memberProfile } from "./diary";
 
 // 교정 등록
 export type CorrectionsUploadRequestDTO = {
@@ -39,7 +40,7 @@ export type ContentsDTO = {
   correctionId: number;
   diaryId: number;
   createdAt: string;
-  member: member;
+  memberProfile: memberProfile;
   original: string;
   corrected: string;
   commentText: string;

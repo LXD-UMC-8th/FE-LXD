@@ -1,8 +1,8 @@
-import type { member as Member } from "../../utils/types/correction";
+import type { memberProfile } from "../../utils/types/diary";
 import Avatar from "./Avatar";
 
 type Props = {
-  member?: Member | null;
+  member?: memberProfile | null;
   createdAt?: string;
   className?: string;
 };
@@ -15,7 +15,7 @@ const ProfileComponent = ({
   return (
     <div className={`flex gap-2 items-center ${className}`}>
       {/* 프로필 이미지 */}
-      <Avatar src={member?.profileImageUrl} />
+      <Avatar src={member?.profileImage} />
 
       <div className="flex flex-col min-w-0">
         {/* 사용자 이름 + 아이디 */}

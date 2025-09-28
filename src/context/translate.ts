@@ -302,6 +302,23 @@ export const translate: Record<
     NoComments: string;
     postmemo: string;
     editmemo: string;
+
+    Alert: string;
+    AlertReport: string;
+    AlertDescription: string;
+    ReportContent: string;
+    ReportContent_1: string;
+    ReportContent_2: string;
+    ReportContent_3: string;
+    CompleteAlert: string;
+
+    unfriendFailToast: string;
+    DeleteCommentFail: string;
+    reportSuccessAlert: string;
+    reportFailAlert: string;
+    reportReasonPlaceholder: string;
+    reporting: string;
+    CommentRestricted: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -428,7 +445,7 @@ export const translate: Record<
     FailToDeleteMemo: "Fail to delete memo.",
     CannotLoadList: "Unable to load list.",
     titleRequired: "Please enter a title.",
-    FriendFeedX: "There is not friend's diary.",
+    FriendFeedX: "No diaries from friends.",
     settingTitle: "Settings",
     SaveChange: "Save Changes",
     setLanguage: "Language Setting",
@@ -438,7 +455,7 @@ export const translate: Record<
     SidebarFeed: "Feed",
     profileEdit: "Edit Profile",
     SidebarDiary: "My Diary",
-    SidebarCorrections: "MyCorrections",
+    SidebarCorrections: "My Corrections",
     SidebarFriends: "Friends",
     SidebarSettings: "Settings",
     findFriendsHeadline: "Find friends around the world",
@@ -673,10 +690,26 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     uploadFailed: "The image is too large or the format is incorrect.",
     postmemo: "Post",
     editmemo: "Edit",
+    Alert: "Alert",
+    AlertReport: "Report",
+    AlertDescription:
+      "Your report will be sent to the admin team for review. Misuse of the report feature may lead to penalties.",
+    ReportContent: "Report Content",
+    ReportContent_1: "Spam / Advertisement",
+    ReportContent_2: "Inappropriate or Offensive Content",
+    ReportContent_3: "Other (please specify)",
+    unfriendFailToast: "Failed to Unfriend friend.",
+    DeleteCommentFail: "Failed to delete comment.",
+    reportSuccessAlert: "Report submitted successfully.",
+    reportFailAlert: "Failed to submit report.",
+    reportReasonPlaceholder: "Please enter the reason for your report.",
+    reporting: "Reporting...",
+    CompleteAlert: "Report submitted successfully.",
+    CommentRestricted: "Comments are not allowed on this diary.",
   },
 
   [Language.KOREAN]: {
-    uploadFailed:"사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
+    uploadFailed: "사진의 크기가 너무 크거나 형식이 올바르지 않습니다.",
     maxImages: "이미지는 최대 5개까지 추가할 수 있습니다.",
     maxOneImage: "이미지는 한 번에 한 개의 이미지만 추가할 수 있습니다.",
     post: "등록",
@@ -726,7 +759,6 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     profileHeader: "프로필 생성에 필요한 정보를 입력해주세요",
     addPhoto: "사진 추가",
     profileEdit: "프로필 편집",
-
     id: "아이디",
     idPlaceholder: "아이디를 입력해주세요",
     idCheck: "중복확인",
@@ -1037,5 +1069,21 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     logoutAlert: "로그아웃이 완료되었습니다.",
     postmemo: "저장하기",
     editmemo: "수정하기",
+    Alert: "신고하기",
+    AlertReport: "신고하기",
+    AlertDescription:
+      "신고는 운영팀에 전달되며, 검토 후 필요한 조치가 이루집니다. 허위 신고는 제재를 받을 수 있습니다.",
+    ReportContent: "신고하기",
+    ReportContent_1: "스팸/광고",
+    ReportContent_2: "부적절하거나 불쾌한 내용",
+    ReportContent_3: "기타(직접입력)",
+    unfriendFailToast: "친구 삭제에 실패했습니다.",
+    DeleteCommentFail: "댓글 삭제에 실패했습니다.",
+    reportSuccessAlert: "신고가 성공적으로 접수되었습니다.",
+    reportFailAlert: "신고 접수에 실패했습니다. 다시 시도해주세요.",
+    reportReasonPlaceholder: "신고 사유를 입력해주세요.",
+    reporting: "신고중...",
+    CompleteAlert: "신고가 완료되었습니다.",
+    CommentRestricted: "댓글 작성을 허용하지 않는 일기입니다.",
   },
 };

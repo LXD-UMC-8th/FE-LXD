@@ -2,14 +2,17 @@
 import { useState, useEffect } from "react";
 import UserListSection from "../UserListSection";
 import ProfileModal from "../ProfileModal";
+import AlertModal from "../../Common/AlertModal"; // ✅ 1. AlertModal 임포트
 import { getFriends, deleteFriend } from "../../../apis/friend";
 import type { FriendListResponseDTO } from "../../../utils/types/friend";
 import { useFriendCounts } from "../../../context/FriendCountsContext";
+import { useLanguage } from "../../../context/LanguageProvider"; // ✅ 2. 언어 관련 훅 임포트
+import { translate } from "../../../context/translate";
 
 const FriendTab = () => {
   const { decFriend } = useFriendCounts();
-  
-
+  const { language } = useLanguage(); // ✅ 3. 언어 설정 가져오기
+  const t = translate[language];
 
   const [isLoading, setIsLoading] = useState(true);
   const [friendList, setFriendList] = useState<
@@ -17,6 +20,7 @@ const FriendTab = () => {
   >([]);
 
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // ✅ 4. 확인 모달 상태 추가
   const [selectedUsername, setSelectedUsername] = useState<string | null>(null);
 
   const selectedUser =
@@ -43,30 +47,14 @@ const FriendTab = () => {
     setShowProfileModal(true);
   };
 
-  // 리스트 카드의 “친구” 버튼 클릭 → 바로 삭제 (팝업 없음)
-  const onFriendButtonClick = async (user: {
+  // ✅ 5. 리스트 카드의 버튼 클릭 -> 이제 즉시 삭제가 아닌 모달을 엽니다.
+  const onFriendButtonClick = (user: {
     id: string;
     name: string;
     username: string;
   }) => {
-    const memberId = Number(user.id);
-    if (!Number.isFinite(memberId)) {
-      console.error("Invalid memberId:", user.id);
-      return;
-    }
-    try {
-      const res = await deleteFriend(memberId); // friendId = memberId
-      const ok = typeof res === "boolean" ? res : !!res?.ok;
-      if (!ok) return; // 실패시 조용히 무시(원하면 토스트로 바꾸세요)
-
-      // 성공 시 UI만 갱신
-      setFriendList((prev) =>
-        prev.filter((f) => f.memberId !== memberId && f.username !== user.username)
-      );
-      decFriend(1);
-    } catch (e) {
-      console.error("❌ 친구 삭제 요청 실패:", e);
-    }
+    setSelectedUsername(user.username);
+    setShowConfirmModal(true);
   };
 
   const onCloseProfileModal = () => {
@@ -74,22 +62,40 @@ const FriendTab = () => {
     setSelectedUsername(null);
   };
 
-  // 프로필 모달 안의 “친구 끊기”도 팝업 없이 즉시 삭제
-  const onUnfriendInModal = async () => {
+  const onCloseConfirmModal = () => {
+    setShowConfirmModal(false);
+    setSelectedUsername(null);
+  };
+
+  // ✅ 6. 프로필 모달의 '친구 끊기' 클릭 -> 프로필 모달 닫고 확인 모달 열기
+  const onUnfriendInModal = () => {
+    if (!selectedUser) return;
+    setShowProfileModal(false); // 프로필 모달은 닫고
+    setShowConfirmModal(true); // 확인 모달을 연다
+  };
+
+  // ✅ 7. 확인 모달에서 '삭제'를 눌렀을 때 실행될 함수 (실제 API 호출)
+  const onConfirmDelete = async () => {
     if (!selectedUser) return;
     try {
       const res = await deleteFriend(selectedUser.memberId);
       const ok = typeof res === "boolean" ? res : !!res?.ok;
-      if (!ok) return;
+      if (!ok) {
+        alert(t.unfriendFailToast ?? "친구 삭제에 실패했습니다.");
+        return;
+      }
 
+      // 성공 시 UI 반영
       setFriendList((prev) =>
         prev.filter((f) => f.memberId !== selectedUser.memberId)
       );
       decFriend(1);
+      alert(t.unfriendDoneToast2 ?? "친구를 삭제했습니다.");
     } catch (e) {
       console.error("❌ 친구 삭제 요청 실패:", e);
+      alert(t.unfriendFailToast ?? "친구 삭제에 실패했습니다.");
     } finally {
-      onCloseProfileModal();
+      onCloseConfirmModal();
     }
   };
 
@@ -109,7 +115,7 @@ const FriendTab = () => {
         }))}
         isLoading={isLoading}
         onUserCardClick={onCardClick}
-        onFriendButtonClick={onFriendButtonClick} // ← 클릭 즉시 삭제, alert 없음
+        onFriendButtonClick={onFriendButtonClick} // ← 이제 모달을 엽니다
       />
 
       {showProfileModal && selectedUser && (
@@ -122,9 +128,18 @@ const FriendTab = () => {
             isFriend: true,
           }}
           onClose={onCloseProfileModal}
-          onUnfriendClick={onUnfriendInModal}  // ← 모달에서도 즉시 삭제, alert 없음
+          onUnfriendClick={onUnfriendInModal} // ← 이제 모달을 엽니다
           onSendRequestClick={onSendRequestClick}
         />
+      )}
+
+      {/* ✅ 8. 확인 모달(AlertModal) JSX 추가 */}
+      {showConfirmModal && selectedUser && (
+        <AlertModal
+          onClose={onCloseConfirmModal}
+          onConfirm={onConfirmDelete}
+          title={t.unfriendConfirmTitle.replace("{name}", selectedUser.nickname)}
+          confirmText={t.unfriendConfirmAction2} alertMessage={""}        />
       )}
     </div>
   );

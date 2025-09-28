@@ -3,7 +3,10 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import { useEffect, useMemo } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getDiaryDetail, getLikedDiaries } from "../../../apis/diary";
-import type { diaries, getDiariesResponseDTO } from "../../../utils/types/diary";
+import type {
+  diaries,
+  getDiariesResponseDTO,
+} from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
@@ -52,7 +55,7 @@ const LikesTab = () => {
 
   const canSee = (item: diaries) => {
     const vis = normalizeVisibility(item.visibility);
-    const writer = toNum(item.writerId);
+    const writer = toNum(item.writerMemberProfile.id);
 
     if (vis === "PUBLIC") return true;
     if (vis === "PRIVATE") return false;
@@ -114,9 +117,7 @@ const LikesTab = () => {
       )}
 
       {isError && (
-        <div className="text-grey-500 text-center mt-4">
-          {t.CannotLoadList}
-        </div>
+        <div className="text-grey-500 text-center mt-4">{t.CannotLoadList}</div>
       )}
 
       <div ref={ref}></div>
