@@ -40,7 +40,7 @@ const DiaryEditPage = () => {
       const normalized = normalizeHtmlForQuill(decoded);
       setEditorRawContent(normalized);
       setTitleName(d.title || "");
-      setThumbImg(d.thumbImg || "");
+      setThumbImg(d.thumbnail || "");
     });
   }, [diaryId]);
 
