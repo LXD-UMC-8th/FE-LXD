@@ -7,34 +7,15 @@ import type {
   ProvidedCorrectionContentDTO,
 } from "../../utils/types/savedCorrection";
 
-/** ---- localStorage for liked map ---- */
-const LIKED_KEY = "lxd-liked-corrections";
-function readLikedMap(): Record<number, boolean> {
-  if (typeof window === "undefined") return {};
-  try {
-    return JSON.parse(localStorage.getItem(LIKED_KEY) || "{}");
-  } catch {
-    return {};
-  }
-}
-
 /** 어디에 있어도 correctionId를 찾아내는 헬퍼 */
 function extractCorrectionId(raw: any): number {
   if (!raw || typeof raw !== "object") return 0;
-  const keys = [
-    "correctionId",
-    "id",
-    "targetCorrectionId",
-    "diaryCorrectionId",
-  ];
-
-  // 1) 1차 키 검사
+  const keys = [ "correctionId", "id", "targetCorrectionId", "diaryCorrectionId" ];
+  // ... (이하 복잡한 ID 찾기 로직은 그대로 유지)
   for (const k of keys) {
     const v = raw?.[k];
     if (Number.isFinite(Number(v)) && Number(v) > 0) return Number(v);
   }
-
-  // 2) 1단계 중첩 검사
   for (const v of Object.values(raw)) {
     if (v && typeof v === "object") {
       for (const k of keys) {
@@ -43,15 +24,12 @@ function extractCorrectionId(raw: any): number {
       }
     }
   }
-
-  // 3) 재귀적 탐색
   for (const v of Object.values(raw)) {
     if (v && typeof v === "object") {
       const id = extractCorrectionId(v);
       if (id) return id;
     }
   }
-
   return 0;
 }
 
@@ -74,12 +52,12 @@ const mapToItem = (
     likeCount: raw?.likeCount ?? 0,
     diaryId: raw?.diaryInfo?.diaryId ?? raw?.diary?.diaryId ?? 0,
     diaryTitle: raw?.diaryInfo?.diaryTitle ?? raw?.diary?.diaryTitle ?? "",
-    liked: raw?.liked ?? raw?.correction?.liked ?? undefined,
+    liked: raw?.liked, // liked 정보는 select 함수에서 최종 결정
     member: {
-      memberId: me?.memberId ?? 0,
+      memberId: me?.memberId ?? me?.id ?? 0,
       username: me?.username ?? "",
       nickname: me?.nickname ?? "",
-      profileImageUrl: me?.profileImageUrl ?? "",
+      profileImageUrl: me?.profileImageUrl ?? me?.profileImage ?? "",
     },
   };
 };
@@ -100,32 +78,16 @@ export function useProvidedCorrections() {
         ? (last?.result?.corrections?.page ?? 1) + 1
         : undefined,
     select: (data) => {
-      const likedMap = readLikedMap();
-
+      // ✅ [최종 수정] localStorage 관련 로직을 모두 제거합니다.
       return data.pages.flatMap((p) => {
-        const me = p?.result?.member ?? {};
+        const me = p?.result?.member ?? p?.result?.memberProfile ?? {};
         const contents = p?.result?.corrections?.contents ?? [];
 
         return contents.map((c: any) => {
           const item = mapToItem(c, me);
 
-          /** ✅ 서버 값 우선, 로컬 보조 + 가드 */
-          const serverLiked =
-            typeof item.liked === "boolean" ? item.liked : undefined;
-
-          // id가 유효할 때만 로컬을 사용
-          const localLiked =
-            item.correctionId > 0
-              ? (likedMap as any)[item.correctionId]
-              : undefined;
-
-          // 최종 liked 병합
-          let liked = serverLiked ?? localLiked ?? false;
-
-          // 서버가 liked를 안 주고 likeCount가 0이면 로컬 true를 무시(유령 하트 방지)
-          if (serverLiked === undefined && (item.likeCount ?? 0) === 0) {
-            liked = false;
-          }
+          // ✅ [최종 수정] 'likeCount'가 0보다 크면 'liked' 상태를 true로 간주합니다.
+          const liked = (item.likeCount ?? 0) > 0;
 
           return { ...item, liked };
         });
