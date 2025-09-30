@@ -1,8 +1,10 @@
-import type { CorrectionsMemberDTO } from "../../utils/types/member";
+// src/components/ProfileInCorrections.tsx
+
+import type { SavedCorrectionItem } from "../../utils/types/savedCorrection";
 import Avatar from "../Common/Avatar";
 
 interface Props {
-  member?: CorrectionsMemberDTO;
+  member?: SavedCorrectionItem['member'];
   createdAt: string;
 }
 
