@@ -23,13 +23,19 @@ type CorrectionsInDiaryDetailProps = {
 };
 
 type CorrectionLikeResponseDTO = {
-  isSuccess: boolean; code: string; message: string;
+  isSuccess: boolean;
+  code: string;
+  message: string;
   result: {
-    correctionId: number; memberId: number; likeCount: number; liked: boolean;
+    correctionId: number;
+    memberId: number;
+    likeCount: number;
+    liked: boolean;
   };
 };
 
-const RED_FILTER = "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
+const RED_FILTER =
+  "invert(16%) sepia(97%) saturate(7471%) hue-rotate(356deg) brightness(96%) contrast(104%)";
 
 const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const { language } = useLanguage();
@@ -49,15 +55,18 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState("");
-  const [selectedComment, setSelectedComment] = useState<CorrectionCommentDTO | null>(null);
-  
+  const [selectedComment, setSelectedComment] =
+    useState<CorrectionCommentDTO | null>(null);
+
   const [isPostingComment, setIsPostingComment] = useState(false);
 
+  // 댓글 가져옴
   const {
-    mutate: fetchComments, data: listData, isPending: listLoading,
+    mutate: fetchComments,
+    data: listData,
+    isPending: listLoading,
   } = useGetCorrectionComments();
 
-  // ✅ 1. usePostCorrectionComment 훅이 객체를 반환하지 않는 문제를 해결합니다.
   const postCommentMutate = usePostCorrectionComment();
 
   const { mutate: deleteComment, isPending: isDeleting } = useMutation({
@@ -69,18 +78,24 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     },
     onError: (err) => {
       console.error("❌ 댓글 삭제 실패:", err);
-      alert(t.DeleteCommentFail ?? "댓글 삭제에 실패했습니다.");
+      alert(t.DeleteCommentFail);
     },
   });
 
   const comments: CorrectionCommentDTO[] = useMemo(
-    () => ((listData as CorrectionCommentGetResponseDTO | undefined)?.result?.contents ?? []) as CorrectionCommentDTO[],
+    () =>
+      ((listData as CorrectionCommentGetResponseDTO | undefined)?.result
+        ?.contents ?? []) as CorrectionCommentDTO[],
     [listData]
   );
 
   const total: number = useMemo(() => {
-    const totalFromServer = (listData as CorrectionCommentGetResponseDTO | undefined)?.result?.totalElements;
-    return typeof totalFromServer === "number" ? totalFromServer : (props.commentCount ?? 0);
+    const totalFromServer = (
+      listData as CorrectionCommentGetResponseDTO | undefined
+    )?.result?.totalElements;
+    return typeof totalFromServer === "number"
+      ? totalFromServer
+      : props.commentCount ?? 0;
   }, [listData, props.commentCount]);
 
   useEffect(() => {
@@ -91,7 +106,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   useEffect(() => {
     if (props?.correctionId && !listData) {
-      fetchComments({ correctionId: props.correctionId, page: 1, size: 1 });
+      fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
     }
   }, [props.correctionId, listData, fetchComments]);
 
@@ -119,7 +134,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
     setShowReportModal(false);
     setReportReason("");
   };
-  
+
   const _toggleCorrectionReply = () => setOpenCorrectionReply((prev) => !prev);
 
   const _handleCommentSubmit = () => {
@@ -128,13 +143,17 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
     setIsPostingComment(true);
     const body: CorrectionCommentRequestDTO = { content };
-    
+
     postCommentMutate.mutate(
       { correctionId: String(props.correctionId), ...body },
       {
         onSuccess: () => {
           setCommentText("");
-          fetchComments({ correctionId: props.correctionId, page: 1, size: 100 });
+          fetchComments({
+            correctionId: props.correctionId,
+            page: 1,
+            size: 100,
+          });
         },
         onError: (err) => {
           console.error("댓글 작성 실패:", err);
@@ -172,8 +191,14 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
 
   return (
     <div className="w-60 bg-white rounded-[10px] border border-gray-300 p-4">
-      <div onClick={() => navigate(`/diaries/member/${props.member.memberId}`)} className="cursor-pointer">
-        <ProfileComponent member={props.member} createdAt={props.createdAt} />
+      <div
+        onClick={() => navigate(`/diaries/member/${props.memberProfile.id}`)}
+        className="cursor-pointer"
+      >
+        <ProfileComponent
+          member={{ ...props.memberProfile }}
+          createdAt={props.createdAt}
+        />
       </div>
 
       <div className="border-t border-gray-200 my-4" />
@@ -182,7 +207,9 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
         <p className="font-medium break-words">{props.original}</p>
         <div className="flex gap-2 items-center">
           <div className="w-1 h-5 bg-[#4170FE]" />
-          <p className="text-[#4170FE] font-medium break-words">{props.corrected}</p>
+          <p className="text-[#4170FE] font-medium break-words">
+            {props.corrected}
+          </p>
         </div>
         <p className="break-words">{props.commentText}</p>
       </div>
@@ -193,7 +220,11 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           className="flex items-center gap-1 cursor-pointer p-1"
         >
           <img
-            src={openCorrectionReply ? "/images/commentIcon.svg" : "/images/CommonComponentIcon/CommentIcon.svg"}
+            src={
+              openCorrectionReply
+                ? "/images/commentIcon.svg"
+                : "/images/CommonComponentIcon/CommentIcon.svg"
+            }
             className="w-4 h-4"
             alt="댓글"
           />
@@ -206,7 +237,11 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           aria-pressed={liked}
         >
           <img
-            src={liked ? "/images/CommonComponentIcon/LikeFullIcon.svg" : "/images/CommonComponentIcon/LikeIcon.svg"}
+            src={
+              liked
+                ? "/images/CommonComponentIcon/LikeFullIcon.svg"
+                : "/images/CommonComponentIcon/LikeIcon.svg"
+            }
             className="w-5 h-5 transition-transform cursor-pointer"
             alt="좋아요"
             style={liked ? { filter: RED_FILTER } : undefined}
@@ -223,18 +258,20 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
           ) : (
             <ul className="flex flex-col gap-3 mb-3">
               {comments.map((c) => {
-                const isOwner = Number(getLocalStorageItem("userId")) === Number(c.memberId);
+                const isOwner =
+                  Number(getLocalStorageItem("userId")) ===
+                  Number(c.memberProfile.id);
                 return (
                   <li key={c.commentId} className="flex flex-col gap-2">
                     <div className="flex justify-between items-start">
-                      <div onClick={() => navigate(`/diaries/member/${c.memberId}`)} className="flex-1 cursor-pointer min-w-0">
+                      <div
+                        onClick={() =>
+                          navigate(`/diaries/member/${c.memberProfile.id}`)
+                        }
+                        className="flex-1 cursor-pointer min-w-0"
+                      >
                         <ProfileComponent
-                          member={{
-                            memberId: c.memberId,
-                            username: c.username,
-                            nickname: c.nickname,
-                            profileImageUrl: c.profileImage,
-                          }}
+                          member={{ ...c.memberProfile }}
                           createdAt={c.createdAt}
                         />
                       </div>
@@ -245,14 +282,19 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                           alt="더보기"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setOpenMenuId(openMenuId === c.commentId ? null : c.commentId);
+                            setOpenMenuId(
+                              openMenuId === c.commentId ? null : c.commentId
+                            );
                           }}
                         />
                         {openMenuId === c.commentId && (
                           <div className="absolute top-6 right-0 bg-white border border-gray-300 rounded-md shadow-lg w-28 z-10">
                             {isOwner ? (
                               <button
-                                onClick={(e) => { e.stopPropagation(); handleOpenDeleteModal(c); }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenDeleteModal(c);
+                                }}
                                 disabled={isDeleting}
                                 className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer disabled:opacity-50"
                               >
@@ -260,10 +302,13 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                               </button>
                             ) : (
                               <button
-                                onClick={(e) => { e.stopPropagation(); handleOpenReportModal(c); }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleOpenReportModal(c);
+                                }}
                                 className="w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 text-left cursor-pointer"
                               >
-                                {t.ReportContent }
+                                {t.ReportContent}
                               </button>
                             )}
                           </div>
@@ -271,7 +316,9 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
                       </div>
                     </div>
                     <div className="flex-1 ml-2">
-                      <p className="text-body2 whitespace-pre-wrap break-words">{c.content}</p>
+                      <p className="text-body2 whitespace-pre-wrap break-words">
+                        {c.content}
+                      </p>
                     </div>
                     <div className="border-t border-gray-200 my-2" />
                   </li>
@@ -279,7 +326,7 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               })}
             </ul>
           )}
-          
+
           <div className="flex gap-2">
             <textarea
               value={commentText}
@@ -300,15 +347,15 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
               disabled={isPostingComment || !commentText.trim()}
               className="w-12 text-caption bg-black rounded-[5px] text-white cursor-pointer hover:scale-105 duration-300 disabled:opacity-60 disabled:hover:scale-100"
             >
-              {isPostingComment ? (t.posting ) : (t.post )}
+              {isPostingComment ? t.posting : t.post}
             </button>
           </div>
         </div>
       )}
-      
+
       {showDeleteModal && selectedComment && (
         <AlertModal
-          title={t.DeleteCommentAlert }
+          title={t.DeleteCommentAlert}
           onClose={() => setShowDeleteModal(false)}
           confirmText={t.DeleteDiary ?? "삭제"}
           onConfirm={handleConfirmDelete}
@@ -317,10 +364,10 @@ const CorrectionsInDiaryDetail = ({ props }: CorrectionsInDiaryDetailProps) => {
       )}
       {showReportModal && selectedComment && (
         <AlertModal
-          title={t.ReportContent }
+          title={t.ReportContent}
           onClose={() => setShowReportModal(false)}
-          description={t.AlertDescription }
-          confirmText={t.AlertReport }
+          description={t.AlertDescription}
+          confirmText={t.AlertReport}
           onConfirm={handleConfirmReport}
           onInputChange={setReportReason}
           inputValue={reportReason}

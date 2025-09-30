@@ -5,7 +5,6 @@ import { translate } from "../../context/translate";
 import ModalWithTabs from "../../components/Common/ModalWithTabs";
 import CalendarModal from "../../components/Common/CalendarModal";
 
-
 const FeedPage = () => {
   const { language } = useLanguage();
   const t = translate[language];
@@ -14,6 +13,7 @@ const FeedPage = () => {
 
   useEffect(() => {
     const sp = new URLSearchParams(loc.search);
+
     if (!sp.get("tab")) {
       sp.set("tab", "friendINfeed");
       nav({ pathname: loc.pathname, search: sp.toString() }, { replace: true });
@@ -24,7 +24,7 @@ const FeedPage = () => {
     () => [
       { value: "friendINfeed", title: t.Friends },
       { value: "searchINfeed", title: t.explore },
-      { value: "likeINfeed",  title: t.Likes },
+      { value: "likeINfeed", title: t.Likes },
     ],
     [t]
   );

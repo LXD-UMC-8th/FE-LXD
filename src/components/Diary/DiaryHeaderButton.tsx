@@ -67,11 +67,13 @@ const DiaryHeaderButton = ({
             )}
             {DiaryHeaderProps.relation !== "FRIEND" &&
               DiaryHeaderProps.status !== "PENDING" &&
-              !isRequesting(DiaryHeaderProps.username ?? "") && (
+              !isRequesting(DiaryHeaderProps.memberProfile.username ?? "") && (
                 <div
                   className="cursor-pointer bg-blue-500 p-3 hover:bg-blue-600 active:bg-blue-700 rounded-2xl flex gap-3 justify-center items-center"
                   onClick={() => {
-                    handleSendRequest(DiaryHeaderProps.username ?? "");
+                    handleSendRequest(
+                      DiaryHeaderProps.memberProfile.username ?? ""
+                    );
                   }}
                 >
                   <img src="/images/plusimg.svg" alt="+" />
@@ -79,7 +81,7 @@ const DiaryHeaderButton = ({
                 </div>
               )}
             {(DiaryHeaderProps.status === "PENDING" ||
-              isRequesting(DiaryHeaderProps.username ?? "")) && (
+              isRequesting(DiaryHeaderProps.memberProfile.username ?? "")) && (
               <div className="flex gap-3 bg-blue-200 rounded-2xl p-3">
                 <img src="/images/requestingIcon.svg" alt="Pending" />
                 <p className="text-blue-500">{t.pending}</p>

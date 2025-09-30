@@ -1,4 +1,5 @@
 import type { APIResponse } from "./APIresponse";
+import type { memberProfile } from "./diary";
 
 // 교정 댓글 작성
 export type CorrectionCommentRequestDTO = {
@@ -8,10 +9,7 @@ export type CorrectionCommentRequestDTO = {
 export type CorrectionCommentDTO = {
   commentId: number;
   parentId?: number | null;
-  memberId: number;
-  username: string;
-  nickname: string;
-  profileImage: string;
+  memberProfile: memberProfile;
   content: string;
   likeCount?: number;
   createdAt: string;
