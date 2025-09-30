@@ -19,6 +19,7 @@ export interface SavedCorrectionContentDTO {
     diaryTitle: string;
     diaryCreatedAt: string;
     thumbImg?: string;
+    diaryWriterId: number;
   };
   memberProfile: {
     id: number;
@@ -53,6 +54,7 @@ export interface SavedCorrectionItem {
   diaryId: number;
   diaryTitle: string;
   diaryThumbnailUrl?: string;
+  diaryWriterId: number;
   liked?: boolean;
   member: {
     memberId: number;
@@ -81,6 +83,7 @@ export const normalizeSavedCorrection = ( raw: SavedCorrectionContentDTO ): Save
     diaryId: diary.diaryId,
     diaryTitle: diary.diaryTitle || '원본 일기를 찾을 수 없습니다.',
     diaryThumbnailUrl: diary.thumbImg,
+    diaryWriterId: diary.diaryWriterId,
     member: {
       memberId: memberProfile.id ?? -1,
       username: memberProfile.username ?? 'unknown',
@@ -102,7 +105,7 @@ export interface ProvidedCorrectionsResponseDTO extends APIResponse<{
     };
 }> {}
 
-// ✅ [수정] 에러가 발생하지 않도록, 처리 로직에 있는 모든 가능한 속성을 옵셔널로 추가합니다.
+// ✅ [수정] diary, diaryInfo 타입에 diaryWriterId를 옵셔널로 추가합니다.
 export interface ProvidedCorrectionContentDTO {
   correctionId?: number;
   id?: number;
@@ -117,12 +120,11 @@ export interface ProvidedCorrectionContentDTO {
   commentCount?: number;
   likeCount?: number;
   liked?: boolean;
-  diaryInfo?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; };
-  diary?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; };
+  diaryInfo?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; diaryWriterId?: number; };
+  diary?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; diaryWriterId?: number; };
   correction?: { liked?: boolean };
 }
 
-// ✅ [추가] '내가 제공한 교정' 데이터를 위한 중앙 변환 함수
 export const normalizeProvidedCorrection = (
   raw: ProvidedCorrectionContentDTO,
   me: any
@@ -143,6 +145,8 @@ export const normalizeProvidedCorrection = (
     diaryId: diaryObject.diaryId ?? 0,
     diaryTitle: diaryObject.diaryTitle || "원본 일기를 찾을 수 없습니다.",
     diaryThumbnailUrl: diaryObject.thumbImg,
+    // ✅ [수정] 'diary'가 아닌 'diaryObject' 변수를 사용하도록 수정
+    diaryWriterId: diaryObject.diaryWriterId ?? 0,
     member: {
       memberId: me?.memberId ?? me?.id ?? 0,
       username: me?.username ?? "",

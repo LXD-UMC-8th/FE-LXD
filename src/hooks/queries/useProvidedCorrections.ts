@@ -11,7 +11,7 @@ import type {
 function extractCorrectionId(raw: any): number {
   if (!raw || typeof raw !== "object") return 0;
   const keys = [ "correctionId", "id", "targetCorrectionId", "diaryCorrectionId" ];
-  // ... (이하 복잡한 ID 찾기 로직은 그대로 유지)
+  // ... (이하 ID 찾기 로직은 그대로 유지)
   for (const k of keys) {
     const v = raw?.[k];
     if (Number.isFinite(Number(v)) && Number(v) > 0) return Number(v);
@@ -53,6 +53,12 @@ const mapToItem = (
     diaryId: raw?.diaryInfo?.diaryId ?? raw?.diary?.diaryId ?? 0,
     diaryTitle: raw?.diaryInfo?.diaryTitle ?? raw?.diary?.diaryTitle ?? "",
     liked: raw?.liked, // liked 정보는 select 함수에서 최종 결정
+
+    // ✅ [수정] 누락되었던 diaryWriterId를 API 응답(raw.diaryInfo)에서 가져와 추가합니다.
+    diaryWriterId: raw?.diaryInfo?.diaryWriterId ?? 0,
+    
+    // 썸네일과 멤버 정보는 이전 수정사항을 그대로 유지합니다.
+    diaryThumbnailUrl: raw?.diaryInfo?.thumbImg,
     member: {
       memberId: me?.memberId ?? me?.id ?? 0,
       username: me?.username ?? "",
@@ -78,17 +84,13 @@ export function useProvidedCorrections() {
         ? (last?.result?.corrections?.page ?? 1) + 1
         : undefined,
     select: (data) => {
-      // ✅ [최종 수정] localStorage 관련 로직을 모두 제거합니다.
       return data.pages.flatMap((p) => {
         const me = p?.result?.member ?? p?.result?.memberProfile ?? {};
         const contents = p?.result?.corrections?.contents ?? [];
 
         return contents.map((c: any) => {
           const item = mapToItem(c, me);
-
-          // ✅ [최종 수정] 'likeCount'가 0보다 크면 'liked' 상태를 true로 간주합니다.
           const liked = (item.likeCount ?? 0) > 0;
-
           return { ...item, liked };
         });
       });
