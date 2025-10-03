@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { axiosInstance } from "../../apis/axios";
+import ToSModal from "../../components/Login/ToSModal";
 
 const GoogleRedirectPage = () => {
   const [_authCode, setAuthCode] = useState<string | null>(null);
+  const [showTosModal, setShowTosModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const GoogleRedirectPage = () => {
           localStorage.setItem("refreshToken", refreshToken);
 
           if (isNewMember) {
-            // 신규회원: ProfilePage로 이동
+            // 신규회원: TosModal 동의 -> ProfilePage로 이동
             const googleEmail = data.result.member.email;
             const randomPassword = Math.random().toString(36).slice(2, 12); // 임의의 10자리 문자열
 
@@ -37,7 +39,7 @@ const GoogleRedirectPage = () => {
               email: googleEmail,
               password: randomPassword,
               checkPassword: randomPassword,
-              isPrivacy: true,
+              isPrivacy: false, // 동의는 모달에서 확정
               id: "",
               nickname: "",
               profileImg: null,
@@ -50,7 +52,8 @@ const GoogleRedirectPage = () => {
               "googleSignupUserInfo",
               JSON.stringify(userInfo)
             );
-            navigate("/home/signup/profile", { replace: true });
+            // TosModal 먼저 띄우기
+            setShowTosModal(true);
           } else {
             // 기존회원: 바로 FeedPage로 이동
             window.location.replace("/feed?tab=friendINfeed");
@@ -64,7 +67,30 @@ const GoogleRedirectPage = () => {
     })();
   }, []);
 
-  return <div>Loading...</div>;
+  const handleAgreeTos = () => {
+    // 동의 결과 반영 — 프로필 페이지에서 읽을 수 있게
+    const raw = localStorage.getItem("googleSignupUserInfo");
+    if (raw) {
+      const userInfo = JSON.parse(raw);
+      userInfo.isPrivacy = true;
+      localStorage.setItem("googleSignupUserInfo", JSON.stringify(userInfo));
+    }
+    setShowTosModal(false);
+    // Tos 동의하면 ProfilePage로 이동
+    navigate("/home/signup/profile", { replace: true });
+  };
+
+  return (
+    <>
+      {showTosModal && (
+        <ToSModal
+          open={showTosModal}
+          onClose={() => setShowTosModal(false)}
+          onConfirm={handleAgreeTos}
+        />
+      )}
+    </>
+  );
 };
 
 export default GoogleRedirectPage;
