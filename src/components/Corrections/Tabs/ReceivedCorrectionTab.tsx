@@ -1,3 +1,5 @@
+// 파일 경로: src/components/Corrections/Tabs/ReceivedCorrectionTab.tsx
+
 import LoadingModal from "../../Common/LoadingModal";
 import { useEffect } from "react";
 import { useSavedCorrections } from "../../../hooks/queries/useSavedCorrections";
@@ -5,65 +7,66 @@ import { useInView } from "react-intersection-observer";
 import CorrectionComponent from "../CorrectionComponent";
 import { translate } from "../../../context/translate";
 import { useLanguage } from "../../../context/LanguageProvider";
+// 훅에서 사용하고 있는 타입을 가져와야 할 수 있습니다.
+// import type { SavedCorrectionItem } from "../../../utils/types/savedCorrection";
 
 const ReceivedCorrectionTab = () => {
-  const {
-    data, // SavedCorrectionItem[]
-    fetchNextPage,
-    hasNextPage,
-    isFetching, // 다음 페이지 로딩 여부(초기에도 true가 될 수 있음)
-    status, // 'pending' | 'success' | 'error'
-    error,
-  } = useSavedCorrections();
-  const { language } = useLanguage();
-  const t = translate[language]; 
+  const {
+    data, // 👈 이제 data는 {pages: [...]} 가 아니라 최종 배열 [] 입니다!
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+    error,
+  } = useSavedCorrections();
 
-  const { ref, inView } = useInView();
+  const { language } = useLanguage();
+  const t = translate[language];
 
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetching) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetching, fetchNextPage]);
+  const { ref, inView } = useInView();
 
-  // 1) 초기 로딩
-  if (isFetching && isFetching) return <LoadingModal />;
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // 2) 에러 표시(500 등)
-  if (status === "error") {
-    return (
-      <div className="p-4 text-red-500">
-        교정 목록을 불러오지 못했습니다.
-        <div className="text-gray-500 text-sm">{String(error)}</div>
-      </div>
-    );
-  }
+  if (status === "pending") return <LoadingModal />;
 
-  // 여기까지 오면 success
-  const list = data ?? [];
+  if (status === "error") {
+    return (
+      <div className="p-4 text-red-500">
+        교정 목록을 불러오지 못했습니다.
+        <div className="text-gray-500 text-sm">{String(error)}</div>
+      </div>
+    );
+  }
+  
+  // 👈 이 부분이 가장 중요합니다!
+  // 더 이상 .pages에 접근할 필요 없이, data를 바로 list로 사용합니다.
+  const list = data ?? [];
 
-  return (
-    <div className="flex flex-col gap-4">
-      {/* 3) 빈 목록 안내 */}
-      {list.length === 0 && (
-        <div className="p-6 text-center text-gray-500">
-          {t.NotSavedCorrection}
-        </div>
-      )}
+  return (
+    <div className="flex flex-col gap-4">
+      {list.length === 0 && !isFetching && (
+        <div className="p-6 text-center text-gray-500">
+          {t.NotSavedCorrection}
+        </div>
+      )}
 
-      {list.map((item, _idx) => (
-        <CorrectionComponent key={_idx} correction={item} />
-      ))}
+      {/* item의 타입이 SavedCorrectionItem으로 잘 추론됩니다. */}
+      {list.map((item) => (
+        <CorrectionComponent key={item.savedCorrectionId} correction={item} />
+      ))}
 
-      {/* 무한스크롤 트리거 */}
-      <div ref={ref} />
+      <div ref={ref} />
 
-      {/* 4) 다음 페이지 로딩 중 표시 (초기 로딩과 분리) */}
-      {isFetching && status === "success" && (
-        <div className="py-3 text-center text-gray-400">불러오는 중…</div>
-      )}
-    </div>
-  );
+      {isFetchingNextPage && (
+        <div className="py-3 text-center text-gray-400">불러오는 중…</div>
+      )}
+    </div>
+  );
 };
 
 export default ReceivedCorrectionTab;
