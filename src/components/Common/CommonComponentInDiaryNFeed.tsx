@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Avatar from "../Common/Avatar";
 import { useDeleteDiaryMutation } from "../../hooks/mutations/useDiaryDelete";
 import { useLanguage } from "../../context/LanguageProvider";
@@ -18,15 +18,13 @@ interface Props {
   props: diaries;
   pageResult?: getDiariesResult;
   idx?: number;
-  /** ✅ 기본(true): 둥근 모서리 유지, false: 모서리 제거 */
   rounded?: boolean;
-  /** (옵션) 표시 컨텍스트가 다르면 스타일을 살짝 달리하고 싶을 때 */
   variant?: Variant;
 }
 
 const CommonComponentInDiaryNFeed = ({
   props,
-  rounded = false, // ✅ 기본은 기존처럼 둥글게
+  rounded = false,
   variant = "default",
 }: Props) => {
   const { language } = useLanguage();
@@ -36,6 +34,11 @@ const CommonComponentInDiaryNFeed = ({
 
   const [isLiked, setIsLiked] = useState<boolean>(props.isLiked || false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
+
+  useEffect(() => {
+    setIsLiked(props.isLiked || false);
+    setLikeCount(props.likeCount || 0);
+  }, [props.isLiked, props.likeCount]);
 
   const { mutate: likeMutate } = usePostLike({
     targetType: "diaries",
@@ -119,11 +122,13 @@ const CommonComponentInDiaryNFeed = ({
         // });
         break;
       case 1:
-        // isLiked
-        //   ? setDeleteLikeModal(true)
-        //   : (likeMutate(),
-        //     setLikeCount((prev) => prev + 1),
-        //     setIsLiked((prev) => !prev));
+        if (isLiked) {
+          setDeleteLikeModal(true);
+        } else {
+          setIsLiked(true);
+          setLikeCount((prev) => prev + 1);
+          likeMutate();
+        }
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
@@ -138,10 +143,8 @@ const CommonComponentInDiaryNFeed = ({
     navigate(`/diaries/member/${props.writerMemberProfile.id}`);
   };
 
-  /** ✅ 둥근 모서리 토글 */
   const roundedCls = rounded ? "rounded-2xl" : "rounded-none";
 
-  /** ✅ 컨테이너 클래스 (기존 스타일 유지, variant로 미세 조정 가능) */
   const containerCls = clsx(
     borderRadius,
     "relative bg-white cursor-pointer transition-shadow",

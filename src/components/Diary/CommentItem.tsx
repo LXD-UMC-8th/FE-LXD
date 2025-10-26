@@ -35,7 +35,7 @@ const CommentItem = ({
   const hasReplies =
     Array.isArray(comment.replies) && comment.replies.length > 0;
   const isOwner =
-    Number(getLocalStorageItem("userId")) === Number(comment.memberId);
+    Number(getLocalStorageItem("userId")) === Number(comment.memberProfile.id);
 
   const { mutate: likeComment, isPending } = useLikeDiaryComment();
 
@@ -66,7 +66,7 @@ const CommentItem = ({
           setLiked(prevLiked);
           setLikeCount(prevCount);
         },
-        onSuccess: (data: any) => {
+        onSuccess: (data) => {
           const r = data?.result ?? data;
           if (r) {
             if (typeof r.liked !== "undefined") setLiked(!!r.liked);

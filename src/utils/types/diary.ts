@@ -36,6 +36,7 @@ export type DiaryUploadResult = {
   diffHtml: string;
   commentPermission: string;
   thumbnail: string;
+  isLiked: boolean;
 };
 
 export type memberProfile = {
