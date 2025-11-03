@@ -178,11 +178,11 @@ const DiaryDetailPage = () => {
           // 최신이 0페이지(UI)라고 가정
           goToUiPage(0);
         },
-        onError: (error: any) => {
-          if (error.response?.status === 403) {
-            alert(t.CommentRestricted);
-          }
-        },
+        // onError: (error) => {
+        //   if (error.response?.status === 403) {
+        //     alert(t.CommentRestricted);
+        //   }
+        // },
       }
     );
   };
@@ -359,7 +359,7 @@ const DiaryDetailPage = () => {
                 {isCommentsPending && <LoadingModal />}
 
                 {/* 댓글 리스트 */}
-                {comments.map((c: any) => (
+                {comments.map((c) => (
                   <CommentItem
                     key={c.commentId}
                     comment={c}

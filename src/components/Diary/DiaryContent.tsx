@@ -87,8 +87,7 @@ const DiaryContent = ({
   const createdDateOnly = props.createdAt?.slice(0, 10);
 
   //좋아요 핸들러를 위한 설정들
-  const [isLiked, setIsLiked] = useState<boolean>();
-  // props.result.isLiked ?? false
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
 
   const stats = [
@@ -118,11 +117,13 @@ const DiaryContent = ({
         if (focusTextarea) focusTextarea();
         break;
       case 1:
-        // isLiked
-        //   ? setDeleteLikeModal(true)
-        //   : (likeMutate(),
-        //     setLikeCount((prev) => prev + 1),
-        //     setIsLiked((prev) => !prev));
+        if (isLiked) {
+          setDeleteLikeModal(true);
+        } else {
+          setIsLiked(true);
+          setLikeCount((prev) => prev + 1);
+          likeMutate();
+        }
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
