@@ -81,16 +81,19 @@ const LikesTab = () => {
 
   const openDiary = async (diaryId?: number) => {
     if (!diaryId) return;
-    await queryClient.prefetchQuery({
+    await queryClient.ensureQueryData({
       queryKey: [QUERY_KEY.DiaryDetail, diaryId],
       queryFn: () => getDiaryDetail(diaryId),
       staleTime: 30_000,
     });
 
-    navigate({
-      pathname: `/feed/${diaryId}`,
-      search: location.search,
-    });
+    navigate(
+      {
+        pathname: `/feed/${diaryId}`,
+        search: location.search,
+      },
+      { replace: true }
+    );
   };
 
   return (

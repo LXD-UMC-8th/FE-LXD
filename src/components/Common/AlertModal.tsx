@@ -43,7 +43,9 @@ const AlertModal = ({
         <div className="flex flex-col items-center pt-12 pb-8 px-6">
           <p className="text-subhead2 font-bold text-black">{title}</p>
           {description && (
-            <p className="text-gray-700 text-body1 py-2 px-10 pt-5">{description}</p>
+            <p className="text-gray-700 text-body1 py-2 px-10 pt-5">
+              {description}
+            </p>
           )}
 
           {/* 콘텐츠 신고 모달 시 텍스트 input */}
@@ -51,15 +53,15 @@ const AlertModal = ({
             <>
               <div className="flex flex-col self-start items-start text-body2 text-primary-900 pt-1 pb-2 pl-15">
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_1}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_2}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_3}
                 </ul>
               </div>
@@ -68,6 +70,8 @@ const AlertModal = ({
                   value={inputValue}
                   className="w-full h-full text-body1 flex p-3 resize-none focus:outline-none"
                   onChange={(e) => onInputChange(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
                 />
               </div>
             </>
