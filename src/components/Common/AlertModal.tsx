@@ -70,6 +70,8 @@ const AlertModal = ({
                   value={inputValue}
                   className="w-full h-full text-body1 flex p-3 resize-none focus:outline-none"
                   onChange={(e) => onInputChange(e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
                 />
               </div>
             </>
@@ -78,7 +80,6 @@ const AlertModal = ({
           <div className={`flex gap-3 px-16 ${description ? "pt-7" : "pt-6"}`}>
             <button
               onClick={onConfirm}
-              disabled
               className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
             >
               {confirmText}
