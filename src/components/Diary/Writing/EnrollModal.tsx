@@ -165,7 +165,7 @@ const EnrollModal = ({
       <div className="text-right">
         <button
           onClick={handleSubmit}
-          className="rounded-[8px] bg-[var(--Primary-500,#4170FE)] text-white hover:bg-[var(--Primary-600,#3259D9)] px-4 py-2 transition-all duration-300"
+          className="rounded-[8px] bg-[var(--Primary-500,#4170FE)] text-white hover:bg-[var(--Primary-600,#3259D9)] px-4 py-2 transition-all duration-300 cursor-pointer"
         >
           {buttonText}
         </button>
