@@ -8,6 +8,7 @@ import {
 } from "../../../hooks/mutations/useWritingSubmit";
 import LoadingModal from "../../Common/LoadingModal";
 import { useParams } from "react-router";
+import { useAuth } from "../../../hooks/useAuth";
 interface EnrollModalProps {
   _onClose?: () => void;
   _titleName: string;
@@ -31,6 +32,9 @@ const EnrollModal = ({
 
   const { mutate: postDiaryUpload, isPending } = useWritingSubmit();
   const { mutate: updateDiary } = useUpdateDiary();
+
+  const { isLoggedIn } = useAuth();
+  const buttonText = isLoggedIn ? t.editButtonText : t.enrollButtonText;
 
   const normalizeStyle = (style: string) => {
     switch (style) {
@@ -163,7 +167,7 @@ const EnrollModal = ({
           onClick={handleSubmit}
           className="rounded-[8px] bg-[var(--Primary-500,#4170FE)] text-white hover:bg-[var(--Primary-600,#3259D9)] px-4 py-2 transition-all duration-300"
         >
-          {t.enrollButtonText}
+          {buttonText}
         </button>
       </div>
     </div>

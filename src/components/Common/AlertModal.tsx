@@ -43,7 +43,9 @@ const AlertModal = ({
         <div className="flex flex-col items-center pt-12 pb-8 px-6">
           <p className="text-subhead2 font-bold text-black">{title}</p>
           {description && (
-            <p className="text-gray-700 text-body1 py-2 px-10 pt-5">{description}</p>
+            <p className="text-gray-700 text-body1 py-2 px-10 pt-5">
+              {description}
+            </p>
           )}
 
           {/* 콘텐츠 신고 모달 시 텍스트 input */}
@@ -51,15 +53,15 @@ const AlertModal = ({
             <>
               <div className="flex flex-col self-start items-start text-body2 text-primary-900 pt-1 pb-2 pl-15">
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_1}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_2}
                 </ul>
                 <ul className="flex gap-1 cursor-pointer">
-                  <img src="/images/CheckIcon.svg" alt="Check mark"/>
+                  <img src="/images/CheckIcon.svg" alt="Check mark" />
                   {t.ReportContent_3}
                 </ul>
               </div>
@@ -76,6 +78,7 @@ const AlertModal = ({
           <div className={`flex gap-3 px-16 ${description ? "pt-7" : "pt-6"}`}>
             <button
               onClick={onConfirm}
+              disabled
               className="w-50 h-12 bg-primary rounded-[5px] text-white text-body1 font-medium cursor-pointer hover:scale-105 duration-300"
             >
               {confirmText}
