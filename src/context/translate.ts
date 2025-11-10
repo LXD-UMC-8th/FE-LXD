@@ -48,6 +48,7 @@ export const translate: Record<
     nextButton: string;
     emailVerifiedToast: string;
     emailErrorToast: string;
+    emailError409Toast: string;
     pwConditionToast: string;
     pwValidToast: string;
     pwConfirmedToast: string;
@@ -369,8 +370,9 @@ export const translate: Record<
     nextButton: "Next",
     emailVerifiedToast: "Your email has verified",
     emailErrorToast: "Cannot send verification email to that address",
+    emailError409Toast: "This email already exists.",
     pwConditionToast:
-      "At least 8 characters, including uppercase, lowercase, and a number.",
+      "At least 8 characters, including upper/lowercase, number, and special symbol.",
     pwValidToast: "Passwords are valid",
     pwConfirmedToast: "Passwords match",
     pwNotConfirmedToast: "Passwords do not match",
@@ -752,7 +754,8 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     nextButton: "다음으로",
     emailVerifiedToast: "인증되었습니다",
     emailErrorToast: "입력하신 이메일로 인증 메일을 보낼 수 없습니다",
-    pwConditionToast: "8자 이상, 대소문자, 숫자 포함",
+    emailError409Toast: "이미 존재하는 이메일입니다",
+    pwConditionToast: "8자 이상, 대소문자, 숫자, 특수문자 포함",
     pwValidToast: "유효한 비밀번호입니다",
     pwConfirmedToast: "비밀번호가 일치합니다",
     pwNotConfirmedToast: "비밀번호가 일치하지 않습니다",
