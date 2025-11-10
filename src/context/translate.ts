@@ -89,6 +89,7 @@ export const translate: Record<
     commentPermission_FRIEND: string;
     commentPermission_PRIVATE: string;
     enrollButtonText: string;
+    editButtonText: string;
     refreshButtonText: string;
     questionGeneratorButtonText: string;
     titleInputPlaceholder: string;
@@ -708,6 +709,7 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     reporting: "Reporting...",
     CompleteAlert: "Report submitted successfully.",
     CommentRestricted: "Comments are not allowed on this diary.",
+    editButtonText: "Edit",
   },
 
   [Language.KOREAN]: {
@@ -1088,5 +1090,6 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     reporting: "신고중...",
     CompleteAlert: "신고가 완료되었습니다.",
     CommentRestricted: "댓글 작성을 허용하지 않는 일기입니다.",
+    editButtonText: "수정하기",
   },
 };

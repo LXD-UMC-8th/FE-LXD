@@ -7,7 +7,7 @@ import IDButton from "../../components/Login/IDButton";
 import SignupButton from "../../components/Login/SignupButton";
 import { useCallback, useEffect, useState } from "react";
 import type { SignupFlowProps } from "../../layouts/SignupFlowLayout";
-import { useOutletContext, useSearchParams } from "react-router-dom";
+import { useNavigate, useOutletContext, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { patchMemberPassword } from "../../apis/members";
 import type { ChangePasswordRequestDTO } from "../../utils/types/member";
@@ -31,14 +31,16 @@ const ChangePWinEditProfilePage = () => {
   const [passwordTouched, setPasswordTouched] = useState(false); // 비밀번호 인풋 눌렀는지 상태관리
   const [checkPasswordTouched, setCheckPasswordTouched] = useState(false); // 비밀번호 확인 인풋 눌렀는지 상태관리
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (payload: ChangePasswordRequestDTO) =>
       patchMemberPassword(payload),
     onSuccess: (data) => {
       if (data.isSuccess) {
-        alert("비밀번호가 성공적으로 변경되었습니다.");
+        alert(t.changePWsuccessAlert);
         console.log("비밀번호 변경 성공:", data);
+        navigate("/editprofile");
       } else {
         alert(data.message || "비밀번호 변경에 실패했습니다.");
       }

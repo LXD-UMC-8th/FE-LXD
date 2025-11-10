@@ -6,14 +6,15 @@ interface PrevButtonProps {
   preserveSearch?: boolean;
 }
 
-const PrevButton = ({ navigateURL, preserveSearch = true }: PrevButtonProps) => {
+const PrevButton = ({
+  navigateURL,
+  preserveSearch = true,
+}: PrevButtonProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const canGoBack = typeof window !== "undefined" && !!window.history?.state && window.history.state.idx > 0;
-
   const handleNavigate = () => {
-    if (canGoBack) {
+    if (window.history.length > 2) {
       navigate(-1);
       return;
     }
@@ -23,7 +24,7 @@ const PrevButton = ({ navigateURL, preserveSearch = true }: PrevButtonProps) => 
     } else {
       navigate({
         pathname: navigateURL,
-        search: preserveSearch ? location.search : undefined, // ?tab=... 유지
+        search: preserveSearch ? location.search : undefined,
       });
     }
   };

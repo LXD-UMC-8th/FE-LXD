@@ -4,7 +4,10 @@ import CommonComponentInDiaryNFeed from "../../Common/CommonComponentInDiaryNFee
 import { useEffect, useState } from "react";
 import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { getDiaryDetail, getExploreDiaries } from "../../../apis/diary";
-import type { diaries, getDiariesResponseDTO } from "../../../utils/types/diary";
+import type {
+  diaries,
+  getDiariesResponseDTO,
+} from "../../../utils/types/diary";
 import { useInView } from "react-intersection-observer";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { translate } from "../../../context/translate";
@@ -50,16 +53,19 @@ const ExploreTab = () => {
   }, [inView, isFetching, hasNextPage, fetchNextPage]);
 
   const handleOpenDiary = async (diaryId?: number) => {
-    await queryClient.prefetchQuery({
+    await queryClient.ensureQueryData({
       queryKey: [QUERY_KEY.DiaryDetail, diaryId],
       queryFn: () => getDiaryDetail(diaryId || 0),
       staleTime: 30_000,
     });
 
-    navigate({
-      pathname: `/feed/${diaryId}`,
-      search: location.search,
-    });
+    navigate(
+      {
+        pathname: `/feed/${diaryId}`,
+        search: location.search,
+      },
+      { replace: true }
+    );
   };
 
   return (

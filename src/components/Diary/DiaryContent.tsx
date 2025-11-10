@@ -21,23 +21,9 @@ interface DiaryContentProps extends DiaryUploadResult {
   contentRootRef?: React.RefObject<HTMLDivElement>;
 }
 
-// function decodeEscapedHtml(raw?: string | null) {
-//   if (!raw) return "";
-//   try {
-//     // "\"<p>...</p>\"" 같은 문자열을 정상 문자열로 복구
-//     const parsed = JSON.parse(raw);
-//     if (typeof parsed === "string") return parsed;
-//   } catch {
-//     /* noop */
-//   }
-//   // 백슬래시 이스케이프가 남아있는 경우의 최소 복구
-//   return raw.replace(/\\"/g, '""');
-// }
-
 const DiaryContent = ({
   contentRootRef,
   focusTextarea,
-  // isMyDiary,
   ...props
 }: DiaryContentProps) => {
   const { language } = useLanguage();
@@ -78,7 +64,6 @@ const DiaryContent = ({
       deleteMutation.mutate();
     }
   };
-  const replaceContent = normalizeQuillHtml(props.content);
 
   // 일기 신고 로직
   const [alertContent, setAlertContent] = useState(false);
@@ -87,8 +72,7 @@ const DiaryContent = ({
   const createdDateOnly = props.createdAt?.slice(0, 10);
 
   //좋아요 핸들러를 위한 설정들
-  const [isLiked, setIsLiked] = useState<boolean>();
-  // props.result.isLiked ?? false
+  const [isLiked, setIsLiked] = useState<boolean>(props.isLiked ?? false);
   const [likeCount, setLikeCount] = useState<number>(props.likeCount || 0);
 
   const stats = [
@@ -118,11 +102,13 @@ const DiaryContent = ({
         if (focusTextarea) focusTextarea();
         break;
       case 1:
-        // isLiked
-        //   ? setDeleteLikeModal(true)
-        //   : (likeMutate(),
-        //     setLikeCount((prev) => prev + 1),
-        //     setIsLiked((prev) => !prev));
+        if (isLiked) {
+          setDeleteLikeModal(true);
+        } else {
+          setIsLiked(true);
+          setLikeCount((prev) => prev + 1);
+          likeMutate();
+        }
         break;
       case 2:
         // 교정 아이콘 클릭 핸들러 (필요 시 구현)
@@ -141,6 +127,25 @@ const DiaryContent = ({
         break;
     }
   };
+
+  function decodeEscapedHtml(raw?: string | null) {
+    if (!raw) return "";
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = raw;
+    return textarea.value;
+  }
+
+  // 깨진 URL 복구
+  function removeDiffTags(html: string): string {
+    return html
+      .replace(/<del>.*?<\/del>/g, "") // <del> </del> 완전 삭제
+      .replace(/<ins>(.*?)<\/ins>/g, "$1"); // <ins>text</ins> → text
+  }
+
+  // 본문 내용 처리
+  const decodedContent = decodeEscapedHtml(props.content);
+  const cleanedContent = removeDiffTags(decodedContent);
+  const replaceContent = normalizeQuillHtml(cleanedContent);
 
   return (
     <div className="relative">
@@ -167,7 +172,7 @@ const DiaryContent = ({
           {/* 더보기 메뉴 */}
           {menuOpen && (
             <div className="absolute top-8 right-0 bg-white border border-gray-200 shadow-lg rounded-md w-28 z-50">
-              {isWriter ? (
+              {canEdit ? (
                 <>
                   <button
                     className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left cursor-pointer"
@@ -218,7 +223,12 @@ const DiaryContent = ({
 
       {/* 제목 & 상태 */}
       <div className="flex items-center mb-5 no-click no-drag select-none">
-        <Header props={{ visibility: props?.visibility }} />
+        <Header
+          props={{
+            visibility: props?.visibility,
+            writerMemberProfile: props.memberProfile,
+          }}
+        />
         <h1 className="flex-1 pr-4 text-subhead2 font-semibold">
           {props.title}
         </h1>

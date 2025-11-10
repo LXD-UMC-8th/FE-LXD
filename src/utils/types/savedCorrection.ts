@@ -2,18 +2,6 @@
 import type { APIResponse } from "./APIresponse";
 
 /** ---------- 서버 원본 스키마(저장 탭) ---------- */
-export interface SavedCorrectionsResponseDTO
-  extends APIResponse<{
-    memberId: number;
-    savedCorrections: {
-      totalElements: number;
-      contents: SavedCorrectionContentDTO[];
-      page: number;
-      size: number;
-      hasNext: boolean;
-    };
-  }> {}
-
 export interface SavedCorrectionContentDTO {
   savedCorrectionId: number;
   memo: string;
@@ -30,40 +18,44 @@ export interface SavedCorrectionContentDTO {
     diaryId: number;
     diaryTitle: string;
     diaryCreatedAt: string;
+    thumbImg?: string;
+    diaryWriterId: number;
   };
-  member: {
-    memberId: number;
+  memberProfile: {
+    id: number;
     username: string;
     nickname: string;
-    profileImageUrl: string;
+    profileImage: string;
   };
 }
 
+export interface SavedCorrectionsResponseDTO extends APIResponse<{
+  memberId: number;
+  savedCorrections: {
+    totalElements: number;
+    contents: SavedCorrectionContentDTO[];
+    page: number;
+    size: number;
+    hasNext: boolean;
+  };
+}> {}
+
 /** ---------- 화면에서 바로 쓰기 좋은 평탄화 타입 ---------- */
 export interface SavedCorrectionItem {
-  // 메모/ID
   savedCorrectionId: number;
   memo: string;
-
-  // 좋아요/댓글 API에 필요한 교정 ID
   correctionId: number;
-
-  // 본문
   original: string;
   corrected: string;
   commentText: string;
   createdAt: string;
   commentCount: number;
   likeCount: number;
-
-  // 연결 정보
   diaryId: number;
   diaryTitle: string;
-
-  // (옵션) 제공 탭 호환
+  diaryThumbnailUrl?: string;
+  diaryWriterId: number;
   liked?: boolean;
-
-  // 작성자
   member: {
     memberId: number;
     username: string;
@@ -73,74 +65,93 @@ export interface SavedCorrectionItem {
 }
 
 /** ---------- 평탄화(helper) (저장 탭용) ---------- */
-export const normalizeSavedCorrection = (
-  raw: SavedCorrectionContentDTO
-): SavedCorrectionItem => ({
-  savedCorrectionId: raw.savedCorrectionId,
-  memo: raw.memo ?? "",
-  correctionId: raw.correction.correctionId,
-  original: raw.correction.originalText,
-  corrected: raw.correction.corrected,
-  commentText: raw.correction.commentText,
-  createdAt: raw.correction.correctionCreatedAt,
-  commentCount: raw.correction.commentCount ?? 0,
-  likeCount: raw.correction.likeCount ?? 0,
-  diaryId: raw.diary.diaryId,
-  diaryTitle: raw.diary.diaryTitle,
-  member: {
-    memberId: raw.member.memberId,
-    username: raw.member.username,
-    nickname: raw.member.nickname,
-    profileImageUrl: raw.member.profileImageUrl,
-  },
-});
+export const normalizeSavedCorrection = ( raw: SavedCorrectionContentDTO ): SavedCorrectionItem => {
+  const correction = raw.correction ?? {};
+  const diary = raw.diary ?? {};
+  const memberProfile = raw.memberProfile ?? {};
 
-/** ---------- (신규) 서버 원본 스키마(제공 탭) ---------- */
-/** 질문 코드/훅에서 참조하는 구조에 맞춰 타입을 정의했습니다.
- *  응답 구조: result.member + result.corrections(contents, page, size, hasNext)
- */
-export interface ProvidedCorrectionsResponseDTO
-  extends APIResponse<{
+  return {
+    savedCorrectionId: raw.savedCorrectionId,
+    memo: raw.memo ?? "",
+    correctionId: correction.correctionId,
+    original: correction.originalText ?? '',
+    corrected: correction.corrected ?? '',
+    commentText: correction.commentText ?? '',
+    createdAt: correction.correctionCreatedAt ?? '',
+    commentCount: correction.commentCount ?? 0,
+    likeCount: correction.likeCount ?? 0,
+    diaryId: diary.diaryId,
+    diaryTitle: diary.diaryTitle || '원본 일기를 찾을 수 없습니다.',
+    diaryThumbnailUrl: diary.thumbImg,
+    diaryWriterId: diary.diaryWriterId,
     member: {
-      memberId: number;
-      username: string;
-      nickname: string;
-      profileImageUrl: string;
-    };
+      memberId: memberProfile.id ?? -1,
+      username: memberProfile.username ?? 'unknown',
+      nickname: memberProfile.nickname ?? '알 수 없는 사용자',
+      profileImageUrl: memberProfile.profileImage ?? '',
+    },
+  };
+};
+
+/** ---------- '내가 제공한 교정' 관련 타입 및 변환 함수 ---------- */
+export interface ProvidedCorrectionsResponseDTO extends APIResponse<{
+    member?: { memberId: number; username: string; nickname: string; profileImageUrl: string; };
+    memberProfile?: { id: number; username: string; nickname: string; profileImage: string; };
     corrections: {
       contents: ProvidedCorrectionContentDTO[];
       page: number;
       size: number;
       hasNext: boolean;
     };
-  }> {}
+}> {}
 
+// ✅ [수정] diary, diaryInfo 타입에 diaryWriterId를 옵셔널로 추가합니다.
 export interface ProvidedCorrectionContentDTO {
-  // 서버가 주는 원본 필드들(가능한 케이스를 포함)
   correctionId?: number;
   id?: number;
-  targetCorrectionId?: number;
-  diaryCorrectionId?: number;
-
   originalText?: string;
   original?: string;
-
   corrected?: string;
   correctedText?: string;
-
   commentText?: string;
-
   createdAt?: string;
   correctionCreatedAt?: string;
   updatedAt?: string;
-
   commentCount?: number;
   likeCount?: number;
-
-  liked?: boolean; // 서버가 내려줄 수도 있음
-
-  diaryInfo?: { diaryId?: number; diaryTitle?: string };
-  diary?: { diaryId?: number; diaryTitle?: string };
-
-  correction?: { liked?: boolean }; // 중첩 케이스 방지용
+  liked?: boolean;
+  diaryInfo?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; diaryWriterId?: number; };
+  diary?: { diaryId?: number; diaryTitle?: string; thumbImg?: string; diaryWriterId?: number; };
+  correction?: { liked?: boolean };
 }
+
+export const normalizeProvidedCorrection = (
+  raw: ProvidedCorrectionContentDTO,
+  me: any
+): SavedCorrectionItem => {
+  const diaryObject = raw.diaryInfo ?? raw.diary ?? {};
+
+  return {
+    savedCorrectionId: -1,
+    memo: '',
+    correctionId: raw.correctionId ?? raw.id ?? -1,
+    original: raw.originalText ?? raw.original ?? '',
+    corrected: raw.corrected ?? raw.correctedText ?? '',
+    commentText: raw.commentText ?? '',
+    createdAt: raw.createdAt ?? raw.correctionCreatedAt ?? raw.updatedAt ?? '',
+    commentCount: raw.commentCount ?? 0,
+    likeCount: raw.likeCount ?? 0,
+    liked: raw.liked ?? raw.correction?.liked,
+    diaryId: diaryObject.diaryId ?? 0,
+    diaryTitle: diaryObject.diaryTitle || "원본 일기를 찾을 수 없습니다.",
+    diaryThumbnailUrl: diaryObject.thumbImg,
+    // ✅ [수정] 'diary'가 아닌 'diaryObject' 변수를 사용하도록 수정
+    diaryWriterId: diaryObject.diaryWriterId ?? 0,
+    member: {
+      memberId: me?.memberId ?? me?.id ?? 0,
+      username: me?.username ?? "",
+      nickname: me?.nickname ?? "",
+      profileImageUrl: me?.profileImageUrl ?? me?.profileImage ?? "",
+    },
+  };
+};
