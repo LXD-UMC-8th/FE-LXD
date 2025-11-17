@@ -321,6 +321,13 @@ export const translate: Record<
     reportReasonPlaceholder: string;
     reporting: string;
     CommentRestricted: string;
+
+    MobileLanding_MainText: string;
+    MobileLanding_SubText: string;
+    MobileLanding_BottomText_Part1: string;
+    MobileLanding_BottomText_Link: string;
+    MobileLanding_BottomText_Part2: string;
+    MobileLanding_BottomText_Part3: string;
   }
 > = {
   [Language.ENGLISH]: {
@@ -710,6 +717,12 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     CompleteAlert: "Report submitted successfully.",
     CommentRestricted: "Comments are not allowed on this diary.",
     editButtonText: "Edit",
+    MobileLanding_MainText: "This service is optimized for desktop use.",
+    MobileLanding_SubText: "Please access it from a PC.",
+    MobileLanding_BottomText_Part1: "To use it on a mobile device, ",
+    MobileLanding_BottomText_Link: "click here",
+    MobileLanding_BottomText_Part2: "to enable",
+    MobileLanding_BottomText_Part3: "Desktop Mode.",
   },
 
   [Language.KOREAN]: {
@@ -1091,5 +1104,11 @@ Upon account deletion, your personal data will be removed promptly unless otherw
     CompleteAlert: "신고가 완료되었습니다.",
     CommentRestricted: "댓글 작성을 허용하지 않는 일기입니다.",
     editButtonText: "수정하기",
+    MobileLanding_MainText: "본 서비스는 PC 환경에 최적화되어 있습니다.",
+    MobileLanding_SubText: "원활한 이용을 위해 PC접속을 권장드립니다.",
+    MobileLanding_BottomText_Part1: "모바일에서 이용하시려면",
+    MobileLanding_BottomText_Link: "여기를",
+    MobileLanding_BottomText_Part2: "눌러",
+    MobileLanding_BottomText_Part3: "'데스크톱 모드'를 활성화해주세요.",
   },
 };
