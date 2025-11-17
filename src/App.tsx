@@ -32,6 +32,9 @@ import ChangePWinEditProfilePage from "./pages/Navbar/ChangePWinEditProfilePage"
 import EditProfileLayout from "./layouts/EditProfileLayout";
 import { LanguageProvider } from "./context/LanguageProvider";
 import { AuthProvider } from "./context/AuthProvider";
+import MobileGateway from "./layouts/MobileGateway";
+
+
 
 
 const publicRoutes: RouteObject[] = [
@@ -128,7 +131,14 @@ const protectedRoutes: RouteObject[] = [
     ],
   },
 ];
-const router = createBrowserRouter([...publicRoutes, ...protectedRoutes]);
+const router = createBrowserRouter([{
+    element: <MobileGateway />, 
+    children: [                 
+      ...publicRoutes,
+      ...protectedRoutes,
+    ],
+  },
+]);
 // eslint-disable-next-line react-refresh/only-export-components
 export const queryClient = new QueryClient();
 
