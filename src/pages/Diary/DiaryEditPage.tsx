@@ -39,13 +39,27 @@ const DiaryEditPage = () => {
     return textarea.value;
   };
 
+  const extractInsOnly = (html: string) => {
+    const cleaned = html.replace(/<del[\s\S]*?<\/del>/g, "");
+
+    const insMatch = cleaned.match(/<ins>([\s\S]*?)<\/ins>/);
+    if (insMatch && insMatch[1]) {
+      return insMatch[1];
+    }
+
+    return cleaned;
+  };
+
   useEffect(() => {
     getDiaryDetail(Number(diaryId)).then((res) => {
       const d = res.result;
       const decoded = decodeOnce(d.content || "");
       const unescaped = handleDecode(decoded);
       const fullyDecoded = handleDecode(unescaped);
-      const normalized = normalizeHtmlForQuill(fullyDecoded);
+
+      const insOnly = extractInsOnly(fullyDecoded);
+
+      const normalized = normalizeHtmlForQuill(insOnly);
       setEditorRawContent(normalized);
       setTitleName(d.title || "");
       setThumbImg(d.thumbnail || "");
