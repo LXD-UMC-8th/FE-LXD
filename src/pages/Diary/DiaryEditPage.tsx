@@ -33,11 +33,33 @@ const DiaryEditPage = () => {
   const [_editorRawContent, setEditorRawContent] = useState<string>("");
   const [_thumbImg, setThumbImg] = useState<string>("");
 
+  const handleDecode = (html: string) => {
+    const textarea = document.createElement("textarea");
+    textarea.innerHTML = html;
+    return textarea.value;
+  };
+
+  const extractInsOnly = (html: string) => {
+    const cleaned = html.replace(/<del[\s\S]*?<\/del>/g, "");
+
+    const insMatch = cleaned.match(/<ins>([\s\S]*?)<\/ins>/);
+    if (insMatch && insMatch[1]) {
+      return insMatch[1];
+    }
+
+    return cleaned;
+  };
+
   useEffect(() => {
     getDiaryDetail(Number(diaryId)).then((res) => {
       const d = res.result;
       const decoded = decodeOnce(d.content || "");
-      const normalized = normalizeHtmlForQuill(decoded);
+      const unescaped = handleDecode(decoded);
+      const fullyDecoded = handleDecode(unescaped);
+
+      const insOnly = extractInsOnly(fullyDecoded);
+
+      const normalized = normalizeHtmlForQuill(insOnly);
       setEditorRawContent(normalized);
       setTitleName(d.title || "");
       setThumbImg(d.thumbnail || "");
@@ -67,10 +89,10 @@ const DiaryEditPage = () => {
       <div className="flex flex-col items-start gap-[15px] self-stretch w-full">
         <div className="bg-white rounded-[12px] shadow w-full p-5 gap-3">
           <input
-            // onChange={(e) => {
-            //   setTitleName(e.target.value);
-            //   console.log("Title changed:", e.target.value);
-            // }}
+            onChange={(e) => {
+              setTitleName(e.target.value);
+              console.log("Title changed:", e.target.value);
+            }}
             type="text"
             className="w-full bg-gray-200 rounded-md p-3 "
             value={_titleName}
