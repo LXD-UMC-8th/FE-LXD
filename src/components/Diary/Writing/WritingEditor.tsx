@@ -213,6 +213,10 @@ const WritingEditor = ({ value, onChange }: WritingEditorProps) => {
       height: auto;
       display: block;
     }
+    // del 태그에 글씨 색 red
+    .custom-quill-editor .ql-editor del {
+      color: red;
+    }
     /* Optional: avoid layout breaks with long content */
     .custom-quill-editor .ql-editor {
       overflow-wrap: anywhere;
