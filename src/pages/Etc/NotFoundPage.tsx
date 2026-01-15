@@ -3,7 +3,7 @@ import { translate } from "../../context/translate";
 
 const NotFoundPage = () => {
   const { language } = useLanguage();
-  const t = translate[language];
+  const t = translate[language]|| translate['KO'];//프론트 로직 오류 , qa상단 문제 해결))
 
   return (
     <div className="flex flex-col bg-white items-center justify-center min-h-screen bg-gray-50">
