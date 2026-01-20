@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import EnrollButton from "./EnrollButton";
 import EnrollModal from "./EnrollModal";
 import useOutsideClick from "../../../hooks/useOutsideClick";
+import { useLocation } from "react-router-dom";
 
 interface EnrollWrapperProps {
   _titleName: string;
@@ -19,6 +20,9 @@ const EnrollWrapper = ({
   const [openModal, setOpenModal] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  const { pathname } = useLocation();
+  const isEditMode = pathname.includes("/mydiary/edit/");
+
   useOutsideClick(wrapperRef, () => setOpenModal(false));
 
   const handleOpenModal = () => setOpenModal(true);
@@ -26,7 +30,7 @@ const EnrollWrapper = ({
 
   return (
     <div className="relative inline-block" ref={wrapperRef}>
-      <EnrollButton onClick={handleOpenModal} />
+      <EnrollButton onClick={handleOpenModal} isEditMode={isEditMode} />
 
       {openModal && (
         <div className="absolute top-full right-0 mt-2 z-50">

@@ -27,6 +27,7 @@ export const QUERY_KEY = {
   notification: "notification",
   notificationRedirect: "notificationRedirect",
   myInfo: "myInfo",
+  language: "language",
   postLike: "postLike",
   correctionComments: "correctionComments",
   friends: "friends",
