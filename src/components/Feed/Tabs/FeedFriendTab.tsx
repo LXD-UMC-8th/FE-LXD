@@ -5,10 +5,9 @@ import { useInfiniteScroll } from "../../../hooks/queries/useInfiniteScroll";
 import { useInView } from "react-intersection-observer";
 import type {
   diaries,
-  DiarySummary,
   getDiariesResponseDTO,
 } from "../../../utils/types/diary";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { translate } from "../../../context/translate";
 import { useLanguage } from "../../../context/LanguageProvider";
 import { QUERY_KEY } from "../../../constants/key";
@@ -66,16 +65,10 @@ const FeedFriendTab = () => {
     (data?.pages?.[0]?.result?.contents?.filter(canSee).length ?? 0) === 0 &&
     !(data?.pages?.[0]?.result?.hasNext ?? false);
 
-  const [_isDiarySummary] = useState<DiarySummary>({} as DiarySummary);
-
   return (
     <div className="w-260 mb-10">
       {visibleItems.map((d) => (
-        <CommonComponentInDiaryNFeed
-          key={d.diaryId}
-          props={d}
-          diaryHeaderProps={_isDiarySummary}
-        />
+        <CommonComponentInDiaryNFeed key={d.diaryId} props={d} />
       ))}
 
       {isInitialEmpty && (
