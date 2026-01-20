@@ -61,7 +61,7 @@ const CommonComponentInDiaryNFeed = ({
   useOutsideClick(menuRef, () => setMenuOpen(false));
 
   const content = useCleanHtmlRemoveImg(
-    props.contentPreview ? props.contentPreview : null
+    props.contentPreview ? props.contentPreview : null,
   );
 
   const stats = [
@@ -151,9 +151,9 @@ const CommonComponentInDiaryNFeed = ({
     variant === "friendPreview"
       ? clsx(
           "w-full border border-gray-200 px-5 py-4 hover:shadow-sm",
-          roundedCls
+          roundedCls,
         )
-      : clsx("w-260 shadow px-6 py-5 space-y-4", roundedCls)
+      : clsx("w-260 shadow px-6 py-5 space-y-4", roundedCls),
   );
 
   return (

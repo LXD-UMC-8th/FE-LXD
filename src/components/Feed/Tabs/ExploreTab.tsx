@@ -64,7 +64,7 @@ const ExploreTab = () => {
         pathname: `/feed/${diaryId}`,
         search: location.search,
       },
-      { replace: true }
+      { replace: true },
     );
   };
 
@@ -81,7 +81,7 @@ const ExploreTab = () => {
       {data?.pages.flatMap((page) =>
         page.result.contents
           .filter(
-            (d: diaries) => d.language === lang && d.visibility !== "PRIVATE"
+            (d: diaries) => d.language === lang && d.visibility !== "PRIVATE",
           )
           .map((d: diaries) => (
             <div
@@ -95,7 +95,7 @@ const ExploreTab = () => {
             >
               <CommonComponentInDiaryNFeed props={d} />
             </div>
-          ))
+          )),
       )}
 
       {isFetching && (

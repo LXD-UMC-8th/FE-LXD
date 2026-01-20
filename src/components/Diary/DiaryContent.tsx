@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Avatar from "../Common/Avatar";
 import { useLanguage } from "../../context/LanguageProvider";
 import { translate } from "../../context/translate";
@@ -11,7 +11,6 @@ import { usePostLike } from "../../hooks/mutations/usePostLike";
 import AlertModal from "../Common/AlertModal";
 import { useAuth } from "../../context/AuthProvider";
 import type { DiaryUploadResult } from "../../utils/types/diary";
-import { useMemberLanguage } from "../../hooks/queries/useMember";
 
 interface DiaryContentProps extends DiaryUploadResult {
   focusTextarea?: () => void;
@@ -148,15 +147,6 @@ const DiaryContent = ({
   const cleanedContent = removeDiffTags(decodedContent);
   const replaceContent = normalizeQuillHtml(cleanedContent);
 
-  // 언어 설정 반영
-  const { data } = useMemberLanguage();
-
-  useEffect(() => {
-    if (data?.result?.studyLanguage) {
-      // setLanguage(data?.result?.studyLanguage);
-    }
-  }, [data]);
-
   return (
     <div className="relative">
       <div className="flex items-center justify-between pb-3">
@@ -243,7 +233,7 @@ const DiaryContent = ({
           {props.title}
         </h1>
         <span className="text-blue-600 text-body2 font-medium ml-auto ">
-          {data?.result?.studyLanguage === "KO" ? "한국어" : "English"}
+          {props.language === "KO" ? "한국어" : "English"}
         </span>
       </div>
 
