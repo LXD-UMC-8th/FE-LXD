@@ -74,7 +74,7 @@ const LikesTab = () => {
   const visibleItems = useMemo(() => {
     return (
       data?.pages.flatMap((page) =>
-        (page.result.contents || []).filter(canSee)
+        (page.result.contents || []).filter(canSee),
       ) || []
     );
   }, [data, isLoggedIn, friendSet]);
@@ -92,7 +92,7 @@ const LikesTab = () => {
         pathname: `/feed/${diaryId}`,
         search: location.search,
       },
-      { replace: true }
+      { replace: true },
     );
   };
 

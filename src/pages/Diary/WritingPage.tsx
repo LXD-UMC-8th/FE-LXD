@@ -33,11 +33,11 @@ const WritingPage = () => {
   const _title_free = t.titleStyle_FREE;
   const _title_question = t.titleStyle_QUESTION;
   const [_style, setStyle] = useState<string>(
-    () => localStorage.getItem("style") ?? "FREE"
+    () => localStorage.getItem("style") ?? "FREE",
   );
 
   const [_titleName, setTitleName] = useState<string>(
-    () => localStorage.getItem("title") ?? ""
+    () => localStorage.getItem("title") ?? "",
   );
 
   const _DebounceTitleName = useDebounce(_titleName, 500);
@@ -84,14 +84,13 @@ const WritingPage = () => {
           (questionData) => {
             setTitleName(questionData.result.content);
             localStorage.setItem("title", questionData.result.content);
-          }
+          },
         );
       }
     });
   };
 
-  if (_style === "QUESTION" || _style === "질문글") {
-  }
+  // if (_style === "QUESTION" || _style === "질문글") {}
 
   return (
     <div className="py-2 bg-gray-100 mx-10">
