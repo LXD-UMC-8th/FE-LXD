@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { getDiaryStats } from "../../apis/diary";
-import { translate } from "../../context/translate";
-import { useLanguage } from "../../context/LanguageProvider";
+
 
 interface value {
   date: string;
@@ -11,30 +10,25 @@ interface value {
 }
 
 const CalendarModal = () => {
-  const { language } = useLanguage();
-  const t = translate[language];
+  
   const [_values, setValues] = useState<value[]>([]);
   const [activeStartDate, _setActiveStartDate] = useState<Date>(new Date());
 
   const formatLocalYMDD = (date: Date) => date.toLocaleDateString("en-CA");
 
+  // ✅ [수정 1] 연도/월 계산 로직 수정 (13월 오류 해결)
+  // 단순히 +1, +2를 하는 대신 Date 객체를 사용해 자동으로 연도가 넘어가게 처리
   const _datesToRequest = useMemo(() => {
     const current = new Date(activeStartDate);
-
-    return [
-      {
-        year: current.getFullYear(),
-        month: current.getMonth(),
-      },
-      {
-        year: current.getFullYear(),
-        month: current.getMonth() + 1,
-      },
-      {
-        year: current.getFullYear(),
-        month: current.getMonth() + 2,
-      },
-    ];
+    
+    return [0, 1, 2].map((offset) => {
+      // 현재 달에서 offset만큼 더한 날짜를 구함 (자동으로 연도 변경됨)
+      const targetDate = new Date(current.getFullYear(), current.getMonth() + offset, 1);
+      return {
+        year: targetDate.getFullYear(),
+        month: targetDate.getMonth() + 1, // 1월~12월로 맞춤
+      };
+    });
   }, [activeStartDate]);
 
   useEffect(() => {
@@ -70,26 +64,17 @@ const CalendarModal = () => {
       <Calendar
         className="border-radius-lg "
         formatDay={(_locale, date) => date.getDate().toString()}
+        // ✅ [수정 2] 월/년도 표기를 영어로 고정 (JAN 2024 형식)
         formatMonthYear={(_locale, date) => {
-          if (language === "KO") {
-            return `${date.getFullYear()} ${date.getMonth() + 1}월`;
-          }
           return `${date.getFullYear()} ${date
-            .toLocaleString("default", {
+            .toLocaleString("en-US", {
               month: "short",
             })
             .toUpperCase()}`;
         }}
+        // ✅ [수정 3] 요일 표기를 영어로 고정 (Sun, Mon...)
         formatShortWeekday={(_locale, date) =>
-          [
-            t.Sunday,
-            t.Monday,
-            t.Tuesday,
-            t.Wednesday,
-            t.Thursday,
-            t.Friday,
-            t.Saturday,
-          ][date.getDay()]
+          ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()]
         }
         locale="en-US"
         prev2Label={null}
