@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import EnrollButton from "./EnrollButton";
 import EnrollModal from "./EnrollModal";
 import useOutsideClick from "../../../hooks/useOutsideClick";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 interface EnrollWrapperProps {
   _titleName: string;
