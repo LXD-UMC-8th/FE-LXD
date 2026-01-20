@@ -4,14 +4,16 @@ import { useAuth } from "../../../hooks/useAuth";
 
 interface EnrollButtonProps {
   onClick?: () => void;
+  isEditMode?: boolean;
 }
 
-const EnrollButton = ({ onClick }: EnrollButtonProps) => {
+const EnrollButton = ({ onClick, isEditMode }: EnrollButtonProps) => {
   const { language } = useLanguage();
   const t = translate[language];
   const { isLoggedIn } = useAuth();
 
-  const buttonText = isLoggedIn ? t.editButtonText : t.enrollButtonText;
+  const buttonText =
+    isEditMode && isLoggedIn ? t.editButtonText : t.enrollButtonText;
 
   return (
     <button
